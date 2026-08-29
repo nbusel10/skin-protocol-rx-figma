@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import AnnouncementBar from './components/AnnouncementBar'
 import Header from './components/Header'
 import Footer from './components/Footer'
+import ScrollIndicator from './components/ScrollIndicator'
 import HomePage from './pages/HomePage'
 import ShopPage from './pages/ShopPage'
 import ProductDetail from './pages/ProductDetail'
@@ -28,7 +29,7 @@ export default function App() {
   }, [page])
 
   return (
-    <div className="min-h-screen bg-ivory">
+    <div className="min-h-screen bg-white">
       <AnnouncementBar />
       <Header currentPage={page} onNavigate={navigate} cartCount={cartCount} />
 
@@ -42,6 +43,7 @@ export default function App() {
       </main>
 
       <Footer onNavigate={navigate} />
+      <ScrollIndicator />
     </div>
   )
 }

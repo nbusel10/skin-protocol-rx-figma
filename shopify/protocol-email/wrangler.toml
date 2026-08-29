@@ -1,0 +1,15 @@
+name = "protocol-email"
+main = "worker.js"
+compatibility_date = "2025-10-01"
+
+# Secrets (do not put these in this file):
+#   npx wrangler secret put SHOPIFY_CLIENT_ID --config shopify/protocol-email/wrangler.toml
+#   npx wrangler secret put SHOPIFY_CLIENT_SECRET --config shopify/protocol-email/wrangler.toml
+#   npx wrangler secret put RESEND_API_KEY --config shopify/protocol-email/wrangler.toml
+#
+# Non-secret vars — uncomment and fill in:
+# [vars]
+# SHOPIFY_STORE_DOMAIN = "your-store.myshopify.com"
+# PROTOCOL_EMAIL_FROM = "Skin Protocol Rx <hello@yourdomain.com>"
+# SHOP_URL = "https://skinprotocolrx.com"
+# SHOP_PUBLIC_DOMAIN = "skinprotocolrx.com"

@@ -1,7 +1,15 @@
 {
-  "description": "Streamline project management with an intuitive platform designed for teams to collaborate, track progress, and enhance productivity effectively.",
+  "title": "Skin Protocol Rx",
+  "description": "Clinical-grade skincare protocols from a family-owned New York lab. Build your regimen or shop purposeful formulas.",
+  "language": "en",
   "robots": {
     "index": false
+  },
+  "icons": {
+    "icon": "/sp-mark.png"
+  },
+  "openGraph": {
+    "image": "/hero.jpg"
   },
   "accessibility": {
     "addBypassLinks": false,

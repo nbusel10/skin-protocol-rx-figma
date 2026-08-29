@@ -1,0 +1,653 @@
+{% comment %}
+  Skin Protocol Home Hero — Online Store 2.0 section
+  File: sections/skin-protocol-home-hero.liquid
+
+  Split homepage hero matching the React home page:
+  - Copy left, portrait right
+  - White studio backdrop (ships home-hero.jpg as the default)
+  - Floating cruelty-free card on the image
+
+  Setup
+  1. Copy this file to sections/skin-protocol-home-hero.liquid
+  2. Copy assets/home-hero.jpg into the theme assets folder
+     (the white-background portrait). Override it in the theme editor
+     if you upload a different image.
+  3. Add the section to the homepage in the theme editor.
+{% endcomment %}
+
+{%- liquid
+  assign heading_tag = section.settings.heading_tag
+  if heading_tag != 'h1' and heading_tag != 'h2'
+    assign heading_tag = 'h1'
+  endif
+
+  assign image = section.settings.image
+  assign image_alt = section.settings.heading
+  if image != blank and image.alt != blank
+    assign image_alt = image.alt
+  elsif image_alt == blank
+    assign image_alt = 'Dewy, healthy skin with Skin Protocol RX'
+  endif
+
+  assign image_position = section.settings.image_position | default: 'right center'
+  if image_position == '65% 20%' or image_position == 'right'
+    assign image_position = 'right center'
+  endif
+  if section.settings.use_focal_point and image != blank and image.presentation.focal_point != blank
+    assign image_position = image.presentation.focal_point
+  endif
+-%}
+
+{%- if section.settings.load_fonts -%}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+{%- endif -%}
+
+<section
+  id="HomeHero-{{ section.id }}"
+  class="sphh"
+  style="
+    --sphh-accent: {{ section.settings.accent }};
+    --sphh-accent-dark: {{ section.settings.accent_dark }};
+    --sphh-charcoal: {{ section.settings.charcoal }};
+    --sphh-ivory: {{ section.settings.ivory }};
+  "
+>
+  <div class="sphh__shell">
+    <div class="sphh__copy">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="sphh__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank or section.settings.heading_emphasis != blank -%}
+        <{{ heading_tag }} class="sphh__heading">
+          {%- if section.settings.heading != blank -%}
+            <span class="sphh__heading-primary">{{ section.settings.heading | escape | replace: ' More.', '<br>More.' }}</span>
+          {%- endif -%}
+          {%- if section.settings.heading_emphasis != blank -%}
+            <em class="sphh__heading-emphasis">{{ section.settings.heading_emphasis | escape }}</em>
+          {%- endif -%}
+        </{{ heading_tag }}>
+      {%- endif -%}
+
+      {%- if section.settings.body != blank -%}
+        <div class="sphh__body">{{ section.settings.body }}</div>
+      {%- endif -%}
+
+      <div class="sphh__actions">
+        {%- if section.settings.button_1_label != blank -%}
+          {%- assign btn1_style = section.settings.button_1_style | default: 'charcoal' -%}
+          {%- if section.settings.button_1_link != blank -%}
+            <a class="sphh__btn sphh__btn--{{ btn1_style }}" href="{{ section.settings.button_1_link }}">
+              {{ section.settings.button_1_label | escape }}
+            </a>
+          {%- else -%}
+            <a class="sphh__btn sphh__btn--{{ btn1_style }}" href="{{ routes.all_products_collection_url }}">
+              {{ section.settings.button_1_label | escape }}
+            </a>
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- if section.settings.button_2_label != blank -%}
+          {%- assign btn2_style = section.settings.button_2_style | default: 'outline' -%}
+          {%- if section.settings.button_2_link != blank -%}
+            <a class="sphh__btn sphh__btn--{{ btn2_style }}" href="{{ section.settings.button_2_link }}">
+              {{ section.settings.button_2_label | escape }}
+            </a>
+          {%- else -%}
+            <span class="sphh__btn sphh__btn--{{ btn2_style }}">
+              {{ section.settings.button_2_label | escape }}
+            </span>
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- for block in section.blocks -%}
+          {%- if block.type != 'button' or block.settings.label == blank -%}{%- continue -%}{%- endif -%}
+          {%- liquid
+            assign btn_style = block.settings.style | default: 'charcoal'
+            assign href = block.settings.link
+          -%}
+          {%- if href != blank -%}
+            <a
+              class="sphh__btn sphh__btn--{{ btn_style }}"
+              href="{{ href }}"
+              {{ block.shopify_attributes }}
+            >
+              {{ block.settings.label | escape }}
+            </a>
+          {%- else -%}
+            <span class="sphh__btn sphh__btn--{{ btn_style }}" {{ block.shopify_attributes }}>
+              {{ block.settings.label | escape }}
+            </span>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      {%- if section.settings.meta != blank -%}
+        <p class="sphh__meta">{{ section.settings.meta | escape }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="sphh__media">
+      {%- if image != blank -%}
+        {{
+          image
+          | image_url: width: 1600
+          | image_tag:
+            widths: '500, 750, 1100, 1500, 1600',
+            sizes: '(min-width: 990px) 50vw, 100vw',
+            class: 'sphh__img',
+            alt: image_alt,
+            loading: 'eager',
+            fetchpriority: 'high'
+        }}
+      {%- else -%}
+        <img
+          class="sphh__img"
+          src="{{ 'home-hero.jpg' | asset_url }}"
+          alt="{{ image_alt | escape }}"
+          width="683"
+          height="1024"
+          loading="eager"
+          fetchpriority="high"
+        >
+      {%- endif -%}
+
+      {%- if section.settings.show_image_card and section.settings.card_text != blank -%}
+        <div class="sphh__card">
+          {%- if section.settings.card_kicker != blank -%}
+            <div class="sphh__card-kicker">
+              <span class="sphh__card-dot"></span>
+              {{ section.settings.card_kicker | escape }}
+            </div>
+          {%- endif -%}
+          <p class="sphh__card-text">{{ section.settings.card_text | escape }}</p>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }},
+  .section-home-hero {
+    max-width: none;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+  #shopify-section-{{ section.id }} .page-width,
+  .section-home-hero .page-width {
+    max-width: none;
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+  }
+
+  #HomeHero-{{ section.id }} {
+    --sphh-font-serif: 'Playfair Display', Georgia, serif;
+    --sphh-font-sans: 'DM Sans', system-ui, sans-serif;
+    position: relative;
+    overflow: hidden;
+    font-family: var(--sphh-font-sans);
+    background: var(--sphh-ivory);
+    color: var(--sphh-charcoal);
+  }
+
+  #HomeHero-{{ section.id }} .sphh__shell {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 990px) {
+    #HomeHero-{{ section.id }} {
+      min-height: 90vh;
+    }
+    #HomeHero-{{ section.id }} .sphh__shell {
+      grid-template-columns: 1fr 1fr;
+      min-height: 90vh;
+    }
+    #HomeHero-{{ section.id }} .sphh__copy {
+      order: 1;
+    }
+    #HomeHero-{{ section.id }} .sphh__media {
+      order: 2;
+      min-height: 90vh;
+      height: auto;
+      align-self: stretch;
+    }
+  }
+
+  #HomeHero-{{ section.id }} .sphh__copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem 1.5rem;
+  }
+
+  @media (min-width: 990px) {
+    #HomeHero-{{ section.id }} .sphh__copy {
+      padding-top: 0;
+      padding-right: 4rem;
+      padding-bottom: 0;
+      padding-left: 80px;
+    }
+  }
+
+  #HomeHero-{{ section.id }} .sphh__eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--sphh-accent);
+    margin: 0 0 1.5rem;
+  }
+
+  #HomeHero-{{ section.id }} .sphh__heading {
+    font-family: var(--sphh-font-serif);
+    font-size: clamp(36px, 4.2vw, 60px);
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1.1;
+    color: var(--sphh-charcoal);
+    margin: 0 0 1.75rem;
+    max-width: 580px;
+  }
+
+  #HomeHero-{{ section.id }} .sphh__heading-primary {
+    display: block;
+  }
+
+  #HomeHero-{{ section.id }} .sphh__heading-emphasis {
+    display: block;
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  #HomeHero-{{ section.id }} .sphh__body {
+    font-size: 16px;
+    line-height: 1.7;
+    color: color-mix(in srgb, var(--sphh-charcoal) 60%, transparent);
+    max-width: 580px;
+    margin: 0 0 2.5rem;
+  }
+
+  #HomeHero-{{ section.id }} .sphh__body p {
+    margin: 0;
+  }
+
+  #HomeHero-{{ section.id }} .sphh__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  #HomeHero-{{ section.id }} .sphh__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    padding: 14px 28px;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  #HomeHero-{{ section.id }} .sphh__btn--charcoal {
+    background: var(--sphh-charcoal);
+    color: #fff;
+    border-color: var(--sphh-charcoal);
+  }
+
+  #HomeHero-{{ section.id }} .sphh__btn--charcoal:hover {
+    background: color-mix(in srgb, var(--sphh-charcoal) 80%, #fff);
+    border-color: color-mix(in srgb, var(--sphh-charcoal) 80%, #fff);
+  }
+
+  #HomeHero-{{ section.id }} .sphh__btn--outline {
+    background: transparent;
+    color: var(--sphh-charcoal);
+    border-color: var(--sphh-charcoal);
+  }
+
+  #HomeHero-{{ section.id }} .sphh__btn--outline:hover {
+    background: var(--sphh-charcoal);
+    color: #fff;
+  }
+
+  #HomeHero-{{ section.id }} .sphh__meta {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--sphh-charcoal) 40%, transparent);
+    margin: 0;
+  }
+
+  #HomeHero-{{ section.id }} .sphh__media {
+    position: relative;
+    min-height: 22rem;
+    background: #fff;
+    overflow: hidden;
+  }
+
+  #HomeHero-{{ section.id }} .sphh__img,
+  #HomeHero-{{ section.id }} .sphh__media img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: auto;
+    display: block;
+    width: auto !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    object-fit: cover !important;
+    object-position: {{ image_position }} !important;
+  }
+
+  #HomeHero-{{ section.id }} .sphh__card {
+    position: absolute;
+    left: 2rem;
+    bottom: 4rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    padding: 2rem 2rem;
+    max-width: 330px;
+    width: max-content;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    color: var(--sphh-charcoal);
+  }
+
+  #HomeHero-{{ section.id }} .sphh__card-kicker {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.2rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--sphh-charcoal) 50%, transparent);
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+  }
+
+  #HomeHero-{{ section.id }} .sphh__card-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--sphh-accent);
+    flex-shrink: 0;
+  }
+
+  #HomeHero-{{ section.id }} .sphh__card-text {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+  }
+
+  @media (max-width: 989px) {
+    #HomeHero-{{ section.id }} .sphh__media {
+      min-height: 22rem;
+    }
+    #HomeHero-{{ section.id }} .sphh__copy {
+      padding: 3.5rem 1.25rem 4rem;
+    }
+    #HomeHero-{{ section.id }} .sphh__card {
+      left: 1.25rem;
+      bottom: 1.25rem;
+      max-width: calc(100% - 2.5rem);
+      width: auto;
+    }
+    #HomeHero-{{ section.id }} .sphh__card-text {
+      white-space: normal;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Skin Protocol Home Hero",
+  "tag": "section",
+  "class": "section-home-hero",
+  "enabled_on": {
+    "templates": ["index"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Homepage split hero. Uses the bundled white-background portrait (assets/home-hero.jpg) until you pick a different image."
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Leave empty to use the bundled white-background portrait."
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "info": "Homepage match pins her to the right so the face and hand stay in frame.",
+      "options": [
+        { "value": "right center", "label": "Homepage match" },
+        { "value": "center", "label": "Center" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" },
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "right center"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_focal_point",
+      "label": "Use uploaded image focal point",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image_card",
+      "label": "Show image card",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "card_kicker",
+      "label": "Card kicker",
+      "default": "Cruelty-Free Certified"
+    },
+    {
+      "type": "textarea",
+      "id": "card_text",
+      "label": "Card text",
+      "default": "Professional formulas. No animal testing. Ever."
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "New York · Since 2019"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Your Skin Doesn't Need More."
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "Second heading line (italic)",
+      "default": "It Needs What Works."
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "default": "<p>Purposeful, professional skincare made without unnecessary additives. Family-owned, created in New York, and never tested on animals.</p>"
+    },
+    {
+      "type": "text",
+      "id": "meta",
+      "label": "Meta line",
+      "default": "Simple formulas · Professional performance · Healthier-looking skin"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "button_1_label",
+      "label": "Primary button",
+      "default": "Shop Skin Protocol RX"
+    },
+    {
+      "type": "url",
+      "id": "button_1_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "select",
+      "id": "button_1_style",
+      "label": "Primary button style",
+      "options": [
+        { "value": "charcoal", "label": "Charcoal fill" },
+        { "value": "outline", "label": "Outline" }
+      ],
+      "default": "charcoal"
+    },
+    {
+      "type": "text",
+      "id": "button_2_label",
+      "label": "Secondary button",
+      "default": "Find Your Protocol"
+    },
+    {
+      "type": "url",
+      "id": "button_2_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "select",
+      "id": "button_2_style",
+      "label": "Secondary button style",
+      "options": [
+        { "value": "charcoal", "label": "Charcoal fill" },
+        { "value": "outline", "label": "Outline" }
+      ],
+      "default": "outline"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "accent",
+      "label": "Accent",
+      "default": "#B8878B"
+    },
+    {
+      "type": "color",
+      "id": "accent_dark",
+      "label": "Accent hover",
+      "default": "#8E6367"
+    },
+    {
+      "type": "color",
+      "id": "charcoal",
+      "label": "Charcoal",
+      "default": "#1A1A1A"
+    },
+    {
+      "type": "color",
+      "id": "ivory",
+      "label": "Ivory",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "checkbox",
+      "id": "load_fonts",
+      "label": "Load Playfair Display and DM Sans",
+      "info": "Turn off if the theme already loads these fonts.",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "button",
+      "name": "Button",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Shop Skin Protocol RX"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Style",
+          "options": [
+            { "value": "charcoal", "label": "Charcoal fill" },
+            { "value": "outline", "label": "Outline" }
+          ],
+          "default": "charcoal"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Skin Protocol Home Hero",
+      "category": "Skin Protocol",
+      "settings": {
+        "eyebrow": "New York · Since 2019",
+        "heading": "Your Skin Doesn't Need More.",
+        "heading_emphasis": "It Needs What Works.",
+        "body": "<p>Purposeful, professional skincare made without unnecessary additives. Family-owned, created in New York, and never tested on animals.</p>",
+        "meta": "Simple formulas · Professional performance · Healthier-looking skin",
+        "show_image_card": true,
+        "card_kicker": "Cruelty-Free Certified",
+        "card_text": "Professional formulas. No animal testing. Ever.",
+        "image_position": "right center",
+        "button_1_label": "Shop Skin Protocol RX",
+        "button_2_label": "Find Your Protocol"
+      }
+    }
+  ]
+}
+{% endschema %}

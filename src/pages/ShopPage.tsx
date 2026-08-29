@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { PRODUCTS, type Product, type SkinType, type SkinConcern, type ProductCategory } from '../data'
-
+import ProductImage from '../components/ProductImage'
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product'
 
 interface ShopPageProps {
@@ -18,7 +18,7 @@ function StarRating({ rating }: { rating: number }) {
   return (
     <div className="flex gap-0.5">
       {[1, 2, 3, 4, 5].map(i => (
-        <svg key={i} width="11" height="11" viewBox="0 0 24 24" fill={i <= rating ? '#4D954C' : 'none'} stroke="#4D954C" strokeWidth="1.5">
+        <svg key={i} width="11" height="11" viewBox="0 0 24 24" fill={i <= rating ? '#B8878B' : 'none'} stroke="#B8878B" strokeWidth="1.5">
           <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
         </svg>
       ))}
@@ -35,11 +35,10 @@ function ProductCard({ product, onNavigate }: { product: Product; onNavigate: (p
       onMouseLeave={() => setHovered(false)}
       onClick={() => onNavigate('product', product.id)}
     >
-      <div className="relative aspect-square bg-ivory overflow-hidden mb-4">
-        <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-        {product.badges.slice(0, 1).map(b => (
+      <div className="relative mb-4">
+        <ProductImage src={product.image} alt={product.name} hover />        {product.badges.slice(0, 1).map(b => (
           <span key={b} className="absolute top-3 left-3 text-[10px] tracking-widest uppercase px-2 py-1 font-medium"
-            style={{ backgroundColor: b === 'Best Seller' ? '#4D954C' : '#252525', color: '#fff' }}>
+            style={{ backgroundColor: b === 'Best Seller' ? '#B8878B' : '#0A0A0A', color: '#fff' }}>
             {b}
           </span>
         ))}
@@ -50,7 +49,7 @@ function ProductCard({ product, onNavigate }: { product: Product; onNavigate: (p
           </svg>
         </button>
         <div className={`absolute bottom-0 left-0 right-0 transition-all duration-300 ${hovered ? 'opacity-100' : 'opacity-0'}`}>
-          <button className="w-full bg-charcoal text-white text-[11px] tracking-widest uppercase py-3 hover:bg-green transition-colors font-medium"
+          <button className="w-full bg-black text-white text-[11px] tracking-widest uppercase py-3 hover:bg-rose transition-colors font-medium"
             onClick={e => e.stopPropagation()}>
             Quick Add
           </button>
@@ -92,7 +91,7 @@ function FilterSection({ title, options, selected, onToggle }: {
             <label key={o} className="flex items-center gap-3 cursor-pointer group">
               <div
                 className="w-4 h-4 border flex items-center justify-center transition-colors"
-                style={{ borderColor: selected.includes(o) ? '#4D954C' : '#E8E8E8', backgroundColor: selected.includes(o) ? '#4D954C' : 'transparent' }}
+                style={{ borderColor: selected.includes(o) ? '#B8878B' : '#E5E5E5', backgroundColor: selected.includes(o) ? '#B8878B' : 'transparent' }}
                 onClick={() => onToggle(o)}
               >
                 {selected.includes(o) && (
@@ -163,13 +162,13 @@ export default function ShopPage({ onNavigate }: ShopPageProps) {
   )
 
   return (
-    <div className="bg-ivory min-h-screen font-sans">
+    <div className="bg-white min-h-screen font-sans">
       {/* Header */}
-      <div className="bg-white border-b border-gray-soft px-5 md:px-8 py-14">
+      <div className="bg-black px-5 md:px-8 py-14">
         <div className="max-w-7xl mx-auto">
-          <p className="text-[11px] tracking-[0.3em] uppercase text-green mb-3">The Collection</p>
-          <h1 className="font-serif text-4xl md:text-5xl text-charcoal mb-4">Shop Skin Protocol RX</h1>
-          <p className="text-charcoal/50 max-w-xl">Find purposeful skincare based on your skin type, primary concern, or preferred product category.</p>
+          <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-3">The Collection</p>
+          <h1 className="font-serif text-4xl md:text-5xl text-white mb-4">Shop Skin Protocol RX</h1>
+          <p className="text-white/50 max-w-xl">Find purposeful skincare based on your skin type, primary concern, or preferred product category.</p>
         </div>
       </div>
 
@@ -214,7 +213,7 @@ export default function ShopPage({ onNavigate }: ShopPageProps) {
             <select
               value={sort}
               onChange={e => setSort(e.target.value as SortOption)}
-              className="border border-gray-soft bg-white px-4 py-2 text-sm text-charcoal focus:outline-none focus:border-green"
+              className="border border-gray-soft bg-white px-4 py-2 text-sm text-black focus:outline-none focus:border-rose"
             >
               <option value="featured">Sort: Featured</option>
               <option value="best-selling">Best Selling</option>
@@ -236,7 +235,7 @@ export default function ShopPage({ onNavigate }: ShopPageProps) {
             {filtered.length === 0 ? (
               <div className="text-center py-24">
                 <p className="font-serif text-2xl text-charcoal/40 mb-4">No products match your filters</p>
-                <button onClick={clearAll} className="text-sm text-green underline underline-offset-2">Clear all filters</button>
+                <button onClick={clearAll} className="text-xs text-rose underline underline-offset-2">Clear all filters</button>
               </div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 gap-5 md:gap-7">
@@ -265,7 +264,7 @@ export default function ShopPage({ onNavigate }: ShopPageProps) {
             <FiltersPanel />
             <button
               onClick={() => setMobileFiltersOpen(false)}
-              className="w-full bg-charcoal text-white py-3.5 text-sm font-medium mt-4"
+              className="w-full bg-black text-white py-3.5 text-sm font-medium mt-4 hover:bg-rose transition-colors"
             >
               Show {filtered.length} Products
             </button>

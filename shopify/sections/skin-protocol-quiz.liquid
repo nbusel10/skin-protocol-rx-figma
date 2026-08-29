@@ -1,0 +1,1618 @@
+{% comment %}
+  Protocol Quiz — Online Store 2.0 custom section
+  File: sections/skin-protocol-quiz.liquid
+
+  Setup
+  1. Create a manual collection named "Protocol Quiz" with only these products
+     (exclude The Trio, starter sets, and seasonal SKUs):
+       - Clarifying Cleanser          (handle: clarifying-cleanser)
+       - Rosewater Niacinamide Toner  (handle: rosewater-niacinamide-toner)
+       - Vitamin C Serum              (handle: vitamin-c-5-serum) — 5% / 20% variants
+       - Hyaluronic Acid Serum        (handle: hyaluronic-acid-serum)
+       - Moisturizing Cream           (handle: moisturizer)
+       - Eye Cream                    (handle: eye-cream)
+       - The Holy Grail               (handle: the-holy-grail)
+       - Amino Acid Serum             (handle: amino-acid-serum)
+  2. In the theme editor, add this section to a page and select that collection.
+  3. Handle-based quiz metadata is built into the section JS — product tags and
+     types are optional. Optional later: set Product type to Cleansers, Toners,
+     Serums, Moisturizers, Eye Care, or Facial Oils, and tag skin types/concerns.
+  4. Optional metafield: custom.tagline (single line text)
+{% endcomment %}
+
+{%- liquid
+  assign quiz_collection = section.settings.product_collection
+  assign accent = section.settings.accent
+  assign accent_light = section.settings.accent_light
+  assign charcoal = section.settings.charcoal
+  assign ivory = section.settings.ivory
+-%}
+
+<div
+  id="ProtocolQuiz-{{ section.id }}"
+  class="spq"
+  style="
+    --spq-accent: {{ accent }};
+    --spq-accent-light: {{ accent_light }};
+    --spq-accent-dark: {{ section.settings.accent_dark }};
+    --spq-charcoal: {{ charcoal }};
+    --spq-ivory: {{ ivory }};
+    --spq-gray: {{ section.settings.gray }};
+  "
+>
+  <div class="spq__inner" data-quiz-panel>
+    <div class="spq__progress" aria-hidden="true">
+      {%- for i in (1..5) -%}
+        <span class="spq__bar{% if forloop.first %} is-on{% endif %}" data-bar></span>
+      {%- endfor -%}
+    </div>
+
+    <div class="spq__card" data-questions>
+      <div class="spq__question is-active" data-step="0" data-required="single">
+        <p class="spq__kicker">Question 1 of 5</p>
+        <h2 class="spq__title">{{ section.settings.q1_title }}</h2>
+        <div class="spq__grid spq__grid--3">
+          {%- assign types = 'Combination,Dry,Normal,Oily,Sensitive' | split: ',' -%}
+          {%- for t in types -%}
+            <button type="button" class="spq__opt" data-option data-value="{{ t }}">
+              <span class="spq__opt-label">{{ t }}</span>
+            </button>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <div class="spq__question" data-step="1" data-required="multi" hidden>
+        <p class="spq__kicker">Question 2 of 5</p>
+        <h2 class="spq__title">{{ section.settings.q2_title }}</h2>
+        <p class="spq__hint">Select all that apply</p>
+        <div class="spq__grid spq__grid--3">
+          {%- assign concerns = 'Acne,Aging,Brightening,Dry Skin,Eye Area,Hyperpigmentation,Large Pores,Preventative,Redness,Sun Damage' | split: ',' -%}
+          {%- for c in concerns -%}
+            <button type="button" class="spq__opt" data-option data-value="{{ c }}">
+              <span class="spq__opt-label">{{ c }}</span>
+            </button>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <div class="spq__question" data-step="2" data-required="none" hidden>
+        <p class="spq__kicker">Question 3 of 5</p>
+        <h2 class="spq__title">{{ section.settings.q3_title }}</h2>
+        <div class="spq__grid spq__grid--3">
+          <button type="button" class="spq__opt" data-option data-value="minimal">
+            <span class="spq__opt-label">Minimal (2–3 steps)</span>
+            <span class="spq__opt-desc">Quick and simple</span>
+          </button>
+          <button type="button" class="spq__opt is-selected" data-option data-value="moderate">
+            <span class="spq__opt-label">Moderate (4–5 steps)</span>
+            <span class="spq__opt-desc">Balanced routine</span>
+          </button>
+          <button type="button" class="spq__opt" data-option data-value="complete">
+            <span class="spq__opt-label">Complete (6 steps)</span>
+            <span class="spq__opt-desc">Full protocol</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="spq__question" data-step="3" data-required="single" hidden>
+        <p class="spq__kicker">Question 4 of 5</p>
+        <h2 class="spq__title">{{ section.settings.q4_title }}</h2>
+        <div class="spq__grid spq__grid--2 spq__grid--narrow">
+          <button type="button" class="spq__opt" data-option data-value="yes">
+            <span class="spq__opt-label">Yes</span>
+          </button>
+          <button type="button" class="spq__opt" data-option data-value="no">
+            <span class="spq__opt-label">No</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="spq__question" data-step="4" data-required="none" hidden>
+        <p class="spq__kicker">Question 5 of 5</p>
+        <h2 class="spq__title">{{ section.settings.q5_title }}</h2>
+        <div class="spq__grid spq__grid--2">
+          <button type="button" class="spq__opt is-selected" data-option data-value="starter" data-default>
+            <span class="spq__opt-label">Starter Routine</span>
+            <span class="spq__opt-desc">A simple foundation to begin with</span>
+          </button>
+          <button type="button" class="spq__opt" data-option data-value="complete">
+            <span class="spq__opt-label">Complete Protocol</span>
+            <span class="spq__opt-desc">A full, optimized daily routine</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="spq__nav">
+      <button type="button" class="spq__back" data-back disabled>← Back</button>
+      <button type="button" class="spq__next" data-next disabled>{{ section.settings.continue_label }}</button>
+      <button type="button" class="spq__finish" data-finish hidden>{{ section.settings.finish_label }}</button>
+    </div>
+  </div>
+
+  <div class="spq__results" data-results-panel hidden>
+    <div class="spq__results-head">
+      <p class="spq__kicker">Your Custom Protocol</p>
+      <h2 class="spq__results-title">{{ section.settings.results_title }}</h2>
+      <p class="spq__results-sub" data-results-sub></p>
+    </div>
+    <div class="spq__list" data-results-list></div>
+    <p class="spq__empty" data-results-empty hidden>No matching products were found. Try a broader skin type or fewer concerns.</p>
+    <p class="spq__empty" data-results-setup hidden>In the theme editor, open this section and select your Protocol Quiz collection under Protocol products.</p>
+    <div class="spq__total" data-results-total hidden>
+      <div class="spq__total-row">
+        <div>
+          <p class="spq__total-kicker">Protocol Total</p>
+          <p class="spq__total-price" data-total-price></p>
+        </div>
+        <div class="spq__total-meta">
+          <p data-total-count></p>
+          <p>Morning &amp; Evening</p>
+        </div>
+      </div>
+      <div class="spq__total-actions">
+        <button type="button" class="spq__cart" data-add-cart>{{ section.settings.cart_label }}</button>
+        <button type="button" class="spq__email" data-email-open>{{ section.settings.email_label }}</button>
+      </div>
+      <p class="spq__cart-msg" data-cart-msg hidden></p>
+    </div>
+    <div class="spq__restart-wrap">
+      <button type="button" class="spq__restart" data-restart>Start Over</button>
+    </div>
+  </div>
+
+  <div class="spq__modal" data-email-modal hidden>
+    <div class="spq__modal-backdrop" data-email-close tabindex="-1" aria-hidden="true"></div>
+    <div class="spq__modal-panel" role="dialog" aria-modal="true" aria-labelledby="spq-email-title-{{ section.id }}">
+      <div class="spq__modal-form" data-email-form>
+        <div class="spq__modal-head">
+          <h3 class="spq__modal-title" id="spq-email-title-{{ section.id }}">{{ section.settings.email_modal_title }}</h3>
+          <p class="spq__modal-desc">{{ section.settings.email_modal_desc }}</p>
+        </div>
+        <form data-email-submit-form novalidate>
+          <label class="spq__field">
+            <span class="spq__field-label">Email Address</span>
+            <input type="email" name="email" required autocomplete="email" placeholder="you@example.com" data-email-input>
+          </label>
+          <label class="spq__field">
+            <span class="spq__field-label">First Name <span class="spq__optional">(optional)</span></span>
+            <input type="text" name="firstName" autocomplete="given-name" placeholder="Your first name" data-first-name-input>
+          </label>
+          <label class="spq__check">
+            <input type="checkbox" name="marketing" value="1" data-marketing-input>
+            <span class="spq__check-box" aria-hidden="true"></span>
+            <span class="spq__check-label">{{ section.settings.marketing_label }}</span>
+          </label>
+          <p class="spq__privacy">{{ section.settings.privacy_note }}</p>
+          <p class="spq__email-error" data-email-error hidden role="alert"></p>
+          <div class="spq__modal-actions">
+            <button type="submit" class="spq__modal-send" data-email-send>{{ section.settings.email_send_label }}</button>
+            <button type="button" class="spq__modal-cancel" data-email-close>{{ section.settings.email_cancel_label }}</button>
+          </div>
+        </form>
+      </div>
+      <div class="spq__modal-success" data-email-success hidden>
+        <div class="spq__success-icon" aria-hidden="true">✓</div>
+        <h3 class="spq__modal-title">{{ section.settings.email_success_title }}</h3>
+        <p class="spq__modal-desc">{{ section.settings.email_success_desc }}</p>
+        <button type="button" class="spq__modal-send spq__modal-done" data-email-close>{{ section.settings.email_done_label }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="application/json" id="ProtocolQuizData-{{ section.id }}">
+{
+  "cartAdd": {{ routes.cart_add_url | append: '.js' | json }},
+  "cartUrl": {{ routes.cart_url | json }},
+  "products": [
+    {%- if quiz_collection != blank -%}
+      {%- for product in quiz_collection.products limit: 250 -%}
+        {%- assign variant = product.selected_or_first_available_variant -%}
+        {
+          "id": {{ variant.id | json }},
+          "handle": {{ product.handle | json }},
+          "title": {{ product.title | json }},
+          "url": {{ product.url | json }},
+          "price": {{ variant.price | json }},
+          "price_formatted": {{ variant.price | money | json }},
+          "image": {% if product.featured_image %}{{ product.featured_image | image_url: width: 240 | json }}{% else %}null{% endif %},
+          "type": {{ product.type | json }},
+          "tags": {{ product.tags | json }},
+          "tagline": {{ product.metafields.custom.tagline.value | default: product.type | json }},
+          "available": {{ product.available | json }},
+          "variants": [
+            {%- for v in product.variants -%}
+              {
+                "id": {{ v.id | json }},
+                "title": {{ v.title | json }},
+                "available": {{ v.available | json }},
+                "price": {{ v.price | json }},
+                "price_formatted": {{ v.price | money | json }}
+              }{% unless forloop.last %},{% endunless %}
+            {%- endfor -%}
+          ]
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    {%- endif -%}
+  ]
+}
+</script>
+
+<style>
+  #ProtocolQuiz-{{ section.id }} {
+    background: var(--spq-ivory);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    color: var(--spq-charcoal);
+    padding: 5.6rem 2rem;
+  }
+  @media (min-width: 768px) {
+    #ProtocolQuiz-{{ section.id }} {
+      padding: 7.2rem 3.2rem;
+    }
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__inner,
+  #ProtocolQuiz-{{ section.id }} .spq__results {
+    max-width: 88rem;
+    margin: 0 auto;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__progress {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 3.6rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__bar {
+    height: 6px;
+    flex: 1;
+    background: var(--spq-gray);
+    transition: background 0.3s ease;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__bar.is-on {
+    background: var(--spq-accent);
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__card {
+    background: #fff;
+    border: 1px solid var(--spq-gray);
+    padding: 3.2rem 2.8rem;
+  }
+  @media (min-width: 640px) {
+    #ProtocolQuiz-{{ section.id }} .spq__card {
+      padding: 4.4rem 4.8rem;
+    }
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__kicker {
+    font-size: 1.4rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--spq-accent);
+    margin: 0 0 1.2rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(2.4rem, 4.5vw, 3.4rem);
+    font-weight: 400;
+    margin: 0 0 2.8rem;
+    line-height: 1.25;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__hint {
+    font-size: 1.5rem;
+    color: rgba(37, 37, 37, 0.4);
+    margin: -1.6rem 0 1.6rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__grid {
+    display: grid;
+    gap: 1.4rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__grid--2 { grid-template-columns: 1fr 1fr; }
+  #ProtocolQuiz-{{ section.id }} .spq__grid--3 { grid-template-columns: 1fr; }
+  #ProtocolQuiz-{{ section.id }} .spq__grid--narrow { max-width: 36rem; }
+  @media (min-width: 640px) {
+    #ProtocolQuiz-{{ section.id }} .spq__grid--3 { grid-template-columns: repeat(3, 1fr); }
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__opt {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 6px;
+    text-align: left;
+    border: 1px solid var(--spq-gray);
+    background: #fff;
+    padding: 1.8rem 2rem;
+    min-height: 6.4rem;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    font: inherit;
+    color: inherit;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__opt.is-selected {
+    border-color: var(--spq-accent);
+    background: var(--spq-accent-light);
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__opt-label {
+    font-size: 1.6rem;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__opt.is-selected .spq__opt-label {
+    color: var(--spq-accent);
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__opt-desc {
+    font-size: 1.3rem;
+    color: rgba(37, 37, 37, 0.4);
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2.4rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__back,
+  #ProtocolQuiz-{{ section.id }} .spq__restart {
+    background: none;
+    border: 0;
+    font: inherit;
+    font-size: 1.4rem;
+    color: rgba(37, 37, 37, 0.4);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    padding: 0.8rem 0;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__back:disabled {
+    opacity: 0.3;
+    cursor: default;
+    text-decoration: none;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__next,
+  #ProtocolQuiz-{{ section.id }} .spq__finish,
+  #ProtocolQuiz-{{ section.id }} .spq__cart {
+    background: var(--spq-charcoal);
+    color: #fff;
+    border: 0;
+    font: inherit;
+    font-size: 1.4rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    padding: 1.35rem 2.75rem;
+    cursor: pointer;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__finish,
+  #ProtocolQuiz-{{ section.id }} .spq__cart {
+    background: var(--spq-accent);
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__next:hover,
+  #ProtocolQuiz-{{ section.id }} .spq__finish:hover,
+  #ProtocolQuiz-{{ section.id }} .spq__cart:hover {
+    filter: brightness(0.92);
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__next:disabled {
+    opacity: 0.4;
+    cursor: default;
+    filter: none;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__results-head {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__results-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(2.8rem, 4vw, 3.8rem);
+    font-weight: 400;
+    margin: 0 0 1.2rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__results-sub {
+    font-size: 1.6rem;
+    color: rgba(37, 37, 37, 0.5);
+    margin: 0;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__row {
+    display: flex;
+    gap: 1.8rem;
+    background: #fff;
+    border: 1px solid var(--spq-gray);
+    padding: 1.8rem;
+    margin-bottom: 1.2rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__step {
+    width: 3.2rem;
+    height: 3.2rem;
+    flex-shrink: 0;
+    background: var(--spq-accent);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__thumb {
+    width: 7.2rem;
+    height: 7.2rem;
+    flex-shrink: 0;
+    background: #fff;
+    overflow: hidden;
+    padding: 0.8rem;
+    box-sizing: border-box;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__row-body { flex: 1; min-width: 0; }
+  #ProtocolQuiz-{{ section.id }} .spq__row-cat {
+    font-size: 1.2rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(37, 37, 37, 0.4);
+    margin: 0 0 0.4rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__row-name {
+    font-size: 1.7rem;
+    font-weight: 500;
+    margin: 0 0 0.4rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__row-tag {
+    font-size: 1.4rem;
+    color: rgba(37, 37, 37, 0.5);
+    margin: 0 0 0.6rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__row-price {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__view {
+    display: none;
+    align-self: center;
+    font-size: 1.4rem;
+    color: var(--spq-accent);
+    white-space: nowrap;
+  }
+  @media (min-width: 768px) {
+    #ProtocolQuiz-{{ section.id }} .spq__view { display: inline; }
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__total {
+    background: var(--spq-charcoal);
+    color: #fff;
+    padding: 2.8rem;
+    margin-top: 3.2rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__total-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__total-kicker {
+    font-size: 1.3rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0 0 0.4rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__total-price {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 3.2rem;
+    margin: 0;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__total-meta {
+    text-align: right;
+    font-size: 1.4rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__total-meta p { margin: 0; }
+  #ProtocolQuiz-{{ section.id }} .spq__total-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  @media (min-width: 640px) {
+    #ProtocolQuiz-{{ section.id }} .spq__total-actions { flex-direction: row; }
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__cart,
+  #ProtocolQuiz-{{ section.id }} .spq__email {
+    flex: 1;
+    text-align: center;
+    text-decoration: none;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__email {
+    display: block;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: transparent;
+    color: #fff;
+    font-size: 1.4rem;
+    font-weight: 500;
+    padding: 1.35rem 2rem;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__email:hover {
+    border-color: #fff;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__modal[hidden] {
+    display: none !important;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(37, 37, 37, 0.6);
+    border: none;
+    cursor: pointer;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__modal-panel {
+    position: relative;
+    width: 100%;
+    max-width: 44rem;
+    background: #fff;
+    border: 1px solid var(--spq-gray);
+    box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.12);
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__modal-head {
+    padding: 2.4rem 2.4rem 0;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__modal-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.4rem;
+    color: var(--spq-charcoal);
+    margin: 0 0 0.8rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__modal-desc {
+    font-size: 1.4rem;
+    color: rgba(37, 37, 37, 0.5);
+    margin: 0;
+    line-height: 1.5;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__modal-form form,
+  #ProtocolQuiz-{{ section.id }} .spq__modal-success {
+    padding: 2.4rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__modal-success {
+    text-align: center;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__modal-success[hidden],
+  #ProtocolQuiz-{{ section.id }} .spq__modal-form[hidden] {
+    display: none !important;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__success-icon {
+    width: 4.8rem;
+    height: 4.8rem;
+    background: var(--spq-accent);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.6rem;
+    font-size: 2rem;
+    font-weight: 600;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__field {
+    display: block;
+    margin-bottom: 1.6rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__field-label {
+    display: block;
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(37, 37, 37, 0.5);
+    margin-bottom: 0.8rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__optional {
+    text-transform: none;
+    letter-spacing: normal;
+    color: rgba(37, 37, 37, 0.3);
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__field input {
+    width: 100%;
+    border: 1px solid var(--spq-gray);
+    padding: 1.2rem 1.6rem;
+    font-size: 1.4rem;
+    font-family: inherit;
+    box-sizing: border-box;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__field input:focus {
+    outline: none;
+    border-color: var(--spq-accent);
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__check {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.2rem;
+    cursor: pointer;
+    margin-bottom: 1.2rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__check input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__check-box {
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--spq-gray);
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__check input:checked + .spq__check-box {
+    background: var(--spq-accent);
+    border-color: var(--spq-accent);
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__check input:checked + .spq__check-box::after {
+    content: '✓';
+    color: #fff;
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__check-label {
+    font-size: 1.4rem;
+    color: rgba(37, 37, 37, 0.6);
+    line-height: 1.5;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__privacy {
+    font-size: 1.2rem;
+    color: rgba(37, 37, 37, 0.35);
+    margin: 0 0 1.6rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__email-error {
+    font-size: 1.4rem;
+    color: #b91c1c;
+    margin: 0 0 1.2rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  @media (min-width: 640px) {
+    #ProtocolQuiz-{{ section.id }} .spq__modal-actions { flex-direction: row; }
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__modal-send,
+  #ProtocolQuiz-{{ section.id }} .spq__modal-cancel {
+    flex: 1;
+    font-size: 1.4rem;
+    font-weight: 500;
+    padding: 1.35rem 2rem;
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__modal-send {
+    background: var(--spq-accent);
+    color: #fff;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__modal-send:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__modal-cancel {
+    background: transparent;
+    border: 1px solid var(--spq-gray);
+    color: var(--spq-charcoal);
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__modal-done {
+    margin-top: 1.6rem;
+    width: 100%;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__cart-msg {
+    margin: 1.2rem 0 0;
+    font-size: 1.4rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__restart-wrap {
+    text-align: center;
+    margin-top: 2.4rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__empty {
+    text-align: center;
+    font-size: 1.6rem;
+    color: rgba(37, 37, 37, 0.5);
+  }
+</style>
+
+<script>
+  (function () {
+    var root = document.getElementById('ProtocolQuiz-{{ section.id }}');
+    if (!root) return;
+
+    var dataEl = document.getElementById('ProtocolQuizData-{{ section.id }}');
+    var data = { products: [], cartAdd: '/cart/add.js', cartUrl: '/cart' };
+    if (dataEl) {
+      try { data = JSON.parse(dataEl.textContent); } catch (e) {
+        console.warn('[Protocol Quiz] Could not parse product data.', e);
+      }
+    }
+
+    var ALL_SKIN = ['Combination', 'Dry', 'Normal', 'Oily', 'Sensitive'];
+    var ALL_CONCERNS = [
+      'Acne', 'Aging', 'Brightening', 'Dry Skin', 'Eye Area',
+      'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage'
+    ];
+
+    // Handle → quiz metadata for the live Skin Protocol Rx catalog.
+    // Tags/types in Admin are optional when a handle is listed here.
+    var QUIZ_CATALOG = {
+      'clarifying-cleanser': {
+        step: 'cleanser',
+        typeLabel: 'Cleansers',
+        skinTypes: ALL_SKIN.slice(),
+        concerns: ALL_CONCERNS.slice()
+      },
+      'rosewater-niacinamide-toner': {
+        step: 'toner',
+        typeLabel: 'Toners',
+        skinTypes: ALL_SKIN.slice(),
+        concerns: ALL_CONCERNS.slice()
+      },
+      'vitamin-c-5-serum': {
+        step: 'vitamin-c',
+        typeLabel: 'Serums',
+        vitaminC: true,
+        skinTypes: ALL_SKIN.slice(),
+        concerns: ['Acne', 'Aging', 'Brightening', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage']
+      },
+      'hyaluronic-acid-serum': {
+        step: 'hyaluronic',
+        typeLabel: 'Serums',
+        skinTypes: ALL_SKIN.slice(),
+        concerns: ALL_CONCERNS.slice()
+      },
+      'moisturizer': {
+        step: 'moisturizer',
+        typeLabel: 'Moisturizers',
+        skinTypes: ALL_SKIN.slice(),
+        concerns: ['Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage']
+      },
+      'eye-cream': {
+        step: 'eye',
+        typeLabel: 'Eye Care',
+        skinTypes: ALL_SKIN.slice(),
+        concerns: ['Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Preventative', 'Sun Damage']
+      },
+      'the-holy-grail': {
+        step: 'oil',
+        typeLabel: 'Facial Oils',
+        skinTypes: ALL_SKIN.slice(),
+        concerns: ALL_CONCERNS.slice()
+      },
+      'amino-acid-serum': {
+        step: null,
+        typeLabel: 'Serums',
+        skinTypes: ALL_SKIN.slice(),
+        concerns: ALL_CONCERNS.slice()
+      }
+    };
+
+    var TYPE_ALIASES = {
+      cleanser: 'Cleansers',
+      cleansers: 'Cleansers',
+      toner: 'Toners',
+      toners: 'Toners',
+      serum: 'Serums',
+      serums: 'Serums',
+      cream: 'Moisturizers',
+      moisturizer: 'Moisturizers',
+      moisturizers: 'Moisturizers',
+      'eye care': 'Eye Care',
+      'eye cream': 'Eye Care',
+      'facial oil': 'Facial Oils',
+      'facial oils': 'Facial Oils',
+      oil: 'Facial Oils',
+      oils: 'Facial Oils'
+    };
+
+    var state = {
+      step: 0,
+      skinType: '',
+      concerns: [],
+      stepsPreference: 'moderate',
+      sensitive: null,
+      routine: 'starter',
+      recs: []
+    };
+
+    var questions = root.querySelectorAll('[data-step]');
+    var bars = root.querySelectorAll('[data-bar]');
+    var backBtn = root.querySelector('[data-back]');
+    var nextBtn = root.querySelector('[data-next]');
+    var finishBtn = root.querySelector('[data-finish]');
+    var quizPanel = root.querySelector('[data-quiz-panel]');
+    var resultsPanel = root.querySelector('[data-results-panel]');
+    var totalSteps = questions.length;
+
+    function norm(s) {
+      return String(s || '').toLowerCase().replace(/[\s_]+/g, '-');
+    }
+
+    function normalizeType(type) {
+      var key = String(type || '').trim().toLowerCase();
+      return TYPE_ALIASES[key] || String(type || '').trim();
+    }
+
+    function hasTag(product, value) {
+      var n = norm(value);
+      var hay = [product.type, product.typeLabel].concat(product.tags || []).map(norm);
+      return hay.indexOf(n) !== -1
+        || hay.indexOf('skin-type-' + n) !== -1
+        || hay.indexOf('concern-' + n) !== -1
+        || hay.indexOf('category-' + n) !== -1;
+    }
+
+    function isSet(product) {
+      return hasTag(product, 'Starter Sets')
+        || hasTag(product, 'Travel Sets')
+        || hasTag(product, 'starter-set')
+        || hasTag(product, 'travel-set')
+        || /(^|-)(trio|starter|travel|set|sets|seasonal)(-|$)/i.test(product.handle || '')
+        || /\b(trio|starter set|travel set|seasonal)\b/i.test(product.title || '');
+    }
+
+    function inferMeta(product) {
+      var h = String(product.handle || '').toLowerCase();
+      var t = String(product.title || '').toLowerCase();
+      var meta = {
+        step: null,
+        typeLabel: normalizeType(product.type),
+        skinTypes: ALL_SKIN.slice(),
+        concerns: ALL_CONCERNS.slice(),
+        vitaminC: false
+      };
+
+      if (h.indexOf('cleanser') !== -1 || t.indexOf('cleanser') !== -1) {
+        meta.step = 'cleanser';
+        meta.typeLabel = 'Cleansers';
+      } else if (h.indexOf('toner') !== -1 || t.indexOf('toner') !== -1) {
+        meta.step = 'toner';
+        meta.typeLabel = 'Toners';
+      } else if (h.indexOf('vitamin') !== -1 || t.indexOf('vitamin c') !== -1) {
+        meta.step = 'vitamin-c';
+        meta.typeLabel = 'Serums';
+        meta.vitaminC = true;
+        meta.concerns = QUIZ_CATALOG['vitamin-c-5-serum'].concerns.slice();
+      } else if (h.indexOf('hyaluronic') !== -1 || t.indexOf('hyaluronic') !== -1) {
+        meta.step = 'hyaluronic';
+        meta.typeLabel = 'Serums';
+      } else if (h.indexOf('eye') !== -1 || t.indexOf('eye cream') !== -1) {
+        meta.step = 'eye';
+        meta.typeLabel = 'Eye Care';
+        meta.concerns = QUIZ_CATALOG['eye-cream'].concerns.slice();
+      } else if (h.indexOf('moistur') !== -1 || h === 'moisturizer' || t.indexOf('moistur') !== -1) {
+        meta.step = 'moisturizer';
+        meta.typeLabel = 'Moisturizers';
+        meta.concerns = QUIZ_CATALOG['moisturizer'].concerns.slice();
+      } else if (h.indexOf('holy-grail') !== -1 || h.indexOf('squalane') !== -1 || t.indexOf('holy grail') !== -1) {
+        meta.step = 'oil';
+        meta.typeLabel = 'Facial Oils';
+      }
+
+      return meta;
+    }
+
+    function applyMeta(product, meta) {
+      var out = product;
+      out.step = meta.step;
+      out.skinTypes = meta.skinTypes;
+      out.concerns = meta.concerns;
+      out.typeLabel = meta.typeLabel;
+      out.type = meta.typeLabel;
+      out.vitaminC = !!meta.vitaminC;
+      return out;
+    }
+
+    function enrichProducts(raw) {
+      return (raw || []).map(function (p) {
+        var out = {
+          id: p.id,
+          handle: p.handle,
+          title: p.title,
+          url: p.url,
+          price: p.price,
+          price_formatted: p.price_formatted,
+          image: p.image,
+          type: normalizeType(p.type),
+          tags: p.tags || [],
+          tagline: p.tagline,
+          available: p.available,
+          variants: p.variants || []
+        };
+        var meta = QUIZ_CATALOG[p.handle] || inferMeta(out);
+        return applyMeta(out, meta);
+      });
+    }
+
+    var products = enrichProducts(data.products);
+
+    function matchesSkinType(product, skinType) {
+      if (product.skinTypes) return product.skinTypes.indexOf(skinType) !== -1;
+      return hasTag(product, skinType);
+    }
+
+    function matchesConcern(product, concern) {
+      if (product.concerns) return product.concerns.indexOf(concern) !== -1;
+      return hasTag(product, concern);
+    }
+
+    function matchesSensitive(product) {
+      if (product.skinTypes) return product.skinTypes.indexOf('Sensitive') !== -1;
+      return hasTag(product, 'Sensitive');
+    }
+
+    function pick(pool, fn) {
+      for (var i = 0; i < pool.length; i++) if (fn(pool[i])) return pool[i];
+      return null;
+    }
+
+    function findVariantByStrength(variants, pct) {
+      return pick(variants, function (v) {
+        return String(v.title || '').indexOf(pct) !== -1;
+      });
+    }
+
+    function applyVariant(product, variant) {
+      if (!variant) return product;
+      var out = Object.assign({}, product);
+      out.id = variant.id;
+      out.price = variant.price;
+      out.price_formatted = variant.price_formatted;
+      if (variant.title && variant.title !== 'Default Title') {
+        out.title = product.title + ' (' + variant.title + ')';
+      }
+      return out;
+    }
+
+    function resolveVitaminC(product, preferGentle) {
+      var variants = product.variants || [];
+      if (!variants.length) return product;
+
+      var v5 = findVariantByStrength(variants, '5%');
+      var v20 = findVariantByStrength(variants, '20%');
+      var available = pick(variants, function (v) { return v.available; });
+      var chosen;
+
+      if (preferGentle) {
+        chosen = v5 || available || v20 || variants[0];
+      } else if (v20 && v20.available) {
+        chosen = v20;
+      } else if (v20) {
+        chosen = v20;
+      } else {
+        chosen = available || v5 || variants[0];
+      }
+
+      return applyVariant(product, chosen);
+    }
+
+    function hasStep(product, step) {
+      if (product.step) return product.step === step;
+      var title = (product.title || '').toLowerCase();
+      if (step === 'cleanser') return hasTag(product, 'Cleansers');
+      if (step === 'toner') return hasTag(product, 'Toners');
+      if (step === 'vitamin-c') {
+        return (hasTag(product, 'Serums') || product.vitaminC) && title.indexOf('vitamin') !== -1;
+      }
+      if (step === 'hyaluronic') {
+        return hasTag(product, 'Serums') && title.indexOf('hyaluronic') !== -1;
+      }
+      if (step === 'moisturizer') return hasTag(product, 'Moisturizers') && !hasTag(product, 'Eye Care');
+      if (step === 'eye') return hasTag(product, 'Eye Care');
+      if (step === 'oil') return hasTag(product, 'Facial Oils') || hasTag(product, 'Oils');
+      return false;
+    }
+
+    function buildProtocol() {
+      var preferGentle = !!state.sensitive;
+
+      function filterPool(strict) {
+        return products.filter(function (p) {
+          if (isSet(p)) return false;
+          if (strict && state.skinType && !matchesSkinType(p, state.skinType)) return false;
+          if (strict && state.concerns.length && !state.concerns.some(function (c) { return matchesConcern(p, c); })) return false;
+          if (strict && state.sensitive && !matchesSensitive(p)) return false;
+          return true;
+        });
+      }
+
+      function assemble(pool) {
+        return [
+          pick(pool, function (p) { return hasStep(p, 'cleanser'); }),
+          pick(pool, function (p) { return hasStep(p, 'toner'); }),
+          pick(pool, function (p) { return hasStep(p, 'vitamin-c'); }),
+          pick(pool, function (p) { return hasStep(p, 'hyaluronic'); }),
+          pick(pool, function (p) { return hasStep(p, 'moisturizer'); }),
+          pick(pool, function (p) { return hasStep(p, 'eye'); }),
+          pick(pool, function (p) { return hasStep(p, 'oil'); })
+        ].filter(Boolean).map(function (p) {
+          if (p.vitaminC || hasStep(p, 'vitamin-c')) return resolveVitaminC(p, preferGentle);
+          return p;
+        });
+      }
+
+      var pool = filterPool(true);
+      if (!pool.length) pool = filterPool(false);
+
+      var ordered = assemble(pool);
+      if (!ordered.length && products.length) {
+        ordered = assemble(products.filter(function (p) { return !isSet(p); }));
+      }
+
+      var limit = state.stepsPreference === 'minimal' ? 3 : state.stepsPreference === 'moderate' ? 5 : 7;
+      var seen = {};
+      return ordered.filter(function (p) {
+        if (seen[p.id]) return false;
+        seen[p.id] = true;
+        return true;
+      }).slice(0, limit);
+    }
+
+    function canAdvance() {
+      if (state.step === 0) return !!state.skinType;
+      if (state.step === 1) return state.concerns.length > 0;
+      if (state.step === 3) return state.sensitive !== null;
+      return true;
+    }
+
+    function syncOptions(stepEl) {
+      var step = Number(stepEl.getAttribute('data-step'));
+      stepEl.querySelectorAll('[data-option]').forEach(function (btn) {
+        var value = btn.getAttribute('data-value');
+        var on = false;
+        if (step === 0) on = state.skinType === value;
+        if (step === 1) on = state.concerns.indexOf(value) !== -1;
+        if (step === 2) on = state.stepsPreference === value;
+        if (step === 3) on = (state.sensitive === true && value === 'yes') || (state.sensitive === false && value === 'no');
+        if (step === 4) on = state.routine === value;
+        btn.classList.toggle('is-selected', on);
+      });
+    }
+
+    function render() {
+      questions.forEach(function (el, i) {
+        var active = i === state.step;
+        el.hidden = !active;
+        el.classList.toggle('is-active', active);
+        if (active) syncOptions(el);
+      });
+      bars.forEach(function (bar, i) {
+        bar.classList.toggle('is-on', i <= state.step);
+      });
+      backBtn.disabled = state.step === 0;
+      var last = state.step === totalSteps - 1;
+      nextBtn.hidden = last;
+      finishBtn.hidden = !last;
+      nextBtn.disabled = !canAdvance();
+    }
+
+    root.querySelectorAll('[data-option]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var stepEl = btn.closest('[data-step]');
+        var step = Number(stepEl.getAttribute('data-step'));
+        var value = btn.getAttribute('data-value');
+        if (step === 0) state.skinType = value;
+        if (step === 1) {
+          var i = state.concerns.indexOf(value);
+          if (i === -1) state.concerns.push(value);
+          else state.concerns.splice(i, 1);
+        }
+        if (step === 2) state.stepsPreference = value;
+        if (step === 3) state.sensitive = value === 'yes';
+        if (step === 4) state.routine = value;
+        render();
+      });
+    });
+
+    backBtn.addEventListener('click', function () {
+      state.step = Math.max(0, state.step - 1);
+      render();
+    });
+
+    nextBtn.addEventListener('click', function () {
+      if (!canAdvance()) return;
+      state.step = Math.min(totalSteps - 1, state.step + 1);
+      render();
+    });
+
+    function showResults() {
+      state.recs = buildProtocol();
+      quizPanel.hidden = true;
+      resultsPanel.hidden = false;
+
+      var sub = root.querySelector('[data-results-sub]');
+      var concernText = state.concerns.slice(0, 2).join(', ').toLowerCase();
+      sub.textContent = 'Based on your ' + (state.skinType || '').toLowerCase() + ' skin type and ' + concernText + ' concerns.';
+
+      var list = root.querySelector('[data-results-list]');
+      var empty = root.querySelector('[data-results-empty]');
+      var setup = root.querySelector('[data-results-setup]');
+      var totalBox = root.querySelector('[data-results-total]');
+      list.innerHTML = '';
+      empty.hidden = true;
+      setup.hidden = true;
+
+      if (!products.length) {
+        setup.hidden = false;
+        totalBox.hidden = true;
+        return;
+      }
+
+      if (!state.recs.length) {
+        empty.hidden = false;
+        totalBox.hidden = true;
+        return;
+      }
+
+      empty.hidden = true;
+      totalBox.hidden = false;
+      var cents = 0;
+      state.recs.forEach(function (p, i) {
+        cents += Number(p.price) || 0;
+        var row = document.createElement('div');
+        row.className = 'spq__row';
+        row.innerHTML =
+          '<div class="spq__step">' + (i + 1) + '</div>' +
+          '<div class="spq__thumb">' + (p.image ? '<img src="' + p.image + '" alt="">' : '') + '</div>' +
+          '<div class="spq__row-body">' +
+            '<p class="spq__row-cat">' + (p.typeLabel || p.type || '') + '</p>' +
+            '<h3 class="spq__row-name">' + p.title + '</h3>' +
+            '<p class="spq__row-tag">' + (p.tagline || '') + '</p>' +
+            '<p class="spq__row-price">' + p.price_formatted + '</p>' +
+          '</div>' +
+          '<a class="spq__view" href="' + p.url + '">View →</a>';
+        list.appendChild(row);
+      });
+
+      root.querySelector('[data-total-price]').textContent = formatCents(cents);
+      root.querySelector('[data-total-count]').textContent = state.recs.length + ' products';
+    }
+
+    var emailEndpoint = {{ section.settings.email_endpoint_url | json }};
+    var emailModal = root.querySelector('[data-email-modal]');
+    var emailFormPanel = root.querySelector('[data-email-form]');
+    var emailSuccessPanel = root.querySelector('[data-email-success]');
+    var emailSubmitForm = root.querySelector('[data-email-submit-form]');
+    var emailError = root.querySelector('[data-email-error]');
+    var emailInput = root.querySelector('[data-email-input]');
+    var firstNameInput = root.querySelector('[data-first-name-input]');
+    var marketingInput = root.querySelector('[data-marketing-input]');
+    var emailSendBtn = root.querySelector('[data-email-send]');
+
+    function buildProtocolPayload() {
+      var cents = state.recs.reduce(function (sum, p) { return sum + (Number(p.price) || 0); }, 0);
+      return {
+        email: '',
+        firstName: '',
+        marketingConsent: false,
+        protocol: {
+          skinType: state.skinType || '',
+          concerns: state.concerns.slice(),
+          products: state.recs.map(function (p, i) {
+            return {
+              name: p.title,
+              price: p.price_formatted,
+              step: i + 1,
+              url: p.url || undefined
+            };
+          }),
+          totalPrice: formatCents(cents)
+        }
+      };
+    }
+
+    function openEmailModal() {
+      if (!emailModal) return;
+      emailModal.hidden = false;
+      emailFormPanel.hidden = false;
+      emailSuccessPanel.hidden = true;
+      emailError.hidden = true;
+      emailError.textContent = '';
+      if (emailSubmitForm) emailSubmitForm.reset();
+      document.body.style.overflow = 'hidden';
+      if (emailInput) emailInput.focus();
+    }
+
+    function closeEmailModal() {
+      if (!emailModal || emailSendBtn && emailSendBtn.disabled) return;
+      emailModal.hidden = true;
+      document.body.style.overflow = '';
+    }
+
+    function stubSubmitProtocol(payload) {
+      return new Promise(function (resolve) {
+        setTimeout(function () {
+          console.info('[Protocol Email] Stub submit — Phase 2 will POST to Shopify Customer API', payload);
+          resolve();
+        }, 800);
+      });
+    }
+
+    function submitProtocolEmail(payload) {
+      if (!emailEndpoint) return stubSubmitProtocol(payload);
+      return fetch(emailEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(payload)
+      }).then(function (res) {
+        if (res.ok) return;
+        return res.text().then(function (text) {
+          var message = text;
+          try {
+            var parsed = JSON.parse(text);
+            if (parsed && parsed.error) message = parsed.error;
+          } catch (e) {}
+          throw new Error(message || 'Could not send your protocol. Please try again.');
+        });
+      });
+    }
+
+    root.querySelectorAll('[data-email-open]').forEach(function (btn) {
+      btn.addEventListener('click', openEmailModal);
+    });
+
+    root.querySelectorAll('[data-email-close]').forEach(function (btn) {
+      btn.addEventListener('click', closeEmailModal);
+    });
+
+    if (emailSubmitForm) {
+      emailSubmitForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!emailInput || !emailInput.value.trim()) return;
+
+        var payload = buildProtocolPayload();
+        payload.email = emailInput.value.trim();
+        payload.firstName = firstNameInput && firstNameInput.value.trim() ? firstNameInput.value.trim() : undefined;
+        payload.marketingConsent = !!(marketingInput && marketingInput.checked);
+
+        emailError.hidden = true;
+        emailSendBtn.disabled = true;
+        emailSendBtn.textContent = 'Sending…';
+
+        submitProtocolEmail(payload)
+          .then(function () {
+            emailFormPanel.hidden = true;
+            emailSuccessPanel.hidden = false;
+          })
+          .catch(function (err) {
+            emailError.hidden = false;
+            emailError.textContent = err && err.message ? err.message : 'Could not send your protocol. Please try again.';
+          })
+          .finally(function () {
+            emailSendBtn.disabled = false;
+            emailSendBtn.textContent = {{ section.settings.email_send_label | json }};
+          });
+      });
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && emailModal && !emailModal.hidden) closeEmailModal();
+    });
+
+    function formatCents(cents) {
+      if (state.recs[0] && state.recs[0].price_formatted) {
+        var sample = state.recs[0].price_formatted;
+        var n = (cents / 100).toFixed(2);
+        return sample.replace(/[\d,]+\.?\d*/, function () { return n; });
+      }
+      return '$' + (cents / 100).toFixed(2);
+    }
+
+    finishBtn.addEventListener('click', showResults);
+
+    root.querySelector('[data-restart]').addEventListener('click', function () {
+      state = { step: 0, skinType: '', concerns: [], stepsPreference: 'moderate', sensitive: null, routine: 'starter', recs: [] };
+      quizPanel.hidden = false;
+      resultsPanel.hidden = true;
+      render();
+      root.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    function cartItemsPayload(recs) {
+      return recs.map(function (p) {
+        return { id: Number(p.id), quantity: 1 };
+      });
+    }
+
+    function postCart(url, body) {
+      return fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify(body)
+      }).then(function (res) {
+        return res.json().then(function (payload) {
+          return { ok: res.ok, status: res.status, payload: payload };
+        });
+      });
+    }
+
+    function addItemsSequentially(url, recs) {
+      var added = [];
+      var failed = [];
+      var chain = Promise.resolve();
+
+      recs.forEach(function (product) {
+        chain = chain.then(function () {
+          return postCart(url, { id: Number(product.id), quantity: 1 }).then(function (result) {
+            if (result.ok) {
+              added.push(product);
+              return;
+            }
+            var message = (result.payload && (result.payload.description || result.payload.message))
+              || 'This item is unavailable.';
+            failed.push({ title: product.title, message: message });
+          });
+        });
+      });
+
+      return chain.then(function () {
+        return { added: added, failed: failed };
+      });
+    }
+
+    function addProtocolToCart(recs) {
+      var url = data.cartAdd.indexOf('.js') !== -1 ? data.cartAdd : data.cartAdd + '.js';
+      var items = cartItemsPayload(recs);
+
+      return postCart(url, { items: items }).then(function (result) {
+        if (result.ok) {
+          return { added: recs.slice(), failed: [] };
+        }
+
+        return addItemsSequentially(url, recs);
+      });
+    }
+
+    root.querySelector('[data-add-cart]').addEventListener('click', function () {
+      var btn = root.querySelector('[data-add-cart]');
+      var msg = root.querySelector('[data-cart-msg]');
+      if (!state.recs.length) return;
+
+      btn.disabled = true;
+      msg.hidden = true;
+
+      addProtocolToCart(state.recs)
+        .then(function (result) {
+          if (result.added.length) {
+            if (result.failed.length) {
+              msg.hidden = false;
+              msg.textContent = 'Added ' + result.added.length + ' of ' + state.recs.length
+                + ' products. Some items are unavailable for pre-order.';
+              setTimeout(function () {
+                window.location.href = data.cartUrl;
+              }, 1800);
+              return;
+            }
+            window.location.href = data.cartUrl;
+            return;
+          }
+
+          var firstError = result.failed[0];
+          msg.hidden = false;
+          msg.textContent = firstError
+            ? firstError.title + ': ' + firstError.message
+            : 'Could not add to cart. Please try again.';
+        })
+        .catch(function () {
+          msg.hidden = false;
+          msg.textContent = 'Could not add to cart. Please try again.';
+        })
+        .finally(function () {
+          btn.disabled = false;
+        });
+    });
+
+    render();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Skin Protocol Quiz",
+  "tag": "section",
+  "class": "section-protocol-quiz",
+  "enabled_on": {
+    "templates": ["page", "index"]
+  },
+  "settings": [
+    {
+      "type": "collection",
+      "id": "product_collection",
+      "label": "Protocol products",
+      "info": "Select the Protocol Quiz collection (core products only — not trios or seasonal)."
+    },
+    {
+      "type": "header",
+      "content": "Questions"
+    },
+    {
+      "type": "text",
+      "id": "q1_title",
+      "label": "Question 1",
+      "default": "What is your skin type?"
+    },
+    {
+      "type": "text",
+      "id": "q2_title",
+      "label": "Question 2",
+      "default": "What are your top skin concerns?"
+    },
+    {
+      "type": "text",
+      "id": "q3_title",
+      "label": "Question 3",
+      "default": "How many steps do you want in your routine?"
+    },
+    {
+      "type": "text",
+      "id": "q4_title",
+      "label": "Question 4",
+      "default": "Is your skin sensitive or reactive?"
+    },
+    {
+      "type": "text",
+      "id": "q5_title",
+      "label": "Question 5",
+      "default": "Which best describes what you want?"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "continue_label",
+      "label": "Continue",
+      "default": "Continue →"
+    },
+    {
+      "type": "text",
+      "id": "finish_label",
+      "label": "Finish",
+      "default": "Build My Protocol"
+    },
+    {
+      "type": "text",
+      "id": "results_title",
+      "label": "Results heading",
+      "default": "Your Recommended Protocol"
+    },
+    {
+      "type": "text",
+      "id": "cart_label",
+      "label": "Add to cart",
+      "default": "Add Entire Protocol to Cart"
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "Email protocol",
+      "default": "Email My Protocol"
+    },
+    {
+      "type": "header",
+      "content": "Email modal"
+    },
+    {
+      "type": "text",
+      "id": "email_modal_title",
+      "label": "Modal title",
+      "default": "Email My Protocol"
+    },
+    {
+      "type": "textarea",
+      "id": "email_modal_desc",
+      "label": "Modal description",
+      "default": "We'll send your recommended products and routine steps to your inbox."
+    },
+    {
+      "type": "textarea",
+      "id": "marketing_label",
+      "label": "Marketing checkbox label",
+      "default": "Send me skincare tips, new releases, and exclusive offers"
+    },
+    {
+      "type": "text",
+      "id": "privacy_note",
+      "label": "Privacy note",
+      "default": "We respect your privacy. Unsubscribe anytime."
+    },
+    {
+      "type": "text",
+      "id": "email_send_label",
+      "label": "Send button",
+      "default": "Send My Protocol"
+    },
+    {
+      "type": "text",
+      "id": "email_cancel_label",
+      "label": "Cancel button",
+      "default": "Cancel"
+    },
+    {
+      "type": "text",
+      "id": "email_success_title",
+      "label": "Success title",
+      "default": "Your Protocol Is on Its Way"
+    },
+    {
+      "type": "textarea",
+      "id": "email_success_desc",
+      "label": "Success message",
+      "default": "Check your inbox in a few minutes for your personalized routine."
+    },
+    {
+      "type": "text",
+      "id": "email_done_label",
+      "label": "Done button",
+      "default": "Done"
+    },
+    {
+      "type": "url",
+      "id": "email_endpoint_url",
+      "label": "Protocol email endpoint",
+      "info": "Cloudflare Worker URL for Email My Protocol. Leave blank to keep stub mode."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "accent",
+      "label": "Accent",
+      "default": "#BD705F"
+    },
+    {
+      "type": "color",
+      "id": "accent_light",
+      "label": "Accent light",
+      "default": "#F6EBE8"
+    },
+    {
+      "type": "color",
+      "id": "accent_dark",
+      "label": "Accent dark",
+      "default": "#9A584A"
+    },
+    {
+      "type": "color",
+      "id": "charcoal",
+      "label": "Charcoal",
+      "default": "#252525"
+    },
+    {
+      "type": "color",
+      "id": "ivory",
+      "label": "Background",
+      "default": "#F7F6F1"
+    },
+    {
+      "type": "color",
+      "id": "gray",
+      "label": "Border",
+      "default": "#E8E8E8"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Skin Protocol Quiz"
+    }
+  ]
+}
+{% endschema %}

@@ -1,8 +1,10 @@
 node_modules/
-dist/
+# dist/ is committed so GreenGeeks can deploy static files without Node
 build/
 .cache/
-.env*
+.env
+.env.*
+!.env.example
 .vite/
 vite.config.*.timestamp-*
 *.tsbuildinfo

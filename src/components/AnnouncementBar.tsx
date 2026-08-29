@@ -24,12 +24,12 @@ export default function AnnouncementBar() {
   }, [])
 
   return (
-    <div className="bg-charcoal text-white text-center py-2.5 px-4">
+    <div className="bg-black text-white text-center py-2.5 px-4 border-b border-white/10">
       <p
-        className="text-xs tracking-widest uppercase font-sans font-medium transition-opacity duration-400"
+        className="text-[11px] tracking-[0.25em] uppercase font-sans font-medium transition-opacity duration-400"
         style={{ opacity: fading ? 0 : 1 }}
       >
-        {MESSAGES[index]}
+        <span className="text-rose">{MESSAGES[index]}</span>
       </p>
     </div>
   )

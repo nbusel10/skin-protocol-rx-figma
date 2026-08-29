@@ -5,23 +5,43 @@
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-sans: 'DM Sans', system-ui, sans-serif;
 
-  --color-green: #4D954C;
-  --color-green-light: #E8F0E6;
-  --color-green-dark: #3a7039;
-  --color-ivory: #F7F6F1;
-  --color-ivory-dark: #EEECE5;
-  --color-charcoal: #252525;
-  --color-gray-soft: #E8E8E8;
+  /* Rose gold palette */
+  --color-rose: #B8878B;
+  --color-rose-light: #FAF4F2;
+  --color-rose-dark: #8E6367;
+  --color-rose-muted: #D4B5B8;
+
+  /* Black & white */
+  --color-black: #0A0A0A;
+  --color-charcoal: #1A1A1A;
+  --color-ivory: #FFFFFF;
+  --color-ivory-dark: #FAFAFA;
+  --color-gray-soft: #E5E5E5;
+  --color-gray-muted: #737373;
+
+  /* Warm neutral used for section backgrounds that need to sit off white */
+  --color-stone: #FAF9F8;
+
+  /* Legacy aliases — maps old "green" tokens to rose gold */
+  --color-green: #B8878B;
+  --color-green-light: #FAF4F2;
+  --color-green-dark: #8E6367;
 }
 
 html {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #fff;
+  color: var(--color-charcoal);
+}
+
+body {
+  background-color: #fff;
 }
 
 /* Scrollbar refinement */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #d1d1d1; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #aaa; }
+::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-rose); }

@@ -29,21 +29,26 @@ export default function Header({ currentPage, onNavigate, cartCount }: HeaderPro
   return (
     <>
       <header
-        className="sticky top-0 z-50 transition-all duration-300 font-sans"
+        className="sticky top-0 z-50 transition-all duration-300 font-sans bg-white"
         style={{
-          backgroundColor: scrolled ? 'rgba(247,246,241,0.97)' : '#F7F6F1',
+          backgroundColor: scrolled ? 'rgba(255,255,255,0.98)' : '#ffffff',
           backdropFilter: scrolled ? 'blur(12px)' : 'none',
-          borderBottom: '1px solid #E8E8E8',
+          borderBottom: scrolled ? '1px solid #E5E5E5' : '1px solid transparent',
+          boxShadow: scrolled ? '0 1px 0 rgba(0,0,0,0.04)' : 'none',
         }}
       >
-        <div className="max-w-7xl mx-auto px-5 md:px-8 flex items-center justify-between h-16">
+        <div className="max-w-7xl mx-auto px-5 md:px-8 flex items-center justify-between h-[5.5rem] sm:h-28 md:h-[7.5rem] lg:h-[8rem]">
           {/* Logo */}
           <button
             onClick={() => onNavigate('home')}
-            className="flex flex-col leading-none cursor-pointer"
+            className="flex items-center cursor-pointer shrink-0"
+            aria-label="Skin Protocol RX Home"
           >
-            <span className="font-serif text-lg font-semibold tracking-tight text-charcoal">Skin Protocol</span>
-            <span className="text-[10px] tracking-[0.25em] uppercase text-green font-sans font-medium">RX</span>
+            <img
+              src="/logo-brand.png"
+              alt="Skin Protocol RX"
+              className="h-[4.5rem] sm:h-[5.5rem] md:h-[6rem] lg:h-[6.5rem] w-auto"
+            />
           </button>
 
           {/* Desktop Nav */}
@@ -54,8 +59,8 @@ export default function Header({ currentPage, onNavigate, cartCount }: HeaderPro
                 onClick={() => onNavigate(n.page)}
                 className={`text-sm font-sans transition-colors duration-200 ${
                   currentPage === n.page
-                    ? 'text-green font-medium'
-                    : 'text-charcoal/70 hover:text-charcoal'
+                    ? 'text-rose font-medium'
+                    : 'text-charcoal/60 hover:text-black'
                 }`}
               >
                 {n.label}
@@ -89,7 +94,7 @@ export default function Header({ currentPage, onNavigate, cartCount }: HeaderPro
                 <path d="M16 10a4 4 0 0 1-8 0" />
               </svg>
               {cartCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 bg-green text-white text-[10px] font-semibold w-4 h-4 rounded-full flex items-center justify-center">
+                <span className="absolute -top-1.5 -right-1.5 bg-rose text-white text-[10px] font-semibold w-4 h-4 rounded-full flex items-center justify-center">
                   {cartCount}
                 </span>
               )}
@@ -128,7 +133,7 @@ export default function Header({ currentPage, onNavigate, cartCount }: HeaderPro
                 <button
                   key={n.label}
                   onClick={() => { onNavigate(n.page); setMobileOpen(false) }}
-                  className="text-left text-base font-sans text-charcoal hover:text-green transition-colors"
+                  className="text-left text-base font-sans text-charcoal hover:text-rose transition-colors"
                 >
                   {n.label}
                 </button>
@@ -136,7 +141,7 @@ export default function Header({ currentPage, onNavigate, cartCount }: HeaderPro
             </nav>
             <div className="mt-10 pt-8 border-t border-gray-soft flex flex-col gap-4">
               <button className="text-sm text-charcoal/60 text-left hover:text-charcoal">Customer Login</button>
-              <button className="text-sm text-green text-left hover:text-green-dark font-medium">Spa Partner Login</button>
+              <button className="text-sm text-rose text-left hover:text-rose-dark font-medium">Spa Partner Login</button>
             </div>
           </div>
         </div>

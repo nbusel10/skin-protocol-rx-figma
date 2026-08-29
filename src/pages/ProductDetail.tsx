@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { PRODUCTS } from '../data'
+import ProductImage from '../components/ProductImage'
 
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product'
 
@@ -13,7 +14,7 @@ function StarRating({ rating, size = 14 }: { rating: number; size?: number }) {
     <div className="flex gap-0.5">
       {[1, 2, 3, 4, 5].map(i => (
         <svg key={i} width={size} height={size} viewBox="0 0 24 24"
-          fill={i <= rating ? '#4D954C' : 'none'} stroke="#4D954C" strokeWidth="1.5">
+          fill={i <= rating ? '#B8878B' : 'none'} stroke="#B8878B" strokeWidth="1.5">
           <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
         </svg>
       ))}
@@ -27,7 +28,7 @@ function Accordion({ title, children }: { title: string; children: React.ReactNo
     <div className="border-b border-gray-soft">
       <button
         onClick={() => setOpen(v => !v)}
-        className="flex items-center justify-between w-full py-4 text-sm font-medium text-charcoal hover:text-green transition-colors"
+        className="flex items-center justify-between w-full py-4 text-sm font-medium text-black hover:text-rose transition-colors"
       >
         {title}
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
@@ -49,7 +50,7 @@ export default function ProductDetail({ productId, onNavigate }: ProductDetailPr
   const images = [product.image, ...related.slice(0, 2).map(p => p.image)]
 
   return (
-    <div className="bg-ivory min-h-screen font-sans">
+    <div className="bg-white min-h-screen font-sans">
       {/* Breadcrumb */}
       <div className="px-5 md:px-8 py-4 border-b border-gray-soft bg-white">
         <div className="max-w-7xl mx-auto flex items-center gap-2 text-xs text-charcoal/40">
@@ -73,16 +74,16 @@ export default function ProductDetail({ productId, onNavigate }: ProductDetailPr
                 <button
                   key={i}
                   onClick={() => setActiveImage(i)}
-                  className="w-16 h-16 bg-white overflow-hidden border transition-colors"
-                  style={{ borderColor: activeImage === i ? '#4D954C' : '#E8E8E8' }}
+                  className="w-16 overflow-hidden border transition-colors"
+                  style={{ borderColor: activeImage === i ? '#B8878B' : '#E5E5E5' }}
                 >
-                  <img src={img} alt="" className="w-full h-full object-cover" />
+                  <ProductImage src={img} alt="" variant="thumb" />
                 </button>
               ))}
             </div>
             {/* Main image */}
-            <div className="flex-1 aspect-square bg-white overflow-hidden">
-              <img src={images[activeImage]} alt={product.name} className="w-full h-full object-cover" />
+            <div className="flex-1">
+              <ProductImage src={images[activeImage]} alt={product.name} variant="detail" />
             </div>
           </div>
 
@@ -92,7 +93,7 @@ export default function ProductDetail({ productId, onNavigate }: ProductDetailPr
             <div className="flex flex-wrap gap-2 mb-5">
               {product.badges.map(b => (
                 <span key={b} className="text-[10px] tracking-widest uppercase px-3 py-1 font-medium"
-                  style={{ backgroundColor: b === 'Best Seller' ? '#4D954C' : '#252525', color: '#fff' }}>
+                  style={{ backgroundColor: b === 'Best Seller' ? '#B8878B' : '#0A0A0A', color: '#fff' }}>
                   {b}
                 </span>
               ))}
@@ -126,7 +127,7 @@ export default function ProductDetail({ productId, onNavigate }: ProductDetailPr
               <p className="text-xs tracking-widest uppercase text-charcoal/40 mb-2">Skin Concerns</p>
               <div className="flex flex-wrap gap-2">
                 {product.concerns.map(c => (
-                  <span key={c} className="text-xs bg-green-light border border-green/20 px-3 py-1 text-green font-medium">{c}</span>
+                  <span key={c} className="text-xs bg-rose-light border border-rose/20 px-3 py-1 text-rose font-medium">{c}</span>
                 ))}
               </div>
             </div>
@@ -138,22 +139,22 @@ export default function ProductDetail({ productId, onNavigate }: ProductDetailPr
                 <span className="w-12 flex items-center justify-center text-sm text-charcoal">{qty}</span>
                 <button onClick={() => setQty(q => q + 1)} className="px-4 py-3 text-charcoal hover:bg-gray-soft transition-colors">+</button>
               </div>
-              <button className="flex-1 bg-charcoal text-white py-3 text-sm font-medium tracking-wide hover:bg-charcoal/80 transition-colors">
+              <button className="flex-1 bg-black text-white py-3 text-sm font-medium tracking-wide hover:bg-rose transition-colors">
                 Add to Cart — ${product.price * qty}
               </button>
             </div>
-            <button className="w-full bg-green text-white py-3 text-sm font-medium tracking-wide hover:bg-green-dark transition-colors mb-5">
+            <button className="w-full bg-rose text-white py-3 text-sm font-medium tracking-wide hover:bg-rose-dark transition-colors mb-5">
               Buy Now
             </button>
 
             {/* Subscription */}
-            <div className="bg-green-light border border-green/20 p-4 mb-6 flex items-center gap-3">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4D954C" strokeWidth="1.8">
+            <div className="bg-rose-light border border-rose/20 p-4 mb-6 flex items-center gap-3">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B8878B" strokeWidth="1.8">
                 <path d="M23 4v6h-6M1 20v-6h6" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               <div>
-                <p className="text-xs font-medium text-green">Subscribe & Save 10%</p>
+                <p className="text-xs font-medium text-rose">Subscribe & Save 10%</p>
                 <p className="text-xs text-charcoal/50">Delivered every 30, 60, or 90 days. Cancel anytime.</p>
               </div>
             </div>
@@ -167,7 +168,7 @@ export default function ProductDetail({ productId, onNavigate }: ProductDetailPr
                 { icon: '◇', label: 'Family-Owned, New York' },
               ].map(b => (
                 <div key={b.label} className="flex items-center gap-2 text-xs text-charcoal/50">
-                  <span className="text-green text-sm">{b.icon}</span>
+                  <span className="text-rose text-sm">{b.icon}</span>
                   {b.label}
                 </div>
               ))}
@@ -179,7 +180,7 @@ export default function ProductDetail({ productId, onNavigate }: ProductDetailPr
                 <ul className="space-y-2">
                   {product.benefits.map(b => (
                     <li key={b} className="flex items-start gap-2">
-                      <span className="text-green mt-0.5">✦</span>
+                      <span className="text-rose mt-0.5">✦</span>
                       {b}
                     </li>
                   ))}
@@ -199,7 +200,7 @@ export default function ProductDetail({ productId, onNavigate }: ProductDetailPr
                 </div>
               </Accordion>
               <Accordion title="How It Fits Into Your Protocol">
-                <p>This product works as part of the Skin Protocol RX system. Use it in the correct step order for best results. <button onClick={() => onNavigate('protocol')} className="text-green underline underline-offset-2">Build your full protocol →</button></p>
+                <p>This product works as part of the Skin Protocol RX system. Use it in the correct step order for best results. <button onClick={() => onNavigate('protocol')} className="text-rose underline underline-offset-2">Build your full protocol →</button></p>
               </Accordion>
               <Accordion title="Shipping & Returns">
                 <p>Free standard shipping on orders over $75. Returns accepted within 30 days of delivery for unopened products. Contact our team for support with opened products.</p>
@@ -219,9 +220,7 @@ export default function ProductDetail({ productId, onNavigate }: ProductDetailPr
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {related.map(p => (
               <div key={p.id} className="group cursor-pointer" onClick={() => onNavigate('product', p.id)}>
-                <div className="aspect-square bg-white overflow-hidden mb-3">
-                  <img src={p.image} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                </div>
+                <ProductImage src={p.image} alt={p.name} hover className="mb-3" />
                 <p className="text-[10px] tracking-widest uppercase text-charcoal/40 mb-0.5">{p.categories[0]}</p>
                 <p className="text-sm font-medium text-charcoal mb-1">{p.name}</p>
                 <p className="text-sm text-charcoal/60">${p.price}</p>

@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { PRODUCTS, type SkinType, type SkinConcern } from '../data'
+import EmailProtocolModal from '../components/EmailProtocolModal'
+import ProductImage from '../components/ProductImage'
 
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product'
 
@@ -22,11 +24,11 @@ function OptionButton({ selected, onClick, label, desc }: { selected: boolean; o
       onClick={onClick}
       className="flex flex-col items-start gap-1 border p-4 transition-all text-left"
       style={{
-        borderColor: selected ? '#4D954C' : '#E8E8E8',
-        backgroundColor: selected ? '#E8F0E6' : '#fff',
+        borderColor: selected ? '#B8878B' : '#E5E5E5',
+        backgroundColor: selected ? '#FAF4F2' : '#fff',
       }}
     >
-      <span className="text-sm font-medium" style={{ color: selected ? '#4D954C' : '#252525' }}>{label}</span>
+      <span className="text-sm font-medium" style={{ color: selected ? '#B8878B' : '#0A0A0A' }}>{label}</span>
       {desc && <span className="text-xs text-charcoal/40">{desc}</span>}
     </button>
   )
@@ -73,6 +75,7 @@ export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
 
   const [recommendations, setRecommendations] = useState<typeof PRODUCTS>([])
   const [done, setDone] = useState(false)
+  const [emailModalOpen, setEmailModalOpen] = useState(false)
 
   const finish = () => {
     setRecommendations(buildProtocol())
@@ -147,11 +150,11 @@ export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
 
   if (done && recommendations.length > 0) {
     return (
-      <div className="bg-ivory min-h-screen font-sans">
+      <div className="bg-white min-h-screen font-sans">
         <div className="max-w-4xl mx-auto px-5 md:px-8 py-16">
           <div className="text-center mb-12">
-            <p className="text-[11px] tracking-[0.3em] uppercase text-green mb-3">Your Custom Protocol</p>
-            <h1 className="font-serif text-4xl text-charcoal mb-4">Your Recommended Protocol</h1>
+            <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-3">Your Custom Protocol</p>
+            <h1 className="font-serif text-4xl text-black mb-4">Your Recommended Protocol</h1>
             <p className="text-charcoal/50">
               Based on your {skinType?.toLowerCase()} skin type and {concerns.slice(0, 2).join(', ').toLowerCase()} concerns.
             </p>
@@ -162,10 +165,10 @@ export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
             {recommendations.map((p, i) => (
               <div key={p.id} className="bg-white flex gap-5 p-5 border border-gray-soft">
                 <div className="flex-shrink-0">
-                  <div className="w-10 h-10 bg-green flex items-center justify-center text-white text-xs font-semibold">{i + 1}</div>
+                  <div className="w-10 h-10 bg-rose flex items-center justify-center text-white text-xs font-semibold">{i + 1}</div>
                 </div>
-                <div className="w-20 h-20 shrink-0 bg-ivory overflow-hidden">
-                  <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
+                <div className="w-20 h-20 shrink-0 overflow-hidden">
+                  <ProductImage src={p.image} alt={p.name} variant="inline" />
                 </div>
                 <div className="flex-1">
                   <p className="text-[10px] tracking-widest uppercase text-charcoal/40 mb-1">{p.categories[0]}</p>
@@ -175,7 +178,7 @@ export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
                 </div>
                 <button
                   onClick={() => onNavigate('product', p.id)}
-                  className="hidden md:flex items-center text-xs text-green underline underline-offset-2 self-center whitespace-nowrap"
+                  className="hidden md:flex items-center text-xs text-rose underline underline-offset-2 self-center whitespace-nowrap"
                 >
                   View →
                 </button>
@@ -184,10 +187,10 @@ export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
           </div>
 
           {/* Total + CTA */}
-          <div className="bg-charcoal p-8 text-white">
+          <div className="bg-black p-8 text-white">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <p className="text-xs tracking-widest uppercase text-white/50 mb-1">Protocol Total</p>
+                <p className="text-xs tracking-widest uppercase text-rose mb-1">Protocol Total</p>
                 <p className="font-serif text-3xl">${totalPrice}</p>
               </div>
               <div className="text-right text-sm text-white/50">
@@ -196,14 +199,33 @@ export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
               </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="flex-1 bg-green text-white py-3.5 text-sm font-medium hover:bg-green-dark transition-colors">
+              <button className="flex-1 bg-rose text-white py-3.5 text-sm font-medium hover:bg-rose-dark transition-colors">
                 Add Entire Protocol to Cart
               </button>
-              <button className="flex-1 border border-white/30 text-white py-3.5 text-sm font-medium hover:border-white transition-colors">
+              <button
+                type="button"
+                onClick={() => setEmailModalOpen(true)}
+                className="flex-1 border border-white/25 text-white py-3.5 text-sm font-medium hover:border-rose hover:text-rose transition-colors"
+              >
                 Email My Protocol
               </button>
             </div>
           </div>
+
+          <EmailProtocolModal
+            isOpen={emailModalOpen}
+            onClose={() => setEmailModalOpen(false)}
+            protocol={{
+              skinType: skinType || '',
+              concerns,
+              products: recommendations.map((p, i) => ({
+                name: p.name,
+                price: `$${p.price}`,
+                step: i + 1,
+              })),
+              totalPrice: `$${totalPrice}`,
+            }}
+          />
 
           <div className="text-center mt-8">
             <button
@@ -219,32 +241,54 @@ export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
   }
 
   return (
-    <div className="bg-ivory min-h-screen font-sans">
-      <div className="max-w-3xl mx-auto px-5 md:px-8 py-16">
-        {/* Header */}
-        <div className="text-center mb-14">
-          <p className="text-[11px] tracking-[0.3em] uppercase text-green mb-3">Personalized Skincare</p>
-          <h1 className="font-serif text-4xl md:text-5xl text-charcoal mb-4">Build Your Protocol</h1>
-          <p className="text-charcoal/50 max-w-md mx-auto">
-            Answer a few simple questions to find the right products for your skin.
+    <div className="bg-white min-h-screen font-sans">
+      {/* Hero */}
+      <section className="relative min-h-[60vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1616394584738-fc6e612e59b7?w=1600&h=900&fit=crop&auto=format"
+            alt="Skincare ritual"
+            className="w-full h-full object-cover grayscale"
+          />
+          <div className="absolute inset-0 bg-black/70" />
+        </div>
+        <div className="relative z-10 max-w-7xl mx-auto px-5 md:px-8 py-24 w-full">
+          <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-5">Personalized Skincare</p>
+          <h1 className="font-serif text-4xl md:text-6xl text-white max-w-2xl mb-6 leading-[1.1]">
+            Five Questions. One Clear Protocol.<br />
+            <em>Built for your skin.</em>
+          </h1>
+          <p className="text-white/60 max-w-xl mb-10 leading-relaxed">
+            Tell us about your skin type, concerns, and routine. We&apos;ll match you to a coordinated regimen — nothing extra.
+          </p>
+          <button
+            onClick={() => document.getElementById('protocol-quiz')?.scrollIntoView({ behavior: 'smooth' })}
+            className="bg-rose text-white px-8 py-4 text-sm font-medium hover:bg-rose-dark transition-colors"
+          >
+            Begin
+          </button>
+          <p className="text-xs tracking-widest uppercase text-white/35 mt-8">
+            5 questions · About 2 minutes · Tailored to your skin
           </p>
         </div>
+      </section>
 
+      <div id="protocol-quiz" className="max-w-3xl mx-auto px-5 md:px-8 py-16 scroll-mt-44 bg-stone">
         {/* Progress */}
         <div className="flex gap-1.5 mb-12">
           {QUESTIONS.map((_, i) => (
             <div
               key={i}
               className="h-1 flex-1 transition-all duration-300"
-              style={{ backgroundColor: i <= step ? '#4D954C' : '#E8E8E8' }}
+              style={{ backgroundColor: i <= step ? '#B8878B' : '#E5E5E5' }}
             />
           ))}
         </div>
 
         {/* Question */}
         <div className="bg-white p-8 md:p-10 border border-gray-soft">
-          <p className="text-[11px] tracking-widest uppercase text-green mb-3">Question {step + 1} of {QUESTIONS.length}</p>
-          <h2 className="font-serif text-2xl md:text-3xl text-charcoal mb-8">{QUESTIONS[step].title}</h2>
+          <p className="text-[11px] tracking-widest uppercase text-rose mb-3">Question {step + 1} of {QUESTIONS.length}</p>
+          <h2 className="font-serif text-2xl md:text-3xl text-black mb-8">{QUESTIONS[step].title}</h2>
           {QUESTIONS[step].content}
         </div>
 
@@ -253,7 +297,7 @@ export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
           <button
             onClick={() => setStep(s => Math.max(0, s - 1))}
             disabled={step === 0}
-            className="text-sm text-charcoal/40 hover:text-charcoal disabled:opacity-30 transition-colors"
+            className="text-sm text-black/40 hover:text-black disabled:opacity-30 transition-colors"
           >
             ← Back
           </button>
@@ -261,14 +305,14 @@ export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
             <button
               onClick={() => setStep(s => s + 1)}
               disabled={!canAdvance[step]}
-              className="bg-charcoal text-white px-8 py-3 text-sm font-medium hover:bg-charcoal/80 disabled:opacity-40 transition-colors"
+              className="bg-black text-white px-8 py-3 text-sm font-medium hover:bg-rose disabled:opacity-40 transition-colors"
             >
               Continue →
             </button>
           ) : (
             <button
               onClick={finish}
-              className="bg-green text-white px-8 py-3 text-sm font-medium hover:bg-green-dark transition-colors"
+              className="bg-rose text-white px-8 py-3 text-sm font-medium hover:bg-rose-dark transition-colors"
             >
               Build My Protocol
             </button>

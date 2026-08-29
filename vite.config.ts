@@ -1,4 +1,4 @@
-import { defineConfig, type HtmlTagDescriptor, type Plugin } from 'vite'
+import { defineConfig, loadEnv, type HtmlTagDescriptor, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'node:path'
@@ -9,6 +9,8 @@ import siteConfiguration from './.figma/make/site.json'
 export default defineConfig(({ mode }) => {
   // .figma/make/deploy-preview passes `--mode development` for cached-preview builds.
   const emitSourcemaps = mode === 'development'
+  const env = loadEnv(mode, process.cwd(), '')
+  Object.assign(process.env, env)
 
   return {
     base: process.env.FIGMA_PUBLIC_URL ? `${process.env.FIGMA_PUBLIC_URL}/` : '/',
@@ -23,6 +25,7 @@ export default defineConfig(({ mode }) => {
       figmaErrorOverlayReplay(),
       figmaReactRefreshBoundaryFallback(),
       figmaMakeKitPlugin({ storiesGlob: '/src/**/*.stories.{ts,tsx,js,jsx}' }),
+      protocolEmailApi(),
     ],
     resolve: {
       alias: {
@@ -41,6 +44,55 @@ export default defineConfig(({ mode }) => {
     },
   }
 })
+
+function protocolEmailApi(): Plugin {
+  return {
+    name: 'protocol-email-api',
+    apply: 'serve',
+    configureServer(server) {
+      server.middlewares.use(async (req, res, next) => {
+        const pathname = req.url?.split('?')[0]
+        if (pathname !== '/api/protocol-email') return next()
+
+        if (req.method === 'OPTIONS') {
+          res.statusCode = 204
+          res.end()
+          return
+        }
+
+        if (req.method !== 'POST') {
+          res.statusCode = 405
+          res.setHeader('Content-Type', 'application/json')
+          res.end(JSON.stringify({ error: 'Method not allowed' }))
+          return
+        }
+
+        try {
+          const chunks: Buffer[] = []
+          for await (const chunk of req) chunks.push(Buffer.from(chunk))
+          const { handleProtocolEmailRequest } = await import('./shopify/protocol-email/handler.js')
+          const request = new Request('http://localhost/api/protocol-email', {
+            method: 'POST',
+            headers: { 'Content-Type': req.headers['content-type'] || 'application/json' },
+            body: Buffer.concat(chunks),
+          })
+          const response = await handleProtocolEmailRequest(request, process.env)
+          res.statusCode = response.status
+          response.headers.forEach((value, key) => {
+            if (key.toLowerCase() === 'transfer-encoding') return
+            res.setHeader(key, value)
+          })
+          res.end(Buffer.from(await response.arrayBuffer()))
+        } catch (err) {
+          console.error('[protocol-email]', err)
+          res.statusCode = 500
+          res.setHeader('Content-Type', 'application/json')
+          res.end(JSON.stringify({ error: 'Could not send your protocol. Please try again.' }))
+        }
+      })
+    },
+  }
+}
 
 type FigmaSiteConfiguration = {
   title?: string

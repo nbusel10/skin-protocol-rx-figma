@@ -1,0 +1,45 @@
+# Skin Protocol Rx — Apache (GreenGeeks / cPanel)
+# Copied into dist/ on `pnpm build`.
+
+Options -MultiViews
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # HTTPS (enable after SSL is active on the subdomain)
+  # RewriteCond %{HTTPS} !=on
+  # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Serve existing files and directories as-is
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # SPA fallback (safe even with client-side page state)
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# Hashed Vite assets — long cache
+<IfModule mod_headers.c>
+  <FilesMatch "\.(?:js|css|png|jpe?g|gif|svg|webp|ico|woff2?)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "^(index\.html|\.htaccess)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType application/javascript .js
+  AddType text/css .css
+  AddType image/svg+xml .svg
+  AddType image/webp .webp
+</IfModule>
+
+# Block common secret paths if ever uploaded by mistake
+<IfModule mod_authz_core.c>
+  <FilesMatch "(?i)^\.(env|git)">
+    Require all denied
+  </FilesMatch>
+</IfModule>

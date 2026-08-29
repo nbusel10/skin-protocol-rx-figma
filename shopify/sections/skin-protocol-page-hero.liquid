@@ -1,0 +1,820 @@
+{% comment %}
+  Skin Protocol Page Hero — reusable OS 2.0 section
+  File: sections/skin-protocol-page-hero.liquid
+
+  Default look: Spa Partners, centered on a full-bleed photo
+  - Full-bleed image, photo at 32% opacity on black (~68% dark), centered horizontally and vertically
+  - Heading line 1: DM Sans (white on photo)
+  - Heading line 2: Playfair italic (white on photo; set "Second heading line")
+
+  Other layouts in the editor:
+  - Image + bottom + gradient ≈ Our Story
+  - Solid banner ≈ Shop
+  - Split ≈ Home
+  - Image + 1 scroll button + meta ≈ Build Your Protocol
+{% endcomment %}
+
+{%- liquid
+  assign layout = section.settings.layout
+  assign color_mode = section.settings.color_mode
+  assign heading_tag = section.settings.heading_tag
+  if heading_tag != 'h1' and heading_tag != 'h2'
+    assign heading_tag = 'h1'
+  endif
+  assign image = section.settings.image
+  assign overlay_style = section.settings.overlay_style
+  assign image_alt = section.settings.heading
+  if image != blank and image.alt != blank
+    assign image_alt = image.alt
+  endif
+  assign image_position = section.settings.image_position | default: 'center'
+  if image != blank and image.presentation.focal_point != blank
+    assign image_position = image.presentation.focal_point
+  endif
+  assign has_buttons = false
+  for block in section.blocks
+    if block.type == 'button' and block.settings.label != blank
+      assign has_buttons = true
+    endif
+  endfor
+-%}
+
+{%- if section.settings.load_fonts -%}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+{%- endif -%}
+
+<section
+  id="PageHero-{{ section.id }}"
+  class="sph sph--layout-{{ layout }} sph--{{ color_mode }} sph--height-{{ section.settings.height }} sph--align-{{ section.settings.content_align }} sph--valign-{{ section.settings.content_position }} sph--overlay-{{ overlay_style }}"
+  style="
+    --sph-accent: {{ section.settings.accent }};
+    --sph-accent-dark: {{ section.settings.accent_dark }};
+    --sph-charcoal: {{ section.settings.charcoal }};
+    --sph-ivory: {{ section.settings.ivory }};
+  "
+>
+  {%- comment -%}
+    Always output .sph__media + image_tag when an image is picked, even if Layout is not
+    "Full-bleed image". Split keeps its own .sph__split-media so it is not duplicated.
+  {%- endcomment -%}
+  {%- if layout != 'split' -%}
+    {%- if image != blank or layout == 'image' -%}
+      <div class="sph__media">
+        {%- if image != blank -%}
+          {{
+            image
+            | image_url: width: 2400
+            | image_tag:
+              widths: '750, 1100, 1500, 1780, 2000, 2400',
+              sizes: '100vw',
+              class: 'sph__img',
+              alt: image_alt,
+              loading: 'eager',
+              fetchpriority: 'high'
+          }}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  {%- endif -%}
+
+  <div class="sph__shell">
+    <div class="sph__copy">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="sph__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank or section.settings.heading_emphasis != blank -%}
+        <{{ heading_tag }} class="sph__heading">
+          {%- if section.settings.heading != blank -%}
+            <span class="sph__heading-primary">{{ section.settings.heading | escape }}</span>
+          {%- endif -%}
+          {%- if section.settings.heading_emphasis != blank -%}
+            <em class="sph__heading-emphasis">{{ section.settings.heading_emphasis | escape }}</em>
+          {%- endif -%}
+        </{{ heading_tag }}>
+      {%- endif -%}
+
+      {%- if section.settings.body != blank -%}
+        <div class="sph__body">{{ section.settings.body }}</div>
+      {%- endif -%}
+
+      {%- if has_buttons -%}
+        <div class="sph__actions">
+          {%- for block in section.blocks -%}
+            {%- if block.type != 'button' or block.settings.label == blank -%}{%- continue -%}{%- endif -%}
+            {%- liquid
+              assign btn_style = block.settings.style | default: 'accent'
+              assign anchor = block.settings.anchor | strip
+              assign href = block.settings.link
+            -%}
+            {%- if anchor != blank -%}
+              <button
+                type="button"
+                class="sph__btn sph__btn--{{ btn_style }}"
+                data-sph-scroll="#{{ anchor | remove: '#' | strip }}"
+                {{ block.shopify_attributes }}
+              >
+                {{ block.settings.label | escape }}
+              </button>
+            {%- elsif href != blank -%}
+              <a
+                class="sph__btn sph__btn--{{ btn_style }}"
+                href="{{ href }}"
+                {% if href contains '#' %}data-sph-scroll="{{ href | split: '#' | last | prepend: '#' }}"{% endif %}
+                {{ block.shopify_attributes }}
+              >
+                {{ block.settings.label | escape }}
+              </a>
+            {%- else -%}
+              <span class="sph__btn sph__btn--{{ btn_style }}" {{ block.shopify_attributes }}>
+                {{ block.settings.label | escape }}
+              </span>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.meta != blank -%}
+        <p class="sph__meta">{{ section.settings.meta | escape }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- if layout == 'split' -%}
+      <div class="sph__split-media">
+        {%- if image != blank -%}
+          {{
+            image
+            | image_url: width: 1600
+            | image_tag:
+              widths: '500, 750, 1100, 1500, 1600',
+              sizes: '(min-width: 990px) 50vw, 100vw',
+              class: 'sph__img',
+              alt: image_alt,
+              loading: 'eager',
+              fetchpriority: 'high'
+          }}
+        {%- endif -%}
+        {%- if section.settings.show_image_card and section.settings.card_text != blank -%}
+          <div class="sph__card">
+            {%- if section.settings.card_kicker != blank -%}
+              <div class="sph__card-kicker">
+                <span class="sph__card-dot"></span>
+                {{ section.settings.card_kicker | escape }}
+              </div>
+            {%- endif -%}
+            <p class="sph__card-text">{{ section.settings.card_text | escape }}</p>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  #PageHero-{{ section.id }} {
+    --sph-font-serif: 'Playfair Display', Georgia, serif;
+    --sph-font-sans: 'DM Sans', system-ui, sans-serif;
+    position: relative;
+    overflow: hidden;
+    font-family: var(--sph-font-sans);
+    background: #000;
+  }
+
+  #PageHero-{{ section.id }} .sph__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: #000;
+  }
+  #PageHero-{{ section.id }} .sph__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: {{ image_position }};
+  }
+  #PageHero-{{ section.id }} .sph__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: {{ image_position }};
+  }
+  #PageHero-{{ section.id }} .sph__media img,
+  #PageHero-{{ section.id }} .sph__img {
+    opacity: 0.50;
+  }
+  #PageHero-{{ section.id }}.sph--overlay-none .sph__media img,
+  #PageHero-{{ section.id }}.sph--overlay-none .sph__img {
+    opacity: 1;
+  }
+
+  #PageHero-{{ section.id }} .sph__shell {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 92rem;
+    margin: 0 auto;
+    padding: 6rem 1.25rem;
+  }
+  @media (min-width: 768px) {
+    #PageHero-{{ section.id }} .sph__shell {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+
+  #PageHero-{{ section.id }}.sph--layout-image {
+    display: flex;
+    background: #000;
+  }
+  #PageHero-{{ section.id }}.sph--layout-image.sph--height-compact { min-height: 40vh; }
+  #PageHero-{{ section.id }}.sph--layout-image.sph--height-default { min-height: 60vh; }
+  #PageHero-{{ section.id }}.sph--layout-image.sph--height-tall { min-height: 80vh; }
+  #PageHero-{{ section.id }}.sph--layout-image.sph--valign-center { align-items: center; }
+  #PageHero-{{ section.id }}.sph--layout-image.sph--valign-bottom { align-items: flex-end; }
+  #PageHero-{{ section.id }}.sph--layout-image.sph--valign-bottom .sph__shell { padding-top: 4rem; padding-bottom: 4rem; }
+  #PageHero-{{ section.id }}.sph--layout-image.sph--valign-top { align-items: flex-start; }
+
+  #PageHero-{{ section.id }}.sph--layout-solid {
+    background: #fff;
+    border-bottom: 1px solid #E8E8E8;
+  }
+  #PageHero-{{ section.id }}.sph--layout-solid .sph__shell {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  #PageHero-{{ section.id }}.sph--layout-split {
+    background: var(--sph-ivory);
+  }
+  #PageHero-{{ section.id }}.sph--layout-split .sph__shell {
+    max-width: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 990px) {
+    #PageHero-{{ section.id }}.sph--layout-split {
+      min-height: 90vh;
+    }
+    #PageHero-{{ section.id }}.sph--layout-split .sph__shell {
+      grid-template-columns: 1fr 1fr;
+      min-height: 90vh;
+    }
+  }
+  #PageHero-{{ section.id }}.sph--layout-split .sph__copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem 2rem;
+    max-width: none;
+  }
+  @media (min-width: 990px) {
+    #PageHero-{{ section.id }}.sph--layout-split .sph__copy {
+      padding: 0 5rem;
+      order: 1;
+    }
+    #PageHero-{{ section.id }}.sph--layout-split .sph__split-media {
+      order: 2;
+    }
+  }
+  #PageHero-{{ section.id }} .sph__split-media {
+    position: relative;
+    min-height: 18rem;
+    background: color-mix(in srgb, var(--sph-accent) 18%, var(--sph-ivory));
+    overflow: hidden;
+  }
+  @media (min-width: 990px) {
+    #PageHero-{{ section.id }} .sph__split-media { min-height: 100%; }
+  }
+
+  #PageHero-{{ section.id }} .sph__copy { max-width: 42rem; }
+  #PageHero-{{ section.id }}.sph--align-center .sph__copy {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+  #PageHero-{{ section.id }}.sph--align-center .sph__actions {
+    justify-content: center;
+  }
+
+  /* Full-bleed image: copy block centered in the hero; internals left-aligned */
+  #PageHero-{{ section.id }}.sph--layout-image .sph__copy {
+    max-width: 56rem;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+  }
+  #PageHero-{{ section.id }}.sph--layout-image .sph__actions {
+    justify-content: flex-start;
+  }
+  #PageHero-{{ section.id }}.sph--layout-image .sph__body {
+    margin-left: 0;
+    margin-right: auto;
+    text-align: left;
+  }
+
+  #PageHero-{{ section.id }} .sph__eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--sph-accent);
+    margin: 0 0 1.25rem;
+  }
+  #PageHero-{{ section.id }} .sph__heading {
+    font-family: var(--sph-font-sans);
+    font-size: clamp(3rem, 6.5vw, 5.25rem);
+    font-weight: 500;
+    font-style: normal;
+    line-height: 1.05;
+    margin: 0 0 1.5rem;
+  }
+  #PageHero-{{ section.id }} .sph__heading-primary {
+    display: block;
+    font-family: var(--sph-font-sans);
+    font-style: normal;
+    font-weight: 500;
+  }
+  #PageHero-{{ section.id }} .sph__heading-emphasis {
+    display: block;
+    font-family: var(--sph-font-serif);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.05;
+    margin-top: 0.18em;
+  }
+  #PageHero-{{ section.id }}.sph--on-light .sph__heading-emphasis {
+    color: color-mix(in srgb, var(--sph-charcoal) 78%, transparent);
+  }
+  #PageHero-{{ section.id }} .sph__body {
+    font-size: clamp(1.45rem, 1.8vw, 1.6rem);
+    line-height: 1.7;
+    margin: 0 0 2.5rem;
+    max-width: 40rem;
+  }
+  #PageHero-{{ section.id }}.sph--align-center .sph__body {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #PageHero-{{ section.id }}.sph--layout-image .sph__body {
+    margin-left: 0;
+    margin-right: auto;
+    text-align: left;
+  }
+  #PageHero-{{ section.id }} .sph__body p { margin: 0; }
+  #PageHero-{{ section.id }} .sph__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+  }
+  #PageHero-{{ section.id }}.sph--on-dark .sph__heading,
+  #PageHero-{{ section.id }}.sph--on-dark .sph__heading-primary,
+  #PageHero-{{ section.id }}.sph--on-dark .sph__heading-emphasis {
+    color: #ffffff;
+  }
+  #PageHero-{{ section.id }}.sph--on-dark .sph__eyebrow {
+    color: #ffffff;
+  }
+  #PageHero-{{ section.id }} .sph__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    font-size: 1.4rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    padding: 1.35rem 2.75rem;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s, filter 0.2s;
+  }
+  #PageHero-{{ section.id }} .sph__btn--accent {
+    background: var(--sph-accent);
+    color: #fff;
+    border-color: var(--sph-accent);
+  }
+  #PageHero-{{ section.id }} .sph__btn--accent:hover { background: var(--sph-accent-dark); border-color: var(--sph-accent-dark); }
+  #PageHero-{{ section.id }} .sph__btn--charcoal {
+    background: var(--sph-charcoal);
+    color: #fff;
+    border-color: var(--sph-charcoal);
+  }
+  #PageHero-{{ section.id }} .sph__btn--charcoal:hover { filter: brightness(1.15); }
+  #PageHero-{{ section.id }} .sph__btn--outline-light {
+    background: transparent;
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+  #PageHero-{{ section.id }} .sph__btn--outline-light:hover { border-color: #fff; }
+  #PageHero-{{ section.id }} .sph__btn--outline-dark {
+    background: transparent;
+    color: var(--sph-charcoal);
+    border-color: var(--sph-charcoal);
+  }
+  #PageHero-{{ section.id }} .sph__btn--outline-dark:hover {
+    background: var(--sph-charcoal);
+    color: #fff;
+  }
+  #PageHero-{{ section.id }} .sph__meta {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin: 2rem 0 0;
+  }
+
+  #PageHero-{{ section.id }}.sph--on-dark { color: #fff; }
+  #PageHero-{{ section.id }}.sph--on-dark .sph__body { color: rgba(255, 255, 255, 0.92); }
+  #PageHero-{{ section.id }}.sph--on-dark .sph__meta { color: rgba(255, 255, 255, 0.4); }
+  #PageHero-{{ section.id }}.sph--on-light { color: var(--sph-charcoal); background-color: var(--sph-ivory); }
+  #PageHero-{{ section.id }}.sph--layout-image { background: #000; }
+  #PageHero-{{ section.id }}.sph--layout-solid.sph--on-light { background: #fff; }
+  #PageHero-{{ section.id }}.sph--on-light .sph__body { color: rgba(37, 37, 37, 0.55); }
+  #PageHero-{{ section.id }}.sph--on-light .sph__meta { color: rgba(37, 37, 37, 0.4); }
+
+  #PageHero-{{ section.id }} .sph__card {
+    position: absolute;
+    left: 2rem;
+    bottom: 2rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    padding: 1.25rem;
+    max-width: 20rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    color: var(--sph-charcoal);
+  }
+  #PageHero-{{ section.id }} .sph__card-kicker {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(37, 37, 37, 0.5);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  #PageHero-{{ section.id }} .sph__card-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--sph-accent);
+    flex-shrink: 0;
+  }
+  #PageHero-{{ section.id }} .sph__card-text {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+</style>
+
+<script>
+  (function () {
+    var root = document.getElementById('PageHero-{{ section.id }}');
+    if (!root) return;
+    root.querySelectorAll('[data-sph-scroll]').forEach(function (el) {
+      el.addEventListener('click', function (event) {
+        var sel = el.getAttribute('data-sph-scroll');
+        if (!sel) return;
+        var target = document.querySelector(sel);
+        if (!target) return;
+        event.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Skin Protocol Page Hero",
+  "tag": "section",
+  "class": "section-page-hero",
+  "enabled_on": {
+    "templates": ["index", "page", "collection", "product", "blog", "article"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Default: Spa layout (full-bleed photo at 32% opacity on black, centered copy, light text) with a two-line white heading — DM Sans, then Playfair italic. Overlay None restores the full photo."
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "image", "label": "Full-bleed image" },
+        { "value": "solid", "label": "Solid banner" },
+        { "value": "split", "label": "Split (copy + image)" }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Height",
+      "info": "Used for full-bleed image layout.",
+      "options": [
+        { "value": "compact", "label": "Compact" },
+        { "value": "default", "label": "Default (60vh)" },
+        { "value": "tall", "label": "Tall" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Vertical alignment",
+      "info": "Used for full-bleed image layout.",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "bottom", "label": "Bottom" },
+        { "value": "top", "label": "Top" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "content_align",
+      "label": "Text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "color_mode",
+      "label": "Text color",
+      "options": [
+        { "value": "on-dark", "label": "Light text (on photo)" },
+        { "value": "on-light", "label": "Dark text (on ivory/white)" }
+      ],
+      "default": "on-dark"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "info": "Used when the image has no focal point. Prefer setting a focal point in the image editor.",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" },
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "overlay_style",
+      "label": "Overlay",
+      "options": [
+        { "value": "solid", "label": "Solid wash" },
+        { "value": "gradient", "label": "Gradient from bottom" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image_card",
+      "label": "Show image card (split layout)",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "card_kicker",
+      "label": "Card kicker",
+      "default": "Cruelty-Free Certified"
+    },
+    {
+      "type": "textarea",
+      "id": "card_text",
+      "label": "Card text",
+      "default": "Professional formulas. No animal testing. Ever."
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Bring a Better Protocol"
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "Second heading line (italic)",
+      "info": "Playfair Display italic, same size as the first line. Leave blank for a single-line heading."
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body"
+    },
+    {
+      "type": "text",
+      "id": "meta",
+      "label": "Meta line",
+      "info": "Optional small caps under the buttons. Leave blank to hide."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "accent",
+      "label": "Accent",
+      "default": "#BD705F"
+    },
+    {
+      "type": "color",
+      "id": "accent_dark",
+      "label": "Accent hover",
+      "default": "#9A584A"
+    },
+    {
+      "type": "color",
+      "id": "charcoal",
+      "label": "Charcoal",
+      "default": "#252525"
+    },
+    {
+      "type": "color",
+      "id": "ivory",
+      "label": "Ivory",
+      "default": "#F7F6F1"
+    },
+    {
+      "type": "checkbox",
+      "id": "load_fonts",
+      "label": "Load Playfair Display and DM Sans",
+      "info": "Turn off if the theme already loads these fonts.",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "button",
+      "name": "Button",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Apply to Become a Spa Partner"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "anchor",
+          "label": "Scroll to section ID",
+          "info": "Optional in-page target without #. Example: protocol-quiz. Overrides the link."
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Style",
+          "options": [
+            { "value": "accent", "label": "Accent fill" },
+            { "value": "charcoal", "label": "Charcoal fill" },
+            { "value": "outline-light", "label": "Outline on photo" },
+            { "value": "outline-dark", "label": "Outline on light" }
+          ],
+          "default": "accent"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Skin Protocol Page Hero",
+      "category": "Skin Protocol",
+      "settings": {
+        "layout": "image",
+        "height": "default",
+        "content_position": "center",
+        "content_align": "center",
+        "color_mode": "on-dark",
+        "overlay_style": "solid",
+        "heading": "Bring a Better Protocol",
+        "heading_emphasis": "To Your Treatment Room.",
+        "body": "<p>Partner with Skin Protocol RX to give your clients a coordinated, professional skincare routine they can continue at home.</p>"
+      },
+      "blocks": [
+        {
+          "type": "button",
+          "settings": {
+            "label": "Apply to Become a Spa Partner",
+            "style": "accent"
+          }
+        },
+        {
+          "type": "button",
+          "settings": {
+            "label": "Spa Partner Login",
+            "style": "outline-light"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Skin Protocol Page Hero — Story",
+      "category": "Skin Protocol",
+      "settings": {
+        "layout": "image",
+        "color_mode": "on-dark",
+        "overlay_style": "gradient",
+        "content_position": "bottom",
+        "content_align": "left",
+        "eyebrow": "Family-Owned · New York",
+        "heading": "Skincare With a Purpose Behind Every Product"
+      }
+    },
+    {
+      "name": "Skin Protocol Page Hero — Shop",
+      "category": "Skin Protocol",
+      "settings": {
+        "layout": "solid",
+        "color_mode": "on-light",
+        "content_align": "left",
+        "eyebrow": "The Collection",
+        "heading": "Shop Skin Protocol RX",
+        "body": "<p>Find purposeful skincare based on your skin type, primary concern, or preferred product category.</p>"
+      }
+    },
+    {
+      "name": "Skin Protocol Page Hero — Home split",
+      "category": "Skin Protocol",
+      "settings": {
+        "layout": "split",
+        "color_mode": "on-light",
+        "content_align": "left",
+        "show_image_card": true,
+        "eyebrow": "New York · Since 2019",
+        "heading": "Your Skin Doesn't Need More.",
+        "heading_emphasis": "It Needs What Works.",
+        "body": "<p>Purposeful, professional skincare made without unnecessary additives. Family-owned, created in New York, and never tested on animals.</p>",
+        "meta": "Simple formulas · Professional performance · Healthier-looking skin",
+        "card_kicker": "Cruelty-Free Certified",
+        "card_text": "Professional formulas. No animal testing. Ever."
+      },
+      "blocks": [
+        {
+          "type": "button",
+          "settings": {
+            "label": "Shop Skin Protocol RX",
+            "style": "charcoal"
+          }
+        },
+        {
+          "type": "button",
+          "settings": {
+            "label": "Find Your Protocol",
+            "style": "outline-dark"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
