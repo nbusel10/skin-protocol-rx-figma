@@ -1,10 +1,5 @@
 ---
-# GreenGeeks / cPanel Git Version Control deploy.
-# Clone this repo OUTSIDE the web root, then Deploy HEAD Commit
-# to copy dist/ into the staging subdomain document root.
-#
-# Spaces only (no tabs).
 deployment:
   tasks:
     - export DEPLOYPATH=/home/buselmei/public_html/preview-skinprotocolrx.buselmeier.com
-    - /bin/cp -RF dist/. $DEPLOYPATH
+    - /bin/cp -RF /home/buselmei/public_html/preview-skinprotocolrx.buselmeier.com/dist/. $DEPLOYPATH
