@@ -63,7 +63,14 @@
       {%- if section.settings.heading != blank or section.settings.heading_emphasis != blank -%}
         <{{ heading_tag }} class="sphh__heading">
           {%- if section.settings.heading != blank -%}
-            <span class="sphh__heading-primary">{{ section.settings.heading | escape | replace: ' More.', '<br>More.' }}</span>
+            {%- assign heading_text = section.settings.heading | escape -%}
+            <span class="sphh__heading-primary">
+              {%- if heading_text contains ' More.' -%}
+                {{ heading_text | split: ' More.' | first }}<br>More.
+              {%- else -%}
+                {{ heading_text }}
+              {%- endif -%}
+            </span>
           {%- endif -%}
           {%- if section.settings.heading_emphasis != blank -%}
             <em class="sphh__heading-emphasis">{{ section.settings.heading_emphasis | escape }}</em>
