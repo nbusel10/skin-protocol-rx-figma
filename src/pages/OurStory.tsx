@@ -1,4 +1,4 @@
-type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product'
+type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 
 interface OurStoryProps {
   onNavigate: (page: Page, productId?: string) => void
@@ -16,8 +16,8 @@ const FOUNDERS = [
     name: 'Susanna Amend, NP',
     role: 'Co-Founder | Nurse Practitioner',
     blurb: 'Patient-facing insight. Translates clinical needs into product design. Focus on real-world skin response.',
-    image: 'https://skinprotocolrx.com/cdn/shop/files/5B62A1EE-DCE3-41D1-83BA-B0966D3051AF_4_5005_c.jpg?v=1776599704&width=800',
-    alt: 'Susanna Amend, NP — nurse practitioner and co-founder of Skin Protocol RX',
+    image: '/susanna-amend-np-co-founder-skin-protocol-rx.png',
+    alt: 'Susanna Amend, NP — nurse practitioner and co-founder of Skin Protocol RX, in a branded white lab coat',
   },
   {
     name: 'Christina Corbin, LME',

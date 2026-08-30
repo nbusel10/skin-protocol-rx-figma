@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product'
+type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 
 interface HeaderProps {
   currentPage: Page
@@ -10,7 +10,6 @@ interface HeaderProps {
 
 const NAV = [
   { label: 'Shop', page: 'shop' as Page },
-  { label: 'Skin Concerns', page: 'shop' as Page },
   { label: 'Build Your Protocol', page: 'protocol' as Page },
   { label: 'Our Story', page: 'story' as Page },
   { label: 'Spa Partners', page: 'spa' as Page },

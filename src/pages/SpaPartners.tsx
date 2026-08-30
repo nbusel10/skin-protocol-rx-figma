@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product'
+type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 
 interface SpaPartnersProps {
   onNavigate: (page: Page) => void

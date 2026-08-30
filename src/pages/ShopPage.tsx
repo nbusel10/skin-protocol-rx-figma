@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { PRODUCTS, type Product, type SkinType, type SkinConcern, type ProductCategory } from '../data'
 import ProductImage from '../components/ProductImage'
-type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product'
+type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 
 interface ShopPageProps {
   onNavigate: (page: Page, productId?: string) => void

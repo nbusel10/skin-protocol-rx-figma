@@ -3,7 +3,7 @@ import { PRODUCTS, type SkinType, type SkinConcern } from '../data'
 import EmailProtocolModal from '../components/EmailProtocolModal'
 import ProductImage from '../components/ProductImage'
 
-type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product'
+type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 
 interface ProtocolBuilderProps {
   onNavigate: (page: Page, productId?: string) => void
@@ -246,11 +246,11 @@ export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
       <section className="relative min-h-[60vh] flex items-center overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1616394584738-fc6e612e59b7?w=1600&h=900&fit=crop&auto=format"
-            alt="Skincare ritual"
-            className="w-full h-full object-cover grayscale"
+            src="/protocol-hero.jpg"
+            alt="Amber serum bottle with eucalyptus on wood"
+            className="w-full h-full object-cover object-[70%_center]"
           />
-          <div className="absolute inset-0 bg-black/70" />
+          <div className="absolute inset-0 bg-black/55" />
         </div>
         <div className="relative z-10 max-w-7xl mx-auto px-5 md:px-8 py-24 w-full">
           <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-5">Personalized Skincare</p>

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { PRODUCTS, SKIN_CONCERNS, PROTOCOL_STEPS } from '../data'
 import ProductImage from '../components/ProductImage'
 
-type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product'
+type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 
 interface HomePageProps {
   onNavigate: (page: Page, productId?: string) => void
@@ -332,12 +332,19 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             </p>
           </div>
           <div className="flex flex-col gap-4">
-            {['Our Standards', 'Ingredient Glossary', 'Product Education'].map(l => (
+            {(
+              [
+                { label: 'Our Standards', page: 'story' as Page },
+                { label: 'Ingredient Glossary', page: 'glossary' as Page },
+                { label: 'Product Education', page: 'education' as Page },
+              ] as const
+            ).map(l => (
               <button
-                key={l}
+                key={l.label}
+                onClick={() => onNavigate(l.page)}
                 className="flex items-center justify-between text-white/70 hover:text-rose border-b border-white/15 pb-4 text-sm font-medium group transition-colors"
               >
-                {l}
+                {l.label}
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="group-hover:translate-x-1 transition-transform">
                   <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>

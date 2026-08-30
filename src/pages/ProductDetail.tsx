@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { PRODUCTS } from '../data'
 import ProductImage from '../components/ProductImage'
 
-type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product'
+type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 
 interface ProductDetailProps {
   productId: string
