@@ -20,10 +20,13 @@ Options -MultiViews
   RewriteRule ^ index.html [L]
 </IfModule>
 
-# Hashed Vite assets — long cache
+# Cache: fingerprint JS/CSS hard; images softly (staging overwrites same filenames)
 <IfModule mod_headers.c>
-  <FilesMatch "\.(?:js|css|png|jpe?g|gif|svg|webp|ico|woff2?)$">
+  <FilesMatch "\.(?:js|css|woff2?)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(?:png|jpe?g|gif|svg|webp|ico)$">
+    Header set Cache-Control "public, max-age=300, must-revalidate"
   </FilesMatch>
   <FilesMatch "^(index\.html|\.htaccess)$">
     Header set Cache-Control "no-cache"
