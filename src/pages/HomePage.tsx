@@ -176,16 +176,16 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           <p className="text-base text-charcoal/60 leading-relaxed max-w-md mb-10">
             Purposeful, professional skincare made without unnecessary additives. Family-owned, created in New York, and never tested on animals.
           </p>
-          <div className="flex flex-wrap gap-4 mb-10">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-4 mb-10 w-full max-w-xs sm:max-w-none">
             <button
               onClick={() => onNavigate('shop')}
-              className="bg-charcoal text-white px-7 py-3.5 text-sm tracking-wide font-medium hover:bg-charcoal/80 transition-colors"
+              className="w-full sm:w-auto bg-charcoal text-white px-7 py-3.5 text-sm tracking-wide font-medium hover:bg-charcoal/80 transition-colors"
             >
               Shop Skin Protocol RX
             </button>
             <button
               onClick={() => onNavigate('protocol')}
-              className="border border-charcoal text-charcoal px-7 py-3.5 text-sm tracking-wide font-medium hover:bg-charcoal hover:text-white transition-colors"
+              className="w-full sm:w-auto border border-charcoal text-charcoal px-7 py-3.5 text-sm tracking-wide font-medium hover:bg-charcoal hover:text-white transition-colors"
             >
               Find Your Protocol
             </button>
@@ -202,13 +202,13 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             alt="Dewy, healthy skin with Skin Protocol RX"
             className="w-full h-full object-cover object-right"
           />
-          {/* Floating trust card */}
-          <div className="absolute bottom-8 left-8 bg-white/95 backdrop-blur-sm p-5 shadow-lg max-w-xs">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-2 h-2 rounded-full bg-green" />
-              <p className="text-xs tracking-widest uppercase text-charcoal/50 font-medium">Cruelty-Free Certified</p>
+          {/* Floating trust card — compact on mobile so her face stays visible */}
+          <div className="absolute bottom-4 left-4 lg:bottom-8 lg:left-8 bg-white/95 backdrop-blur-sm p-3 lg:p-5 shadow-lg max-w-[11.5rem] lg:max-w-xs">
+            <div className="flex items-center gap-1.5 lg:gap-3 mb-1 lg:mb-2">
+              <div className="w-1.5 h-1.5 lg:w-2 lg:h-2 rounded-full bg-green shrink-0" />
+              <p className="text-[0.625rem] lg:text-xs tracking-[0.14em] lg:tracking-widest uppercase text-charcoal/50 font-medium leading-tight">Cruelty-Free Certified</p>
             </div>
-            <p className="text-sm font-sans text-charcoal leading-snug">Professional formulas. No animal testing. Ever.</p>
+            <p className="text-xs lg:text-sm font-sans text-charcoal leading-snug">Professional formulas. No animal testing. Ever.</p>
           </div>
         </div>
       </section>

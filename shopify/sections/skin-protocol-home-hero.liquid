@@ -407,13 +407,35 @@
     #HomeHero-{{ section.id }} .sphh__copy {
       padding: 3.5rem 1.25rem 4rem;
     }
+    #HomeHero-{{ section.id }} .sphh__actions {
+      flex-direction: column;
+      align-items: stretch;
+      max-width: 20rem;
+    }
+    #HomeHero-{{ section.id }} .sphh__btn {
+      width: 100%;
+      box-sizing: border-box;
+    }
     #HomeHero-{{ section.id }} .sphh__card {
-      left: 1.25rem;
-      bottom: 1.25rem;
-      max-width: calc(100% - 2.5rem);
+      left: 1rem;
+      bottom: 1rem;
+      max-width: min(11.5rem, calc(100% - 2rem));
       width: auto;
+      padding: 0.75rem 0.875rem;
+    }
+    #HomeHero-{{ section.id }} .sphh__card-kicker {
+      font-size: 0.625rem;
+      letter-spacing: 0.14em;
+      gap: 0.4rem;
+      margin-bottom: 0.35rem;
+    }
+    #HomeHero-{{ section.id }} .sphh__card-dot {
+      width: 0.35rem;
+      height: 0.35rem;
     }
     #HomeHero-{{ section.id }} .sphh__card-text {
+      font-size: 12px;
+      line-height: 1.35;
       white-space: normal;
     }
   }
