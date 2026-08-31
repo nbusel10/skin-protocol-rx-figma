@@ -176,16 +176,16 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           <p className="text-base text-charcoal/60 leading-relaxed max-w-md mb-10">
             Purposeful, professional skincare made without unnecessary additives. Family-owned, created in New York, and never tested on animals.
           </p>
-          <div className="flex flex-col sm:flex-row flex-wrap gap-4 mb-10 w-full max-w-xs sm:max-w-none">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-4 mb-10 w-full">
             <button
               onClick={() => onNavigate('shop')}
-              className="w-full sm:w-auto bg-charcoal text-white px-7 py-3.5 text-sm tracking-wide font-medium hover:bg-charcoal/80 transition-colors"
+              className="w-full sm:w-auto whitespace-nowrap bg-charcoal text-white px-7 py-3.5 text-sm tracking-wide font-medium hover:bg-charcoal/80 transition-colors"
             >
               Shop Skin Protocol RX
             </button>
             <button
               onClick={() => onNavigate('protocol')}
-              className="w-full sm:w-auto border border-charcoal text-charcoal px-7 py-3.5 text-sm tracking-wide font-medium hover:bg-charcoal hover:text-white transition-colors"
+              className="w-full sm:w-auto whitespace-nowrap border border-charcoal text-charcoal px-7 py-3.5 text-sm tracking-wide font-medium hover:bg-charcoal hover:text-white transition-colors"
             >
               Find Your Protocol
             </button>
@@ -203,7 +203,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             className="w-full h-full object-cover object-right"
           />
           {/* Floating trust card — compact on mobile so her face stays visible */}
-          <div className="absolute bottom-4 left-4 lg:bottom-8 lg:left-8 bg-white/95 backdrop-blur-sm p-3 lg:p-5 shadow-lg max-w-[11.5rem] lg:max-w-xs">
+          <div className="absolute bottom-4 left-4 lg:bottom-8 lg:left-8 bg-white/95 backdrop-blur-sm p-3 lg:p-5 shadow-lg w-[calc(50%-1rem)] max-w-[calc(50%-1rem)] lg:w-auto lg:max-w-xs">
             <div className="flex items-center gap-1.5 lg:gap-3 mb-1 lg:mb-2">
               <div className="w-1.5 h-1.5 lg:w-2 lg:h-2 rounded-full bg-green shrink-0" />
               <p className="text-[0.625rem] lg:text-xs tracking-[0.14em] lg:tracking-widest uppercase text-charcoal/50 font-medium leading-tight">Cruelty-Free Certified</p>
