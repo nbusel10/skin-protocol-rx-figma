@@ -1,5 +1,13 @@
 ---
+# GreenGeeks / cPanel Git Version Control deploy.
+# 1. Clone this repo OUTSIDE the web root (Git Version Control → Create).
+# 2. Pull with Update from Remote.
+# 3. Deploy HEAD Commit — that runs the tasks below and copies dist/
+#    into the staging subdomain document root.
+#
+# Spaces only (no tabs). Path must exist before deploy.
+# Use relative dist/. from the repo checkout — NOT public_html/.../dist.
 deployment:
   tasks:
     - export DEPLOYPATH=/home/buselmei/public_html/preview-skinprotocolrx.buselmeier.com
-    - /bin/cp -RF /home/buselmei/public_html/preview-skinprotocolrx.buselmeier.com/dist/. $DEPLOYPATH
+    - /bin/cp -RF dist/. $DEPLOYPATH
