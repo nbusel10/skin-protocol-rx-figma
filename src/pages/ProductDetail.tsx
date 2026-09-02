@@ -199,6 +199,17 @@ export default function ProductDetail({ productId, onNavigate }: ProductDetailPr
                   ))}
                 </div>
               </Accordion>
+              <Accordion title="Full Ingredient List">
+                <p className="text-charcoal/60 leading-relaxed">
+                  {product.fullIngredients.join(' · ')}
+                </p>
+                <button
+                  onClick={() => onNavigate('glossary')}
+                  className="mt-4 text-rose text-sm underline underline-offset-2"
+                >
+                  Browse the Ingredient Glossary →
+                </button>
+              </Accordion>
               <Accordion title="How It Fits Into Your Protocol">
                 <p>This product works as part of the Skin Protocol RX system. Use it in the correct step order for best results. <button onClick={() => onNavigate('protocol')} className="text-rose underline underline-offset-2">Build your full protocol →</button></p>
               </Accordion>

@@ -1,0 +1,241 @@
+/** Glossary entries derived from Master Ingredient List formulas. */
+export interface GlossaryIngredient {
+  id: string
+  name: string
+  aka?: string
+  benefit: string
+  productIds: string[]
+}
+
+export const INGREDIENTS: GlossaryIngredient[] = [
+  {
+    id: 'aloe',
+    name: 'Aloe Barbadensis Leaf Juice',
+    aka: 'Aloe Vera',
+    benefit: 'Soothes and helps preserve moisture while supporting a calm, comfortable feel.',
+    productIds: ['clarifying-gel-cleanser', 'hydration-cloud-cream', 'rich-barrier-cream', 'eye-cream', 'matrix-serum', 'beauty-elixir-serum'],
+  },
+  {
+    id: 'arginine',
+    name: 'Arginine',
+    benefit: 'An amino acid that supports skin comfort, resilience, and barrier function.',
+    productIds: ['rosewater-niacinamide-toner', 'tripleglow-exfoliating-cleanser', 'rich-barrier-cream', 'eye-cream'],
+  },
+  {
+    id: 'bakuchiol',
+    name: 'Bakuchiol',
+    benefit: 'A phyto-retinol alternative that helps smooth, brighten, and refine without classic retinoid irritation.',
+    productIds: ['bakuchiol-renewal-serum'],
+  },
+  {
+    id: 'betaine',
+    name: 'Betaine',
+    benefit: 'A humectant that supports hydration balance and skin comfort.',
+    productIds: ['hydration-cloud-cream'],
+  },
+  {
+    id: 'beta-glucan',
+    name: 'Beta-Glucan',
+    benefit: 'Soothes while supporting renewal and a more resilient-looking barrier.',
+    productIds: ['bakuchiol-renewal-serum'],
+  },
+  {
+    id: 'bromelain',
+    name: 'Bromelain',
+    benefit: 'A fruit enzyme that supports gentle polish and renewal during cleansing.',
+    productIds: ['tripleglow-exfoliating-cleanser'],
+  },
+  {
+    id: 'caffeine',
+    name: 'Caffeine',
+    benefit: 'Temporarily refreshes and helps de-puff the delicate eye area.',
+    productIds: ['eye-cream'],
+  },
+  {
+    id: 'chamomile',
+    name: 'Chamomilla Recutita (Matricaria) Flower Extract',
+    aka: 'Chamomile',
+    benefit: 'Calms visible irritation and leaves skin feeling soothed after cleansing.',
+    productIds: ['clarifying-cleanser'],
+  },
+  {
+    id: 'frankincense',
+    name: 'Boswellia Carterii Oil',
+    aka: 'Frankincense',
+    benefit: 'A restorative resin oil that supports tone, vitality, and luminous comfort.',
+    productIds: ['the-holy-grail', 'beauty-elixir-serum'],
+  },
+  {
+    id: 'ferulic-acid',
+    name: 'Ferulic Acid',
+    benefit: 'An antioxidant that stabilizes vitamin C and supports overall formula efficacy.',
+    productIds: ['brighten-glow-c-5', 'brighten-glow-c-20', 'tripleglow-exfoliating-cleanser'],
+  },
+  {
+    id: 'gluconolactone',
+    name: 'Gluconolactone',
+    benefit: 'A gentle polyhydroxy acid that supports mild renewal and formula preservation.',
+    productIds: [
+      'clarifying-cleanser', 'clarifying-gel-cleanser', 'tripleglow-exfoliating-cleanser',
+      'rosewater-niacinamide-toner', 'brighten-glow-c-5', 'brighten-glow-c-20',
+      'matrix-serum', 'amino-acid-serum', 'beauty-elixir-serum', 'bakuchiol-renewal-serum',
+      'hydration-cloud-cream', 'rich-barrier-cream', 'eye-cream',
+    ],
+  },
+  {
+    id: 'glycerin',
+    name: 'Glycerin',
+    benefit: 'A classic humectant that draws moisture into skin and supports softness.',
+    productIds: [
+      'clarifying-cleanser', 'clarifying-gel-cleanser', 'tripleglow-exfoliating-cleanser',
+      'rosewater-niacinamide-toner', 'brighten-glow-c-5', 'brighten-glow-c-20',
+      'matrix-serum', 'amino-acid-serum', 'beauty-elixir-serum', 'bakuchiol-renewal-serum',
+      'rich-barrier-cream', 'eye-cream',
+    ],
+  },
+  {
+    id: 'glycolic-acid',
+    name: 'Glycolic Acid',
+    benefit: 'An AHA that gently resurfaces for smoother, brighter-looking skin.',
+    productIds: ['tripleglow-exfoliating-cleanser'],
+  },
+  {
+    id: 'green-tea',
+    name: 'Camellia Sinensis Leaf Extract',
+    aka: 'Green Tea',
+    benefit: 'Antioxidant botanical support that helps refresh tired-looking skin.',
+    productIds: ['eye-cream', 'bakuchiol-renewal-serum'],
+  },
+  {
+    id: 'jojoba',
+    name: 'Simmondsia Chinensis (Jojoba) Seed Oil',
+    aka: 'Jojoba Oil',
+    benefit: 'A lightweight botanical oil that conditions and balances without heaviness.',
+    productIds: ['clarifying-cleanser', 'hydration-cloud-cream', 'eye-cream'],
+  },
+  {
+    id: 'l-ascorbic-acid',
+    name: 'L-Ascorbic Acid',
+    aka: 'Vitamin C',
+    benefit: 'A potent antioxidant that brightens, supports even tone, and defends against environmental stressors.',
+    productIds: ['brighten-glow-c-5', 'brighten-glow-c-20'],
+  },
+  {
+    id: 'licorice',
+    name: 'Glycyrrhiza Glabra (Licorice) Root Extract',
+    aka: 'Licorice Root',
+    benefit: 'Supports a more even-looking complexion and soothes reactive skin.',
+    productIds: ['bakuchiol-renewal-serum'],
+  },
+  {
+    id: 'myrrh',
+    name: 'Commiphora Myrrha Oil',
+    aka: 'Myrrh',
+    benefit: 'A restorative resin oil that supports resilient-looking skin and vitality.',
+    productIds: ['the-holy-grail'],
+  },
+  {
+    id: 'neroli',
+    name: 'Citrus Aurantium Flower Oil',
+    aka: 'Neroli',
+    benefit: 'A luminous botanical oil that finishes formulas with soft aromatic comfort.',
+    productIds: ['hyaluronic-acid-serum', 'beauty-elixir-serum'],
+  },
+  {
+    id: 'niacinamide',
+    name: 'Niacinamide',
+    aka: 'Vitamin B3',
+    benefit: 'Supports barrier function, clarity, refined pores, and a more even-looking tone.',
+    productIds: ['rosewater-niacinamide-toner', 'matrix-serum', 'bakuchiol-renewal-serum', 'eye-cream'],
+  },
+  {
+    id: 'oat',
+    name: 'Avena Sativa (Oat) Kernel Extract',
+    aka: 'Oat Extract',
+    benefit: 'Soothes and comforts while supporting renewal in evening formulas.',
+    productIds: ['bakuchiol-renewal-serum'],
+  },
+  {
+    id: 'panthenol',
+    name: 'Panthenol',
+    aka: 'Pro-Vitamin B5',
+    benefit: 'Conditions skin and supports comfort after cleansing or treatment.',
+    productIds: ['clarifying-cleanser', 'clarifying-gel-cleanser', 'bakuchiol-renewal-serum'],
+  },
+  {
+    id: 'pea-peptide',
+    name: 'Pisum Sativum (Pea) Peptide',
+    aka: 'Pea Peptide',
+    benefit: 'Supports firmness and collagen-looking resilience in lightweight serums.',
+    productIds: ['amino-acid-serum'],
+  },
+  {
+    id: 'pomegranate',
+    name: 'Punica Granatum Extract',
+    aka: 'Pomegranate',
+    benefit: 'Antioxidant botanical support for the delicate eye area.',
+    productIds: ['eye-cream'],
+  },
+  {
+    id: 'propanediol',
+    name: 'Propanediol',
+    benefit: 'A plant-derived solvent and humectant that supports absorption and comfort.',
+    productIds: ['tripleglow-exfoliating-cleanser', 'brighten-glow-c-5', 'brighten-glow-c-20', 'bakuchiol-renewal-serum', 'hydration-cloud-cream', 'amino-acid-serum'],
+  },
+  {
+    id: 'amino-acids',
+    name: 'Proline, Glycine & Lysine',
+    aka: 'Amino Acid Complex',
+    benefit: 'Building-block amino acids that support smoother, more resilient-looking skin.',
+    productIds: ['matrix-serum', 'amino-acid-serum'],
+  },
+  {
+    id: 'rosehip',
+    name: 'Rosa Canina Fruit Oil',
+    aka: 'Rosehip Oil',
+    benefit: 'Nourishing botanical oil that supports softness and barrier replenishment.',
+    productIds: ['rich-barrier-cream'],
+  },
+  {
+    id: 'rosewater',
+    name: 'Rosa Damascena Flower Water',
+    aka: 'Rosewater',
+    benefit: 'Soothes, softens, and hydrates as a purposeful base across the protocol.',
+    productIds: [
+      'clarifying-cleanser', 'clarifying-gel-cleanser', 'tripleglow-exfoliating-cleanser',
+      'rosewater-niacinamide-toner', 'hyaluronic-acid-serum', 'matrix-serum', 'amino-acid-serum',
+      'beauty-elixir-serum', 'bakuchiol-renewal-serum', 'hydration-cloud-cream',
+      'rich-barrier-cream', 'eye-cream',
+    ],
+  },
+  {
+    id: 'shea',
+    name: 'Butyrospermum Parkii (Shea) Butter',
+    aka: 'Shea Butter',
+    benefit: 'Deep nourishment that reinforces barrier comfort and lasting softness.',
+    productIds: ['hydration-cloud-cream', 'rich-barrier-cream', 'eye-cream'],
+  },
+  {
+    id: 'squalane',
+    name: 'Squalane',
+    benefit: 'A lightweight lipid that mimics skin oils to seal hydration without clogging.',
+    productIds: ['the-holy-grail', 'beauty-elixir-serum', 'hydration-cloud-cream', 'rich-barrier-cream', 'eye-cream'],
+  },
+  {
+    id: 'sodium-hyaluronate',
+    name: 'Sodium Hyaluronate',
+    aka: 'Hyaluronic Acid',
+    benefit: 'Multi-level hydration that plumps, softens fine lines, and refreshes skin.',
+    productIds: [
+      'hyaluronic-acid-serum', 'matrix-serum', 'amino-acid-serum', 'beauty-elixir-serum',
+      'bakuchiol-renewal-serum', 'hydration-cloud-cream', 'rich-barrier-cream', 'eye-cream',
+    ],
+  },
+  {
+    id: 'tocopherol',
+    name: 'Tocopherol',
+    aka: 'Vitamin E',
+    benefit: 'An antioxidant that nourishes and helps protect oils and skin lipids.',
+    productIds: ['the-holy-grail', 'bakuchiol-renewal-serum'],
+  },
+]

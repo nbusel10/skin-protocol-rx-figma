@@ -10,6 +10,7 @@ import ProtocolBuilder from './pages/ProtocolBuilder'
 import OurStory from './pages/OurStory'
 import SpaPartners from './pages/SpaPartners'
 import ComingSoonPage from './pages/ComingSoonPage'
+import IngredientGlossary from './pages/IngredientGlossary'
 import { PRODUCTS } from './data'
 
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
@@ -148,14 +149,7 @@ export default function App() {
         {page === 'protocol' && <ProtocolBuilder onNavigate={navigate} />}
         {page === 'story' && <OurStory onNavigate={navigate} />}
         {page === 'spa' && <SpaPartners onNavigate={navigate} />}
-        {page === 'glossary' && (
-          <ComingSoonPage
-            eyebrow="Learn"
-            title="Ingredient Glossary"
-            body="A clear reference for the purposeful ingredients in Skin Protocol RX formulas — what they do, why they're included, and how they support your protocol."
-            onNavigate={navigate}
-          />
-        )}
+        {page === 'glossary' && <IngredientGlossary onNavigate={navigate} />}
         {page === 'education' && (
           <ComingSoonPage
             eyebrow="Learn"

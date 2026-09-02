@@ -54,23 +54,63 @@ export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
   ]
 
   const buildProtocol = () => {
-    let pool = PRODUCTS.filter(p => !p.categories.includes('Starter Sets') && !p.categories.includes('Travel Sets'))
+    let pool = [...PRODUCTS]
     if (skinType) pool = pool.filter(p => p.skinTypes.includes(skinType as SkinType))
     if (concerns.length) pool = pool.filter(p => concerns.some(c => p.concerns.includes(c)))
     if (sensitive) pool = pool.filter(p => p.skinTypes.includes('Sensitive'))
 
+    const byId = (id: string) => pool.find(p => p.id === id) ?? PRODUCTS.find(p => p.id === id)
+
+    const oilyOrAcne =
+      skinType === 'Oily' || concerns.includes('Acne') || concerns.includes('Large Pores')
+    const cleanser = sensitive
+      ? byId('clarifying-cleanser')
+      : oilyOrAcne
+        ? byId('clarifying-gel-cleanser')
+        : byId('clarifying-cleanser')
+
+    const preferGentle = !!sensitive || routine === 'starter'
+    const vitaminC = preferGentle ? byId('brighten-glow-c-5') : byId('brighten-glow-c-20')
+
+    const moisturizer =
+      skinType === 'Dry' || concerns.includes('Dry Skin')
+        ? byId('rich-barrier-cream')
+        : byId('hydration-cloud-cream')
+
+    const treatmentExtra = (() => {
+      if (concerns.includes('Aging') || concerns.includes('Hyperpigmentation')) {
+        return byId('bakuchiol-renewal-serum')
+      }
+      if (concerns.includes('Redness') || concerns.includes('Dry Skin')) {
+        return byId('matrix-serum')
+      }
+      if (concerns.includes('Aging') || concerns.includes('Preventative')) {
+        return byId('amino-acid-serum')
+      }
+      return byId('amino-acid-serum')
+    })()
+
     const ordered = [
-      pool.find(p => p.categories.includes('Cleansers')),
-      pool.find(p => p.categories.includes('Toners')),
-      pool.find(p => p.categories.includes('Serums') && p.name.toLowerCase().includes('vitamin') && p.id !== 'advanced-c-serum-20'),
-      pool.find(p => p.categories.includes('Serums') && p.name.toLowerCase().includes('hyaluronic')),
-      pool.find(p => p.categories.includes('Moisturizers') && !p.categories.includes('Eye Care')),
-      pool.find(p => p.categories.includes('Eye Care')),
-      pool.find(p => p.categories.includes('Facial Oils')),
+      cleanser,
+      byId('rosewater-niacinamide-toner'),
+      vitaminC,
+      byId('hyaluronic-acid-serum'),
+      moisturizer,
+      byId('eye-cream'),
+      byId('the-holy-grail'),
+      treatmentExtra,
     ].filter(Boolean)
 
+    // De-dupe while preserving order
+    const seen = new Set<string>()
+    const unique = ordered.filter(p => {
+      if (!p || seen.has(p.id)) return false
+      seen.add(p.id)
+      return true
+    })
+
     const limit = stepsPreference === 'minimal' ? 3 : stepsPreference === 'moderate' ? 5 : 7
-    return ordered.slice(0, limit) as typeof PRODUCTS
+    return unique.slice(0, limit) as typeof PRODUCTS
   }
 
   const [recommendations, setRecommendations] = useState<typeof PRODUCTS>([])

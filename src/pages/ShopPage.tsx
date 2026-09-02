@@ -11,7 +11,7 @@ type SortOption = 'featured' | 'best-selling' | 'newest' | 'price-asc' | 'price-
 
 const SKIN_TYPES: SkinType[] = ['Combination', 'Dry', 'Normal', 'Oily', 'Sensitive']
 const SKIN_CONCERNS: SkinConcern[] = ['Acne', 'Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage']
-const CATEGORIES: ProductCategory[] = ['Cleansers', 'Toners', 'Moisturizers', 'Eye Care', 'Serums', 'Facial Oils', 'Starter Sets', 'Travel Sets']
+const CATEGORIES: ProductCategory[] = ['Cleansers', 'Toners', 'Moisturizers', 'Eye Care', 'Serums', 'Facial Oils']
 const BADGES = ['Best Sellers', 'Sensitive Skin Friendly', 'Professional Favorites']
 
 function StarRating({ rating }: { rating: number }) {

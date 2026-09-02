@@ -52,7 +52,7 @@ const BRAND_PROMISES = [
 
 const TESTIMONIALS_CUSTOMER = [
   { name: 'Rachel M.', location: 'New York, NY', text: 'The Hyaluronic Acid Serum changed my morning routine completely. My skin has never felt this hydrated by midday.', rating: 5 },
-  { name: 'Danielle K.', location: 'Brooklyn, NY', text: 'I was hesitant to try a 20% vitamin C but the Advanced C Serum has been a game changer for my hyperpigmentation.', rating: 5 },
+  { name: 'Danielle K.', location: 'Brooklyn, NY', text: 'I was hesitant to try a 20% vitamin C but Brighten & Glow C Serum has been a game changer for my hyperpigmentation.', rating: 5 },
   { name: 'Sophia T.', location: 'Los Angeles, CA', text: 'Simple, effective products that do exactly what they say. I love that there are no unnecessary extras.', rating: 5 },
 ]
 
@@ -156,7 +156,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
   const [testimonialTab, setTestimonialTab] = useState<'customer' | 'pro'>('customer')
   const testimonials = testimonialTab === 'customer' ? TESTIMONIALS_CUSTOMER : TESTIMONIALS_PRO
   const featuredProducts = PRODUCTS.filter(p =>
-    ['advanced-c-serum-20', 'hyaluronic-acid-serum', 'firming-moisturizer', 'squalane-oil'].includes(p.id)
+    ['brighten-glow-c-20', 'hyaluronic-acid-serum', 'rich-barrier-cream', 'the-holy-grail'].includes(p.id)
   )
 
   return (

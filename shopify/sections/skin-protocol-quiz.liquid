@@ -3,16 +3,23 @@
   File: sections/skin-protocol-quiz.liquid
 
   Setup
-  1. Create a manual collection named "Protocol Quiz" with only these products
-     (exclude The Trio, starter sets, and seasonal SKUs):
-       - Clarifying Cleanser          (handle: clarifying-cleanser)
-       - Rosewater Niacinamide Toner  (handle: rosewater-niacinamide-toner)
-       - Vitamin C Serum              (handle: vitamin-c-5-serum) — 5% / 20% variants
-       - Hyaluronic Acid Serum        (handle: hyaluronic-acid-serum)
-       - Moisturizing Cream           (handle: moisturizer)
-       - Eye Cream                    (handle: eye-cream)
-       - The Holy Grail               (handle: the-holy-grail)
-       - Amino Acid Serum             (handle: amino-acid-serum)
+  1. Create a manual collection named "Protocol Quiz" with quiz-eligible products
+     (exclude starter sets and seasonal SKUs). Preferred catalog from Master Ingredient List:
+       - Chamomile Cream Cleanser              (handle: clarifying-cleanser)
+       - Clarifying Gel Cleanser               (handle: clarifying-gel-cleanser)
+       - TripleGlow Exfoliating Cleanser       (handle: tripleglow-exfoliating-cleanser) — optional weekly
+       - Niacinamide Rosewater Restorative Toner (handle: rosewater-niacinamide-toner)
+       - Brighten & Glow C Serum / Vitamin C   (handle: vitamin-c-5-serum) — 5% / 20% variants
+       - Hyaluronic Acid Serum                 (handle: hyaluronic-acid-serum)
+       - Hydration Cloud Cream                 (handle: hydration-cloud-cream)
+       - Rich Barrier Cream                    (handle: rich-barrier-cream)
+         · also accepts live handle moisturizer as alias
+       - Eye Recovery Complex                  (handle: eye-cream)
+       - The Holy Grail Oil                    (handle: the-holy-grail)
+       - Tri-peptide Complex Serum             (handle: amino-acid-serum)
+       - Matrix Serum                          (handle: matrix-serum)
+       - Bakuchiol Renewal Serum               (handle: bakuchiol-renewal-serum)
+       - Beauty Elixir Serum                   (handle: beauty-elixir-serum)
   2. In the theme editor, add this section to a page and select that collection.
   3. Handle-based quiz metadata is built into the section JS — product tags and
      types are optional. Optional later: set Product type to Cleansers, Toners,
@@ -746,12 +753,28 @@
 
     // Handle → quiz metadata for the live Skin Protocol Rx catalog.
     // Tags/types in Admin are optional when a handle is listed here.
+    // Titles should match Master Ingredient List marketing names when updated in Admin.
     var QUIZ_CATALOG = {
       'clarifying-cleanser': {
         step: 'cleanser',
+        cleanserKind: 'chamomile',
         typeLabel: 'Cleansers',
         skinTypes: ALL_SKIN.slice(),
         concerns: ALL_CONCERNS.slice()
+      },
+      'clarifying-gel-cleanser': {
+        step: 'cleanser',
+        cleanserKind: 'gel',
+        typeLabel: 'Cleansers',
+        skinTypes: ['Combination', 'Normal', 'Oily', 'Sensitive'],
+        concerns: ['Acne', 'Brightening', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage']
+      },
+      'tripleglow-exfoliating-cleanser': {
+        step: 'cleanser',
+        cleanserKind: 'exfoliating',
+        typeLabel: 'Cleansers',
+        skinTypes: ['Combination', 'Dry', 'Normal', 'Oily'],
+        concerns: ['Acne', 'Aging', 'Brightening', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Sun Damage']
       },
       'rosewater-niacinamide-toner': {
         step: 'toner',
@@ -774,8 +797,23 @@
       },
       'moisturizer': {
         step: 'moisturizer',
+        moisturizerKind: 'rich',
         typeLabel: 'Moisturizers',
         skinTypes: ALL_SKIN.slice(),
+        concerns: ['Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage']
+      },
+      'rich-barrier-cream': {
+        step: 'moisturizer',
+        moisturizerKind: 'rich',
+        typeLabel: 'Moisturizers',
+        skinTypes: ALL_SKIN.slice(),
+        concerns: ['Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage']
+      },
+      'hydration-cloud-cream': {
+        step: 'moisturizer',
+        moisturizerKind: 'light',
+        typeLabel: 'Moisturizers',
+        skinTypes: ['Combination', 'Normal', 'Oily', 'Sensitive'],
         concerns: ['Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage']
       },
       'eye-cream': {
@@ -791,10 +829,28 @@
         concerns: ALL_CONCERNS.slice()
       },
       'amino-acid-serum': {
-        step: null,
+        step: 'treatment',
         typeLabel: 'Serums',
         skinTypes: ALL_SKIN.slice(),
         concerns: ALL_CONCERNS.slice()
+      },
+      'matrix-serum': {
+        step: 'treatment',
+        typeLabel: 'Serums',
+        skinTypes: ALL_SKIN.slice(),
+        concerns: ALL_CONCERNS.slice()
+      },
+      'bakuchiol-renewal-serum': {
+        step: 'treatment',
+        typeLabel: 'Serums',
+        skinTypes: ALL_SKIN.slice(),
+        concerns: ['Aging', 'Brightening', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Sun Damage']
+      },
+      'beauty-elixir-serum': {
+        step: 'treatment',
+        typeLabel: 'Serums',
+        skinTypes: ALL_SKIN.slice(),
+        concerns: ['Aging', 'Brightening', 'Dry Skin', 'Preventative', 'Redness', 'Sun Damage']
       }
     };
 
@@ -870,16 +926,32 @@
         typeLabel: normalizeType(product.type),
         skinTypes: ALL_SKIN.slice(),
         concerns: ALL_CONCERNS.slice(),
-        vitaminC: false
+        vitaminC: false,
+        cleanserKind: null,
+        moisturizerKind: null
       };
 
-      if (h.indexOf('cleanser') !== -1 || t.indexOf('cleanser') !== -1) {
+      if (h.indexOf('exfoliat') !== -1 || t.indexOf('exfoliat') !== -1 || t.indexOf('tripleglow') !== -1) {
         meta.step = 'cleanser';
+        meta.cleanserKind = 'exfoliating';
+        meta.typeLabel = 'Cleansers';
+      } else if (h.indexOf('gel-cleanser') !== -1 || t.indexOf('gel cleanser') !== -1) {
+        meta.step = 'cleanser';
+        meta.cleanserKind = 'gel';
+        meta.typeLabel = 'Cleansers';
+      } else if (h.indexOf('cleanser') !== -1 || t.indexOf('cleanser') !== -1 || t.indexOf('chamomile') !== -1) {
+        meta.step = 'cleanser';
+        meta.cleanserKind = 'chamomile';
         meta.typeLabel = 'Cleansers';
       } else if (h.indexOf('toner') !== -1 || t.indexOf('toner') !== -1) {
         meta.step = 'toner';
         meta.typeLabel = 'Toners';
-      } else if (h.indexOf('vitamin') !== -1 || t.indexOf('vitamin c') !== -1) {
+      } else if (
+        h.indexOf('vitamin') !== -1 ||
+        t.indexOf('vitamin c') !== -1 ||
+        t.indexOf('brighten') !== -1 ||
+        t.indexOf('l-ascorbic') !== -1
+      ) {
         meta.step = 'vitamin-c';
         meta.typeLabel = 'Serums';
         meta.vitaminC = true;
@@ -887,17 +959,46 @@
       } else if (h.indexOf('hyaluronic') !== -1 || t.indexOf('hyaluronic') !== -1) {
         meta.step = 'hyaluronic';
         meta.typeLabel = 'Serums';
-      } else if (h.indexOf('eye') !== -1 || t.indexOf('eye cream') !== -1) {
+      } else if (h.indexOf('eye') !== -1 || t.indexOf('eye cream') !== -1 || t.indexOf('eye recovery') !== -1) {
         meta.step = 'eye';
         meta.typeLabel = 'Eye Care';
         meta.concerns = QUIZ_CATALOG['eye-cream'].concerns.slice();
-      } else if (h.indexOf('moistur') !== -1 || h === 'moisturizer' || t.indexOf('moistur') !== -1) {
+      } else if (
+        h === 'moisturizer' ||
+        h.indexOf('rich-barrier') !== -1 ||
+        t.indexOf('rich barrier') !== -1 ||
+        t.indexOf('moisturizing cream') !== -1
+      ) {
         meta.step = 'moisturizer';
+        meta.moisturizerKind = 'rich';
         meta.typeLabel = 'Moisturizers';
-        meta.concerns = QUIZ_CATALOG['moisturizer'].concerns.slice();
+        meta.concerns = QUIZ_CATALOG['rich-barrier-cream'].concerns.slice();
+      } else if (
+        h.indexOf('hydration-cloud') !== -1 ||
+        t.indexOf('hydration cloud') !== -1 ||
+        h.indexOf('moistur') !== -1 ||
+        t.indexOf('moistur') !== -1
+      ) {
+        meta.step = 'moisturizer';
+        meta.moisturizerKind = h.indexOf('cloud') !== -1 || t.indexOf('cloud') !== -1 ? 'light' : 'rich';
+        meta.typeLabel = 'Moisturizers';
+        meta.concerns = QUIZ_CATALOG['hydration-cloud-cream'].concerns.slice();
       } else if (h.indexOf('holy-grail') !== -1 || h.indexOf('squalane') !== -1 || t.indexOf('holy grail') !== -1) {
         meta.step = 'oil';
         meta.typeLabel = 'Facial Oils';
+      } else if (
+        h.indexOf('bakuchiol') !== -1 ||
+        h.indexOf('matrix') !== -1 ||
+        h.indexOf('amino-acid') !== -1 ||
+        h.indexOf('beauty-elixir') !== -1 ||
+        t.indexOf('bakuchiol') !== -1 ||
+        t.indexOf('matrix') !== -1 ||
+        t.indexOf('tri-peptide') !== -1 ||
+        t.indexOf('peptide') !== -1 ||
+        t.indexOf('beauty elixir') !== -1
+      ) {
+        meta.step = 'treatment';
+        meta.typeLabel = 'Serums';
       }
 
       return meta;
@@ -911,6 +1012,8 @@
       out.typeLabel = meta.typeLabel;
       out.type = meta.typeLabel;
       out.vitaminC = !!meta.vitaminC;
+      out.cleanserKind = meta.cleanserKind || null;
+      out.moisturizerKind = meta.moisturizerKind || null;
       return out;
     }
 
@@ -1003,19 +1106,93 @@
       if (step === 'cleanser') return hasTag(product, 'Cleansers');
       if (step === 'toner') return hasTag(product, 'Toners');
       if (step === 'vitamin-c') {
-        return (hasTag(product, 'Serums') || product.vitaminC) && title.indexOf('vitamin') !== -1;
+        return (hasTag(product, 'Serums') || product.vitaminC) && (
+          title.indexOf('vitamin') !== -1 ||
+          title.indexOf('brighten') !== -1 ||
+          title.indexOf('ascorbic') !== -1
+        );
       }
       if (step === 'hyaluronic') {
         return hasTag(product, 'Serums') && title.indexOf('hyaluronic') !== -1;
       }
       if (step === 'moisturizer') return hasTag(product, 'Moisturizers') && !hasTag(product, 'Eye Care');
-      if (step === 'eye') return hasTag(product, 'Eye Care');
+      if (step === 'eye') return hasTag(product, 'Eye Care') || title.indexOf('eye recovery') !== -1;
       if (step === 'oil') return hasTag(product, 'Facial Oils') || hasTag(product, 'Oils');
+      if (step === 'treatment') {
+        return hasTag(product, 'Serums') && (
+          title.indexOf('bakuchiol') !== -1 ||
+          title.indexOf('matrix') !== -1 ||
+          title.indexOf('peptide') !== -1 ||
+          title.indexOf('amino') !== -1 ||
+          title.indexOf('elixir') !== -1
+        );
+      }
       return false;
+    }
+
+    function pickCleanser(pool, preferGentle, oilyOrAcne) {
+      var cleansers = pool.filter(function (p) { return hasStep(p, 'cleanser'); });
+      if (!cleansers.length) return null;
+      if (preferGentle) {
+        return pick(cleansers, function (p) {
+          return p.cleanserKind === 'chamomile' || (p.handle || '').indexOf('clarifying-cleanser') !== -1;
+        }) || pick(cleansers, function (p) { return p.cleanserKind !== 'exfoliating'; }) || cleansers[0];
+      }
+      if (oilyOrAcne) {
+        return pick(cleansers, function (p) {
+          return p.cleanserKind === 'gel' || (p.handle || '').indexOf('gel') !== -1;
+        }) || pick(cleansers, function (p) { return p.cleanserKind !== 'exfoliating'; }) || cleansers[0];
+      }
+      return pick(cleansers, function (p) {
+        return p.cleanserKind === 'chamomile' || p.cleanserKind === 'gel';
+      }) || cleansers[0];
+    }
+
+    function pickMoisturizer(pool, preferRich) {
+      var moisturizers = pool.filter(function (p) { return hasStep(p, 'moisturizer'); });
+      if (!moisturizers.length) return null;
+      if (preferRich) {
+        return pick(moisturizers, function (p) {
+          return p.moisturizerKind === 'rich' ||
+            (p.handle || '') === 'moisturizer' ||
+            (p.handle || '').indexOf('rich-barrier') !== -1;
+        }) || moisturizers[0];
+      }
+      return pick(moisturizers, function (p) {
+        return p.moisturizerKind === 'light' || (p.handle || '').indexOf('cloud') !== -1;
+      }) || moisturizers[0];
+    }
+
+    function pickTreatment(pool) {
+      var treatments = pool.filter(function (p) { return hasStep(p, 'treatment'); });
+      if (!treatments.length) return null;
+      var aging = state.concerns.indexOf('Aging') !== -1 || state.concerns.indexOf('Hyperpigmentation') !== -1;
+      var barrier = state.concerns.indexOf('Redness') !== -1 || state.concerns.indexOf('Dry Skin') !== -1;
+      if (aging) {
+        return pick(treatments, function (p) {
+          return (p.handle || '').indexOf('bakuchiol') !== -1 || (p.title || '').toLowerCase().indexOf('bakuchiol') !== -1;
+        }) || pick(treatments, function (p) {
+          return (p.handle || '').indexOf('amino') !== -1 || (p.title || '').toLowerCase().indexOf('peptide') !== -1;
+        }) || treatments[0];
+      }
+      if (barrier) {
+        return pick(treatments, function (p) {
+          return (p.handle || '').indexOf('matrix') !== -1 || (p.title || '').toLowerCase().indexOf('matrix') !== -1;
+        }) || treatments[0];
+      }
+      return pick(treatments, function (p) {
+        return (p.handle || '').indexOf('amino') !== -1;
+      }) || treatments[0];
     }
 
     function buildProtocol() {
       var preferGentle = !!state.sensitive;
+      var oilyOrAcne =
+        state.skinType === 'Oily' ||
+        state.concerns.indexOf('Acne') !== -1 ||
+        state.concerns.indexOf('Large Pores') !== -1;
+      var preferRich =
+        state.skinType === 'Dry' || state.concerns.indexOf('Dry Skin') !== -1;
 
       function filterPool(strict) {
         return products.filter(function (p) {
@@ -1029,13 +1206,14 @@
 
       function assemble(pool) {
         return [
-          pick(pool, function (p) { return hasStep(p, 'cleanser'); }),
+          pickCleanser(pool, preferGentle, oilyOrAcne),
           pick(pool, function (p) { return hasStep(p, 'toner'); }),
           pick(pool, function (p) { return hasStep(p, 'vitamin-c'); }),
           pick(pool, function (p) { return hasStep(p, 'hyaluronic'); }),
-          pick(pool, function (p) { return hasStep(p, 'moisturizer'); }),
+          pickMoisturizer(pool, preferRich),
           pick(pool, function (p) { return hasStep(p, 'eye'); }),
-          pick(pool, function (p) { return hasStep(p, 'oil'); })
+          pick(pool, function (p) { return hasStep(p, 'oil'); }),
+          pickTreatment(pool)
         ].filter(Boolean).map(function (p) {
           if (p.vitaminC || hasStep(p, 'vitamin-c')) return resolveVitaminC(p, preferGentle);
           return p;
