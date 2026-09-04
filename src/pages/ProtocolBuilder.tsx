@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { PRODUCTS, type SkinType, type SkinConcern } from '../data'
+import { PRODUCTS, getProtocolStepLabel, type SkinType, type SkinConcern } from '../data'
 import EmailProtocolModal from '../components/EmailProtocolModal'
 import ProductImage from '../components/ProductImage'
 
@@ -69,7 +69,7 @@ export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
         ? byId('clarifying-gel-cleanser')
         : byId('clarifying-cleanser')
 
-    const preferGentle = !!sensitive || routine === 'starter'
+    const preferGentle = !!sensitive
     const vitaminC = preferGentle ? byId('brighten-glow-c-5') : byId('brighten-glow-c-20')
 
     const moisturizer =
@@ -110,7 +110,9 @@ export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
     })
 
     const limit = stepsPreference === 'minimal' ? 3 : stepsPreference === 'moderate' ? 5 : 7
-    return unique.slice(0, limit) as typeof PRODUCTS
+    return [...unique]
+      .sort((a, b) => a.protocolStep - b.protocolStep)
+      .slice(0, limit) as typeof PRODUCTS
   }
 
   const [recommendations, setRecommendations] = useState<typeof PRODUCTS>([])
@@ -202,15 +204,16 @@ export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
 
           {/* Protocol steps */}
           <div className="space-y-4 mb-10">
-            {recommendations.map((p, i) => (
+            {recommendations.map((p) => (
               <div key={p.id} className="bg-white flex gap-5 p-5 border border-gray-soft">
                 <div className="flex-shrink-0">
-                  <div className="w-10 h-10 bg-rose flex items-center justify-center text-white text-xs font-semibold">{i + 1}</div>
+                  <div className="w-10 h-10 bg-rose flex items-center justify-center text-white text-xs font-semibold">{p.protocolStep}</div>
                 </div>
                 <div className="w-20 h-20 shrink-0 overflow-hidden">
                   <ProductImage src={p.image} alt={p.name} variant="inline" />
                 </div>
                 <div className="flex-1">
+                  <p className="text-[10px] tracking-widest uppercase text-rose mb-1">{getProtocolStepLabel(p.protocolStep)}</p>
                   <p className="text-[10px] tracking-widest uppercase text-charcoal/40 mb-1">{p.categories[0]}</p>
                   <h3 className="font-medium text-charcoal mb-1">{p.name}</h3>
                   <p className="text-xs text-charcoal/50 mb-2">{p.tagline}</p>
@@ -258,10 +261,10 @@ export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
             protocol={{
               skinType: skinType || '',
               concerns,
-              products: recommendations.map((p, i) => ({
+              products: recommendations.map((p) => ({
                 name: p.name,
                 price: `$${p.price}`,
-                step: i + 1,
+                step: p.protocolStep,
               })),
               totalPrice: `$${totalPrice}`,
             }}
