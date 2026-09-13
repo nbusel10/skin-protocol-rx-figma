@@ -1,7 +1,10 @@
+import { useEffect } from 'react'
+
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 
 interface OurStoryProps {
   onNavigate: (page: Page, productId?: string) => void
+  scrollToId?: string
 }
 
 const FOUNDERS = [
@@ -26,6 +29,44 @@ const FOUNDERS = [
     image: 'https://skinprotocolrx.com/cdn/shop/files/6103798B-BA6F-4093-A676-897E515244CC_1_201_a.jpg?v=1776598050&width=800',
     alt: 'Christina Corbin, LME — licensed medical esthetician and co-founder of Skin Protocol RX',
   },
+]
+
+const WHAT_YOU_FIND = [
+  'Clinically relevant active ingredients',
+  'Intentional concentrations',
+  'Balanced, skin-supportive formulas',
+  'Multi-functional ingredients selected with purpose',
+  'Formulation decisions grounded in long-term skin health',
+]
+
+const WHAT_YOU_WONT_FIND = [
+  'Overloaded ingredient lists',
+  'Redundant actives',
+  'Trend-driven formulation',
+  'Unnecessary fillers',
+  'Fragrance added without purpose',
+]
+
+const STANDARDS = [
+  {
+    title: 'Expert-Led',
+    body: 'Every formula is shaped by a chemist, nurse practitioner, and licensed medical esthetician.',
+  },
+  {
+    title: 'Purposeful Formulation',
+    body: 'We prioritize ingredients that support function, tolerance, and consistency over time.',
+  },
+  {
+    title: 'Less, Done Properly',
+    body: 'We do not believe more products, more steps, or more actives automatically lead to better skin.',
+  },
+]
+
+const CLINICAL_PHILOSOPHY = [
+  'Skin is a biological system, not a trend.',
+  'Precision outperforms excess.',
+  'Long-term skin health matters more than short-term stimulation.',
+  'Every ingredient must earn its place.',
 ]
 
 const PHILOSOPHY_SECTIONS = [
@@ -55,7 +96,14 @@ const PHILOSOPHY_SECTIONS = [
   },
 ]
 
-export default function OurStory({ onNavigate }: OurStoryProps) {
+export default function OurStory({ onNavigate, scrollToId }: OurStoryProps) {
+  useEffect(() => {
+    if (!scrollToId) return
+    const el = document.getElementById(scrollToId)
+    if (!el) return
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [scrollToId])
+
   return (
     <div className="bg-white font-sans">
       {/* Hero */}
@@ -165,6 +213,71 @@ export default function OurStory({ onNavigate }: OurStoryProps) {
           <div className="max-w-2xl mx-auto text-center mt-16 pt-12 border-t border-white/10">
             <p className="text-white/55 leading-relaxed text-sm">
               Most skincare is built by marketing teams. This system is built from clinical disciplines — where formulation, treatment, and skin physiology intersect. The result is not more products. It is better ones.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Standards — formulation doctrine from The Facts */}
+      <section
+        id="our-standards"
+        className="bg-stone border-t border-gray-soft py-20 px-5 md:px-8 scroll-mt-[7rem] md:scroll-mt-[8.5rem] lg:scroll-mt-[9rem]"
+      >
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-12 lg:gap-20 mb-16 pb-16 border-b border-gray-soft">
+            <div>
+              <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-5">Our Standards</p>
+              <h2 className="font-serif text-3xl md:text-4xl text-black mb-5">
+                What matters. What doesn&apos;t.
+              </h2>
+              <p className="text-black/55 leading-relaxed">
+                Skin Protocol RX is built on disciplined formulation, clinical perspective, and intentional restraint.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+              <div>
+                <p className="text-[11px] tracking-[0.25em] uppercase text-black mb-5">Included</p>
+                <ul className="space-y-3">
+                  {WHAT_YOU_FIND.map(item => (
+                    <li key={item} className="text-sm text-black/70 leading-relaxed flex gap-3">
+                      <span className="text-rose shrink-0">+</span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <p className="text-[11px] tracking-[0.25em] uppercase text-black/35 mb-5">Left Out</p>
+                <ul className="space-y-3">
+                  {WHAT_YOU_WONT_FIND.map(item => (
+                    <li key={item} className="text-sm text-black/40 leading-relaxed flex gap-3">
+                      <span className="shrink-0">−</span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-0 md:divide-x md:divide-gray-soft mb-16">
+            {STANDARDS.map((s, i) => (
+              <div key={s.title} className="py-6 md:py-0 md:px-8 first:md:pl-0 last:md:pr-0">
+                <p className="text-[11px] tracking-[0.25em] uppercase text-rose mb-3">
+                  {String(i + 1).padStart(2, '0')}
+                </p>
+                <h3 className="font-serif text-xl text-black mb-3">{s.title}</h3>
+                <p className="text-black/55 leading-relaxed text-sm">{s.body}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="border-t border-gray-soft pt-10">
+            <p className="font-serif text-xl md:text-2xl text-black mb-6">
+              Minimal formulas. Maximum performance.
+            </p>
+            <p className="text-sm text-black/45 leading-relaxed max-w-2xl">
+              {CLINICAL_PHILOSOPHY.join(' ')}
             </p>
           </div>
         </div>

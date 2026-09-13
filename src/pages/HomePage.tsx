@@ -342,14 +342,14 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           <div className="flex flex-col gap-4">
             {(
               [
-                { label: 'Our Standards', page: 'story' as Page },
+                { label: 'Our Standards', page: 'story' as Page, id: 'our-standards' },
                 { label: 'Ingredient Glossary', page: 'glossary' as Page },
                 { label: 'Product Education', page: 'education' as Page },
               ] as const
             ).map(l => (
               <button
                 key={l.label}
-                onClick={() => onNavigate(l.page)}
+                onClick={() => onNavigate(l.page, 'id' in l ? l.id : undefined)}
                 className="flex items-center justify-between text-white/70 hover:text-rose border-b border-white/15 pb-4 text-sm font-medium group transition-colors"
               >
                 {l.label}
