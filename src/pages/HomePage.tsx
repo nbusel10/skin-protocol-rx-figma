@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { PRODUCTS, SKIN_CONCERNS, PROTOCOL_STEPS } from '../data'
+import { PRODUCTS, SKIN_CONCERNS, PROTOCOL_STEPS, getProtocolStepLabel } from '../data'
 import ProductImage from '../components/ProductImage'
 
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
@@ -135,6 +135,9 @@ function ProductCard({ product, onNavigate, dark = false }: { product: typeof PR
       <div className="flex flex-col gap-1.5 flex-1">
         <div className="flex items-start justify-between gap-2">
           <div>
+            <p className={`text-[11px] tracking-widest uppercase text-rose mb-0.5 font-sans`}>
+              {getProtocolStepLabel(product.protocolStep)}
+            </p>
             <p className={`text-[11px] tracking-widest uppercase ${textMuted} mb-0.5 font-sans`}>
               {product.categories[0]}
             </p>
@@ -300,11 +303,16 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           {/* Protocol steps */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             {PROTOCOL_STEPS.map(s => (
-              <div key={s.step} className="bg-white p-5 flex flex-col gap-2 border border-gray-soft">
+              <button
+                key={s.step}
+                type="button"
+                onClick={() => onNavigate('shop', s.name.toLowerCase())}
+                className="bg-white p-5 flex flex-col gap-2 border border-gray-soft text-left transition-all duration-200 hover:border-rose hover:shadow-[0_4px_24px_rgba(184,135,139,0.12)]"
+              >
                 <span className="text-[10px] tracking-[0.25em] uppercase text-rose font-medium">Step {s.step}</span>
                 <h3 className="font-serif text-xl text-black">{s.name}</h3>
                 <p className="text-xs text-black/45 leading-relaxed">{s.description}</p>
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -463,26 +471,6 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                   <p className="text-xs text-black/40">{t.location}</p>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── FULL PRODUCT PREVIEW ─────────────────────────────────────── */}
-      <section className="py-20 px-5 md:px-8 bg-white border-t border-gray-soft">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-            <div>
-              <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-3">The Collection</p>
-              <h2 className="font-serif text-3xl md:text-4xl text-black">The Complete Collection</h2>
-            </div>
-            <button onClick={() => onNavigate('shop')} className="text-sm text-black underline underline-offset-4 hover:text-rose transition-colors">
-              Shop All Products →
-            </button>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5 md:gap-7">
-            {PRODUCTS.slice(0, 8).map(p => (
-              <ProductCard key={p.id} product={p} onNavigate={onNavigate} />
             ))}
           </div>
         </div>
