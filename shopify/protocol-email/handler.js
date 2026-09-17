@@ -2,7 +2,7 @@
  * Protocol email backend (Phase 2).
  *
  * POST JSON:
- *   { email, firstName?, marketingConsent, protocol: { skinType, concerns, products, totalPrice } }
+ *   { email, firstName?, marketingConsent, protocol: { skinType, concerns, skinRightNow?, note?, products, totalPrice } }
  *
  * Env (server-side only — never prefix with VITE_):
  *   SHOPIFY_STORE_DOMAIN           your-store.myshopify.com
@@ -227,15 +227,27 @@ async function parsePayload(request) {
   const concerns = Array.isArray(protocol.concerns)
     ? protocol.concerns.map((c) => String(c).trim()).filter(Boolean).slice(0, 12)
     : []
+  const skinRightNow = String(protocol.skinRightNow || "").trim().slice(0, 80)
+  const note = String(protocol.note || "").trim().slice(0, 400)
   const products = Array.isArray(protocol.products)
     ? protocol.products
-        .slice(0, 16)
+        .slice(0, 24)
         .map((p, i) => {
-          const step = Number(p?.step || p?.step)
+          const rawStep = p?.step
+          const step =
+            typeof rawStep === "string" && rawStep.trim()
+              ? rawStep.trim().slice(0, 40)
+              : Number(rawStep) > 0
+                ? Number(rawStep)
+                : i + 1
+          const period = ["am", "pm", "both", "weekly"].includes(String(p?.period || ""))
+            ? String(p.period)
+            : undefined
           return {
             name: String(p?.name || "").trim().slice(0, 120),
             price: String(p?.price || "").trim().slice(0, 40),
-            step: step > 0 ? step : i + 1,
+            step,
+            period,
             url: typeof p?.url === "string" && p.url.startsWith("http") ? p.url.slice(0, 500) : undefined,
           }
         })
@@ -250,7 +262,7 @@ async function parsePayload(request) {
     email,
     firstName: firstName || undefined,
     marketingConsent,
-    protocol: { skinType, concerns, products, totalPrice },
+    protocol: { skinType, concerns, skinRightNow, note, products, totalPrice },
   }
 }
 
@@ -279,6 +291,7 @@ async function saveProtocolMetafield(config, ownerId, payload) {
   const value = JSON.stringify({
     skinType: payload.protocol.skinType,
     concerns: payload.protocol.concerns,
+    skinRightNow: payload.protocol.skinRightNow,
     products: payload.protocol.products,
     totalPrice: payload.protocol.totalPrice,
     firstName: payload.firstName || "",
@@ -455,19 +468,35 @@ function renderProtocolEmail(payload, shopUrl) {
   const name = payload.firstName ? escapeHtml(payload.firstName) : "there"
   const skinType = payload.protocol.skinType ? escapeHtml(payload.protocol.skinType) : "your skin"
   const concerns = payload.protocol.concerns.map(escapeHtml).join(", ")
+  const hasPeriods = payload.protocol.products.some((p) => p.period)
+  const periodLabels = { am: "AM only", pm: "PM only", both: "AM &amp; PM", weekly: "1-3x weekly" }
+  const header = hasPeriods
+    ? `<tr>
+        <td style="padding:0 0 8px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#999;">Product</td>
+        <td style="padding:0 0 8px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#999;text-align:center;">When</td>
+        <td style="padding:0 0 8px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#999;text-align:right;">Price</td>
+      </tr>`
+    : ""
   const rows = payload.protocol.products
     .map((p) => {
       const step = `<span style="display:inline-block;min-width:18px;color:#BD705F;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;">${escapeHtml(String(p.step))}</span>`
-      const title = p.url
+      const titleHtml = p.url
         ? `<a href="${escapeHtml(p.url)}" style="color:#252525;text-decoration:none;font-weight:500;">${escapeHtml(p.name)}</a>`
         : `<span style="color:#252525;font-weight:500;">${escapeHtml(p.name)}</span>`
+      const when = hasPeriods
+        ? `<td style="padding:14px 0;border-bottom:1px solid #EEECE5;text-align:center;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#888;white-space:nowrap;">${periodLabels[p.period] || ""}</td>`
+        : ""
       return `<tr>
-        <td style="padding:14px 0;border-bottom:1px solid #EEECE5;">${step} ${title}</td>
+        <td style="padding:14px 0;border-bottom:1px solid #EEECE5;">${step} ${titleHtml}</td>
+        ${when}
         <td style="padding:14px 0;border-bottom:1px solid #EEECE5;text-align:right;color:#252525;white-space:nowrap;">${escapeHtml(p.price)}</td>
       </tr>`
     })
     .join("")
   const total = payload.protocol.totalPrice ? escapeHtml(payload.protocol.totalPrice) : ""
+  const note = payload.protocol.note
+    ? `<p style="margin:0 0 16px;padding:14px 16px;background:#FBF3F1;border:1px solid #F0DCD7;font-size:14px;line-height:1.6;color:#6B4A44;">${escapeHtml(payload.protocol.note)}</p>`
+    : ""
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -482,7 +511,8 @@ function renderProtocolEmail(payload, shopUrl) {
         </td></tr>
         <tr><td style="padding:28px 36px;">
           <p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#444;">Built around <strong>${skinType}</strong>${concerns ? ` and ${concerns}` : ""}. A clear routine — nothing extra.</p>
-          <table role="presentation" width="100%" cellspacing="0" cellpadding="0">${rows}</table>
+          ${note}
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0">${header}${rows}</table>
           ${total ? `<p style="margin:20px 0 0;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:#888;">Protocol total <span style="color:#252525;letter-spacing:0;">${total}</span></p>` : ""}
           <p style="margin:28px 0 0;">
             <a href="${escapeHtml(shopUrl)}" style="display:inline-block;background:#BD705F;color:#ffffff;text-decoration:none;padding:14px 22px;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;">Shop your protocol</a>

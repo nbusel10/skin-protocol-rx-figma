@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { PRODUCTS } from '../data'
+import { PRODUCTS, getProtocolStepLabel } from '../data'
 import ProductImage from '../components/ProductImage'
 
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
@@ -99,6 +99,9 @@ export default function ProductDetail({ productId, onNavigate }: ProductDetailPr
               ))}
             </div>
 
+            <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-2">
+              {getProtocolStepLabel(product.protocolStep)}
+            </p>
             <p className="text-[11px] tracking-[0.3em] uppercase text-charcoal/40 mb-2">{product.categories[0]}</p>
             <h1 className="font-serif text-3xl md:text-4xl text-charcoal mb-3">{product.name}</h1>
             <p className="text-charcoal/60 mb-4">{product.tagline}</p>
@@ -211,7 +214,11 @@ export default function ProductDetail({ productId, onNavigate }: ProductDetailPr
                 </button>
               </Accordion>
               <Accordion title="How It Fits Into Your Protocol">
-                <p>This product works as part of the Skin Protocol RX system. Use it in the correct step order for best results. <button onClick={() => onNavigate('protocol')} className="text-rose underline underline-offset-2">Build your full protocol →</button></p>
+                <p className="mb-3">
+                  <span className="font-medium text-charcoal">{getProtocolStepLabel(product.protocolStep)}</span>
+                  {' — '}use this product in step order with the rest of your protocol for best results.
+                </p>
+                <p>This product works as part of the Skin Protocol RX system. <button onClick={() => onNavigate('protocol')} className="text-rose underline underline-offset-2">Build your full protocol →</button></p>
               </Accordion>
               <Accordion title="Shipping & Returns">
                 <p>Free standard shipping on orders over $75. Returns accepted within 30 days of delivery for unopened products. Contact our team for support with opened products.</p>

@@ -153,6 +153,10 @@ export default function IngredientGlossary({ onNavigate }: IngredientGlossaryPro
               Build Your Protocol
             </button>
           </div>
+
+          <p className="text-[11px] text-charcoal/30 mt-6 leading-relaxed max-w-2xl">
+            Ingredient descriptions are for educational purposes and reflect general cosmetic uses. They do not imply clinical testing or dermatologist endorsement of Skin Protocol RX products. This information does not replace professional medical advice.
+          </p>
         </div>
       </section>
     </div>

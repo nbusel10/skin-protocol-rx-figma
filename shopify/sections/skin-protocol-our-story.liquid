@@ -1,0 +1,1540 @@
+{% comment %}
+  Skin Protocol Our Story — Online Store 2.0 section
+  File: sections/skin-protocol-our-story.liquid
+
+  Matches src/pages/OurStory.tsx: hero, intro, foundation, founders,
+  standards, values, quote, and CTA.
+
+  Setup
+  1. Online Store → Themes → Edit code → Add a new section
+     named skin-protocol-our-story. Paste this file.
+     Do not paste this into Custom Liquid — it needs a real section.
+  2. Customize theme → template dropdown → Pages → our-story
+     (or the Our Story page).
+  3. Hide or remove the theme's Page heading and Page body / content
+     so the old kitchen-origin copy does not show.
+  4. Add section → Skin Protocol Our Story.
+  5. Upload images (from the React public/ folder):
+       Hero       public/our-story-serum.png
+       Foundation public/family-owned-skin-protocol-rx-founders-skincare-lab-new-york.png
+       Founders   Upload from React public/ to Content → Files / Founder blocks:
+                  public/linda-amend-chemist-co-founder-skin-protocol-rx.png
+                  public/susanna-amend-np-co-founder-skin-protocol-rx.png
+                  public/christina-corbin-lme-co-founder-skin-protocol-rx.png
+                  (Christina CDN fallback is soft at width=800 — prefer the local PNG.)
+  6. Point the shop buttons at your catalog and Build My Protocol
+     at /pages/build-your-protocol.
+  7. This theme already loads Playfair Display and DM Sans. This
+     section does not load Google Fonts (theme-check RemoteAsset).
+
+  Shopify sizing
+  Dawn sets html { font-size: 62.5% } so 1rem = 10px.
+  This section locks a 16px rem base and uses px for type.
+{% endcomment %}
+
+{%- liquid
+  assign shop_link = section.settings.shop_link
+  if shop_link == blank
+    assign shop_link = '/collections/all'
+  endif
+
+  assign protocol_link = section.settings.protocol_link
+  if protocol_link == blank
+    assign protocol_link = '/pages/build-your-protocol'
+  endif
+
+  assign founder_count = 0
+  assign standard_count = 0
+  assign value_count = 0
+  for block in section.blocks
+    if block.type == 'founder'
+      assign founder_count = founder_count | plus: 1
+    elsif block.type == 'standard'
+      assign standard_count = standard_count | plus: 1
+    elsif block.type == 'value'
+      assign value_count = value_count | plus: 1
+    endif
+  endfor
+
+  assign included_items = section.settings.included_items | strip | newline_to_br | replace: '<br/>', '<br />' | replace: '<br>', '<br />' | split: '<br />'
+  assign leftout_items = section.settings.leftout_items | strip | newline_to_br | replace: '<br/>', '<br />' | replace: '<br>', '<br />' | split: '<br />'
+
+  assign hero_alt = 'Skin Protocol RX Hyaluronic Acid Serum being dispensed in the lab'
+  if section.settings.hero_image != blank and section.settings.hero_image.alt != blank
+    assign hero_alt = section.settings.hero_image.alt
+  endif
+
+  assign foundation_alt = 'Skin Protocol RX founders Linda D. Amend, Susanna Amend, and Christina Corbin formulating skincare in a New York lab'
+  if section.settings.foundation_image != blank and section.settings.foundation_image.alt != blank
+    assign foundation_alt = section.settings.foundation_image.alt
+  endif
+
+  assign quote_alt = 'Skincare texture'
+  if section.settings.quote_image != blank and section.settings.quote_image.alt != blank
+    assign quote_alt = section.settings.quote_image.alt
+  endif
+-%}
+
+<div
+  id="OurStory-{{ section.id }}"
+  class="sos"
+>
+  <section class="sos__hero">
+    <div class="sos__hero-inner">
+      <div class="sos__hero-copy">
+        {%- if section.settings.hero_eyebrow != blank -%}
+          <p class="sos__eyebrow">{{ section.settings.hero_eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.hero_heading != blank -%}
+          <h1 class="sos__hero-heading">{{ section.settings.hero_heading | escape }}</h1>
+        {%- endif -%}
+      </div>
+      {%- if section.settings.hero_image != blank -%}
+        <div class="sos__hero-media">
+          <div class="sos__hero-shot">
+            {{
+              section.settings.hero_image
+              | image_url: width: 1600
+              | image_tag:
+                widths: '500, 750, 1100, 1600',
+                sizes: '(min-width: 990px) 50vw, 90vw',
+                class: 'sos__hero-img',
+                alt: hero_alt,
+                loading: 'eager',
+                fetchpriority: 'high'
+            }}
+            <div class="sos__hero-fade sos__hero-fade--left"></div>
+            <div class="sos__hero-fade sos__hero-fade--right"></div>
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </section>
+
+  <section class="sos__intro">
+    <div class="sos__intro-inner">
+      {%- if section.settings.intro_lead != blank -%}
+        <p class="sos__intro-lead">{{ section.settings.intro_lead | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.intro_body != blank -%}
+        <p class="sos__intro-body">{{ section.settings.intro_body | escape }}</p>
+      {%- endif -%}
+    </div>
+  </section>
+
+  <div class="sos__rule"></div>
+
+  <section class="sos__foundation">
+    <div class="sos__foundation-copy">
+      {%- if section.settings.foundation_eyebrow != blank -%}
+        <p class="sos__eyebrow">{{ section.settings.foundation_eyebrow | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.foundation_heading != blank -%}
+        <h2 class="sos__heading">{{ section.settings.foundation_heading | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.foundation_body_1 != blank -%}
+        <p class="sos__body">{{ section.settings.foundation_body_1 | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.foundation_body_2 != blank -%}
+        <p class="sos__body">{{ section.settings.foundation_body_2 | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.foundation_button_label != blank -%}
+        <a class="sos__text-link" href="{{ shop_link }}">
+          <span>{{ section.settings.foundation_button_label | escape }}</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </a>
+      {%- endif -%}
+    </div>
+    {%- if section.settings.foundation_image != blank -%}
+      <div class="sos__foundation-media">
+        {{
+          section.settings.foundation_image
+          | image_url: width: 1600
+          | image_tag:
+            widths: '750, 1100, 1600',
+            sizes: '(min-width: 990px) 50vw, 100vw',
+            class: 'sos__cover',
+            alt: foundation_alt,
+            loading: 'lazy'
+        }}
+      </div>
+    {%- endif -%}
+  </section>
+
+  <section class="sos__founders">
+    <div class="sos__founders-inner">
+      <div class="sos__founders-intro">
+        {%- if section.settings.founders_eyebrow != blank -%}
+          <p class="sos__eyebrow">{{ section.settings.founders_eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.founders_heading != blank -%}
+          <h2 class="sos__heading sos__heading--light">{{ section.settings.founders_heading | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.founders_subheading != blank -%}
+          <p class="sos__founders-sub">{{ section.settings.founders_subheading | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.founders_disciplines != blank -%}
+          <p class="sos__founders-meta">{{ section.settings.founders_disciplines | escape }}</p>
+        {%- endif -%}
+      </div>
+
+      <div class="sos__founder-grid">
+        {%- if founder_count > 0 -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type != 'founder' -%}{%- continue -%}{%- endif -%}
+            {%- liquid
+              assign f_alt = block.settings.name
+              if block.settings.image != blank and block.settings.image.alt != blank
+                assign f_alt = block.settings.image.alt
+              endif
+              assign f_src = block.settings.image_url | strip
+              if f_src == blank
+                if block.settings.name contains 'Linda'
+                  assign f_src = 'https://skinprotocolrx.com/cdn/shop/files/Firefly_Gemini_Flash_1.png?v=1776596368&width=800'
+                elsif block.settings.name contains 'Susanna'
+                  assign f_src = 'https://skinprotocolrx.com/cdn/shop/files/5B62A1EE-DCE3-41D1-83BA-B0966D3051AF_4_5005_c.jpg?v=1776599704&width=800'
+                elsif block.settings.name contains 'Christina'
+                  assign f_src = 'https://skinprotocolrx.com/cdn/shop/files/6103798B-BA6F-4093-A676-897E515244CC_1_201_a.jpg?v=1776598050&width=800'
+                endif
+              endif
+            -%}
+            <article class="sos__founder" {{ block.shopify_attributes }}>
+              <div class="sos__founder-photo">
+                {%- if block.settings.image != blank -%}
+                  {{
+                    block.settings.image
+                    | image_url: width: 1200
+                    | image_tag:
+                      widths: '400, 600, 800, 1200',
+                      sizes: '(min-width: 750px) 30vw, 100vw',
+                      class: 'sos__founder-img',
+                      alt: f_alt,
+                      loading: 'lazy'
+                  }}
+                {%- elsif f_src != blank -%}
+                  {% # theme-check-disable RemoteAsset %}
+                  <img
+                    class="sos__founder-img"
+                    src="{{ f_src | escape }}"
+                    alt="{{ f_alt | escape }}"
+                    width="800"
+                    height="1000"
+                    loading="lazy"
+                    decoding="async"
+                  >
+                  {% # theme-check-enable RemoteAsset %}
+                {%- endif -%}
+              </div>
+              {%- if block.settings.name != blank -%}
+                <h3 class="sos__founder-name">{{ block.settings.name | escape }}</h3>
+              {%- endif -%}
+              {%- if block.settings.role != blank -%}
+                <p class="sos__founder-role">{{ block.settings.role | escape }}</p>
+              {%- endif -%}
+              {%- if block.settings.blurb != blank -%}
+                <p class="sos__founder-blurb">{{ block.settings.blurb | escape }}</p>
+              {%- endif -%}
+            </article>
+          {%- endfor -%}
+        {%- else -%}
+          <article class="sos__founder">
+            <div class="sos__founder-photo">
+              {% # theme-check-disable RemoteAsset %}
+              <img
+                class="sos__founder-img"
+                src="https://skinprotocolrx.com/cdn/shop/files/Firefly_Gemini_Flash_1.png?v=1776596368&amp;width=800"
+                alt="Linda D. Amend, MS — chemist and co-founder of Skin Protocol RX, in a branded white lab coat"
+                width="800"
+                height="1000"
+                loading="lazy"
+                decoding="async"
+              >
+              {% # theme-check-enable RemoteAsset %}
+            </div>
+            <h3 class="sos__founder-name">Linda D. Amend, MS</h3>
+            <p class="sos__founder-role">Co-Founder | Chemist</p>
+            <p class="sos__founder-blurb">Formulation-driven. Decades of ingredient development. Focused on stability, delivery, and performance.</p>
+          </article>
+          <article class="sos__founder">
+            <div class="sos__founder-photo">
+              {% # theme-check-disable RemoteAsset %}
+              <img
+                class="sos__founder-img"
+                src="https://skinprotocolrx.com/cdn/shop/files/5B62A1EE-DCE3-41D1-83BA-B0966D3051AF_4_5005_c.jpg?v=1776599704&amp;width=800"
+                alt="Susanna Amend, NP — nurse practitioner and co-founder of Skin Protocol RX, in a branded white lab coat"
+                width="800"
+                height="1000"
+                loading="lazy"
+                decoding="async"
+              >
+              {% # theme-check-enable RemoteAsset %}
+            </div>
+            <h3 class="sos__founder-name">Susanna Amend, NP</h3>
+            <p class="sos__founder-role">Co-Founder | Nurse Practitioner</p>
+            <p class="sos__founder-blurb">Patient-facing insight. Translates clinical needs into product design. Focus on real-world skin response.</p>
+          </article>
+          <article class="sos__founder">
+            <div class="sos__founder-photo">
+              {% # theme-check-disable RemoteAsset %}
+              <img
+                class="sos__founder-img"
+                src="https://skinprotocolrx.com/cdn/shop/files/6103798B-BA6F-4093-A676-897E515244CC_1_201_a.jpg?v=1776598050&amp;width=800"
+                alt="Christina Corbin, LME — licensed medical esthetician and co-founder of Skin Protocol RX"
+                width="800"
+                height="1000"
+                loading="lazy"
+                decoding="async"
+              >
+              {% # theme-check-enable RemoteAsset %}
+            </div>
+            <h3 class="sos__founder-name">Christina Corbin, LME</h3>
+            <p class="sos__founder-role">Co-Founder | Licensed Medical Esthetician</p>
+            <p class="sos__founder-blurb">Hands-on skin expertise. Refines formulations through treatment experience. Focus on texture, tolerance, and results.</p>
+          </article>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.founders_footer != blank -%}
+        <div class="sos__founders-footer">
+          <p>{{ section.settings.founders_footer | escape }}</p>
+        </div>
+      {%- endif -%}
+    </div>
+  </section>
+
+  <section id="our-standards" class="sos__standards">
+    <div class="sos__standards-inner">
+      <div class="sos__standards-top">
+        <div class="sos__standards-copy">
+          {%- if section.settings.standards_eyebrow != blank -%}
+            <p class="sos__eyebrow">{{ section.settings.standards_eyebrow | escape }}</p>
+          {%- endif -%}
+          {%- if section.settings.standards_heading != blank -%}
+            <h2 class="sos__heading">{{ section.settings.standards_heading | escape }}</h2>
+          {%- endif -%}
+          {%- if section.settings.standards_body != blank -%}
+            <p class="sos__body sos__body--tight">{{ section.settings.standards_body | escape }}</p>
+          {%- endif -%}
+        </div>
+        <div class="sos__lists">
+          <div>
+            <p class="sos__list-kicker">Included</p>
+            <ul class="sos__list">
+              {%- for item in included_items -%}
+                {%- assign line = item | strip | replace: '<br />', '' -%}
+                {%- if line == blank -%}{%- continue -%}{%- endif -%}
+                <li><span class="sos__list-mark sos__list-mark--in">+</span>{{ line | escape }}</li>
+              {%- endfor -%}
+            </ul>
+          </div>
+          <div>
+            <p class="sos__list-kicker sos__list-kicker--muted">Left Out</p>
+            <ul class="sos__list sos__list--muted">
+              {%- for item in leftout_items -%}
+                {%- assign line = item | strip | replace: '<br />', '' -%}
+                {%- if line == blank -%}{%- continue -%}{%- endif -%}
+                <li><span class="sos__list-mark">−</span>{{ line | escape }}</li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sos__standard-grid">
+        {%- if standard_count > 0 -%}
+          {%- assign standard_index = 0 -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type != 'standard' -%}{%- continue -%}{%- endif -%}
+            {%- assign standard_index = standard_index | plus: 1 -%}
+            {%- assign standard_num = standard_index | prepend: '00' | slice: -2, 2 -%}
+            <div class="sos__standard" {{ block.shopify_attributes }}>
+              <p class="sos__standard-num">{{ standard_num }}</p>
+              {%- if block.settings.title != blank -%}
+                <h3 class="sos__standard-title">{{ block.settings.title | escape }}</h3>
+              {%- endif -%}
+              {%- if block.settings.body != blank -%}
+                <p class="sos__standard-body">{{ block.settings.body | escape }}</p>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        {%- else -%}
+          <div class="sos__standard">
+            <p class="sos__standard-num">01</p>
+            <h3 class="sos__standard-title">Expert-Led</h3>
+            <p class="sos__standard-body">Every formula is shaped by a chemist, nurse practitioner, and licensed medical esthetician.</p>
+          </div>
+          <div class="sos__standard">
+            <p class="sos__standard-num">02</p>
+            <h3 class="sos__standard-title">Purposeful Formulation</h3>
+            <p class="sos__standard-body">We prioritize ingredients that support function, tolerance, and consistency over time.</p>
+          </div>
+          <div class="sos__standard">
+            <p class="sos__standard-num">03</p>
+            <h3 class="sos__standard-title">Less, Done Properly</h3>
+            <p class="sos__standard-body">We do not believe more products, more steps, or more actives automatically lead to better skin.</p>
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="sos__closer">
+        {%- if section.settings.closer_heading != blank -%}
+          <p class="sos__closer-heading">{{ section.settings.closer_heading | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.closer_body != blank -%}
+          <p class="sos__closer-body">{{ section.settings.closer_body | escape }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+
+  <section class="sos__values">
+    <div class="sos__values-inner">
+      {%- if section.settings.values_eyebrow != blank -%}
+        <p class="sos__eyebrow sos__eyebrow--center">{{ section.settings.values_eyebrow | escape }}</p>
+      {%- endif -%}
+      <div class="sos__value-grid">
+        {%- if value_count > 0 -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type != 'value' -%}{%- continue -%}{%- endif -%}
+            <div class="sos__value" {{ block.shopify_attributes }}>
+              {%- if block.settings.title != blank -%}
+                <h3 class="sos__value-title">{{ block.settings.title | escape }}</h3>
+              {%- endif -%}
+              {%- if block.settings.body != blank -%}
+                <p class="sos__value-body">{{ block.settings.body | escape }}</p>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        {%- else -%}
+          <div class="sos__value">
+            <h3 class="sos__value-title">Why Skin Protocol RX Was Created</h3>
+            <p class="sos__value-body">The brand was born from a simple frustration: too many skincare products, too little clarity. A family that had spent years in the professional skincare world decided to build something different — a line where every product has a purpose, every formula has a reason, and every step makes sense.</p>
+          </div>
+          <div class="sos__value">
+            <h3 class="sos__value-title">Professional Skincare Without the Noise</h3>
+            <p class="sos__value-body">Skin Protocol RX was designed to bring professional-grade formulas to everyday routines. The same quality used in spas and treatment rooms, built into a clear, step-by-step protocol anyone can follow at home.</p>
+          </div>
+          <div class="sos__value">
+            <h3 class="sos__value-title">Our Ingredient Philosophy</h3>
+            <p class="sos__value-body">We start with the goal — what the skin needs — and work backward. We do not add ingredients for marketing appeal or trend cycles. If an ingredient is in our formula, it has a documented role in supporting skin health.</p>
+          </div>
+          <div class="sos__value">
+            <h3 class="sos__value-title">Our Commitment to Cruelty-Free Skincare</h3>
+            <p class="sos__value-body">Skin Protocol RX products are never tested on animals. We believe effective skincare does not require that compromise. Our commitment to cruelty-free practices is not a marketing claim — it is a standard we hold without exception.</p>
+          </div>
+          <div class="sos__value">
+            <h3 class="sos__value-title">What &quot;Protocol&quot; Means</h3>
+            <p class="sos__value-body">&quot;Protocol&quot; is not just a name. It reflects a philosophy: skincare works best as a system, not a collection of random products. A protocol is intentional, sequential, and purposeful. That is how every Skin Protocol RX product is designed to be used.</p>
+          </div>
+          <div class="sos__value">
+            <h3 class="sos__value-title">Supporting Healthy Skin at Home and in the Treatment Room</h3>
+            <p class="sos__value-body">When a client leaves a spa after a professional treatment, the results do not have to stop there. Skin Protocol RX gives spa professionals a coordinated home-care line that supports their work and keeps clients connected to their skincare goals between visits.</p>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+
+  <section class="sos__quote">
+    {%- if section.settings.quote_image != blank -%}
+      {{
+        section.settings.quote_image
+        | image_url: width: 2400
+        | image_tag:
+          widths: '750, 1100, 1600, 2000, 2400',
+          sizes: '100vw',
+          class: 'sos__quote-img',
+          alt: quote_alt,
+          loading: 'lazy'
+      }}
+    {%- endif -%}
+    <div class="sos__quote-wash"></div>
+    <div class="sos__quote-copy">
+      {%- if section.settings.quote_text != blank -%}
+        <p class="sos__quote-text">&ldquo;{{ section.settings.quote_text | escape }}&rdquo;</p>
+      {%- endif -%}
+      {%- if section.settings.quote_attribution != blank -%}
+        <p class="sos__quote-attr">{{ section.settings.quote_attribution | escape }}</p>
+      {%- endif -%}
+    </div>
+  </section>
+
+  <section class="sos__cta">
+    {%- if section.settings.cta_eyebrow != blank -%}
+      <p class="sos__eyebrow sos__eyebrow--center">{{ section.settings.cta_eyebrow | escape }}</p>
+    {%- endif -%}
+    {%- if section.settings.cta_heading != blank -%}
+      <h2 class="sos__heading sos__heading--center">{{ section.settings.cta_heading | escape }}</h2>
+    {%- endif -%}
+    <div class="sos__cta-actions">
+      {%- if section.settings.cta_primary_label != blank -%}
+        <a class="sos__btn sos__btn--solid" href="{{ protocol_link }}">{{ section.settings.cta_primary_label | escape }}</a>
+      {%- endif -%}
+      {%- if section.settings.cta_secondary_label != blank -%}
+        <a class="sos__btn sos__btn--outline" href="{{ shop_link }}">{{ section.settings.cta_secondary_label | escape }}</a>
+      {%- endif -%}
+    </div>
+  </section>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }},
+  #shopify-section-{{ section.id }}.shopify-section,
+  .section-our-story {
+    --section-padding: 0;
+    --padding-top: 0;
+    --padding-bottom: 0;
+    max-width: none !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  #shopify-section-{{ section.id }} .page-width,
+  .section-our-story .page-width {
+    max-width: none !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: 100% !important;
+  }
+
+  #OurStory-{{ section.id }} {
+    --sos-accent: #B8878B;
+    --sos-accent-dark: #8E6367;
+    --sos-black: #0A0A0A;
+    --sos-stone: #FAF9F8;
+    --sos-border: #E5E5E5;
+    --sos-font-serif: 'Playfair Display', Georgia, serif;
+    --sos-font-sans: 'DM Sans', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    font-family: var(--sos-font-sans);
+    background: #fff;
+    color: var(--sos-black);
+    box-sizing: border-box;
+  }
+  #OurStory-{{ section.id }} *,
+  #OurStory-{{ section.id }} *::before,
+  #OurStory-{{ section.id }} *::after {
+    box-sizing: border-box;
+  }
+  #OurStory-{{ section.id }} p,
+  #OurStory-{{ section.id }} h1,
+  #OurStory-{{ section.id }} h2,
+  #OurStory-{{ section.id }} h3,
+  #OurStory-{{ section.id }} ul,
+  #OurStory-{{ section.id }} li {
+    margin: 0;
+    padding: 0;
+  }
+  #OurStory-{{ section.id }} ul {
+    list-style: none;
+  }
+  #OurStory-{{ section.id }} img {
+    max-width: 100%;
+    height: auto;
+  }
+  #OurStory-{{ section.id }} a {
+    text-decoration: none;
+  }
+
+  #OurStory-{{ section.id }} .sos__eyebrow,
+  #OurStory-{{ section.id }} p.sos__eyebrow {
+    font-family: var(--sos-font-sans);
+    font-size: 11px !important;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--sos-accent) !important;
+    margin: 0 0 20px !important;
+  }
+  #OurStory-{{ section.id }} .sos__eyebrow--center {
+    text-align: center;
+  }
+  #OurStory-{{ section.id }} .sos__heading,
+  #OurStory-{{ section.id }} h2.sos__heading {
+    font-family: var(--sos-font-serif) !important;
+    font-size: 30px !important;
+    font-weight: 400 !important;
+    font-style: normal;
+    line-height: 1.2 !important;
+    letter-spacing: normal !important;
+    color: var(--sos-black) !important;
+    margin: 0 0 24px !important;
+  }
+  #OurStory-{{ section.id }} .sos__heading--light,
+  #OurStory-{{ section.id }} h2.sos__heading.sos__heading--light {
+    color: #fff !important;
+    margin-bottom: 20px !important;
+  }
+  #OurStory-{{ section.id }} .sos__heading--center {
+    text-align: center;
+    margin-bottom: 24px !important;
+  }
+  #OurStory-{{ section.id }} .sos__body,
+  #OurStory-{{ section.id }} p.sos__body {
+    font-family: var(--sos-font-sans);
+    font-size: 16px !important;
+    line-height: 1.7 !important;
+    color: color-mix(in srgb, var(--sos-black) 55%, transparent);
+    margin: 0 0 20px !important;
+  }
+  #OurStory-{{ section.id }} .sos__body--tight {
+    margin-bottom: 0 !important;
+  }
+
+  #OurStory-{{ section.id }} .sos__hero {
+    background: #000;
+  }
+  #OurStory-{{ section.id }} .sos__hero-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 64px 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+    align-items: center;
+    min-height: 60vh;
+  }
+  #OurStory-{{ section.id }} .sos__hero-copy {
+    order: 2;
+  }
+  #OurStory-{{ section.id }} .sos__hero-media {
+    order: 1;
+    display: flex;
+    justify-content: center;
+  }
+  #OurStory-{{ section.id }} .sos__hero-heading,
+  #OurStory-{{ section.id }} h1.sos__hero-heading,
+  #OurStory-{{ section.id }} h2.sos__hero-heading {
+    font-family: var(--sos-font-serif) !important;
+    font-size: 36px !important;
+    font-weight: 400 !important;
+    font-style: normal;
+    line-height: 1.15 !important;
+    letter-spacing: normal !important;
+    color: #fff !important;
+    margin: 0 !important;
+  }
+  #OurStory-{{ section.id }} .sos__hero-shot {
+    position: relative;
+    width: fit-content;
+    max-width: 100%;
+  }
+  #OurStory-{{ section.id }} .sos__hero-img,
+  #OurStory-{{ section.id }} img.sos__hero-img {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: 60vh;
+    height: auto;
+    object-fit: contain;
+  }
+  #OurStory-{{ section.id }} .sos__hero-fade {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    pointer-events: none;
+  }
+  #OurStory-{{ section.id }} .sos__hero-fade--left {
+    left: 0;
+    width: 40%;
+    background: linear-gradient(to right, #000, rgba(0, 0, 0, 0.7), transparent);
+  }
+  #OurStory-{{ section.id }} .sos__hero-fade--right {
+    right: 0;
+    width: 20%;
+    background: linear-gradient(to left, #000, transparent);
+  }
+
+  #OurStory-{{ section.id }} .sos__intro {
+    background: var(--sos-stone);
+    padding: 80px 20px;
+    text-align: center;
+  }
+  #OurStory-{{ section.id }} .sos__intro-inner {
+    max-width: 768px;
+    margin: 0 auto;
+  }
+  #OurStory-{{ section.id }} .sos__intro-lead,
+  #OurStory-{{ section.id }} p.sos__intro-lead {
+    font-family: var(--sos-font-serif) !important;
+    font-size: 20px !important;
+    font-weight: 400 !important;
+    line-height: 1.6 !important;
+    color: var(--sos-black) !important;
+    margin: 0 0 24px !important;
+  }
+  #OurStory-{{ section.id }} .sos__intro-body,
+  #OurStory-{{ section.id }} p.sos__intro-body {
+    font-family: var(--sos-font-sans);
+    font-size: 16px !important;
+    line-height: 1.7 !important;
+    color: color-mix(in srgb, var(--sos-black) 55%, transparent);
+    margin: 0 !important;
+  }
+
+  #OurStory-{{ section.id }} .sos__rule {
+    border-top: 1px solid var(--sos-border);
+  }
+
+  #OurStory-{{ section.id }} .sos__foundation {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 80px 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  #OurStory-{{ section.id }} .sos__text-link,
+  #OurStory-{{ section.id }} a.sos__text-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+    font-family: var(--sos-font-sans);
+    font-size: 14px !important;
+    font-weight: 500;
+    color: #1a1a1a !important;
+  }
+  #OurStory-{{ section.id }} .sos__text-link span {
+    border-bottom: 1px solid #000;
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  #OurStory-{{ section.id }} .sos__text-link svg {
+    transition: transform 0.2s, color 0.2s;
+  }
+  #OurStory-{{ section.id }} .sos__text-link:hover {
+    color: var(--sos-accent) !important;
+  }
+  #OurStory-{{ section.id }} .sos__text-link:hover span {
+    border-color: var(--sos-accent);
+  }
+  #OurStory-{{ section.id }} .sos__text-link:hover svg {
+    transform: translateX(4px);
+  }
+  #OurStory-{{ section.id }} .sos__foundation-media {
+    aspect-ratio: 3 / 2;
+    background: var(--sos-stone);
+    overflow: hidden;
+  }
+  #OurStory-{{ section.id }} .sos__cover,
+  #OurStory-{{ section.id }} img.sos__cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  #OurStory-{{ section.id }} .sos__founders {
+    background: #000;
+    padding: 80px 20px;
+  }
+  #OurStory-{{ section.id }} .sos__founders-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  #OurStory-{{ section.id }} .sos__founders-intro {
+    max-width: 768px;
+    margin: 0 auto 56px;
+    text-align: center;
+  }
+  #OurStory-{{ section.id }} .sos__founders-sub,
+  #OurStory-{{ section.id }} p.sos__founders-sub {
+    font-family: var(--sos-font-serif) !important;
+    font-size: 20px !important;
+    font-weight: 400 !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    margin: 0 0 12px !important;
+  }
+  #OurStory-{{ section.id }} .sos__founders-meta,
+  #OurStory-{{ section.id }} p.sos__founders-meta {
+    font-size: 11px !important;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4) !important;
+  }
+  #OurStory-{{ section.id }} .sos__founder-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  #OurStory-{{ section.id }} .sos__founder-photo {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    background: rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  #OurStory-{{ section.id }} .sos__founder-img,
+  #OurStory-{{ section.id }} img.sos__founder-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(20%);
+    display: block;
+  }
+  #OurStory-{{ section.id }} .sos__founder-name,
+  #OurStory-{{ section.id }} h3.sos__founder-name {
+    font-family: var(--sos-font-serif) !important;
+    font-size: 20px !important;
+    font-weight: 400 !important;
+    color: #fff !important;
+    margin: 0 0 8px !important;
+  }
+  #OurStory-{{ section.id }} .sos__founder-role,
+  #OurStory-{{ section.id }} p.sos__founder-role {
+    font-size: 11px !important;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sos-accent) !important;
+    margin: 0 0 12px !important;
+  }
+  #OurStory-{{ section.id }} .sos__founder-blurb,
+  #OurStory-{{ section.id }} p.sos__founder-blurb {
+    font-size: 14px !important;
+    line-height: 1.7 !important;
+    color: rgba(255, 255, 255, 0.55) !important;
+  }
+  #OurStory-{{ section.id }} .sos__founders-footer {
+    max-width: 672px;
+    margin: 64px auto 0;
+    padding-top: 48px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+  }
+  #OurStory-{{ section.id }} .sos__founders-footer p {
+    font-size: 14px !important;
+    line-height: 1.7 !important;
+    color: rgba(255, 255, 255, 0.55) !important;
+  }
+
+  #OurStory-{{ section.id }} .sos__standards {
+    background: var(--sos-stone);
+    border-top: 1px solid var(--sos-border);
+    padding: 80px 20px;
+    scroll-margin-top: 7rem;
+  }
+  #OurStory-{{ section.id }} .sos__standards-inner {
+    max-width: 1152px;
+    margin: 0 auto;
+  }
+  #OurStory-{{ section.id }} .sos__standards-top {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+    margin-bottom: 64px;
+    padding-bottom: 64px;
+    border-bottom: 1px solid var(--sos-border);
+  }
+  #OurStory-{{ section.id }} .sos__lists {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  #OurStory-{{ section.id }} .sos__list-kicker {
+    font-size: 11px !important;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--sos-black) !important;
+    margin: 0 0 20px !important;
+  }
+  #OurStory-{{ section.id }} .sos__list-kicker--muted {
+    color: color-mix(in srgb, var(--sos-black) 35%, transparent) !important;
+  }
+  #OurStory-{{ section.id }} .sos__list li {
+    display: flex;
+    gap: 12px;
+    font-size: 14px !important;
+    line-height: 1.7 !important;
+    color: color-mix(in srgb, var(--sos-black) 70%, transparent);
+    margin: 0 0 12px;
+  }
+  #OurStory-{{ section.id }} .sos__list--muted li {
+    color: color-mix(in srgb, var(--sos-black) 40%, transparent);
+  }
+  #OurStory-{{ section.id }} .sos__list-mark {
+    flex-shrink: 0;
+  }
+  #OurStory-{{ section.id }} .sos__list-mark--in {
+    color: var(--sos-accent);
+  }
+  #OurStory-{{ section.id }} .sos__standard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-bottom: 64px;
+  }
+  #OurStory-{{ section.id }} .sos__standard {
+    padding: 24px 0;
+  }
+  #OurStory-{{ section.id }} .sos__standard-num {
+    font-size: 11px !important;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--sos-accent) !important;
+    margin: 0 0 12px !important;
+  }
+  #OurStory-{{ section.id }} .sos__standard-title,
+  #OurStory-{{ section.id }} h3.sos__standard-title {
+    font-family: var(--sos-font-serif) !important;
+    font-size: 20px !important;
+    font-weight: 400 !important;
+    color: var(--sos-black) !important;
+    margin: 0 0 12px !important;
+  }
+  #OurStory-{{ section.id }} .sos__standard-body,
+  #OurStory-{{ section.id }} p.sos__standard-body {
+    font-size: 14px !important;
+    line-height: 1.7 !important;
+    color: color-mix(in srgb, var(--sos-black) 55%, transparent);
+  }
+  #OurStory-{{ section.id }} .sos__closer {
+    border-top: 1px solid var(--sos-border);
+    padding-top: 40px;
+  }
+  #OurStory-{{ section.id }} .sos__closer-heading,
+  #OurStory-{{ section.id }} p.sos__closer-heading {
+    font-family: var(--sos-font-serif) !important;
+    font-size: 20px !important;
+    font-weight: 400 !important;
+    color: var(--sos-black) !important;
+    margin: 0 0 24px !important;
+  }
+  #OurStory-{{ section.id }} .sos__closer-body,
+  #OurStory-{{ section.id }} p.sos__closer-body {
+    max-width: 672px;
+    font-size: 14px !important;
+    line-height: 1.7 !important;
+    color: color-mix(in srgb, var(--sos-black) 45%, transparent);
+  }
+
+  #OurStory-{{ section.id }} .sos__values {
+    background: #fff;
+    border-top: 1px solid var(--sos-border);
+    padding: 80px 20px;
+  }
+  #OurStory-{{ section.id }} .sos__values-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  #OurStory-{{ section.id }} .sos__eyebrow--center {
+    margin-bottom: 48px !important;
+  }
+  #OurStory-{{ section.id }} .sos__value-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  #OurStory-{{ section.id }} .sos__value {
+    border-left: 2px solid var(--sos-accent);
+    padding-left: 32px;
+  }
+  #OurStory-{{ section.id }} .sos__value-title,
+  #OurStory-{{ section.id }} h3.sos__value-title {
+    font-family: var(--sos-font-serif) !important;
+    font-size: 20px !important;
+    font-weight: 400 !important;
+    color: var(--sos-black) !important;
+    margin: 0 0 16px !important;
+  }
+  #OurStory-{{ section.id }} .sos__value-body,
+  #OurStory-{{ section.id }} p.sos__value-body {
+    font-size: 14px !important;
+    line-height: 1.7 !important;
+    color: color-mix(in srgb, var(--sos-black) 55%, transparent);
+  }
+
+  #OurStory-{{ section.id }} .sos__quote {
+    position: relative;
+    overflow: hidden;
+    padding: 112px 20px;
+    min-height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+  }
+  #OurStory-{{ section.id }} .sos__quote-img,
+  #OurStory-{{ section.id }} img.sos__quote-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%);
+  }
+  #OurStory-{{ section.id }} .sos__quote-wash {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+  }
+  #OurStory-{{ section.id }} .sos__quote-copy {
+    position: relative;
+    z-index: 1;
+    max-width: 768px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  #OurStory-{{ section.id }} .sos__quote-text,
+  #OurStory-{{ section.id }} p.sos__quote-text {
+    font-family: var(--sos-font-serif) !important;
+    font-size: 30px !important;
+    font-style: italic;
+    font-weight: 400 !important;
+    line-height: 1.3 !important;
+    color: #fff !important;
+    margin: 0 0 24px !important;
+  }
+  #OurStory-{{ section.id }} .sos__quote-attr,
+  #OurStory-{{ section.id }} p.sos__quote-attr {
+    font-size: 14px !important;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sos-accent) !important;
+  }
+
+  #OurStory-{{ section.id }} .sos__cta {
+    background: var(--sos-stone);
+    border-top: 1px solid var(--sos-border);
+    padding: 80px 20px;
+    text-align: center;
+  }
+  #OurStory-{{ section.id }} .sos__cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+  }
+  #OurStory-{{ section.id }} .sos__btn,
+  #OurStory-{{ section.id }} a.sos__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--sos-font-sans);
+    font-size: 14px !important;
+    font-weight: 500;
+    line-height: 1.2;
+    padding: 14px 32px;
+    border-radius: 0;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  #OurStory-{{ section.id }} .sos__btn--solid {
+    background: var(--sos-black);
+    color: #fff !important;
+    border: 1px solid var(--sos-black);
+  }
+  #OurStory-{{ section.id }} .sos__btn--solid:hover {
+    background: var(--sos-accent);
+    border-color: var(--sos-accent);
+    color: #fff !important;
+  }
+  #OurStory-{{ section.id }} .sos__btn--outline {
+    background: transparent;
+    color: var(--sos-black) !important;
+    border: 1px solid var(--sos-black);
+  }
+  #OurStory-{{ section.id }} .sos__btn--outline:hover {
+    background: var(--sos-black);
+    color: #fff !important;
+  }
+
+  @media (min-width: 750px) {
+    #OurStory-{{ section.id }} .sos__hero-inner,
+    #OurStory-{{ section.id }} .sos__intro,
+    #OurStory-{{ section.id }} .sos__foundation,
+    #OurStory-{{ section.id }} .sos__founders,
+    #OurStory-{{ section.id }} .sos__standards,
+    #OurStory-{{ section.id }} .sos__values,
+    #OurStory-{{ section.id }} .sos__quote,
+    #OurStory-{{ section.id }} .sos__cta {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+    #OurStory-{{ section.id }} .sos__heading,
+    #OurStory-{{ section.id }} h2.sos__heading {
+      font-size: 36px !important;
+    }
+    #OurStory-{{ section.id }} .sos__intro-lead,
+    #OurStory-{{ section.id }} p.sos__intro-lead,
+    #OurStory-{{ section.id }} .sos__closer-heading,
+    #OurStory-{{ section.id }} p.sos__closer-heading {
+      font-size: 24px !important;
+    }
+    #OurStory-{{ section.id }} .sos__quote-text,
+    #OurStory-{{ section.id }} p.sos__quote-text {
+      font-size: 36px !important;
+    }
+    #OurStory-{{ section.id }} .sos__lists {
+      grid-template-columns: 1fr 1fr;
+    }
+    #OurStory-{{ section.id }} .sos__founder-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 32px;
+    }
+    #OurStory-{{ section.id }} .sos__standard-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    #OurStory-{{ section.id }} .sos__standard {
+      padding: 0 32px;
+    }
+    #OurStory-{{ section.id }} .sos__standard:first-child {
+      padding-left: 0;
+    }
+    #OurStory-{{ section.id }} .sos__standard:last-child {
+      padding-right: 0;
+    }
+    #OurStory-{{ section.id }} .sos__standard + .sos__standard {
+      border-left: 1px solid var(--sos-border);
+    }
+    #OurStory-{{ section.id }} .sos__value-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    #OurStory-{{ section.id }} .sos__standards {
+      scroll-margin-top: 8.5rem;
+    }
+  }
+
+  @media (min-width: 990px) {
+    #OurStory-{{ section.id }} .sos__hero-inner {
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+    #OurStory-{{ section.id }} .sos__hero-copy {
+      order: 1;
+    }
+    #OurStory-{{ section.id }} .sos__hero-media {
+      order: 2;
+      justify-content: flex-end;
+    }
+    #OurStory-{{ section.id }} .sos__hero-heading,
+    #OurStory-{{ section.id }} h1.sos__hero-heading,
+    #OurStory-{{ section.id }} h2.sos__hero-heading {
+      font-size: 60px !important;
+    }
+    #OurStory-{{ section.id }} .sos__foundation {
+      grid-template-columns: 1fr 1fr;
+    }
+    #OurStory-{{ section.id }} .sos__standards-top {
+      grid-template-columns: 1fr 1.4fr;
+      gap: 80px;
+    }
+    #OurStory-{{ section.id }} .sos__standards {
+      scroll-margin-top: 9rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Skin Protocol Our Story",
+  "tag": "section",
+  "class": "section-our-story",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero"
+    },
+    {
+      "type": "text",
+      "id": "hero_eyebrow",
+      "label": "Eyebrow",
+      "default": "Family-Owned · New York"
+    },
+    {
+      "type": "text",
+      "id": "hero_heading",
+      "label": "Heading",
+      "default": "Skincare With a Purpose Behind Every Product"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Serum image"
+    },
+    {
+      "type": "header",
+      "content": "Intro"
+    },
+    {
+      "type": "textarea",
+      "id": "intro_lead",
+      "label": "Lead",
+      "default": "Skin Protocol RX was created by a family that believes healthy skin should not require complicated routines or overloaded formulas."
+    },
+    {
+      "type": "textarea",
+      "id": "intro_body",
+      "label": "Body",
+      "default": "Every product reflects a commitment to purposeful ingredients, professional performance, and honest skincare — built in New York, shared with the world."
+    },
+    {
+      "type": "header",
+      "content": "Foundation"
+    },
+    {
+      "type": "text",
+      "id": "foundation_eyebrow",
+      "label": "Eyebrow",
+      "default": "The Foundation"
+    },
+    {
+      "type": "text",
+      "id": "foundation_heading",
+      "label": "Heading",
+      "default": "Family-Owned and Created in New York"
+    },
+    {
+      "type": "textarea",
+      "id": "foundation_body_1",
+      "label": "Paragraph 1",
+      "default": "Skin Protocol RX is not a faceless brand. It was built by a family that started with personal standards and professional knowledge — and refused to compromise either."
+    },
+    {
+      "type": "textarea",
+      "id": "foundation_body_2",
+      "label": "Paragraph 2",
+      "default": "Created in New York, our formulas are shaped by years of professional skincare experience and a commitment to what actually works. No unnecessary steps. No trend-driven ingredients. Just purposeful skincare at professional quality."
+    },
+    {
+      "type": "text",
+      "id": "foundation_button_label",
+      "label": "Link label",
+      "default": "Explore the Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "foundation_image",
+      "label": "Lab image"
+    },
+    {
+      "type": "header",
+      "content": "Founders"
+    },
+    {
+      "type": "text",
+      "id": "founders_eyebrow",
+      "label": "Eyebrow",
+      "default": "The Founders"
+    },
+    {
+      "type": "text",
+      "id": "founders_heading",
+      "label": "Heading",
+      "default": "Built by people who treat skin. Not people who market it."
+    },
+    {
+      "type": "text",
+      "id": "founders_subheading",
+      "label": "Subheading",
+      "default": "Three disciplines. One system."
+    },
+    {
+      "type": "text",
+      "id": "founders_disciplines",
+      "label": "Disciplines",
+      "default": "Chemist · Nurse Practitioner · Esthetician"
+    },
+    {
+      "type": "textarea",
+      "id": "founders_footer",
+      "label": "Footer",
+      "default": "Most skincare is built by marketing teams. This system is built from clinical disciplines — where formulation, treatment, and skin physiology intersect. The result is not more products. It is better ones."
+    },
+    {
+      "type": "header",
+      "content": "Standards"
+    },
+    {
+      "type": "text",
+      "id": "standards_eyebrow",
+      "label": "Eyebrow",
+      "default": "Our Standards"
+    },
+    {
+      "type": "text",
+      "id": "standards_heading",
+      "label": "Heading",
+      "default": "What matters. What doesn't."
+    },
+    {
+      "type": "textarea",
+      "id": "standards_body",
+      "label": "Body",
+      "default": "Skin Protocol RX is built on disciplined formulation, clinical perspective, and intentional restraint."
+    },
+    {
+      "type": "textarea",
+      "id": "included_items",
+      "label": "Included items",
+      "info": "One item per line.",
+      "default": "Clinically relevant active ingredients\nIntentional concentrations\nBalanced, skin-supportive formulas\nMulti-functional ingredients selected with purpose\nFormulation decisions grounded in long-term skin health"
+    },
+    {
+      "type": "textarea",
+      "id": "leftout_items",
+      "label": "Left out items",
+      "info": "One item per line.",
+      "default": "Overloaded ingredient lists\nRedundant actives\nTrend-driven formulation\nUnnecessary fillers\nFragrance added without purpose"
+    },
+    {
+      "type": "text",
+      "id": "closer_heading",
+      "label": "Closer heading",
+      "default": "Minimal formulas. Maximum performance."
+    },
+    {
+      "type": "textarea",
+      "id": "closer_body",
+      "label": "Closer body",
+      "default": "Skin is a biological system, not a trend. Precision outperforms excess. Long-term skin health matters more than short-term stimulation. Every ingredient must earn its place."
+    },
+    {
+      "type": "text",
+      "id": "values_eyebrow",
+      "label": "Values eyebrow",
+      "default": "Our Values"
+    },
+    {
+      "type": "text",
+      "id": "quote_text",
+      "label": "Quote",
+      "default": "Purposeful skincare. Professional results. No unnecessary extras."
+    },
+    {
+      "type": "text",
+      "id": "quote_attribution",
+      "label": "Attribution",
+      "default": "Skin Protocol RX"
+    },
+    {
+      "type": "image_picker",
+      "id": "quote_image",
+      "label": "Quote background"
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "text",
+      "id": "cta_eyebrow",
+      "label": "Eyebrow",
+      "default": "Start Your Protocol"
+    },
+    {
+      "type": "text",
+      "id": "cta_heading",
+      "label": "Heading",
+      "default": "Ready to Build a Better Routine?"
+    },
+    {
+      "type": "text",
+      "id": "cta_primary_label",
+      "label": "Primary button",
+      "default": "Build My Protocol"
+    },
+    {
+      "type": "url",
+      "id": "protocol_link",
+      "label": "Protocol page",
+      "info": "Used by Build My Protocol. Falls back to /pages/build-your-protocol."
+    },
+    {
+      "type": "text",
+      "id": "cta_secondary_label",
+      "label": "Secondary button",
+      "default": "Shop All Products"
+    },
+    {
+      "type": "url",
+      "id": "shop_link",
+      "label": "Shop link",
+      "info": "Used by Explore the Collection and Shop All Products. Falls back to /collections/all."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "founder",
+      "name": "Founder",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "image_url",
+          "label": "Photo URL",
+          "info": "Used when Photo is empty. Leave blank to use the built-in founder photos."
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Linda D. Amend, MS"
+        },
+        {
+          "type": "text",
+          "id": "role",
+          "label": "Role",
+          "default": "Co-Founder | Chemist"
+        },
+        {
+          "type": "textarea",
+          "id": "blurb",
+          "label": "Blurb",
+          "default": "Formulation-driven. Decades of ingredient development. Focused on stability, delivery, and performance."
+        }
+      ]
+    },
+    {
+      "type": "standard",
+      "name": "Standard",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Expert-Led"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Body",
+          "default": "Every formula is shaped by a chemist, nurse practitioner, and licensed medical esthetician."
+        }
+      ]
+    },
+    {
+      "type": "value",
+      "name": "Value",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Why Skin Protocol RX Was Created"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Body",
+          "default": "The brand was born from a simple frustration: too many skincare products, too little clarity."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Skin Protocol Our Story",
+      "category": "Skin Protocol",
+      "blocks": [
+        {
+          "type": "founder",
+          "settings": {
+            "name": "Linda D. Amend, MS",
+            "role": "Co-Founder | Chemist",
+            "blurb": "Formulation-driven. Decades of ingredient development. Focused on stability, delivery, and performance.",
+            "image_url": "https://skinprotocolrx.com/cdn/shop/files/Firefly_Gemini_Flash_1.png?v=1776596368&width=800"
+          }
+        },
+        {
+          "type": "founder",
+          "settings": {
+            "name": "Susanna Amend, NP",
+            "role": "Co-Founder | Nurse Practitioner",
+            "blurb": "Patient-facing insight. Translates clinical needs into product design. Focus on real-world skin response.",
+            "image_url": "https://skinprotocolrx.com/cdn/shop/files/5B62A1EE-DCE3-41D1-83BA-B0966D3051AF_4_5005_c.jpg?v=1776599704&width=800"
+          }
+        },
+        {
+          "type": "founder",
+          "settings": {
+            "name": "Christina Corbin, LME",
+            "role": "Co-Founder | Licensed Medical Esthetician",
+            "blurb": "Hands-on skin expertise. Refines formulations through treatment experience. Focus on texture, tolerance, and results.",
+            "image_url": "https://skinprotocolrx.com/cdn/shop/files/6103798B-BA6F-4093-A676-897E515244CC_1_201_a.jpg?v=1776598050&width=800"
+          }
+        },
+        {
+          "type": "standard",
+          "settings": {
+            "title": "Expert-Led",
+            "body": "Every formula is shaped by a chemist, nurse practitioner, and licensed medical esthetician."
+          }
+        },
+        {
+          "type": "standard",
+          "settings": {
+            "title": "Purposeful Formulation",
+            "body": "We prioritize ingredients that support function, tolerance, and consistency over time."
+          }
+        },
+        {
+          "type": "standard",
+          "settings": {
+            "title": "Less, Done Properly",
+            "body": "We do not believe more products, more steps, or more actives automatically lead to better skin."
+          }
+        },
+        {
+          "type": "value",
+          "settings": {
+            "title": "Why Skin Protocol RX Was Created",
+            "body": "The brand was born from a simple frustration: too many skincare products, too little clarity. A family that had spent years in the professional skincare world decided to build something different — a line where every product has a purpose, every formula has a reason, and every step makes sense."
+          }
+        },
+        {
+          "type": "value",
+          "settings": {
+            "title": "Professional Skincare Without the Noise",
+            "body": "Skin Protocol RX was designed to bring professional-grade formulas to everyday routines. The same quality used in spas and treatment rooms, built into a clear, step-by-step protocol anyone can follow at home."
+          }
+        },
+        {
+          "type": "value",
+          "settings": {
+            "title": "Our Ingredient Philosophy",
+            "body": "We start with the goal — what the skin needs — and work backward. We do not add ingredients for marketing appeal or trend cycles. If an ingredient is in our formula, it has a documented role in supporting skin health."
+          }
+        },
+        {
+          "type": "value",
+          "settings": {
+            "title": "Our Commitment to Cruelty-Free Skincare",
+            "body": "Skin Protocol RX products are never tested on animals. We believe effective skincare does not require that compromise. Our commitment to cruelty-free practices is not a marketing claim — it is a standard we hold without exception."
+          }
+        },
+        {
+          "type": "value",
+          "settings": {
+            "title": "What \"Protocol\" Means",
+            "body": "\"Protocol\" is not just a name. It reflects a philosophy: skincare works best as a system, not a collection of random products. A protocol is intentional, sequential, and purposeful. That is how every Skin Protocol RX product is designed to be used."
+          }
+        },
+        {
+          "type": "value",
+          "settings": {
+            "title": "Supporting Healthy Skin at Home and in the Treatment Room",
+            "body": "When a client leaves a spa after a professional treatment, the results do not have to stop there. Skin Protocol RX gives spa professionals a coordinated home-care line that supports their work and keeps clients connected to their skincare goals between visits."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

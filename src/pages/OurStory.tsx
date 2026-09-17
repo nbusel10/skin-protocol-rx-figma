@@ -26,7 +26,7 @@ const FOUNDERS = [
     name: 'Christina Corbin, LME',
     role: 'Co-Founder | Licensed Medical Esthetician',
     blurb: 'Hands-on skin expertise. Refines formulations through treatment experience. Focus on texture, tolerance, and results.',
-    image: 'https://skinprotocolrx.com/cdn/shop/files/6103798B-BA6F-4093-A676-897E515244CC_1_201_a.jpg?v=1776598050&width=800',
+    image: '/christina-corbin-lme-co-founder-skin-protocol-rx.png',
     alt: 'Christina Corbin, LME — licensed medical esthetician and co-founder of Skin Protocol RX',
   },
 ]

@@ -1,0 +1,559 @@
+{% comment %}
+  Skin Protocol Personalized Routine — Online Store 2.0 section
+  File: sections/skin-protocol-routine.liquid
+
+  Matches the React homepage block:
+  "Personalized Routine — A Better Routine Starts With a Better Protocol"
+
+  - Stone background, hairline top/bottom borders
+  - Copy left, protocol-step cards right
+  - Playfair heading + DM Sans body, rose-gold kickers
+
+  Setup
+  1. Copy this file to sections/skin-protocol-routine.liquid
+  2. Add the section on the homepage in the theme editor
+  3. Point "Build My Protocol" at /pages/build-your-protocol
+  4. Create collections (manual or automated by tag), then pick
+     each one on the matching step card — or use these handles and
+     the cards will auto-link:
+       cleanse / tone / treat / eye-care / moisturize / nourish
+     Suggested products:
+       Cleanse     Chamomile Cream Cleanser, Clarifying Gel Cleanser,
+                   TripleGlow Exfoliating Cleanser
+       Tone        Niacinamide Rosewater Restorative Toner
+       Treat       Brighten & Glow C (5% / 20%), Hyaluronic Acid Serum,
+                   Matrix Serum, Tri-peptide Complex, Beauty Elixir,
+                   Bakuchiol Renewal
+       Eye Care    Eye Recovery Complex
+       Moisturize  Hydration Cloud Cream, Rich Barrier Cream
+       Nourish     The Holy Grail Oil
+       Protect     Guidance-only morning SPF step (no SKU required)
+     Optional: tag products protocol-step-1 … protocol-step-6 and
+     use automated collections so new SKUs stay in the right step.
+
+  Shopify sizing
+  Dawn themes set html { font-size: 62.5% } so 1rem = 10px, not 16px.
+  This section locks a 16px rem base, uses px for type and max-widths,
+  and overrides theme h2/h3/a so the block does not shrink in the theme.
+{% endcomment %}
+
+{%- liquid
+  assign heading_tag = section.settings.heading_tag
+  if heading_tag != 'h2' and heading_tag != 'h3'
+    assign heading_tag = 'h2'
+  endif
+-%}
+
+{%- if section.settings.load_fonts -%}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+{%- endif -%}
+
+<section
+  id="ProtocolRoutine-{{ section.id }}"
+  class="spr"
+  style="
+    --spr-accent: {{ section.settings.accent }};
+    --spr-accent-dark: {{ section.settings.accent_dark }};
+    --spr-black: {{ section.settings.black }};
+    --spr-stone: {{ section.settings.stone }};
+    --spr-border: {{ section.settings.border }};
+  "
+>
+  <div class="spr__inner">
+    <div class="spr__copy">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="spr__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <{{ heading_tag }} class="spr__heading">{{ section.settings.heading | escape }}</{{ heading_tag }}>
+      {%- endif -%}
+
+      {%- if section.settings.body != blank -%}
+        <div class="spr__body">{{ section.settings.body }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank -%}
+        {%- if section.settings.button_link != blank -%}
+          <a class="spr__btn" href="{{ section.settings.button_link }}">
+            {{ section.settings.button_label | escape }}
+          </a>
+        {%- else -%}
+          <span class="spr__btn">{{ section.settings.button_label | escape }}</span>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="spr__steps">
+        {%- for block in section.blocks -%}
+          {%- if block.type != 'step' -%}{%- continue -%}{%- endif -%}
+          {%- liquid
+            assign href = block.settings.link
+            if href == blank and block.settings.step_collection != blank
+              assign href = block.settings.step_collection.url
+            endif
+            if href == blank and block.settings.name != blank
+              assign name_handle = block.settings.name | handleize
+              assign step_handle = 'step-' | append: forloop.index | append: '-' | append: name_handle
+              if collections[name_handle] != blank
+                assign href = collections[name_handle].url
+              elsif collections[step_handle] != blank
+                assign href = collections[step_handle].url
+              endif
+            endif
+          -%}
+          {%- if href != blank -%}
+            <a class="spr__card spr__card--link" href="{{ href }}" {{ block.shopify_attributes }}>
+          {%- else -%}
+            <div class="spr__card" {{ block.shopify_attributes }}>
+          {%- endif -%}
+            {%- if block.settings.eyebrow != blank -%}
+              <span class="spr__card-kicker">{{ block.settings.eyebrow | escape }}</span>
+            {%- else -%}
+              <span class="spr__card-kicker">Step {{ forloop.index }}</span>
+            {%- endif -%}
+            {%- if block.settings.name != blank -%}
+              <h3 class="spr__card-title">{{ block.settings.name | escape }}</h3>
+            {%- endif -%}
+            {%- if block.settings.description != blank -%}
+              <p class="spr__card-body">
+                {%- if block.settings.name == 'Nourish' -%}
+                  <em>Optional</em> — facial oil after moisturizer when desired
+                {%- elsif block.settings.name == 'Protect' -%}
+                  <em>Morning</em> — finish with broad-spectrum SPF 30+
+                {%- else -%}
+                  {{ block.settings.description | escape }}
+                {%- endif -%}
+              </p>
+            {%- endif -%}
+          {%- if href != blank -%}
+            </a>
+          {%- else -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }},
+  #shopify-section-{{ section.id }}.shopify-section,
+  .section-protocol-routine {
+    --section-padding: 0;
+    max-width: none !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  #shopify-section-{{ section.id }} .page-width,
+  .section-protocol-routine .page-width {
+    max-width: none !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: 100% !important;
+  }
+
+  #ProtocolRoutine-{{ section.id }} {
+    --spr-font-serif: 'Playfair Display', Georgia, serif;
+    --spr-font-sans: 'DM Sans', system-ui, sans-serif;
+    /* Dawn uses 62.5% html font-size (1rem = 10px). Lock 16px so rem matches the React site. */
+    font-size: 16px;
+    line-height: 1.5;
+    font-family: var(--spr-font-sans);
+    background: var(--spr-stone);
+    color: var(--spr-black);
+    border-top: 1px solid var(--spr-border);
+    border-bottom: 1px solid var(--spr-border);
+    padding: 96px 20px;
+    box-sizing: border-box;
+  }
+
+  #ProtocolRoutine-{{ section.id }} *,
+  #ProtocolRoutine-{{ section.id }} *::before,
+  #ProtocolRoutine-{{ section.id }} *::after {
+    box-sizing: border-box;
+  }
+
+  #ProtocolRoutine-{{ section.id }} .spr__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+
+  #ProtocolRoutine-{{ section.id }} .spr__eyebrow,
+  #ProtocolRoutine-{{ section.id }} p.spr__eyebrow {
+    font-family: var(--spr-font-sans);
+    font-size: 12px !important;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--spr-accent);
+    margin: 0 0 16px;
+  }
+
+  #ProtocolRoutine-{{ section.id }} .spr__heading,
+  #ProtocolRoutine-{{ section.id }} h2.spr__heading,
+  #ProtocolRoutine-{{ section.id }} h3.spr__heading {
+    font-family: var(--spr-font-serif) !important;
+    font-size: 36px !important;
+    font-weight: 400 !important;
+    font-style: normal;
+    line-height: 1.2 !important;
+    letter-spacing: normal !important;
+    color: var(--spr-black) !important;
+    margin: 0 0 24px !important;
+    max-width: 520px;
+  }
+
+  #ProtocolRoutine-{{ section.id }} .spr__body,
+  #ProtocolRoutine-{{ section.id }} .spr__body p {
+    font-family: var(--spr-font-sans);
+    font-size: 16px !important;
+    line-height: 1.7 !important;
+    letter-spacing: normal;
+    color: color-mix(in srgb, var(--spr-black) 55%, transparent);
+    max-width: 512px;
+  }
+
+  #ProtocolRoutine-{{ section.id }} .spr__body {
+    margin: 0 0 40px;
+  }
+
+  #ProtocolRoutine-{{ section.id }} .spr__body p {
+    margin: 0;
+  }
+
+  #ProtocolRoutine-{{ section.id }} .spr__btn,
+  #ProtocolRoutine-{{ section.id }} a.spr__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--spr-font-sans);
+    font-size: 14px !important;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    padding: 16px 32px;
+    text-decoration: none !important;
+    background: var(--spr-black);
+    color: #fff !important;
+    border: 1px solid var(--spr-black);
+    border-radius: 0;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  #ProtocolRoutine-{{ section.id }} .spr__btn:hover,
+  #ProtocolRoutine-{{ section.id }} a.spr__btn:hover {
+    background: var(--spr-accent);
+    border-color: var(--spr-accent);
+    color: #fff !important;
+  }
+
+  #ProtocolRoutine-{{ section.id }} .spr__steps {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  #ProtocolRoutine-{{ section.id }} .spr__card {
+    background: #fff;
+    border: 1px solid var(--spr-border);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  #ProtocolRoutine-{{ section.id }} a.spr__card,
+  #ProtocolRoutine-{{ section.id }} a.spr__card:visited,
+  #ProtocolRoutine-{{ section.id }} a.spr__card:hover,
+  #ProtocolRoutine-{{ section.id }} a.spr__card:focus {
+    text-decoration: none !important;
+    color: inherit;
+  }
+
+  #ProtocolRoutine-{{ section.id }} a.spr__card {
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  #ProtocolRoutine-{{ section.id }} a.spr__card:hover {
+    border-color: var(--spr-accent);
+    box-shadow: 0 4px 24px rgba(184, 135, 139, 0.12);
+  }
+
+  #ProtocolRoutine-{{ section.id }} .spr__card-kicker {
+    font-family: var(--spr-font-sans);
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--spr-accent);
+  }
+
+  #ProtocolRoutine-{{ section.id }} .spr__card-title,
+  #ProtocolRoutine-{{ section.id }} h3.spr__card-title {
+    font-family: var(--spr-font-serif) !important;
+    font-size: 22px !important;
+    font-weight: 400 !important;
+    font-style: normal;
+    line-height: 1.25 !important;
+    letter-spacing: normal !important;
+    color: var(--spr-black) !important;
+    margin: 0 !important;
+  }
+
+  #ProtocolRoutine-{{ section.id }} .spr__card-body,
+  #ProtocolRoutine-{{ section.id }} p.spr__card-body {
+    font-family: var(--spr-font-sans);
+    font-size: 13px !important;
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--spr-black) 45%, transparent);
+    margin: 0;
+  }
+
+  @media (min-width: 750px) {
+    #ProtocolRoutine-{{ section.id }} {
+      padding: 96px 32px;
+    }
+    #ProtocolRoutine-{{ section.id }} .spr__steps {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 990px) {
+    #ProtocolRoutine-{{ section.id }} {
+      padding: 96px 48px;
+    }
+    #ProtocolRoutine-{{ section.id }} .spr__heading,
+    #ProtocolRoutine-{{ section.id }} h2.spr__heading,
+    #ProtocolRoutine-{{ section.id }} h3.spr__heading {
+      font-size: 42px !important;
+    }
+    #ProtocolRoutine-{{ section.id }} .spr__inner {
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Skin Protocol Routine",
+  "tag": "section",
+  "class": "section-protocol-routine",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Homepage protocol block. Matches Personalize Your Protocol — Cleanse through Protect."
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Personalized Routine"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "A Better Routine Starts With a Better Protocol"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "default": "<p>Find products designed for your skin type, concerns, and daily routine. Build a straightforward regimen without unnecessary steps or ingredients.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Build My Protocol"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Link to your protocol quiz page."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "accent",
+      "label": "Accent",
+      "default": "#B8878B"
+    },
+    {
+      "type": "color",
+      "id": "accent_dark",
+      "label": "Accent hover",
+      "default": "#8E6367"
+    },
+    {
+      "type": "color",
+      "id": "black",
+      "label": "Black",
+      "default": "#0A0A0A"
+    },
+    {
+      "type": "color",
+      "id": "stone",
+      "label": "Background",
+      "default": "#FAF9F8"
+    },
+    {
+      "type": "color",
+      "id": "border",
+      "label": "Border",
+      "default": "#E5E5E5"
+    },
+    {
+      "type": "checkbox",
+      "id": "load_fonts",
+      "label": "Load Playfair Display and DM Sans",
+      "info": "Turn off if the theme already loads these fonts.",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Protocol step",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Step label",
+          "default": "Step 1"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Cleanse"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Remove impurities and prepare skin"
+        },
+        {
+          "type": "collection",
+          "id": "step_collection",
+          "label": "Step collection",
+          "info": "Card links to this collection. Create one collection per protocol step so the page only shows those products."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link override",
+          "info": "Optional. Use instead of the collection — for example a filtered catalog URL."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Skin Protocol Routine",
+      "category": "Skin Protocol",
+      "settings": {
+        "eyebrow": "Personalize Your Protocol",
+        "heading": "Build Your Daily Routine With Products That Fit Your Skin",
+        "body": "<p>Choose one cleanser and one moisturizer, then add a serum or optional care based on your needs. You do not need every product in the collection. Daily essentials: cleanser, moisturizer, and morning sunscreen.</p>",
+        "button_label": "Build My Protocol"
+      },
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "eyebrow": "Step 1",
+            "name": "Cleanse",
+            "description": "Choose one cleanser for daily cleansing"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "eyebrow": "Step 2",
+            "name": "Tone",
+            "description": "Balance and prime after cleansing"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "eyebrow": "Step 3",
+            "name": "Treat",
+            "description": "Personalize with one serum for your concerns"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "eyebrow": "Step 4",
+            "name": "Eye Care",
+            "description": "Optional — apply before moisturizer when selected"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "eyebrow": "Step 5",
+            "name": "Moisturize",
+            "description": "Choose one moisturizer for your skin needs"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "eyebrow": "Step 6",
+            "name": "Nourish",
+            "description": "Optional — facial oil after moisturizer when desired"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "eyebrow": "Step 7",
+            "name": "Protect",
+            "description": "Morning — finish with broad-spectrum SPF 30+"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

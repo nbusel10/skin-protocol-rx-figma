@@ -10,8 +10,8 @@ import ProtocolBuilder from './pages/ProtocolBuilder'
 import OurStory from './pages/OurStory'
 import StandardsSectionPreview from './pages/StandardsSectionPreview'
 import SpaPartners from './pages/SpaPartners'
-import ComingSoonPage from './pages/ComingSoonPage'
 import IngredientGlossary from './pages/IngredientGlossary'
+import ProductEducation from './pages/ProductEducation'
 import { PRODUCTS } from './data'
 
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
@@ -185,19 +185,12 @@ export default function App() {
         {page === 'home' && <HomePage onNavigate={navigate} />}
         {page === 'shop' && <ShopPage onNavigate={navigate} />}
         {page === 'product' && <ProductDetail productId={productId} onNavigate={navigate} />}
-        {page === 'protocol' && <ProtocolBuilder onNavigate={navigate} />}
+        {page === 'protocol' && <ProtocolBuilder onNavigate={navigate} onAddToCart={(count) => setCartCount(c => c + count)} />}
         {preview === 'standards' && <StandardsSectionPreview onNavigate={navigate} />}
         {page === 'story' && preview !== 'standards' && <OurStory onNavigate={navigate} scrollToId={storyHash || undefined} />}
         {page === 'spa' && <SpaPartners onNavigate={navigate} />}
         {page === 'glossary' && <IngredientGlossary onNavigate={navigate} />}
-        {page === 'education' && (
-          <ComingSoonPage
-            eyebrow="Learn"
-            title="Product Education"
-            body="Guides to help you understand each step of your protocol — how to use products, what to expect, and how professional formulas support healthier-looking skin."
-            onNavigate={navigate}
-          />
-        )}
+        {page === 'education' && <ProductEducation onNavigate={navigate} />}
       </main>
 
       <Footer onNavigate={navigate} />

@@ -19,12 +19,32 @@ export type ProductCategory =
   | 'Serums'
   | 'Facial Oils'
 
+export type ProtocolStepName =
+  | 'Cleanse'
+  | 'Tone'
+  | 'Treat'
+  | 'Eye Care'
+  | 'Moisturize'
+  | 'Nourish'
+  | 'Protect'
+
+/** Product-backed protocol steps (Protect is guidance-only, step 7). */
+export type ProductProtocolStep = 1 | 2 | 3 | 4 | 5 | 6
+
 export interface Product {
   id: string
   name: string
   tagline: string
+  /** Plain-language "what this is good for" line for cards and the education guide. */
+  goodFor: string
+  /** Decision help: when to pick this product over others in the same step. */
+  chooseIf: string
+  /** Optional frequency, timing, or pairing guidance shown alongside goodFor. */
+  usageNote?: string
   price: number
   size: string
+  /** Protocol application order: 1 Cleanse → 6 Nourish (Protect is guidance-only) */
+  protocolStep: ProductProtocolStep
   categories: ProductCategory[]
   skinTypes: SkinType[]
   concerns: SkinConcern[]
@@ -37,6 +57,55 @@ export interface Product {
   howToUse: string
   keyIngredients: { name: string; benefit: string }[]
   fullIngredients: string[]
+}
+
+export const PROTOCOL_STEP_META: {
+  step: 1 | 2 | 3 | 4 | 5 | 6 | 7
+  name: ProtocolStepName
+  description: string
+  /** When false, step is educational only (no SKU in catalog). */
+  productBacked?: boolean
+}[] = [
+  { step: 1, name: 'Cleanse', description: 'Choose one cleanser for daily cleansing' },
+  { step: 2, name: 'Tone', description: 'Balance and prime after cleansing' },
+  { step: 3, name: 'Treat', description: 'Personalize with one serum for your concerns' },
+  { step: 4, name: 'Eye Care', description: 'Optional — apply before moisturizer when selected' },
+  { step: 5, name: 'Moisturize', description: 'Choose one moisturizer for your skin needs' },
+  { step: 6, name: 'Nourish', description: 'Optional — facial oil after moisturizer when desired' },
+  { step: 7, name: 'Protect', description: 'Morning — finish with broad-spectrum SPF 30+', productBacked: false },
+]
+
+export const PROTECT_GUIDANCE = {
+  step: 7 as const,
+  name: 'Protect' as const,
+  label: 'Step 7 · Protect',
+  description: 'Finish the morning routine with broad-spectrum SPF 30+ sunscreen.',
+  note: 'Use your preferred SPF, even if purchased separately.',
+}
+
+export function getProtocolStepLabel(step: ProductProtocolStep | 7): string {
+  const meta = PROTOCOL_STEP_META.find(s => s.step === step)
+  return meta ? `Step ${meta.step} · ${meta.name}` : `Step ${step}`
+}
+
+export function getProtocolStepFromParam(param: string): ProductProtocolStep | null {
+  const raw = param.trim().toLowerCase()
+  if (!raw) return null
+  // Legacy URL aliases from the previous Repair / Restore naming
+  if (raw === 'repair' || raw.replace(/[^a-z0-9]+/g, '') === 'repair') return 3
+  if (raw === 'restore' || raw.replace(/[^a-z0-9]+/g, '') === 'restore') return 3
+  const compact = raw.replace(/[^a-z0-9]+/g, '')
+  const match = PROTOCOL_STEP_META.find(s => {
+    if (s.productBacked === false) return false
+    const name = s.name.toLowerCase()
+    return (
+      String(s.step) === raw ||
+      name === raw ||
+      name.replace(/[^a-z0-9]+/g, '') === compact ||
+      `step${s.step}${name}`.replace(/[^a-z0-9]+/g, '') === compact
+    )
+  })
+  return match ? (match.step as ProductProtocolStep) : null
 }
 
 /** Reference product shot for client visualization — Rosewater Niacinamide Toner */
@@ -54,8 +123,11 @@ export const PRODUCTS: Product[] = [
     id: 'clarifying-cleanser',
     name: 'Chamomile Cream Cleanser',
     tagline: 'Gentle. Soothe. Balance.',
+    goodFor: 'Cleanses and leaves skin feeling soft. A cream-texture option for skin that feels dry or needs a comforting cleanse.',
+    chooseIf: 'Your skin feels dry, tight, or sensitive and you want a soft, moisturizing cream cleanse. Works for all skin types.',
     price: 68,
     size: '6.7 oz / 200 ml',
+    protocolStep: 1,
     categories: ['Cleansers'],
     skinTypes: ALL_SKIN,
     concerns: ALL_CONCERNS,
@@ -88,8 +160,11 @@ export const PRODUCTS: Product[] = [
     id: 'clarifying-gel-cleanser',
     name: 'Clarifying Gel Cleanser',
     tagline: 'Clarify. Purify. Balance.',
+    goodFor: 'Removes daily impurities with a refreshing gel texture while leaving skin feeling comfortable.',
+    chooseIf: 'Your skin feels oily, combination, or normal and prefers a lighter gel cleanse that still leaves skin comfortable — not the first pick for very dry skin.',
     price: 68,
     size: '6.7 oz / 200 ml',
+    protocolStep: 1,
     categories: ['Cleansers'],
     skinTypes: ['Combination', 'Normal', 'Oily', 'Sensitive'],
     concerns: ['Acne', 'Brightening', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage'],
@@ -120,8 +195,12 @@ export const PRODUCTS: Product[] = [
     id: 'tripleglow-exfoliating-cleanser',
     name: 'TripleGlow Exfoliating Cleanser',
     tagline: 'Polish. Renew. Illuminate.',
+    goodFor: 'Helps exfoliate surface buildup for smoother texture and a brighter-looking complexion.',
+    chooseIf: 'You want a weekly polish for dullness or rough texture — not your everyday cleanser. Pair it with the cream or gel cleanser on other days.',
+    usageNote: 'Use 1–3 times weekly, as tolerated.',
     price: 72,
     size: '6.7 oz / 200 ml',
+    protocolStep: 1,
     categories: ['Cleansers'],
     skinTypes: ['Combination', 'Dry', 'Normal', 'Oily'],
     concerns: ['Acne', 'Aging', 'Brightening', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Sun Damage'],
@@ -154,8 +233,11 @@ export const PRODUCTS: Product[] = [
     id: 'rosewater-niacinamide-toner',
     name: 'Niacinamide Rosewater Restorative Toner',
     tagline: 'Balance. Glow. Refine.',
+    goodFor: 'Adds hydration and supports the skin barrier and a more even-looking complexion.',
+    chooseIf: 'You want a daily toner after cleansing for hydration, barrier support, and a more even-looking tone — a fit for every skin type.',
     price: 52,
     size: '4 oz / 120 ml',
+    protocolStep: 2,
     categories: ['Toners'],
     skinTypes: ALL_SKIN,
     concerns: ALL_CONCERNS,
@@ -185,11 +267,15 @@ export const PRODUCTS: Product[] = [
     id: 'brighten-glow-c-5',
     name: 'Brighten & Glow C Serum 5%',
     tagline: 'Brighten. Firm. Repair.',
+    goodFor: 'A lower-strength vitamin C option for dullness and uneven-looking tone, with antioxidant support.',
+    chooseIf: 'You are new to vitamin C, have sensitive skin, or want a gentler daily brightening serum.',
+    usageNote: 'Choose one strength based on skin tolerance.',
     price: 88,
     size: '1 oz / 30 ml',
+    protocolStep: 3,
     categories: ['Serums'],
     skinTypes: ALL_SKIN,
-    concerns: ['Acne', 'Aging', 'Brightening', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage'],
+    concerns: ['Acne', 'Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage'],
     badges: ['Sensitive Skin'],
     rating: 4.8,
     reviews: 197,
@@ -216,8 +302,12 @@ export const PRODUCTS: Product[] = [
     id: 'brighten-glow-c-20',
     name: 'Brighten & Glow C Serum 20%',
     tagline: 'Brighten. Firm. Repair.',
+    goodFor: 'A higher-strength vitamin C option for dullness and uneven-looking tone, with antioxidant support.',
+    chooseIf: 'You already tolerate vitamin C well and want a stronger option for dullness and uneven-looking tone.',
+    usageNote: 'Choose one strength based on skin tolerance.',
     price: 98,
     size: '1 oz / 30 ml',
+    protocolStep: 3,
     categories: ['Serums'],
     skinTypes: ['Combination', 'Dry', 'Normal', 'Oily'],
     concerns: ['Aging', 'Brightening', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Sun Damage'],
@@ -247,8 +337,12 @@ export const PRODUCTS: Product[] = [
     id: 'hyaluronic-acid-serum',
     name: 'Hyaluronic Acid Serum',
     tagline: 'Hydrate. Plump. Preserve.',
+    goodFor: 'Adds hydration for skin that feels dehydrated and helps it look temporarily plumper and smoother.',
+    chooseIf: 'Dehydration is your main concern — skin that feels tight or looks dull from lack of water, not oil.',
+    usageNote: 'Follow with moisturizer.',
     price: 92,
     size: '1 oz / 30 ml',
+    protocolStep: 3,
     categories: ['Serums'],
     skinTypes: ALL_SKIN,
     concerns: ALL_CONCERNS,
@@ -277,8 +371,11 @@ export const PRODUCTS: Product[] = [
     id: 'matrix-serum',
     name: 'Matrix Serum',
     tagline: 'Strengthen. Renew. Brighten.',
+    goodFor: 'Amino acid and humectant care for hydration, skin conditioning, and a smoother-looking surface.',
+    chooseIf: 'You want everyday conditioning for texture and barrier comfort without a strong active like vitamin C or bakuchiol.',
     price: 88,
     size: '1 oz / 30 ml',
+    protocolStep: 3,
     categories: ['Serums'],
     skinTypes: ALL_SKIN,
     concerns: ALL_CONCERNS,
@@ -309,8 +406,11 @@ export const PRODUCTS: Product[] = [
     id: 'amino-acid-serum',
     name: 'Tri-peptide Complex Serum',
     tagline: 'Rebuild. Firm. Revitalize.',
+    goodFor: 'Hydrating amino acid and peptide care that helps skin look moisturized, supple, and smoother.',
+    chooseIf: 'Firmness, suppleness, and a smoother look are your focus — peptide care rather than brightening or exfoliation.',
     price: 88,
     size: '1 oz / 30 ml',
+    protocolStep: 3,
     categories: ['Serums'],
     skinTypes: ALL_SKIN,
     concerns: ALL_CONCERNS,
@@ -340,8 +440,11 @@ export const PRODUCTS: Product[] = [
     id: 'beauty-elixir-serum',
     name: 'Beauty Elixir Serum',
     tagline: 'Plump. Hydrate. Nourish.',
+    goodFor: 'Lightweight hydration and nourishment that leaves skin feeling soft and looking radiant.',
+    chooseIf: 'You want a soft, radiant finish and lightweight botanical nourishment rather than a targeted active for tone or lines.',
     price: 94,
     size: '1 oz / 30 ml',
+    protocolStep: 3,
     categories: ['Serums'],
     skinTypes: ALL_SKIN,
     concerns: ['Aging', 'Brightening', 'Dry Skin', 'Preventative', 'Redness', 'Sun Damage'],
@@ -372,11 +475,15 @@ export const PRODUCTS: Product[] = [
     id: 'bakuchiol-renewal-serum',
     name: 'Bakuchiol Renewal Serum',
     tagline: 'Refine. Even. Brighten.',
+    goodFor: 'Helps improve the appearance of fine lines and uneven-looking tone.',
+    chooseIf: 'Evening renewal is the goal — fine lines or uneven tone — and you want a gentler alternative to traditional retinoids.',
+    usageNote: 'Use in the evening.',
     price: 98,
     size: '1 oz / 30 ml',
+    protocolStep: 3,
     categories: ['Serums'],
     skinTypes: ALL_SKIN,
-    concerns: ['Aging', 'Brightening', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Sun Damage'],
+    concerns: ['Acne', 'Aging', 'Brightening', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Sun Damage'],
     badges: ['Professional Favorite'],
     rating: 4.8,
     reviews: 55,
@@ -406,11 +513,14 @@ export const PRODUCTS: Product[] = [
     id: 'hydration-cloud-cream',
     name: 'Hydration Cloud Cream',
     tagline: 'Nourish. Smooth. Restore.',
+    goodFor: 'Daily moisture with a lightweight feel; helps soften skin and maintain a supple appearance.',
+    chooseIf: 'You want everyday moisture without heaviness — best for combination, oily, normal, or sensitive skin that prefers a lighter cream.',
     price: 88,
     size: '1.7 oz / 50 ml',
+    protocolStep: 5,
     categories: ['Moisturizers'],
     skinTypes: ['Combination', 'Normal', 'Oily', 'Sensitive'],
-    concerns: ['Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage'],
+    concerns: ['Acne', 'Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage'],
     badges: ['Best Seller'],
     rating: 4.8,
     reviews: 142,
@@ -439,11 +549,14 @@ export const PRODUCTS: Product[] = [
     id: 'rich-barrier-cream',
     name: 'Rich Barrier Cream',
     tagline: 'Nourish. Restore. Replenish.',
+    goodFor: 'Rich moisture for skin that feels dry; helps soften skin and support the moisture barrier.',
+    chooseIf: 'Your skin feels dry, depleted, or needs richer comfort and barrier support — the fuller cream when Cloud Cream is not enough.',
     price: 92,
     size: '1.7 oz / 50 ml',
+    protocolStep: 5,
     categories: ['Moisturizers'],
     skinTypes: ALL_SKIN,
-    concerns: ['Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage'],
+    concerns: ['Acne', 'Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage'],
     badges: ['Best Seller', 'Professional Favorite'],
     rating: 4.9,
     reviews: 241,
@@ -472,9 +585,12 @@ export const PRODUCTS: Product[] = [
     id: 'eye-cream',
     name: 'Eye Recovery Complex',
     tagline: 'Brighten. Depuff. Hydrate.',
+    goodFor: 'Hydrates the eye area and may temporarily reduce the appearance of puffiness for a fresher look.',
+    chooseIf: 'The eye area is a concern — puffiness, dryness, or a tired look. Skip it if your protocol does not need targeted eye care.',
     price: 108,
     size: '0.5 oz / 15 ml',
-    categories: ['Eye Care', 'Moisturizers'],
+    protocolStep: 4,
+    categories: ['Eye Care'],
     skinTypes: ALL_SKIN,
     concerns: ['Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Preventative', 'Sun Damage'],
     badges: ['Professional Favorite'],
@@ -506,8 +622,11 @@ export const PRODUCTS: Product[] = [
     id: 'the-holy-grail',
     name: 'The Holy Grail Oil',
     tagline: 'Restore. Illuminate. Revitalize.',
+    goodFor: 'Squalane-based nourishment for softness and comfort, especially when skin feels dry.',
+    chooseIf: 'Skin wants extra softness and comfort after moisturizer — especially dry or depleted skin.',
     price: 148,
     size: '1 oz / 30 ml',
+    protocolStep: 6,
     categories: ['Facial Oils'],
     skinTypes: ALL_SKIN,
     concerns: ALL_CONCERNS,
@@ -547,11 +666,10 @@ export const SKIN_CONCERNS = [
   { id: 'eye-area', label: 'Eye Area', icon: '◔', description: 'Targeted care for the delicate skin around eyes' },
 ]
 
-export const PROTOCOL_STEPS = [
-  { step: 1, name: 'Cleanse', products: ['clarifying-cleanser', 'clarifying-gel-cleanser', 'tripleglow-exfoliating-cleanser'], description: 'Remove impurities and prepare skin' },
-  { step: 2, name: 'Tone', products: ['rosewater-niacinamide-toner'], description: 'Balance pH and prime for treatment' },
-  { step: 3, name: 'Repair', products: ['brighten-glow-c-5', 'brighten-glow-c-20', 'matrix-serum', 'amino-acid-serum', 'bakuchiol-renewal-serum', 'beauty-elixir-serum'], description: 'Target specific skin concerns' },
-  { step: 4, name: 'Restore', products: ['hyaluronic-acid-serum'], description: 'Replenish hydration' },
-  { step: 5, name: 'Moisturize', products: ['hydration-cloud-cream', 'rich-barrier-cream', 'eye-cream'], description: 'Seal in moisture and support skin barrier' },
-  { step: 6, name: 'Nourish', products: ['the-holy-grail'], description: 'Finish and lock in the protocol' },
-]
+export const PROTOCOL_STEPS = PROTOCOL_STEP_META.map(meta => ({
+  ...meta,
+  products: PRODUCTS.filter(p => p.protocolStep === meta.step).map(p => p.id),
+}))
+
+/** Product-backed steps only (excludes Protect guidance). */
+export const PRODUCT_PROTOCOL_STEPS = PROTOCOL_STEP_META.filter(s => s.productBacked !== false)

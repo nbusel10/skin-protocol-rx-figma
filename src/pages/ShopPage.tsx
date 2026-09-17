@@ -1,17 +1,19 @@
-import { useState, useMemo } from 'react'
-import { PRODUCTS, type Product, type SkinType, type SkinConcern, type ProductCategory } from '../data'
+import { useState, useMemo, useEffect } from 'react'
+import { PRODUCTS, PRODUCT_PROTOCOL_STEPS, getProtocolStepLabel, getProtocolStepFromParam, type Product, type SkinType, type SkinConcern, type ProductCategory } from '../data'
 import ProductImage from '../components/ProductImage'
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 
 interface ShopPageProps {
   onNavigate: (page: Page, productId?: string) => void
+  initialStep?: string
 }
 
-type SortOption = 'featured' | 'best-selling' | 'newest' | 'price-asc' | 'price-desc'
+type SortOption = 'featured' | 'protocol-step' | 'protocol-step-desc' | 'best-selling' | 'newest' | 'price-asc' | 'price-desc'
 
 const SKIN_TYPES: SkinType[] = ['Combination', 'Dry', 'Normal', 'Oily', 'Sensitive']
 const SKIN_CONCERNS: SkinConcern[] = ['Acne', 'Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage']
 const CATEGORIES: ProductCategory[] = ['Cleansers', 'Toners', 'Moisturizers', 'Eye Care', 'Serums', 'Facial Oils']
+const PROTOCOL_STEP_OPTIONS = PRODUCT_PROTOCOL_STEPS.map(s => `Step ${s.step} · ${s.name}`)
 const BADGES = ['Best Sellers', 'Sensitive Skin Friendly', 'Professional Favorites']
 
 function StarRating({ rating }: { rating: number }) {
@@ -55,6 +57,7 @@ function ProductCard({ product, onNavigate }: { product: Product; onNavigate: (p
           </button>
         </div>
       </div>
+      <p className="text-[10px] tracking-widest uppercase text-rose mb-0.5">{getProtocolStepLabel(product.protocolStep)}</p>
       <p className="text-[10px] tracking-widest uppercase text-charcoal/40 mb-0.5">{product.categories[0]}</p>
       <div className="flex items-start justify-between gap-2 mb-1">
         <h3 className="text-sm font-medium text-charcoal leading-snug">{product.name}</h3>
@@ -109,13 +112,23 @@ function FilterSection({ title, options, selected, onToggle }: {
   )
 }
 
-export default function ShopPage({ onNavigate }: ShopPageProps) {
+function stepFilterFromParam(param?: string) {
+  const step = getProtocolStepFromParam(param || '')
+  return step ? [getProtocolStepLabel(step)] : []
+}
+
+export default function ShopPage({ onNavigate, initialStep }: ShopPageProps) {
   const [selectedTypes, setSelectedTypes] = useState<string[]>([])
   const [selectedConcerns, setSelectedConcerns] = useState<string[]>([])
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [selectedSteps, setSelectedSteps] = useState<string[]>(() => stepFilterFromParam(initialStep))
   const [selectedBadges, setSelectedBadges] = useState<string[]>([])
-  const [sort, setSort] = useState<SortOption>('featured')
+  const [sort, setSort] = useState<SortOption>('protocol-step')
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+
+  useEffect(() => {
+    setSelectedSteps(stepFilterFromParam(initialStep))
+  }, [initialStep])
 
   const toggle = (arr: string[], setArr: (v: string[]) => void, val: string) => {
     setArr(arr.includes(val) ? arr.filter(v => v !== val) : [...arr, val])
@@ -125,35 +138,47 @@ export default function ShopPage({ onNavigate }: ShopPageProps) {
     setSelectedTypes([])
     setSelectedConcerns([])
     setSelectedCategories([])
+    setSelectedSteps([])
     setSelectedBadges([])
   }
 
-  const activeFilterCount = selectedTypes.length + selectedConcerns.length + selectedCategories.length + selectedBadges.length
+  const activeFilterCount = selectedTypes.length + selectedConcerns.length + selectedCategories.length + selectedSteps.length + selectedBadges.length
 
   const filtered = useMemo(() => {
     let list = [...PRODUCTS]
     if (selectedTypes.length) list = list.filter(p => selectedTypes.some(t => p.skinTypes.includes(t as SkinType)))
     if (selectedConcerns.length) list = list.filter(p => selectedConcerns.some(c => p.concerns.includes(c as SkinConcern)))
     if (selectedCategories.length) list = list.filter(p => selectedCategories.some(c => p.categories.includes(c as ProductCategory)))
+    if (selectedSteps.length) {
+      list = list.filter(p => selectedSteps.includes(getProtocolStepLabel(p.protocolStep)))
+    }
     if (selectedBadges.includes('Best Sellers')) list = list.filter(p => p.badges.includes('Best Seller'))
     if (selectedBadges.includes('Sensitive Skin Friendly')) list = list.filter(p => p.skinTypes.includes('Sensitive'))
     if (selectedBadges.includes('Professional Favorites')) list = list.filter(p => p.badges.includes('Professional Favorite'))
 
     switch (sort) {
+      case 'protocol-step':
+        list.sort((a, b) => a.protocolStep - b.protocolStep || a.name.localeCompare(b.name))
+        break
+      case 'protocol-step-desc':
+        list.sort((a, b) => b.protocolStep - a.protocolStep || a.name.localeCompare(b.name))
+        break
       case 'price-asc': list.sort((a, b) => a.price - b.price); break
       case 'price-desc': list.sort((a, b) => b.price - a.price); break
       case 'best-selling': list.sort((a, b) => b.reviews - a.reviews); break
+      case 'newest': list.sort((a, b) => b.reviews - a.reviews); break
       default: break
     }
     return list
-  }, [selectedTypes, selectedConcerns, selectedCategories, selectedBadges, sort])
+  }, [selectedTypes, selectedConcerns, selectedCategories, selectedSteps, selectedBadges, sort])
 
   const allActiveFilters = [
-    ...selectedTypes, ...selectedConcerns, ...selectedCategories, ...selectedBadges,
+    ...selectedTypes, ...selectedConcerns, ...selectedCategories, ...selectedSteps, ...selectedBadges,
   ]
 
   const FiltersPanel = () => (
     <div className="font-sans">
+      <FilterSection title="Protocol Step" options={PROTOCOL_STEP_OPTIONS} selected={selectedSteps} onToggle={v => toggle(selectedSteps, setSelectedSteps, v)} />
       <FilterSection title="Skin Type" options={SKIN_TYPES} selected={selectedTypes} onToggle={v => toggle(selectedTypes, setSelectedTypes, v)} />
       <FilterSection title="Skin Concern" options={SKIN_CONCERNS} selected={selectedConcerns} onToggle={v => toggle(selectedConcerns, setSelectedConcerns, v)} />
       <FilterSection title="Product Category" options={CATEGORIES} selected={selectedCategories} onToggle={v => toggle(selectedCategories, setSelectedCategories, v)} />
@@ -184,6 +209,7 @@ export default function ShopPage({ onNavigate }: ShopPageProps) {
                   toggle(selectedTypes, setSelectedTypes, f)
                   toggle(selectedConcerns, setSelectedConcerns, f)
                   toggle(selectedCategories, setSelectedCategories, f)
+                  toggle(selectedSteps, setSelectedSteps, f)
                   toggle(selectedBadges, setSelectedBadges, f)
                 }}
                 className="flex items-center gap-1.5 bg-white border border-gray-soft px-3 py-1 text-xs text-charcoal hover:border-charcoal transition-colors"
@@ -215,6 +241,8 @@ export default function ShopPage({ onNavigate }: ShopPageProps) {
               onChange={e => setSort(e.target.value as SortOption)}
               className="border border-gray-soft bg-white px-4 py-2 text-sm text-black focus:outline-none focus:border-rose"
             >
+              <option value="protocol-step">Protocol Step: 1–6</option>
+              <option value="protocol-step-desc">Protocol Step: 6–1</option>
               <option value="featured">Sort: Featured</option>
               <option value="best-selling">Best Selling</option>
               <option value="newest">Newest</option>

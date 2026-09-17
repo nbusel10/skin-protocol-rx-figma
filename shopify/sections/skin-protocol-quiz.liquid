@@ -87,16 +87,16 @@
         <h2 class="spq__title">{{ section.settings.q3_title }}</h2>
         <div class="spq__grid spq__grid--3">
           <button type="button" class="spq__opt" data-option data-value="minimal">
-            <span class="spq__opt-label">Minimal (2–3 steps)</span>
-            <span class="spq__opt-desc">Quick and simple</span>
+            <span class="spq__opt-label">Essentials &middot; 3 products</span>
+            <span class="spq__opt-desc">Cleanser, toner, moisturizer + morning SPF</span>
           </button>
           <button type="button" class="spq__opt is-selected" data-option data-value="moderate">
-            <span class="spq__opt-label">Moderate (4–5 steps)</span>
-            <span class="spq__opt-desc">Balanced routine</span>
+            <span class="spq__opt-label">Essentials + serum &middot; 4 products</span>
+            <span class="spq__opt-desc">Add one personalized treatment</span>
           </button>
           <button type="button" class="spq__opt" data-option data-value="complete">
-            <span class="spq__opt-label">Complete (6 steps)</span>
-            <span class="spq__opt-desc">Full protocol</span>
+            <span class="spq__opt-label">Full personalized &middot; up to 6 products</span>
+            <span class="spq__opt-desc">Serum plus optional eye care and oil</span>
           </button>
         </div>
       </div>
@@ -114,17 +114,25 @@
         </div>
       </div>
 
-      <div class="spq__question" data-step="4" data-required="none" hidden>
+      <div class="spq__question" data-step="4" data-required="single" hidden>
         <p class="spq__kicker">Question 5 of 5</p>
         <h2 class="spq__title">{{ section.settings.q5_title }}</h2>
         <div class="spq__grid spq__grid--2">
-          <button type="button" class="spq__opt is-selected" data-option data-value="starter" data-default>
-            <span class="spq__opt-label">Starter Routine</span>
-            <span class="spq__opt-desc">A simple foundation to begin with</span>
+          <button type="button" class="spq__opt" data-option data-value="calm">
+            <span class="spq__opt-label">Calm and comfortable</span>
+            <span class="spq__opt-desc">Nothing&rsquo;s really bothering me</span>
           </button>
-          <button type="button" class="spq__opt" data-option data-value="complete">
-            <span class="spq__opt-label">Complete Protocol</span>
-            <span class="spq__opt-desc">A full, optimized daily routine</span>
+          <button type="button" class="spq__opt" data-option data-value="dehydrated">
+            <span class="spq__opt-label">Dull and dehydrated</span>
+            <span class="spq__opt-desc">Looks flat, drinks up moisturizer</span>
+          </button>
+          <button type="button" class="spq__opt" data-option data-value="breakout">
+            <span class="spq__opt-label">Breaking out</span>
+            <span class="spq__opt-desc">Active blemishes or congestion</span>
+          </button>
+          <button type="button" class="spq__opt" data-option data-value="irritated">
+            <span class="spq__opt-label">Irritated</span>
+            <span class="spq__opt-desc">Red, stinging, or peeling</span>
           </button>
         </div>
       </div>
@@ -143,6 +151,14 @@
       <h2 class="spq__results-title">{{ section.settings.results_title }}</h2>
       <p class="spq__results-sub" data-results-sub></p>
     </div>
+    <div class="spq__recovery" data-results-recovery hidden>
+      <p class="spq__kicker">Let&rsquo;s Calm Things First</p>
+      <p class="spq__recovery-body">
+        You told us your skin is irritated right now, so we&rsquo;ve left the active ingredients out. This is a short
+        recovery routine built to settle things down. Once your skin feels comfortable again &mdash; usually two to
+        three weeks &mdash; come back and we&rsquo;ll add your treatment serum.
+      </p>
+    </div>
     <div class="spq__list" data-results-list></div>
     <p class="spq__empty" data-results-empty hidden>No matching products were found. Try a broader skin type or fewer concerns.</p>
     <p class="spq__empty" data-results-setup hidden>In the theme editor, open this section and select your Protocol Quiz collection under Protocol products.</p>
@@ -154,7 +170,7 @@
         </div>
         <div class="spq__total-meta">
           <p data-total-count></p>
-          <p>Morning &amp; Evening</p>
+          <p>AM &amp; PM + morning SPF</p>
         </div>
       </div>
       <div class="spq__total-actions">
@@ -393,7 +409,8 @@
   #ProtocolQuiz-{{ section.id }} .spq__cart:hover {
     filter: brightness(0.92);
   }
-  #ProtocolQuiz-{{ section.id }} .spq__next:disabled {
+  #ProtocolQuiz-{{ section.id }} .spq__next:disabled,
+  #ProtocolQuiz-{{ section.id }} .spq__finish:disabled {
     opacity: 0.4;
     cursor: default;
     filter: none;
@@ -413,6 +430,18 @@
     color: rgba(37, 37, 37, 0.5);
     margin: 0;
   }
+  #ProtocolQuiz-{{ section.id }} .spq__recovery {
+    background: var(--spq-accent-light);
+    border: 1px solid var(--spq-accent);
+    padding: 2.4rem;
+    margin-bottom: 3.2rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__recovery-body {
+    font-size: 1.5rem;
+    line-height: 1.7;
+    color: rgba(37, 37, 37, 0.65);
+    margin: 0;
+  }
   #ProtocolQuiz-{{ section.id }} .spq__row {
     display: flex;
     gap: 1.8rem;
@@ -420,6 +449,133 @@
     border: 1px solid var(--spq-gray);
     padding: 1.8rem;
     margin-bottom: 1.2rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__row--guidance {
+    background: var(--spq-ivory, #FAF9F8);
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__period {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.2rem;
+    font-size: 1.1rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--spq-accent);
+    margin: 2.4rem 0 1.2rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__period:first-child {
+    margin-top: 0;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__period-when {
+    letter-spacing: 0.2em;
+    color: rgba(37, 37, 37, 0.4);
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__row-aside {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 0.8rem;
+    flex-shrink: 0;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__add {
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid var(--spq-charcoal);
+    background: var(--spq-charcoal);
+    color: #fff;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__add:hover {
+    background: var(--spq-accent);
+    border-color: var(--spq-accent);
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__add.is-added,
+  #ProtocolQuiz-{{ section.id }} .spq__add.is-added:hover {
+    background: var(--spq-accent-light);
+    border-color: var(--spq-accent);
+    color: var(--spq-accent);
+    cursor: default;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__add.is-soldout {
+    background: transparent;
+    border-color: var(--spq-gray);
+    color: rgba(37, 37, 37, 0.4);
+    cursor: default;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__add[disabled] {
+    opacity: 0.6;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__optional {
+    border: 1px dashed var(--spq-gray);
+    background: #fff;
+    margin-bottom: 1.2rem;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__optional.is-open {
+    border-color: var(--spq-accent);
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__optional-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    padding: 1.2rem 1.8rem;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    text-align: left;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__optional-tease {
+    margin: 0;
+    font-size: 1.4rem;
+    color: rgba(37, 37, 37, 0.5);
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__optional-plus {
+    margin-left: auto;
+    font-size: 2.2rem;
+    line-height: 1;
+    color: rgba(37, 37, 37, 0.4);
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__optional-body {
+    display: flex;
+    gap: 1.6rem;
+    padding: 0 1.8rem 1.8rem 1.8rem;
+    align-items: center;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__optional-body[hidden] {
+    display: none;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__step--ghost {
+    background: transparent;
+    border: 1px dashed rgba(37, 37, 37, 0.25);
+    color: rgba(37, 37, 37, 0.4);
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__add-treat {
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid var(--spq-accent);
+    background: var(--spq-accent);
+    color: #fff;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__add-treat:hover {
+    background: var(--spq-accent-dark);
+    border-color: var(--spq-accent-dark);
+  }
+  #ProtocolQuiz-{{ section.id }} .spq__when {
+    font-size: 1.1rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(37, 37, 37, 0.5);
+    border: 1px solid var(--spq-gray);
+    padding: 0.4rem 0.8rem;
+    white-space: nowrap;
   }
   #ProtocolQuiz-{{ section.id }} .spq__step {
     width: 3.2rem;
@@ -473,7 +629,6 @@
   }
   #ProtocolQuiz-{{ section.id }} .spq__view {
     display: none;
-    align-self: center;
     font-size: 1.4rem;
     color: var(--spq-accent);
     white-space: nowrap;
@@ -787,7 +942,28 @@
         typeLabel: 'Serums',
         vitaminC: true,
         skinTypes: ALL_SKIN.slice(),
-        concerns: ['Acne', 'Aging', 'Brightening', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage']
+        concerns: ['Acne', 'Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage']
+      },
+      'brighten-glow-c-5': {
+        step: 'vitamin-c',
+        typeLabel: 'Serums',
+        vitaminC: true,
+        skinTypes: ALL_SKIN.slice(),
+        concerns: ['Acne', 'Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage']
+      },
+      'brighten-glow-c-20': {
+        step: 'vitamin-c',
+        typeLabel: 'Serums',
+        vitaminC: true,
+        skinTypes: ['Combination', 'Dry', 'Normal', 'Oily'],
+        concerns: ['Aging', 'Brightening', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Sun Damage']
+      },
+      'vitamin-c-20-serum': {
+        step: 'vitamin-c',
+        typeLabel: 'Serums',
+        vitaminC: true,
+        skinTypes: ['Combination', 'Dry', 'Normal', 'Oily'],
+        concerns: ['Aging', 'Brightening', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Sun Damage']
       },
       'hyaluronic-acid-serum': {
         step: 'hyaluronic',
@@ -800,21 +976,21 @@
         moisturizerKind: 'rich',
         typeLabel: 'Moisturizers',
         skinTypes: ALL_SKIN.slice(),
-        concerns: ['Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage']
+        concerns: ['Acne', 'Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage']
       },
       'rich-barrier-cream': {
         step: 'moisturizer',
         moisturizerKind: 'rich',
         typeLabel: 'Moisturizers',
         skinTypes: ALL_SKIN.slice(),
-        concerns: ['Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage']
+        concerns: ['Acne', 'Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage']
       },
       'hydration-cloud-cream': {
         step: 'moisturizer',
         moisturizerKind: 'light',
         typeLabel: 'Moisturizers',
         skinTypes: ['Combination', 'Normal', 'Oily', 'Sensitive'],
-        concerns: ['Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage']
+        concerns: ['Acne', 'Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage']
       },
       'eye-cream': {
         step: 'eye',
@@ -844,7 +1020,7 @@
         step: 'treatment',
         typeLabel: 'Serums',
         skinTypes: ALL_SKIN.slice(),
-        concerns: ['Aging', 'Brightening', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Sun Damage']
+        concerns: ['Acne', 'Aging', 'Brightening', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Sun Damage']
       },
       'beauty-elixir-serum': {
         step: 'treatment',
@@ -872,14 +1048,23 @@
       oils: 'Facial Oils'
     };
 
+    var SKIN_STATE_LABELS = {
+      calm: 'Calm and comfortable',
+      dehydrated: 'Dull and dehydrated',
+      breakout: 'Breaking out',
+      irritated: 'Irritated'
+    };
+
     var state = {
       step: 0,
       skinType: '',
       concerns: [],
       stepsPreference: 'moderate',
       sensitive: null,
-      routine: 'starter',
-      recs: []
+      skinRightNow: '',
+      recs: [],
+      weekly: null,
+      optionalTreat: null
     };
 
     var questions = root.querySelectorAll('[data-step]');
@@ -1130,117 +1315,226 @@
       return false;
     }
 
-    function pickCleanser(pool, preferGentle, oilyOrAcne) {
-      var cleansers = pool.filter(function (p) { return hasStep(p, 'cleanser'); });
-      if (!cleansers.length) return null;
+    function catalog() {
+      return products.filter(function (p) { return !isSet(p); });
+    }
+
+    function byHandle(ids) {
+      var list = Array.isArray(ids) ? ids : [ids];
+      var pool = catalog();
+      var i;
+      for (i = 0; i < list.length; i++) {
+        var exact = pick(pool, function (p) { return p.handle === list[i]; });
+        if (exact) return exact;
+      }
+      for (i = 0; i < list.length; i++) {
+        var needle = list[i];
+        var fuzzy = pick(pool, function (p) {
+          return (p.handle || '').indexOf(needle) !== -1;
+        });
+        if (fuzzy) return fuzzy;
+      }
+      return null;
+    }
+
+    function hasConcern(name) {
+      return state.concerns.indexOf(name) !== -1;
+    }
+
+    function preferGentleSkin() {
+      return !!state.sensitive || state.skinType === 'Sensitive';
+    }
+
+    /* Irritated: cleanse, tone, calm serum, moisturize. Essentials always include moisturizer. */
+    function protocolSize() {
+      if (state.skinRightNow === 'irritated') return 4;
+      if (state.stepsPreference === 'minimal') return 3;
+      var n = 4;
+      if (state.stepsPreference === 'complete') {
+        var wantEye = hasConcern('Eye Area');
+        var includeOil = state.skinRightNow !== 'breakout';
+        if (wantEye) n += 1;
+        if (includeOil) n += 1;
+      }
+      return n;
+    }
+
+    function pickCleanser(preferGentle) {
+      if (state.skinRightNow === 'irritated' || preferGentle || state.skinType === 'Dry') {
+        return byHandle(['clarifying-cleanser']) ||
+          pick(catalog(), function (p) { return p.cleanserKind === 'chamomile'; });
+      }
+      if (state.skinRightNow === 'breakout' || state.skinType === 'Oily' || hasConcern('Acne') || hasConcern('Large Pores')) {
+        return byHandle(['clarifying-gel-cleanser']) ||
+          pick(catalog(), function (p) { return p.cleanserKind === 'gel'; });
+      }
+      return byHandle(['clarifying-cleanser']) ||
+        pick(catalog(), function (p) { return p.cleanserKind === 'chamomile' || hasStep(p, 'cleanser'); });
+    }
+
+    function pickVitaminC(preferGentle) {
       if (preferGentle) {
-        return pick(cleansers, function (p) {
-          return p.cleanserKind === 'chamomile' || (p.handle || '').indexOf('clarifying-cleanser') !== -1;
-        }) || pick(cleansers, function (p) { return p.cleanserKind !== 'exfoliating'; }) || cleansers[0];
+        return byHandle(['brighten-glow-c-5', 'vitamin-c-5-serum']) ||
+          resolveVitaminC(pick(catalog(), function (p) { return p.vitaminC || hasStep(p, 'vitamin-c'); }), true);
       }
-      if (oilyOrAcne) {
-        return pick(cleansers, function (p) {
-          return p.cleanserKind === 'gel' || (p.handle || '').indexOf('gel') !== -1;
-        }) || pick(cleansers, function (p) { return p.cleanserKind !== 'exfoliating'; }) || cleansers[0];
-      }
-      return pick(cleansers, function (p) {
-        return p.cleanserKind === 'chamomile' || p.cleanserKind === 'gel';
-      }) || cleansers[0];
+      return byHandle(['brighten-glow-c-20', 'vitamin-c-20-serum']) ||
+        resolveVitaminC(pick(catalog(), function (p) { return p.vitaminC || hasStep(p, 'vitamin-c'); }), false);
     }
 
-    function pickMoisturizer(pool, preferRich) {
-      var moisturizers = pool.filter(function (p) { return hasStep(p, 'moisturizer'); });
-      if (!moisturizers.length) return null;
-      if (preferRich) {
-        return pick(moisturizers, function (p) {
-          return p.moisturizerKind === 'rich' ||
-            (p.handle || '') === 'moisturizer' ||
-            (p.handle || '').indexOf('rich-barrier') !== -1;
-        }) || moisturizers[0];
+    function pickMoisturizer() {
+      var wantRich = state.skinRightNow === 'irritated' ||
+        state.skinType === 'Dry' ||
+        hasConcern('Dry Skin') ||
+        (state.skinRightNow === 'dehydrated' && state.skinType !== 'Oily');
+      if (wantRich) {
+        return byHandle(['rich-barrier-cream', 'moisturizer']) ||
+          pick(catalog(), function (p) { return p.moisturizerKind === 'rich'; });
       }
-      return pick(moisturizers, function (p) {
-        return p.moisturizerKind === 'light' || (p.handle || '').indexOf('cloud') !== -1;
-      }) || moisturizers[0];
+      return byHandle(['hydration-cloud-cream']) ||
+        pick(catalog(), function (p) { return p.moisturizerKind === 'light' || hasStep(p, 'moisturizer'); });
     }
 
-    function pickTreatment(pool) {
-      var treatments = pool.filter(function (p) { return hasStep(p, 'treatment'); });
-      if (!treatments.length) return null;
-      var aging = state.concerns.indexOf('Aging') !== -1 || state.concerns.indexOf('Hyperpigmentation') !== -1;
-      var barrier = state.concerns.indexOf('Redness') !== -1 || state.concerns.indexOf('Dry Skin') !== -1;
-      if (aging) {
-        return pick(treatments, function (p) {
-          return (p.handle || '').indexOf('bakuchiol') !== -1 || (p.title || '').toLowerCase().indexOf('bakuchiol') !== -1;
-        }) || pick(treatments, function (p) {
-          return (p.handle || '').indexOf('amino') !== -1 || (p.title || '').toLowerCase().indexOf('peptide') !== -1;
-        }) || treatments[0];
+    function pickTreatment(preferGentle) {
+      if (state.skinRightNow === 'irritated') return byHandle(['matrix-serum']);
+      if (state.skinRightNow === 'breakout') {
+        return preferGentle ? byHandle(['matrix-serum']) : byHandle(['bakuchiol-renewal-serum']);
       }
-      if (barrier) {
-        return pick(treatments, function (p) {
-          return (p.handle || '').indexOf('matrix') !== -1 || (p.title || '').toLowerCase().indexOf('matrix') !== -1;
-        }) || treatments[0];
+      if (hasConcern('Hyperpigmentation') || hasConcern('Brightening') || hasConcern('Sun Damage')) {
+        return pickVitaminC(preferGentle);
       }
-      return pick(treatments, function (p) {
-        return (p.handle || '').indexOf('amino') !== -1;
-      }) || treatments[0];
+      if (hasConcern('Aging')) return byHandle(['bakuchiol-renewal-serum']);
+      if (hasConcern('Redness')) return byHandle(['matrix-serum']);
+      if (hasConcern('Dry Skin')) return byHandle(['beauty-elixir-serum']);
+      if (hasConcern('Acne') || hasConcern('Large Pores')) {
+        return preferGentle ? byHandle(['matrix-serum']) : byHandle(['bakuchiol-renewal-serum']);
+      }
+      if (state.skinRightNow === 'dehydrated') {
+        return byHandle(['hyaluronic-acid-serum']) || pick(catalog(), function (p) { return hasStep(p, 'hyaluronic'); });
+      }
+      return byHandle(['amino-acid-serum']);
+    }
+
+    function pickWeekly(preferGentle) {
+      if (state.skinRightNow === 'dehydrated' || state.skinRightNow === 'irritated') return null;
+      if (state.stepsPreference !== 'complete' || preferGentle || state.skinType === 'Dry') return null;
+      var weeklyConcerns = ['Acne', 'Aging', 'Brightening', 'Hyperpigmentation', 'Large Pores', 'Sun Damage'];
+      if (!weeklyConcerns.some(hasConcern)) return null;
+      return byHandle(['tripleglow-exfoliating-cleanser']);
+    }
+
+    function isEveningOnlySerum(p) {
+      if (!p) return false;
+      var h = (p.handle || '').toLowerCase();
+      var t = (p.title || '').toLowerCase();
+      return h.indexOf('bakuchiol') !== -1 || t.indexOf('bakuchiol') !== -1;
+    }
+
+    function productStep(p) {
+      if (!p) return 99;
+      if (hasStep(p, 'cleanser')) return 1;
+      if (hasStep(p, 'toner')) return 2;
+      if (hasStep(p, 'eye')) return 4;
+      if (hasStep(p, 'moisturizer')) return 5;
+      if (hasStep(p, 'oil')) return 6;
+      if (hasStep(p, 'treatment') || hasStep(p, 'hyaluronic') || hasStep(p, 'vitamin-c') || p.vitaminC) return 3;
+      return 3;
+    }
+
+    function displayOrder(list) {
+      return list.slice().sort(function (a, b) {
+        return productStep(a) - productStep(b) || String(a.title || '').localeCompare(String(b.title || ''));
+      });
     }
 
     function buildProtocol() {
-      var preferGentle = !!state.sensitive;
-      var oilyOrAcne =
-        state.skinType === 'Oily' ||
-        state.concerns.indexOf('Acne') !== -1 ||
-        state.concerns.indexOf('Large Pores') !== -1;
-      var preferRich =
-        state.skinType === 'Dry' || state.concerns.indexOf('Dry Skin') !== -1;
+      var preferGentle = preferGentleSkin();
+      var wantEye = state.stepsPreference === 'complete' &&
+        hasConcern('Eye Area') &&
+        state.skinRightNow !== 'irritated';
+      var includeOil = state.stepsPreference === 'complete' &&
+        state.skinRightNow !== 'breakout' &&
+        state.skinRightNow !== 'irritated';
 
-      function filterPool(strict) {
-        return products.filter(function (p) {
-          if (isSet(p)) return false;
-          if (strict && state.skinType && !matchesSkinType(p, state.skinType)) return false;
-          if (strict && state.concerns.length && !state.concerns.some(function (c) { return matchesConcern(p, c); })) return false;
-          if (strict && state.sensitive && !matchesSensitive(p)) return false;
-          return true;
-        });
+      var cleanser = pickCleanser(preferGentle);
+      var toner = byHandle(['rosewater-niacinamide-toner']) || pick(catalog(), function (p) { return hasStep(p, 'toner'); });
+      var moisturizer = pickMoisturizer();
+      var eye = byHandle(['eye-cream']) || pick(catalog(), function (p) { return hasStep(p, 'eye'); });
+      var oil = byHandle(['the-holy-grail']) || pick(catalog(), function (p) { return hasStep(p, 'oil'); });
+
+      var picked;
+      if (state.skinRightNow === 'irritated') {
+        picked = [cleanser, toner, byHandle(['matrix-serum']), moisturizer].filter(Boolean);
+      } else {
+        picked = [cleanser, toner].filter(Boolean);
+        if (state.stepsPreference !== 'minimal') {
+          var treatment = pickTreatment(preferGentle);
+          if (treatment) picked.push(treatment);
+        }
+        if (moisturizer) picked.push(moisturizer);
+        if (wantEye && eye) picked.push(eye);
+        if (includeOil && oil) picked.push(oil);
       }
 
-      function assemble(pool) {
-        return [
-          pickCleanser(pool, preferGentle, oilyOrAcne),
-          pick(pool, function (p) { return hasStep(p, 'toner'); }),
-          pick(pool, function (p) { return hasStep(p, 'vitamin-c'); }),
-          pick(pool, function (p) { return hasStep(p, 'hyaluronic'); }),
-          pickMoisturizer(pool, preferRich),
-          pick(pool, function (p) { return hasStep(p, 'eye'); }),
-          pick(pool, function (p) { return hasStep(p, 'oil'); }),
-          pickTreatment(pool)
-        ].filter(Boolean).map(function (p) {
-          if (p.vitaminC || hasStep(p, 'vitamin-c')) return resolveVitaminC(p, preferGentle);
-          return p;
-        });
-      }
-
-      var pool = filterPool(true);
-      if (!pool.length) pool = filterPool(false);
-
-      var ordered = assemble(pool);
-      if (!ordered.length && products.length) {
-        ordered = assemble(products.filter(function (p) { return !isSet(p); }));
-      }
-
-      var limit = state.stepsPreference === 'minimal' ? 3 : state.stepsPreference === 'moderate' ? 5 : 7;
       var seen = {};
-      return ordered.filter(function (p) {
-        if (seen[p.id]) return false;
+      var daily = displayOrder(picked.filter(function (p) {
+        if (!p || seen[p.id]) return false;
         seen[p.id] = true;
         return true;
-      }).slice(0, limit);
+      }));
+
+      state.weekly = pickWeekly(preferGentle);
+      return daily;
+    }
+
+    function optionalTreat() {
+      if (state.skinRightNow === 'irritated') return null;
+      if (state.stepsPreference !== 'minimal') return null;
+      return pickTreatment(preferGentleSkin());
+    }
+
+    function splitRoutine(products) {
+      var cleanser = pick(products, function (p) { return hasStep(p, 'cleanser'); });
+      var toner = pick(products, function (p) { return hasStep(p, 'toner'); });
+      var treat = pick(products, function (p) {
+        return productStep(p) === 3;
+      });
+      var eye = pick(products, function (p) { return hasStep(p, 'eye'); });
+      var moisturizer = pick(products, function (p) {
+        return hasStep(p, 'moisturizer') && !hasStep(p, 'eye');
+      });
+      var oil = pick(products, function (p) { return hasStep(p, 'oil'); });
+      var morningTreat = treat && !isEveningOnlySerum(treat) ? treat : null;
+      var morning = [cleanser, toner, morningTreat, eye, moisturizer].filter(Boolean);
+      var evening = [cleanser, toner, treat, eye, moisturizer, oil].filter(Boolean);
+      return { morning: morning, evening: evening };
+    }
+
+    /* One entry per product, tagged with when it is applied. Derived from splitRoutine. */
+    function routineEntries(products) {
+      var routine = splitRoutine(products);
+      var amIds = {};
+      var pmIds = {};
+      routine.morning.forEach(function (p) { amIds[p.id] = true; });
+      routine.evening.forEach(function (p) { pmIds[p.id] = true; });
+      return products.map(function (product) {
+        var am = !!amIds[product.id];
+        var pm = !!pmIds[product.id];
+        return { product: product, period: am && pm ? 'both' : am ? 'am' : 'pm' };
+      });
+    }
+
+    function routinePeriodLabel(period) {
+      if (period === 'both') return 'AM & PM';
+      if (period === 'am') return 'AM only';
+      if (period === 'weekly') return '1–3× weekly';
+      return 'PM only';
     }
 
     function canAdvance() {
       if (state.step === 0) return !!state.skinType;
       if (state.step === 1) return state.concerns.length > 0;
       if (state.step === 3) return state.sensitive !== null;
+      if (state.step === 4) return !!state.skinRightNow;
       return true;
     }
 
@@ -1253,7 +1547,7 @@
         if (step === 1) on = state.concerns.indexOf(value) !== -1;
         if (step === 2) on = state.stepsPreference === value;
         if (step === 3) on = (state.sensitive === true && value === 'yes') || (state.sensitive === false && value === 'no');
-        if (step === 4) on = state.routine === value;
+        if (step === 4) on = state.skinRightNow === value;
         btn.classList.toggle('is-selected', on);
       });
     }
@@ -1273,6 +1567,7 @@
       nextBtn.hidden = last;
       finishBtn.hidden = !last;
       nextBtn.disabled = !canAdvance();
+      finishBtn.disabled = !canAdvance();
     }
 
     root.querySelectorAll('[data-option]').forEach(function (btn) {
@@ -1288,7 +1583,7 @@
         }
         if (step === 2) state.stepsPreference = value;
         if (step === 3) state.sensitive = value === 'yes';
-        if (step === 4) state.routine = value;
+        if (step === 4) state.skinRightNow = value;
         render();
       });
     });
@@ -1306,12 +1601,20 @@
 
     function showResults() {
       state.recs = buildProtocol();
+      state.optionalTreat = optionalTreat();
+      renderResults();
+    }
+
+    function renderResults() {
       quizPanel.hidden = true;
       resultsPanel.hidden = false;
 
       var sub = root.querySelector('[data-results-sub]');
       var concernText = state.concerns.slice(0, 2).join(', ').toLowerCase();
-      sub.textContent = 'Based on your ' + (state.skinType || '').toLowerCase() + ' skin type and ' + concernText + ' concerns.';
+      sub.textContent = 'Based on your ' + (state.skinType || '').toLowerCase() + ' skin type and ' + concernText + ' concerns. Daily essentials are cleanser, moisturizer, and morning sunscreen — personalized additions only where they help.';
+
+      var recovery = root.querySelector('[data-results-recovery]');
+      if (recovery) recovery.hidden = state.skinRightNow !== 'irritated';
 
       var list = root.querySelector('[data-results-list]');
       var empty = root.querySelector('[data-results-empty]');
@@ -1336,25 +1639,105 @@
       empty.hidden = true;
       totalBox.hidden = false;
       var cents = 0;
-      state.recs.forEach(function (p, i) {
-        cents += Number(p.price) || 0;
+      var STEP_LABELS = {
+        1: 'Step 1 · Cleanse',
+        2: 'Step 2 · Tone',
+        3: 'Step 3 · Treat',
+        4: 'Step 4 · Eye Care',
+        5: 'Step 5 · Moisturize',
+        6: 'Step 6 · Nourish'
+      };
+      function appendHeading(text, when) {
+        var h = document.createElement('p');
+        h.className = 'spq__period';
+        h.innerHTML = '<span>' + text + '</span>' + (when ? '<span class="spq__period-when">' + when + '</span>' : '');
+        list.appendChild(h);
+      }
+      function appendRow(p, stepLabel, opts) {
+        opts = opts || {};
+        if (!opts.skipPrice) cents += Number(p.price) || 0;
         var row = document.createElement('div');
-        row.className = 'spq__row';
+        row.className = 'spq__row' + (opts.guidance ? ' spq__row--guidance' : '');
         row.innerHTML =
-          '<div class="spq__step">' + (i + 1) + '</div>' +
+          '<div class="spq__step">' + stepLabel + '</div>' +
           '<div class="spq__thumb">' + (p.image ? '<img src="' + p.image + '" alt="">' : '') + '</div>' +
           '<div class="spq__row-body">' +
-            '<p class="spq__row-cat">' + (p.typeLabel || p.type || '') + '</p>' +
-            '<h3 class="spq__row-name">' + p.title + '</h3>' +
-            '<p class="spq__row-tag">' + (p.tagline || '') + '</p>' +
-            '<p class="spq__row-price">' + p.price_formatted + '</p>' +
+            '<p class="spq__row-cat">' + (opts.cat || p.typeLabel || p.type || '') + '</p>' +
+            '<h3 class="spq__row-name">' + (p.title || p.name) + '</h3>' +
+            '<p class="spq__row-tag">' + (opts.tag || p.tagline || '') + '</p>' +
+            (opts.skipPrice ? '' : '<p class="spq__row-price">' + p.price_formatted + '</p>') +
           '</div>' +
-          '<a class="spq__view" href="' + p.url + '">View →</a>';
+          '<div class="spq__row-aside">' +
+            (opts.period ? '<span class="spq__when">' + routinePeriodLabel(opts.period) + '</span>' : '') +
+            (opts.skipPrice || !p.id
+              ? ''
+              : p.available === false
+                ? '<span class="spq__add is-soldout">Sold out</span>'
+                : '<button type="button" class="spq__add" data-add-one="' + p.id + '">' + {{ section.settings.item_cart_label | default: 'Add to Cart' | json }} + '</button>') +
+            (p.url ? '<a class="spq__view" href="' + p.url + '">View →</a>' : '') +
+          '</div>';
         list.appendChild(row);
+      }
+      function appendOptional(p) {
+        if (!p) return;
+        var period = isEveningOnlySerum(p) ? 'pm' : 'both';
+        var wrap = document.createElement('div');
+        wrap.className = 'spq__optional';
+        wrap.setAttribute('data-optional', '');
+        wrap.innerHTML =
+          '<button type="button" class="spq__optional-toggle" data-optional-toggle aria-expanded="false">' +
+            '<div class="spq__step spq__step--ghost">3</div>' +
+            '<div class="spq__row-body">' +
+              '<p class="spq__row-cat">Step 3 · Treat</p>' +
+              '<p class="spq__optional-tease">Add a personalized serum</p>' +
+            '</div>' +
+            '<span class="spq__optional-plus" data-optional-symbol aria-hidden="true">+</span>' +
+          '</button>' +
+          '<div class="spq__optional-body" data-optional-body hidden>' +
+            '<div class="spq__thumb">' + (p.image ? '<img src="' + p.image + '" alt="">' : '') + '</div>' +
+            '<div class="spq__row-body">' +
+              '<p class="spq__row-cat">' + (p.typeLabel || p.type || '') + '</p>' +
+              '<h3 class="spq__row-name">' + (p.title || p.name) + '</h3>' +
+              '<p class="spq__row-tag">' + (p.tagline || '') + '</p>' +
+              '<p class="spq__row-price">' + (p.price_formatted || '') + '</p>' +
+            '</div>' +
+            '<div class="spq__row-aside">' +
+              '<span class="spq__when">' + routinePeriodLabel(period) + '</span>' +
+              '<button type="button" class="spq__add-treat" data-add-treat>Add to my protocol</button>' +
+              (p.url ? '<a class="spq__view" href="' + p.url + '">View →</a>' : '') +
+            '</div>' +
+          '</div>';
+        list.appendChild(wrap);
+      }
+      var entries = routineEntries(state.recs);
+      appendHeading('Your Daily Routine', 'When to apply');
+      entries.forEach(function (entry) {
+        var p = entry.product;
+        appendRow(p, STEP_LABELS[productStep(p)] || String(productStep(p)), { period: entry.period });
+        if (productStep(p) === 2) appendOptional(state.optionalTreat);
       });
+      appendRow(
+        {
+          title: 'Broad-spectrum SPF 30+',
+          tagline: 'Finish the morning routine with sunscreen — even if purchased separately.',
+          typeLabel: 'Step 7 · Protect',
+          image: '',
+          price: 0,
+          price_formatted: '',
+          url: ''
+        },
+        '7',
+        { guidance: true, skipPrice: true, cat: 'Step 7 · Protect', tag: 'Use your preferred SPF 30+.', period: 'am' }
+      );
+      if (state.weekly) {
+        appendHeading('Weekly · Polish');
+        appendRow(state.weekly, 'W', { period: 'weekly' });
+      }
 
+      var count = state.recs.length + (state.weekly ? 1 : 0);
       root.querySelector('[data-total-price]').textContent = formatCents(cents);
-      root.querySelector('[data-total-count]').textContent = state.recs.length + ' products';
+      root.querySelector('[data-total-count]').textContent = count + ' products';
+      state.entries = entries;
     }
 
     var emailEndpoint = {{ section.settings.email_endpoint_url | json }};
@@ -1368,8 +1751,38 @@
     var marketingInput = root.querySelector('[data-marketing-input]');
     var emailSendBtn = root.querySelector('[data-email-send]');
 
+    function protocolProducts() {
+      return state.weekly ? state.recs.concat([state.weekly]) : state.recs.slice();
+    }
+
     function buildProtocolPayload() {
-      var cents = state.recs.reduce(function (sum, p) { return sum + (Number(p.price) || 0); }, 0);
+      var entries = state.entries || routineEntries(state.recs);
+      var items = protocolProducts();
+      var cents = items.reduce(function (sum, p) { return sum + (Number(p.price) || 0); }, 0);
+      var products = entries.map(function (entry) {
+        return {
+          name: entry.product.title,
+          price: entry.product.price_formatted,
+          step: productStep(entry.product),
+          period: entry.period,
+          url: entry.product.url || undefined
+        };
+      });
+      products.push({
+        name: 'Broad-spectrum SPF 30+',
+        price: 'Purchased separately',
+        step: 7,
+        period: 'am'
+      });
+      if (state.weekly) {
+        products.push({
+          name: state.weekly.title,
+          price: state.weekly.price_formatted,
+          step: 'W',
+          period: 'weekly',
+          url: state.weekly.url || undefined
+        });
+      }
       return {
         email: '',
         firstName: '',
@@ -1377,14 +1790,11 @@
         protocol: {
           skinType: state.skinType || '',
           concerns: state.concerns.slice(),
-          products: state.recs.map(function (p, i) {
-            return {
-              name: p.title,
-              price: p.price_formatted,
-              step: i + 1,
-              url: p.url || undefined
-            };
-          }),
+          skinRightNow: SKIN_STATE_LABELS[state.skinRightNow] || '',
+          note: state.skinRightNow === 'irritated'
+            ? "Your skin is irritated right now, so this is a short recovery routine without active ingredients. Come back in two to three weeks and we'll add your treatment serum."
+            : undefined,
+          products: products,
           totalPrice: formatCents(cents)
         }
       };
@@ -1487,10 +1897,13 @@
       return '$' + (cents / 100).toFixed(2);
     }
 
-    finishBtn.addEventListener('click', showResults);
+    finishBtn.addEventListener('click', function () {
+      if (!canAdvance()) return;
+      showResults();
+    });
 
     root.querySelector('[data-restart]').addEventListener('click', function () {
-      state = { step: 0, skinType: '', concerns: [], stepsPreference: 'moderate', sensitive: null, routine: 'starter', recs: [] };
+      state = { step: 0, skinType: '', concerns: [], stepsPreference: 'moderate', sensitive: null, skinRightNow: '', recs: [], weekly: null, optionalTreat: null };
       quizPanel.hidden = false;
       resultsPanel.hidden = true;
       render();
@@ -1556,20 +1969,83 @@
       });
     }
 
+    /* Optional serum accordion + single-product add. */
+    root.querySelector('[data-results-list]').addEventListener('click', function (event) {
+      var target = event.target;
+      if (target && target.nodeType !== 1) target = target.parentElement;
+      if (!target || !target.closest) return;
+
+      var toggle = target.closest('[data-optional-toggle]');
+      if (toggle) {
+        var wrap = toggle.closest('[data-optional]');
+        if (!wrap) return;
+        var open = wrap.classList.toggle('is-open');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        var body = wrap.querySelector('[data-optional-body]');
+        if (body) body.hidden = !open;
+        var symbol = wrap.querySelector('[data-optional-symbol]');
+        if (symbol) symbol.textContent = open ? '−' : '+';
+        return;
+      }
+
+      var addTreat = target.closest('[data-add-treat]');
+      if (addTreat && state.optionalTreat) {
+        state.recs = displayOrder(state.recs.concat([state.optionalTreat]));
+        state.optionalTreat = null;
+        renderResults();
+        return;
+      }
+
+      var btn = target.closest('[data-add-one]');
+      if (!btn) return;
+
+      var product = protocolProducts().find(function (p) {
+        return String(p.id) === btn.getAttribute('data-add-one');
+      });
+      if (!product) return;
+
+      var msg = root.querySelector('[data-cart-msg]');
+      var label = btn.textContent;
+      btn.disabled = true;
+      msg.hidden = true;
+
+      var url = data.cartAdd.indexOf('.js') !== -1 ? data.cartAdd : data.cartAdd + '.js';
+      postCart(url, { id: Number(product.id), quantity: 1 })
+        .then(function (result) {
+          if (result.ok) {
+            btn.classList.add('is-added');
+            btn.textContent = 'Added ✓';
+            return;
+          }
+          btn.textContent = label;
+          btn.disabled = false;
+          msg.hidden = false;
+          msg.textContent = product.title + ': '
+            + ((result.payload && (result.payload.description || result.payload.message)) || 'This item is unavailable.');
+        })
+        .catch(function () {
+          btn.textContent = label;
+          btn.disabled = false;
+          msg.hidden = false;
+          msg.textContent = 'Could not add to cart. Please try again.';
+        });
+    });
+
     root.querySelector('[data-add-cart]').addEventListener('click', function () {
       var btn = root.querySelector('[data-add-cart]');
       var msg = root.querySelector('[data-cart-msg]');
-      if (!state.recs.length) return;
+      var cartItems = protocolProducts();
+      if (!cartItems.length) return;
 
       btn.disabled = true;
       msg.hidden = true;
 
-      addProtocolToCart(state.recs)
+      addProtocolToCart(cartItems)
         .then(function (result) {
           if (result.added.length) {
             if (result.failed.length) {
               msg.hidden = false;
-              msg.textContent = 'Added ' + result.added.length + ' of ' + state.recs.length
+              msg.textContent = 'Added ' + result.added.length + ' of ' + cartItems.length
                 + ' products. Some items are unavailable for pre-order.';
               setTimeout(function () {
                 window.location.href = data.cartUrl;
@@ -1634,7 +2110,7 @@
       "type": "text",
       "id": "q3_title",
       "label": "Question 3",
-      "default": "How many steps do you want in your routine?"
+      "default": "How personalized should your routine be?"
     },
     {
       "type": "text",
@@ -1646,7 +2122,7 @@
       "type": "text",
       "id": "q5_title",
       "label": "Question 5",
-      "default": "Which best describes what you want?"
+      "default": "How is your skin feeling right now?"
     },
     {
       "type": "header",
@@ -1675,6 +2151,13 @@
       "id": "cart_label",
       "label": "Add to cart",
       "default": "Add Entire Protocol to Cart"
+    },
+    {
+      "type": "text",
+      "id": "item_cart_label",
+      "label": "Add single product",
+      "info": "Shown on each product row in the results.",
+      "default": "Add to Cart"
     },
     {
       "type": "text",

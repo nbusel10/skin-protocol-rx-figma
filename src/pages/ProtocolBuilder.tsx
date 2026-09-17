@@ -1,5 +1,15 @@
 import { useState } from 'react'
-import { PRODUCTS, getProtocolStepLabel, type SkinType, type SkinConcern } from '../data'
+import { PRODUCTS, getProtocolStepLabel, PROTECT_GUIDANCE, type SkinType, type SkinConcern } from '../data'
+import {
+  buildProtocol,
+  optionalTreat,
+  isEveningOnlySerum,
+  routineEntries,
+  routinePeriodLabel,
+  type SkinState,
+  type StepsPreference,
+  type RoutinePeriod,
+} from '../lib/buildProtocol'
 import EmailProtocolModal from '../components/EmailProtocolModal'
 import ProductImage from '../components/ProductImage'
 
@@ -7,15 +17,24 @@ type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossa
 
 interface ProtocolBuilderProps {
   onNavigate: (page: Page, productId?: string) => void
+  /** Called with the number of newly added items so the header badge can update. */
+  onAddToCart?: (count: number) => void
 }
 
 const SKIN_TYPES: SkinType[] = ['Combination', 'Dry', 'Normal', 'Oily', 'Sensitive']
 const SKIN_CONCERNS: SkinConcern[] = ['Acne', 'Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage']
 
-const STEPS_PREFERENCE = [
-  { value: 'minimal', label: 'Minimal (2–3 steps)', desc: 'Quick and simple' },
-  { value: 'moderate', label: 'Moderate (4–5 steps)', desc: 'Balanced routine' },
-  { value: 'complete', label: 'Complete (6 steps)', desc: 'Full protocol' },
+const STEPS_PREFERENCE: { value: StepsPreference; label: string; desc: string }[] = [
+  { value: 'minimal', label: 'Essentials · 3 products', desc: 'Cleanser, toner, moisturizer + morning SPF' },
+  { value: 'moderate', label: 'Essentials + serum · 4 products', desc: 'Add one personalized treatment' },
+  { value: 'complete', label: 'Full personalized · up to 6 products', desc: 'Serum plus optional eye care and oil' },
+]
+
+const SKIN_STATES: { value: SkinState; label: string; desc: string }[] = [
+  { value: 'calm', label: 'Calm and comfortable', desc: "Nothing's really bothering me" },
+  { value: 'dehydrated', label: 'Dull and dehydrated', desc: 'Looks flat, drinks up moisturizer' },
+  { value: 'breakout', label: 'Breaking out', desc: 'Active blemishes or congestion' },
+  { value: 'irritated', label: 'Irritated', desc: 'Red, stinging, or peeling' },
 ]
 
 function OptionButton({ selected, onClick, label, desc }: { selected: boolean; onClick: () => void; label: string; desc?: string }) {
@@ -34,13 +53,185 @@ function OptionButton({ selected, onClick, label, desc }: { selected: boolean; o
   )
 }
 
-export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
+function PeriodBadge({ label }: { label: string }) {
+  return (
+    <span className="text-[10px] tracking-widest uppercase text-charcoal/50 border border-gray-soft px-2 py-1 whitespace-nowrap">
+      {label}
+    </span>
+  )
+}
+
+function AddToCartButton({ added, onAdd }: { added: boolean; onAdd: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onAdd}
+      aria-live="polite"
+      className="text-[11px] tracking-wide px-3 py-2 border transition-colors whitespace-nowrap"
+      style={
+        added
+          ? { borderColor: '#B8878B', backgroundColor: '#FAF4F2', color: '#B8878B' }
+          : { borderColor: '#0A0A0A', backgroundColor: '#0A0A0A', color: '#fff' }
+      }
+    >
+      {added ? 'Added ✓' : 'Add to Cart'}
+    </button>
+  )
+}
+
+function RoutineProductRow({
+  product,
+  period,
+  added,
+  onAdd,
+  onNavigate,
+}: {
+  product: (typeof PRODUCTS)[number]
+  period: RoutinePeriod
+  added: boolean
+  onAdd: () => void
+  onNavigate: (page: Page, productId?: string) => void
+}) {
+  return (
+    <div className="bg-white flex gap-5 p-5 border border-gray-soft">
+      <div className="flex-shrink-0">
+        <div className="w-10 h-10 bg-rose flex items-center justify-center text-white text-xs font-semibold">{product.protocolStep}</div>
+      </div>
+      <div className="w-20 h-20 shrink-0 overflow-hidden">
+        <ProductImage src={product.image} alt={product.name} variant="inline" />
+      </div>
+      <div className="flex-1">
+        <p className="text-[10px] tracking-widest uppercase text-rose mb-1">{getProtocolStepLabel(product.protocolStep)}</p>
+        <p className="text-[10px] tracking-widest uppercase text-charcoal/40 mb-1">{product.categories[0]}</p>
+        <h3 className="font-medium text-charcoal mb-1">{product.name}</h3>
+        <p className="text-xs text-charcoal/50 mb-2">{product.tagline}</p>
+        <p className="text-sm font-semibold text-charcoal">${product.price}</p>
+      </div>
+      <div className="flex flex-col items-end justify-center gap-2 shrink-0">
+        <PeriodBadge label={routinePeriodLabel(period)} />
+        <AddToCartButton added={added} onAdd={onAdd} />
+        <button
+          onClick={() => onNavigate('product', product.id)}
+          className="hidden md:flex items-center text-xs text-rose underline underline-offset-2 whitespace-nowrap"
+        >
+          View →
+        </button>
+      </div>
+    </div>
+  )
+}
+
+function ProtectRow() {
+  return (
+    <div className="bg-stone flex gap-5 p-5 border border-gray-soft">
+      <div className="flex-shrink-0">
+        <div className="w-10 h-10 bg-black flex items-center justify-center text-white text-xs font-semibold">{PROTECT_GUIDANCE.step}</div>
+      </div>
+      <div className="flex-1">
+        <p className="text-[10px] tracking-widest uppercase text-rose mb-1">{PROTECT_GUIDANCE.label}</p>
+        <h3 className="font-medium text-charcoal mb-1">Broad-spectrum SPF 30+</h3>
+        <p className="text-xs text-charcoal/50 mb-1">{PROTECT_GUIDANCE.description}</p>
+        <p className="text-xs text-charcoal/40">{PROTECT_GUIDANCE.note}</p>
+      </div>
+      <div className="flex flex-col items-end justify-center shrink-0">
+        <PeriodBadge label="AM only" />
+      </div>
+    </div>
+  )
+}
+
+function OptionalTreatSliver({
+  product,
+  open,
+  onToggle,
+  onAddToProtocol,
+  onNavigate,
+}: {
+  product: (typeof PRODUCTS)[number]
+  open: boolean
+  onToggle: () => void
+  onAddToProtocol: () => void
+  onNavigate: (page: Page, productId?: string) => void
+}) {
+  const period: RoutinePeriod = isEveningOnlySerum(product) ? 'pm' : 'both'
+  if (!open) {
+    return (
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={false}
+        className="w-full bg-white flex items-center gap-5 px-5 py-3 border border-dashed border-gray-soft text-left hover:border-rose/40 transition-colors"
+      >
+        <div className="w-10 h-10 border border-dashed border-charcoal/25 flex items-center justify-center text-charcoal/40 text-xs font-semibold shrink-0">
+          {product.protocolStep}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-[10px] tracking-widest uppercase text-rose mb-0.5">{getProtocolStepLabel(product.protocolStep)}</p>
+          <p className="text-sm text-charcoal/50">Add a personalized serum</p>
+        </div>
+        <span className="text-xl leading-none text-charcoal/40 shrink-0" aria-hidden="true">+</span>
+        <span className="sr-only">Show optional serum</span>
+      </button>
+    )
+  }
+  return (
+    <div className="bg-white border border-dashed border-rose/40">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={true}
+        className="w-full flex items-center gap-5 px-5 py-3 text-left hover:bg-rose-light/40 transition-colors"
+      >
+        <div className="w-10 h-10 border border-dashed border-rose/50 flex items-center justify-center text-rose text-xs font-semibold shrink-0">
+          {product.protocolStep}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-[10px] tracking-widest uppercase text-rose mb-0.5">{getProtocolStepLabel(product.protocolStep)}</p>
+          <p className="text-sm text-charcoal/50">Add a personalized serum</p>
+        </div>
+        <span className="text-xl leading-none text-charcoal/40 shrink-0" aria-hidden="true">−</span>
+        <span className="sr-only">Hide optional serum</span>
+      </button>
+      <div className="flex gap-5 p-5 pt-0">
+        <div className="w-10 shrink-0" />
+        <div className="w-20 h-20 shrink-0 overflow-hidden">
+          <ProductImage src={product.image} alt={product.name} variant="inline" />
+        </div>
+        <div className="flex-1">
+          <p className="text-[10px] tracking-widest uppercase text-charcoal/40 mb-1">{product.categories[0]}</p>
+          <h3 className="font-medium text-charcoal mb-1">{product.name}</h3>
+          <p className="text-xs text-charcoal/50 mb-2">{product.tagline}</p>
+          <p className="text-sm font-semibold text-charcoal">${product.price}</p>
+        </div>
+        <div className="flex flex-col items-end justify-center gap-2 shrink-0">
+          <PeriodBadge label={routinePeriodLabel(period)} />
+          <button
+            type="button"
+            onClick={onAddToProtocol}
+            className="text-[11px] tracking-wide px-3 py-2 border border-rose bg-rose text-white hover:bg-rose-dark transition-colors whitespace-nowrap"
+          >
+            Add to my protocol
+          </button>
+          <button
+            type="button"
+            onClick={() => onNavigate('product', product.id)}
+            className="hidden md:flex items-center text-xs text-rose underline underline-offset-2 whitespace-nowrap"
+          >
+            View →
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBuilderProps) {
   const [step, setStep] = useState(0)
   const [skinType, setSkinType] = useState<SkinType | ''>('')
   const [concerns, setConcerns] = useState<SkinConcern[]>([])
-  const [stepsPreference, setStepsPreference] = useState('moderate')
+  const [stepsPreference, setStepsPreference] = useState<StepsPreference>('moderate')
   const [sensitive, setSensitive] = useState<boolean | null>(null)
-  const [routine, setRoutine] = useState<'starter' | 'complete'>('starter')
+  const [skinRightNow, setSkinRightNow] = useState<SkinState | ''>('')
 
   const toggleConcern = (c: SkinConcern) =>
     setConcerns(prev => prev.includes(c) ? prev.filter(x => x !== c) : [...prev, c])
@@ -50,81 +241,44 @@ export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
     concerns.length > 0,
     true,
     sensitive !== null,
-    true,
+    skinRightNow !== '',
   ]
 
-  const buildProtocol = () => {
-    let pool = [...PRODUCTS]
-    if (skinType) pool = pool.filter(p => p.skinTypes.includes(skinType as SkinType))
-    if (concerns.length) pool = pool.filter(p => concerns.some(c => p.concerns.includes(c)))
-    if (sensitive) pool = pool.filter(p => p.skinTypes.includes('Sensitive'))
-
-    const byId = (id: string) => pool.find(p => p.id === id) ?? PRODUCTS.find(p => p.id === id)
-
-    const oilyOrAcne =
-      skinType === 'Oily' || concerns.includes('Acne') || concerns.includes('Large Pores')
-    const cleanser = sensitive
-      ? byId('clarifying-cleanser')
-      : oilyOrAcne
-        ? byId('clarifying-gel-cleanser')
-        : byId('clarifying-cleanser')
-
-    const preferGentle = !!sensitive
-    const vitaminC = preferGentle ? byId('brighten-glow-c-5') : byId('brighten-glow-c-20')
-
-    const moisturizer =
-      skinType === 'Dry' || concerns.includes('Dry Skin')
-        ? byId('rich-barrier-cream')
-        : byId('hydration-cloud-cream')
-
-    const treatmentExtra = (() => {
-      if (concerns.includes('Aging') || concerns.includes('Hyperpigmentation')) {
-        return byId('bakuchiol-renewal-serum')
-      }
-      if (concerns.includes('Redness') || concerns.includes('Dry Skin')) {
-        return byId('matrix-serum')
-      }
-      if (concerns.includes('Aging') || concerns.includes('Preventative')) {
-        return byId('amino-acid-serum')
-      }
-      return byId('amino-acid-serum')
-    })()
-
-    const ordered = [
-      cleanser,
-      byId('rosewater-niacinamide-toner'),
-      vitaminC,
-      byId('hyaluronic-acid-serum'),
-      moisturizer,
-      byId('eye-cream'),
-      byId('the-holy-grail'),
-      treatmentExtra,
-    ].filter(Boolean)
-
-    // De-dupe while preserving order
-    const seen = new Set<string>()
-    const unique = ordered.filter(p => {
-      if (!p || seen.has(p.id)) return false
-      seen.add(p.id)
-      return true
-    })
-
-    const limit = stepsPreference === 'minimal' ? 3 : stepsPreference === 'moderate' ? 5 : 7
-    return [...unique]
-      .sort((a, b) => a.protocolStep - b.protocolStep)
-      .slice(0, limit) as typeof PRODUCTS
-  }
-
   const [recommendations, setRecommendations] = useState<typeof PRODUCTS>([])
+  const [weekly, setWeekly] = useState<(typeof PRODUCTS)[number] | null>(null)
   const [done, setDone] = useState(false)
   const [emailModalOpen, setEmailModalOpen] = useState(false)
+  const [addedIds, setAddedIds] = useState<string[]>([])
+  const [treatOffer, setTreatOffer] = useState<(typeof PRODUCTS)[number] | null>(null)
+  const [treatOpen, setTreatOpen] = useState(false)
+
+  const addToCart = (ids: string[]) => {
+    const fresh = ids.filter(id => !addedIds.includes(id))
+    if (!fresh.length) return
+    setAddedIds(prev => [...prev, ...fresh])
+    onAddToCart?.(fresh.length)
+  }
 
   const finish = () => {
-    setRecommendations(buildProtocol())
+    if (!skinType || !concerns.length || sensitive === null || !skinRightNow) return
+    const answers = {
+      skinType,
+      concerns,
+      stepsPreference,
+      sensitive,
+      skinRightNow,
+    }
+    const result = buildProtocol(answers)
+    setRecommendations(result.products)
+    setWeekly(result.weekly)
+    setTreatOffer(optionalTreat(answers))
+    setTreatOpen(false)
     setDone(true)
   }
 
-  const totalPrice = recommendations.reduce((s, p) => s + p.price, 0)
+  const emailedProducts = weekly ? [...recommendations, weekly] : recommendations
+  const totalPrice = emailedProducts.reduce((s, p) => s + p.price, 0)
+  const entries = routineEntries(recommendations)
 
   const QUESTIONS = [
     {
@@ -151,7 +305,7 @@ export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
       ),
     },
     {
-      title: 'How many steps do you want in your routine?',
+      title: 'How personalized should your routine be?',
       content: (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {STEPS_PREFERENCE.map(s => (
@@ -170,64 +324,115 @@ export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
       ),
     },
     {
-      title: 'Which best describes what you want?',
+      title: 'How is your skin feeling right now?',
       content: (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg">
-          <OptionButton
-            selected={routine === 'starter'}
-            onClick={() => setRoutine('starter')}
-            label="Starter Routine"
-            desc="A simple foundation to begin with"
-          />
-          <OptionButton
-            selected={routine === 'complete'}
-            onClick={() => setRoutine('complete')}
-            label="Complete Protocol"
-            desc="A full, optimized daily routine"
-          />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {SKIN_STATES.map(s => (
+            <OptionButton key={s.value} selected={skinRightNow === s.value} onClick={() => setSkinRightNow(s.value)} label={s.label} desc={s.desc} />
+          ))}
         </div>
       ),
     },
   ]
 
-  if (done && recommendations.length > 0) {
+  if (done) {
     return (
       <div className="bg-white min-h-screen font-sans">
         <div className="max-w-4xl mx-auto px-5 md:px-8 py-16">
           <div className="text-center mb-12">
             <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-3">Your Custom Protocol</p>
             <h1 className="font-serif text-4xl text-black mb-4">Your Recommended Protocol</h1>
-            <p className="text-charcoal/50">
+            <p className="text-charcoal/50 max-w-xl mx-auto">
               Based on your {skinType?.toLowerCase()} skin type and {concerns.slice(0, 2).join(', ').toLowerCase()} concerns.
+              Daily essentials are cleanser, moisturizer, and morning sunscreen — personalized additions only where they help.
             </p>
           </div>
 
-          {/* Protocol steps */}
-          <div className="space-y-4 mb-10">
-            {recommendations.map((p) => (
-              <div key={p.id} className="bg-white flex gap-5 p-5 border border-gray-soft">
+          {skinRightNow === 'irritated' && (
+            <div className="border border-rose/40 bg-rose-light p-6 mb-10">
+              <p className="text-[11px] tracking-widest uppercase text-rose mb-2">Let&apos;s Calm Things First</p>
+              <p className="text-sm text-charcoal/60 leading-relaxed">
+                You told us your skin is irritated right now, so we&apos;ve left the active ingredients out. This is a
+                short recovery routine built to settle things down. Once your skin feels comfortable again — usually two
+                to three weeks — come back and we&apos;ll add your treatment serum.
+              </p>
+            </div>
+          )}
+
+          {recommendations.length === 0 && (
+            <p className="text-center text-charcoal/50 mb-10">We could not build a protocol from those answers. Please start over.</p>
+          )}
+
+          {recommendations.length > 0 && (
+            <div className="mb-10">
+              <div className="flex items-baseline justify-between mb-4">
+                <p className="text-[11px] tracking-[0.3em] uppercase text-rose">Your Daily Routine</p>
+                <p className="text-[10px] tracking-widest uppercase text-charcoal/40">When to apply</p>
+              </div>
+              <div className="space-y-4">
+                {entries.map(({ product, period }) => (
+                  <div key={product.id} className="space-y-4">
+                    <RoutineProductRow
+                      product={product}
+                      period={period}
+                      added={addedIds.includes(product.id)}
+                      onAdd={() => addToCart([product.id])}
+                      onNavigate={onNavigate}
+                    />
+                    {treatOffer && product.protocolStep === 2 && (
+                      <OptionalTreatSliver
+                        product={treatOffer}
+                        open={treatOpen}
+                        onToggle={() => setTreatOpen(open => !open)}
+                        onAddToProtocol={() => {
+                          setRecommendations(prev =>
+                            [...prev, treatOffer].sort(
+                              (a, b) => a.protocolStep - b.protocolStep || a.name.localeCompare(b.name),
+                            ),
+                          )
+                          setTreatOffer(null)
+                          setTreatOpen(false)
+                        }}
+                        onNavigate={onNavigate}
+                      />
+                    )}
+                  </div>
+                ))}
+                <ProtectRow />
+              </div>
+            </div>
+          )}
+
+          {weekly && (
+            <div className="mb-10">
+              <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-4">Weekly · Polish</p>
+              <div className="bg-white flex gap-5 p-5 border border-gray-soft">
                 <div className="flex-shrink-0">
-                  <div className="w-10 h-10 bg-rose flex items-center justify-center text-white text-xs font-semibold">{p.protocolStep}</div>
+                  <div className="w-10 h-10 bg-black flex items-center justify-center text-white text-[10px] tracking-widest uppercase font-semibold">W</div>
                 </div>
                 <div className="w-20 h-20 shrink-0 overflow-hidden">
-                  <ProductImage src={p.image} alt={p.name} variant="inline" />
+                  <ProductImage src={weekly.image} alt={weekly.name} variant="inline" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-[10px] tracking-widest uppercase text-rose mb-1">{getProtocolStepLabel(p.protocolStep)}</p>
-                  <p className="text-[10px] tracking-widest uppercase text-charcoal/40 mb-1">{p.categories[0]}</p>
-                  <h3 className="font-medium text-charcoal mb-1">{p.name}</h3>
-                  <p className="text-xs text-charcoal/50 mb-2">{p.tagline}</p>
-                  <p className="text-sm font-semibold text-charcoal">${p.price}</p>
+                  <p className="text-[10px] tracking-widest uppercase text-rose mb-1">Occasional alternative cleanser</p>
+                  <p className="text-[10px] tracking-widest uppercase text-charcoal/40 mb-1">{weekly.categories[0]}</p>
+                  <h3 className="font-medium text-charcoal mb-1">{weekly.name}</h3>
+                  <p className="text-xs text-charcoal/50 mb-2">Use 1 to 3 times per week in place of your daily cleanser, as tolerated.</p>
+                  <p className="text-sm font-semibold text-charcoal">${weekly.price}</p>
                 </div>
-                <button
-                  onClick={() => onNavigate('product', p.id)}
-                  className="hidden md:flex items-center text-xs text-rose underline underline-offset-2 self-center whitespace-nowrap"
-                >
-                  View →
-                </button>
+                <div className="flex flex-col items-end justify-center gap-2 shrink-0">
+                  <PeriodBadge label="1–3× weekly" />
+                  <AddToCartButton added={addedIds.includes(weekly.id)} onAdd={() => addToCart([weekly.id])} />
+                  <button
+                    onClick={() => onNavigate('product', weekly.id)}
+                    className="hidden md:flex items-center text-xs text-rose underline underline-offset-2 whitespace-nowrap"
+                  >
+                    View →
+                  </button>
+                </div>
               </div>
-            ))}
-          </div>
+            </div>
+          )}
 
           {/* Total + CTA */}
           <div className="bg-black p-8 text-white">
@@ -237,12 +442,16 @@ export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
                 <p className="font-serif text-3xl">${totalPrice}</p>
               </div>
               <div className="text-right text-sm text-white/50">
-                <p>{recommendations.length} products</p>
-                <p>Morning & Evening</p>
+                <p>{emailedProducts.length} products</p>
+                <p>AM &amp; PM + morning SPF</p>
               </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="flex-1 bg-rose text-white py-3.5 text-sm font-medium hover:bg-rose-dark transition-colors">
+              <button
+                type="button"
+                onClick={() => addToCart(emailedProducts.map(p => p.id))}
+                className="flex-1 bg-rose text-white py-3.5 text-sm font-medium hover:bg-rose-dark transition-colors"
+              >
                 Add Entire Protocol to Cart
               </button>
               <button
@@ -261,18 +470,46 @@ export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
             protocol={{
               skinType: skinType || '',
               concerns,
-              products: recommendations.map((p) => ({
-                name: p.name,
-                price: `$${p.price}`,
-                step: p.protocolStep,
-              })),
+              skinRightNow: SKIN_STATES.find(s => s.value === skinRightNow)?.label,
+              note: skinRightNow === 'irritated'
+                ? "Your skin is irritated right now, so this is a short recovery routine without active ingredients. Come back in two to three weeks and we'll add your treatment serum."
+                : undefined,
+              products: [
+                ...entries.map(({ product, period }) => ({
+                  name: product.name,
+                  price: `$${product.price}`,
+                  step: product.protocolStep,
+                  period,
+                })),
+                {
+                  name: 'Broad-spectrum SPF 30+',
+                  price: 'Purchased separately',
+                  step: PROTECT_GUIDANCE.step,
+                  period: 'am' as const,
+                },
+                ...(weekly
+                  ? [{ name: weekly.name, price: `$${weekly.price}`, step: 'W', period: 'weekly' as const }]
+                  : []),
+              ],
               totalPrice: `$${totalPrice}`,
             }}
           />
 
           <div className="text-center mt-8">
             <button
-              onClick={() => { setDone(false); setStep(0) }}
+              onClick={() => {
+                setDone(false)
+                setStep(0)
+                setWeekly(null)
+                setRecommendations([])
+                setSkinType('')
+                setConcerns([])
+                setStepsPreference('moderate')
+                setSensitive(null)
+                setSkinRightNow('')
+                setTreatOffer(null)
+                setTreatOpen(false)
+              }}
               className="text-sm text-charcoal/40 underline underline-offset-2 hover:text-charcoal transition-colors"
             >
               Start Over
@@ -296,13 +533,13 @@ export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
           <div className="absolute inset-0 bg-black/55" />
         </div>
         <div className="relative z-10 max-w-7xl mx-auto px-5 md:px-8 py-24 w-full">
-          <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-5">Personalized Skincare</p>
+          <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-5">Personalize Your Protocol</p>
           <h1 className="font-serif text-4xl md:text-6xl text-white max-w-2xl mb-6 leading-[1.1]">
-            Five Questions. One Clear Protocol.<br />
-            <em>Built for your skin.</em>
+            Build your daily routine.<br />
+            <em>You do not need every product.</em>
           </h1>
           <p className="text-white/60 max-w-xl mb-10 leading-relaxed">
-            Tell us about your skin type, concerns, and routine. We&apos;ll match you to a coordinated regimen — nothing extra.
+            Choose products that fit your skin — cleanser and moisturizer as daily essentials, then add a serum or optional care based on your needs. Finish mornings with SPF.
           </p>
           <button
             onClick={() => document.getElementById('protocol-quiz')?.scrollIntoView({ behavior: 'smooth' })}
@@ -355,7 +592,8 @@ export default function ProtocolBuilder({ onNavigate }: ProtocolBuilderProps) {
           ) : (
             <button
               onClick={finish}
-              className="bg-rose text-white px-8 py-3 text-sm font-medium hover:bg-rose-dark transition-colors"
+              disabled={!canAdvance[step]}
+              className="bg-rose text-white px-8 py-3 text-sm font-medium hover:bg-rose-dark disabled:opacity-40 transition-colors"
             >
               Build My Protocol
             </button>

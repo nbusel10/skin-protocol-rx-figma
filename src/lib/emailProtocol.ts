@@ -1,8 +1,10 @@
 export interface ProtocolProduct {
   name: string
   price: string
-  step: number
+  step: number | string
   url?: string
+  /** When the product is applied. Each product appears once, tagged with its period. */
+  period?: 'am' | 'pm' | 'both' | 'weekly'
 }
 
 export interface ProtocolEmailPayload {
@@ -12,6 +14,9 @@ export interface ProtocolEmailPayload {
   protocol: {
     skinType: string
     concerns: string[]
+    skinRightNow?: string
+    /** Present when the protocol is a recovery routine rather than a full regimen. */
+    note?: string
     products: ProtocolProduct[]
     totalPrice: string
   }
