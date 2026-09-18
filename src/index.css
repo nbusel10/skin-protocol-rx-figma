@@ -34,10 +34,12 @@ html {
   -moz-osx-font-smoothing: grayscale;
   background-color: #fff;
   color: var(--color-charcoal);
+  overflow-anchor: none;
 }
 
 body {
   background-color: #fff;
+  overflow-anchor: none;
 }
 
 /* Scrollbar refinement */

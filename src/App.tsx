@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useLayoutEffect, useCallback } from 'react'
 import AnnouncementBar from './components/AnnouncementBar'
 import Header from './components/Header'
 import Footer from './components/Footer'
@@ -105,6 +105,15 @@ function getInitialRoute(): RouteState {
   return parseLocation(window.location.pathname, window.location.search, window.location.hash)
 }
 
+/** Instant jump to top. Smooth scroll fights layout swaps and focused footer buttons. */
+function scrollToTop() {
+  const active = document.activeElement
+  if (active instanceof HTMLElement && active !== document.body) active.blur()
+  window.scrollTo(0, 0)
+  document.documentElement.scrollTop = 0
+  document.body.scrollTop = 0
+}
+
 export default function App() {
   const initial = getInitialRoute()
   const [page, setPage] = useState<Page>(initial.page)
@@ -135,8 +144,8 @@ export default function App() {
 
   const navigate = useCallback((p: Page, id?: string) => {
     if (p === 'story' && id === 'standards-preview') {
+      scrollToTop()
       applyRoute(route('story', { preview: 'standards' }), 'push')
-      window.scrollTo({ top: 0, behavior: 'smooth' })
       return
     }
     const next = route(p, {
@@ -144,12 +153,24 @@ export default function App() {
       shopStep: p === 'shop' ? (id || '') : '',
       hash: p === 'story' ? (id || '') : '',
     })
+    if (!next.hash) scrollToTop()
     applyRoute(next, 'push')
-    if (!next.hash) window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [applyRoute])
+
+  // After the new page commits, pin scroll at the top before paint (skip in-page story hashes).
+  useLayoutEffect(() => {
+    if (storyHash) return
+    scrollToTop()
+    const frame = requestAnimationFrame(() => scrollToTop())
+    return () => cancelAnimationFrame(frame)
+  }, [page, productId, shopStep, preview, storyHash])
 
   // Sync initial URL + browser back/forward
   useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual'
+    }
+
     const current = parseLocation(window.location.pathname, window.location.search, window.location.hash)
     applyRoute(current, 'replace')
 
@@ -169,7 +190,7 @@ export default function App() {
       setStoryHash(next.page === 'story' && next.preview !== 'standards' ? next.hash : '')
       setPreview(next.preview || '')
       applyDocumentTitle(next.page, next.productId, next.preview)
-      if (!next.hash) window.scrollTo(0, 0)
+      if (!next.hash) scrollToTop()
     }
 
     window.addEventListener('popstate', onPopState)
