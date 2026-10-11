@@ -152,9 +152,59 @@ body {
   opacity: 1;
 }
 
+/* Text links rest with no line. Hover draws a rule past the words and ends it with an arrowhead. */
+.theme-v2 .link-arrow {
+  position: relative;
+  width: max-content;
+  max-width: 100%;
+  transition: color 0.2s ease;
+}
+
+.theme-v2 .link-arrow::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  height: 1px;
+  width: 0;
+  background-color: #B88E91;
+  transition: width 0.35s ease;
+  pointer-events: none;
+}
+
+.theme-v2 .link-arrow::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -7.5px;
+  width: 0;
+  height: 0;
+  border-top: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-left: 4px solid #B88E91;
+  opacity: 0;
+  transition: left 0.35s ease, opacity 0.15s ease;
+  pointer-events: none;
+}
+
+.theme-v2 .link-arrow:hover::after,
+.theme-v2 .link-arrow:focus-visible::after {
+  width: calc(100% + 8px);
+}
+
+.theme-v2 .link-arrow:hover::before,
+.theme-v2 .link-arrow:focus-visible::before {
+  left: calc(100% + 8px);
+  opacity: 1;
+  transition: left 0.35s ease, opacity 0.15s ease 0.12s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .theme-v2 .difference-title,
-  .theme-v2 .difference-title::after {
+  .theme-v2 .difference-title::after,
+  .theme-v2 .link-arrow,
+  .theme-v2 .link-arrow::before,
+  .theme-v2 .link-arrow::after {
     transition: none;
   }
 }

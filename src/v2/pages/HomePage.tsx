@@ -217,7 +217,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             <button
               type="button"
               onClick={() => onNavigate('shop')}
-              className="text-sm text-charcoal underline underline-offset-4 hover:text-rose"
+              className="link-arrow text-sm text-charcoal hover:text-rose"
             >
               View the collection
             </button>
@@ -252,7 +252,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             <button
               type="button"
               onClick={() => onNavigate('shop')}
-              className="text-sm text-charcoal underline underline-offset-4 hover:text-rose"
+              className="link-arrow text-sm text-charcoal hover:text-rose"
             >
               Explore the collection
             </button>
@@ -336,7 +336,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             <button
               type="button"
               onClick={() => onNavigate('story')}
-              className="self-start text-sm text-white underline underline-offset-4 decoration-rose hover:text-rose"
+              className="link-arrow self-start text-sm text-white hover:text-rose"
             >
               Read our story
             </button>

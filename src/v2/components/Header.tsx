@@ -58,10 +58,10 @@ export default function Header({ currentPage, onNavigate, cartCount }: HeaderPro
                 <button
                   key={n.label}
                   onClick={() => onNavigate(n.page)}
-                  className={`text-sm font-sans pb-1 border-b-2 transition-colors duration-200 ${
+                  className={`link-arrow text-sm font-sans ${
                     active
-                      ? 'text-charcoal font-medium border-rose'
-                      : 'text-charcoal/80 border-transparent hover:text-charcoal hover:border-rose'
+                      ? 'text-charcoal font-medium'
+                      : 'text-charcoal/80 hover:text-charcoal'
                   }`}
                 >
                   {n.label}
