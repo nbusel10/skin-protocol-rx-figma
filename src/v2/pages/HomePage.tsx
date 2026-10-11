@@ -293,11 +293,11 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       {/* CTA 5 — science guided by nature, the charcoal anchor */}
       <section className="bg-charcoal text-white">
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2">
-          <div className="min-h-[280px] lg:min-h-[460px]">
+          <div className="px-6 pt-8 pb-4 lg:px-0 lg:py-14 lg:pr-10">
             <img
               src="/family-owned-skin-protocol-rx-founders-skincare-lab-new-york.png"
               alt="The founders formulating Skin Protocol RX together"
-              className="w-full h-full object-cover object-center min-h-[280px]"
+              className="w-full aspect-[4/3] object-cover object-center"
             />
           </div>
           <div className="px-6 md:px-12 py-14 flex flex-col justify-center">
@@ -335,10 +335,11 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               Explore Spa Partnerships
             </button>
           </div>
-          <div className="lineup-frame">
+          <div className="aspect-[4/3] overflow-hidden bg-stone">
             <img
-              src="/v2-collection-lineup.jpg"
-              alt="Skin Protocol RX products in a calm treatment setting"
+              src="/spa-partnership-shelf.jpg"
+              alt="Skin Protocol RX products displayed on warm spa shelves"
+              className="w-full h-full object-cover"
             />
           </div>
         </div>
