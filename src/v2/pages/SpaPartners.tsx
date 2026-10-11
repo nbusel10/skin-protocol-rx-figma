@@ -205,7 +205,7 @@ export default function SpaPartners({ onNavigate }: SpaPartnersProps) {
 
   return (
     <div className="bg-ivory font-sans">
-      <section className="grid grid-cols-1 lg:grid-cols-2 bg-ivory">
+      <section className="grid grid-cols-1 lg:grid-cols-2 items-center bg-ivory">
         <div className="px-5 md:px-12 py-16 flex flex-col justify-center">
           <p className="text-[11px] tracking-[0.22em] uppercase text-rose mb-4">For spas and estheticians</p>
           <h1 className="font-serif text-4xl md:text-5xl text-charcoal max-w-xl mb-5">
@@ -226,7 +226,7 @@ export default function SpaPartners({ onNavigate }: SpaPartnersProps) {
             </button>
           </div>
         </div>
-        <div className="lineup-frame min-h-[280px] lg:min-h-full bg-stone">
+        <div className="lineup-frame self-center">
           <img
             src="/v2-collection-lineup.jpg"
             alt="Skin Protocol RX products in a calm treatment room"

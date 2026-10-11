@@ -9,10 +9,10 @@ interface ProductImageProps {
 }
 
 const variantClasses: Record<ProductImageVariant, string> = {
-  card: "aspect-[4/5] p-6 md:p-8",
-  thumb: "aspect-square p-1.5",
-  inline: "w-full h-full p-3",
-  detail: "aspect-square p-8 md:p-12",
+  card: "aspect-[2/3]",
+  thumb: "aspect-[2/3]",
+  inline: "w-full h-full",
+  detail: "aspect-[2/3]",
 }
 
 export default function ProductImage({
@@ -23,12 +23,12 @@ export default function ProductImage({
   hover = false,
 }: ProductImageProps) {
   return (
-    <div className={`bg-stone overflow-hidden ${variantClasses[variant]} ${className}`}>
+    <div className={`bg-white overflow-hidden ${variantClasses[variant]} ${className}`}>
       <img
         src={src}
         alt={alt}
-        className={`w-full h-full object-contain object-center ${
-          hover ? "transition-transform duration-500 group-hover:scale-105" : ""
+        className={`w-full h-full object-cover object-center scale-[1.04] ${
+          hover ? "transition-transform duration-500 group-hover:scale-110" : ""
         }`}
       />
     </div>

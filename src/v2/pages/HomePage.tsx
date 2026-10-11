@@ -124,7 +124,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
     <div className="bg-ivory font-sans text-charcoal">
 
       {/* CTA 1 — product-led hero */}
-      <section className="grid grid-cols-1 lg:grid-cols-2 min-h-[80vh] bg-ivory">
+      <section className="grid grid-cols-1 lg:grid-cols-2 items-center bg-ivory">
         <div className="flex flex-col justify-center px-6 md:px-12 lg:px-16 py-14 lg:py-16 order-2 lg:order-1">
           <p className="font-serif text-lg text-rose mb-3">The Natural Prescription</p>
           {/* Directional kicker — not final approved copy */}
@@ -147,7 +147,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             </button>
           </div>
         </div>
-        <div className="lineup-frame order-1 lg:order-2 min-h-[320px] lg:min-h-[80vh] bg-stone">
+        <div className="lineup-frame order-1 lg:order-2 self-center">
           <img
             src="/v2-collection-lineup.jpg"
             alt="Skin Protocol RX bottles and jars arranged in warm spa light"
@@ -384,7 +384,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               Explore Spa Partnerships
             </button>
           </div>
-          <div className="lineup-frame aspect-[4/3] bg-ivory">
+          <div className="lineup-frame">
             <img
               src="/v2-collection-lineup.jpg"
               alt="Skin Protocol RX products in a calm treatment setting"

@@ -65,7 +65,7 @@ export default function ProductDetail({ productId, onNavigate }: ProductDetailPr
       </div>
 
       <div className="max-w-7xl mx-auto px-5 md:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
           <div className="flex gap-4">
             <div className="hidden md:flex flex-col gap-3">
               {images.map((img, i) => (
@@ -81,7 +81,7 @@ export default function ProductDetail({ productId, onNavigate }: ProductDetailPr
             </div>
             <div className="flex-1">
               {images[activeImage].src.includes('v2-collection-lineup') ? (
-                <div className="lineup-frame aspect-square bg-stone">
+                <div className="lineup-frame">
                   <img src={images[activeImage].src} alt={images[activeImage].alt} />
                 </div>
               ) : (

@@ -98,15 +98,16 @@ body {
   color: #F7F4EF;
 }
 
-/* The supplied lineup photo includes letterbox bars. Crop them in the frame. */
+/* Wide lineup photo. The frame matches the picture so the bottles stay whole. */
 .theme-v2 .lineup-frame {
   overflow: hidden;
+  aspect-ratio: 1.85 / 1;
+  background-color: #eee8e0;
 }
 
 .theme-v2 .lineup-frame img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 46%;
-  transform: scale(1.14);
+  object-position: center 42%;
 }
