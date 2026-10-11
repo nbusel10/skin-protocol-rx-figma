@@ -149,9 +149,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
           <div className="aspect-[4/5] bg-stone overflow-hidden">
             <img
-              src="/hydrated-glowing-skin-water-splash-skin-protocol-rx.png"
-              alt="A person with healthy, hydrated skin"
-              className="w-full h-full object-cover object-[58%_center]"
+              src="/our-story-ritual.jpg"
+              alt="A woman applying Skin Protocol RX cream, with the collection beside her"
+              className="w-full h-full object-cover object-[center_28%]"
             />
           </div>
           <div>
@@ -314,9 +314,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           <div className="flex flex-col px-6 pt-8 pb-2 lg:px-0 lg:py-14 lg:pr-10">
             <div className="relative flex-1 min-h-[280px]">
               <img
-                src="/our-story-ritual.jpg"
-                alt="A woman applying Skin Protocol RX cream, with the collection beside her"
-                className="absolute inset-0 w-full h-full object-cover object-[center_28%]"
+                src="/hydrated-glowing-skin-water-splash-skin-protocol-rx.png"
+                alt="A person with healthy, hydrated skin"
+                className="absolute inset-0 w-full h-full object-cover object-[62%_18%]"
               />
               <div className="absolute bottom-5 left-5 right-5 md:right-auto md:max-w-xs bg-charcoal border border-rose/40 p-5">
                 <p className="text-[10px] tracking-[0.22em] uppercase text-rose mb-2">Why these formulas</p>
