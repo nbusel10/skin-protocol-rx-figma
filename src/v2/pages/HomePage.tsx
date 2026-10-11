@@ -23,27 +23,6 @@ const DIFFERENCE = [
   },
 ]
 
-const FOUNDERS = [
-  {
-    name: 'Linda D. Amend',
-    role: 'Chemist',
-    image: '/linda-amend-chemist-co-founder-skin-protocol-rx.png',
-    alt: 'Linda D. Amend, chemist and co-founder, in the lab',
-  },
-  {
-    name: 'Susanna Amend',
-    role: 'Nurse Practitioner',
-    image: '/susanna-amend-np-co-founder-skin-protocol-rx.png',
-    alt: 'Susanna Amend, nurse practitioner and co-founder',
-  },
-  {
-    name: 'Christina Corbin',
-    role: 'Licensed Medical Esthetician',
-    image: '/christina-corbin-lme-co-founder-skin-protocol-rx.png',
-    alt: 'Christina Corbin, licensed medical esthetician and co-founder',
-  },
-]
-
 const TESTIMONIALS_CUSTOMER = [
   { name: 'Rachel M.', location: 'Client', text: 'The Hyaluronic Acid Serum changed my morning routine completely. My skin has never felt this hydrated by midday.', rating: 5 },
   { name: 'Danielle K.', location: 'Client', text: 'I was hesitant to try a 20% vitamin C, but Brighten & Glow C Serum has been a game changer for my hyperpigmentation.', rating: 5 },
@@ -327,44 +306,16 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             <p className="text-base text-white/85 leading-relaxed mb-4">
               Clinical enough to trust. Natural enough to live with. We choose ingredients for how they behave on skin, then keep the routine short.
             </p>
-            <p className="text-base text-white/85 leading-relaxed">
+            <p className="text-base text-white/85 leading-relaxed mb-8">
               That is why a chemist, a nurse practitioner, and an esthetician share the bench. The result should feel clear, not crowded.
             </p>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA 6 — founders, small and in action */}
-      <section className="bg-ivory px-6 md:px-8 py-16">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-            <div>
-              <p className="text-[11px] tracking-[0.22em] uppercase text-rose mb-2">The founders</p>
-              <h2 className="font-serif text-3xl md:text-4xl text-charcoal">Meet the people behind the line</h2>
-            </div>
             <button
               type="button"
               onClick={() => onNavigate('story')}
-              className="text-sm text-charcoal underline underline-offset-4 hover:text-rose"
+              className="self-start text-sm text-white underline underline-offset-4 decoration-rose hover:text-rose"
             >
-              About us
+              Our Story
             </button>
-          </div>
-          <div className="grid grid-cols-3 gap-4 md:gap-8">
-            {FOUNDERS.map(founder => (
-              <button
-                key={founder.name}
-                type="button"
-                onClick={() => onNavigate('story')}
-                className="text-left"
-              >
-                <div className="aspect-[3/4] bg-stone overflow-hidden mb-3">
-                  <img src={founder.image} alt={founder.alt} className="w-full h-full object-cover object-top" />
-                </div>
-                <p className="text-sm font-medium text-charcoal">{founder.name}</p>
-                <p className="text-xs text-charcoal/70">{founder.role}</p>
-              </button>
-            ))}
           </div>
         </div>
       </section>

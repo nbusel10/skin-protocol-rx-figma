@@ -192,12 +192,6 @@ export default function ShopPage({ onNavigate, initialStep }: ShopPageProps) {
           <p className="text-[11px] tracking-[0.22em] uppercase text-rose mb-3">The Natural Prescription</p>
           <h1 className="font-serif text-4xl md:text-5xl text-charcoal mb-4">Explore the Collection</h1>
           <p className="text-base text-charcoal/85 max-w-xl">Find the formulas that fit your skin. Each one has a clear job in a simple routine.</p>
-          <div className="lineup-frame mt-8">
-            <img
-              src="/v2-collection-lineup.jpg"
-              alt="Skin Protocol RX collection in warm spa light"
-            />
-          </div>
         </div>
       </div>
 
