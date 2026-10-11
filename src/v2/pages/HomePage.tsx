@@ -159,8 +159,8 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <section className="bg-stone px-6 md:px-8 py-14">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
           {DIFFERENCE.map(item => (
-            <div key={item.title}>
-              <h2 className="font-serif text-2xl text-charcoal mb-3">{item.title}</h2>
+            <div key={item.title} className="difference-card" tabIndex={0}>
+              <h2 className="difference-title font-serif text-2xl">{item.title}</h2>
               <p className="text-base text-charcoal/85 leading-relaxed">{item.body}</p>
             </div>
           ))}

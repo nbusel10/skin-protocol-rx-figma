@@ -111,3 +111,50 @@ body {
   object-fit: cover;
   object-position: center 42%;
 }
+
+.theme-v2 .difference-card {
+  outline: none;
+}
+
+.theme-v2 .difference-card:focus-visible {
+  outline: 2px solid #B88E91;
+  outline-offset: 8px;
+}
+
+.theme-v2 .difference-title {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1.15rem;
+  color: #45403F;
+  transition: color 0.4s ease;
+}
+
+.theme-v2 .difference-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -0.45rem;
+  height: 1px;
+  width: 2.5rem;
+  background-color: #B88E91;
+  opacity: 0.55;
+  transition: width 0.4s ease, opacity 0.4s ease;
+}
+
+.theme-v2 .difference-card:hover .difference-title,
+.theme-v2 .difference-card:focus-visible .difference-title {
+  color: #B88E91;
+}
+
+.theme-v2 .difference-card:hover .difference-title::after,
+.theme-v2 .difference-card:focus-visible .difference-title::after {
+  width: 100%;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-v2 .difference-title,
+  .theme-v2 .difference-title::after {
+    transition: none;
+  }
+}
