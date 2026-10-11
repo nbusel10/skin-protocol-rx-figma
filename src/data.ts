@@ -108,10 +108,6 @@ export function getProtocolStepFromParam(param: string): ProductProtocolStep | n
   return match ? (match.step as ProductProtocolStep) : null
 }
 
-/** Reference product shot for client visualization — Rosewater Niacinamide Toner */
-export const PRODUCT_REFERENCE_IMAGE =
-  "https://skinprotocolrx.com/cdn/shop/files/9798CD8F-0DBE-486B-91EF-F17E2B4A245D.png?v=1774149955&width=800"
-
 const ALL_SKIN: SkinType[] = ['Combination', 'Dry', 'Normal', 'Oily', 'Sensitive']
 const ALL_CONCERNS: SkinConcern[] = [
   'Acne', 'Aging', 'Brightening', 'Dry Skin', 'Eye Area',
@@ -134,7 +130,7 @@ export const PRODUCTS: Product[] = [
     badges: ['Best Seller', 'Sensitive Skin'],
     rating: 4.8,
     reviews: 214,
-    image: PRODUCT_REFERENCE_IMAGE,
+    image: '/chamomile-cream-cleanser.png',
     description: 'A gentle, restorative cleanser that purifies without stripping. Chamomile and rose water calm visible irritation while nourishing botanicals leave the skin soft, balanced, and refreshed.',
     benefits: [
       'Removes impurities without stripping',
@@ -171,7 +167,7 @@ export const PRODUCTS: Product[] = [
     badges: [],
     rating: 4.7,
     reviews: 98,
-    image: PRODUCT_REFERENCE_IMAGE,
+    image: '/clarifying-gel-cleanser.png',
     description: 'A luxurious gel cleanser that gently lifts impurities while preserving the skin’s essential moisture. Skin is left soft, balanced, and refreshed—beautifully clarified and perfectly primed for the treatments that follow.',
     benefits: [
       'Gently lifts impurities without over-drying',
@@ -207,7 +203,7 @@ export const PRODUCTS: Product[] = [
     badges: ['Professional Favorite'],
     rating: 4.8,
     reviews: 76,
-    image: PRODUCT_REFERENCE_IMAGE,
+    image: '/tripleglow-exfoliating-cleanser.png',
     description: 'A silky, multi-action cleanser designed to refine texture, brighten dullness, and gently resurface the skin. TripleGlow combines botanical waters, fruit enzymes, and fine plant exfoliants to sweep away impurities while maintaining essential moisture.',
     benefits: [
       'Refines texture and brightens dullness',
@@ -244,7 +240,7 @@ export const PRODUCTS: Product[] = [
     badges: ['Best Seller', 'Sensitive Skin'],
     rating: 4.8,
     reviews: 256,
-    image: PRODUCT_REFERENCE_IMAGE,
+    image: '/niacinamide-rosewater-toner.png',
     description: 'A restorative, skin-balancing toner infused with niacinamide and rosewater. Supports barrier function while enhancing clarity and natural radiance.',
     benefits: [
       'Balances and refreshes after cleansing',
@@ -279,7 +275,7 @@ export const PRODUCTS: Product[] = [
     badges: ['Sensitive Skin'],
     rating: 4.8,
     reviews: 197,
-    image: PRODUCT_REFERENCE_IMAGE,
+    image: '/brighten-glow-c-serum-5.png',
     description: 'A gentle-strength formula with 5% L-Ascorbic Acid designed to visibly brighten the complexion, refine skin texture, and support a more radiant, even-toned appearance. This antioxidant-rich formula helps defend against environmental stressors while promoting a smoother, more luminous look.',
     benefits: [
       'Gentle daily introduction to vitamin C',
@@ -311,10 +307,10 @@ export const PRODUCTS: Product[] = [
     categories: ['Serums'],
     skinTypes: ['Combination', 'Dry', 'Normal', 'Oily'],
     concerns: ['Aging', 'Brightening', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Sun Damage'],
-    badges: ['Best Seller', 'Professional Favorite'],
+    badges: ['Professional Favorite'],
     rating: 4.9,
     reviews: 284,
-    image: PRODUCT_REFERENCE_IMAGE,
+    image: '/brighten-glow-c-serum-20.png',
     description: 'A concentrated 20% L-Ascorbic Acid serum designed to visibly brighten the complexion, refine skin texture, and support a more radiant, even-toned appearance. Crafted with precision for maximum potency and stability, it absorbs instantly to deliver a refined, revitalized glow.',
     benefits: [
       'Potent 20% L-Ascorbic Acid brightening',
@@ -349,7 +345,7 @@ export const PRODUCTS: Product[] = [
     badges: ['Best Seller', 'Sensitive Skin'],
     rating: 4.9,
     reviews: 398,
-    image: PRODUCT_REFERENCE_IMAGE,
+    image: '/hyaluronic-acid-serum.png',
     description: 'A lightweight, concentrated hydrating serum designed to instantly replenish moisture, plump the skin, and restore a healthy radiant glow. Formulated with multi-weight hyaluronic acid to help soften the appearance of fine lines while leaving the skin smooth, dewy, and refreshed without feeling heavy.',
     benefits: [
       'Instant multi-level hydration',
@@ -382,7 +378,7 @@ export const PRODUCTS: Product[] = [
     badges: ['Sensitive Skin'],
     rating: 4.7,
     reviews: 64,
-    image: PRODUCT_REFERENCE_IMAGE,
+    image: '/matrix-serum.png',
     description: 'A concentrated amino acid serum featuring glycine, lysine, and proline to support a smoother, more resilient appearance. Powered by niacinamide and hyaluronic acid, it refines texture, replenishes hydration, and leaves skin looking supple, balanced, and visibly renewed.',
     benefits: [
       'Amino acids support a smoother, more resilient look',
@@ -414,10 +410,10 @@ export const PRODUCTS: Product[] = [
     categories: ['Serums'],
     skinTypes: ALL_SKIN,
     concerns: ALL_CONCERNS,
-    badges: ['Professional Favorite'],
+    badges: [],
     rating: 4.8,
     reviews: 112,
-    image: PRODUCT_REFERENCE_IMAGE,
+    image: '/tri-peptide-complex-serum.png',
     description: 'A powerful amino+peptide serum formulated to help firm, hydrate, and visibly smooth the skin while supporting collagen production and improving overall skin texture. This lightweight formula helps soften the appearance of fine lines and leaves the complexion looking refreshed, plump, and radiant.',
     benefits: [
       'Peptides and amino acids support firmer-looking skin',
@@ -451,7 +447,7 @@ export const PRODUCTS: Product[] = [
     badges: [],
     rating: 4.7,
     reviews: 48,
-    image: PRODUCT_REFERENCE_IMAGE,
+    image: '/beauty-elixir-serum.png',
     description: 'A botanical serum crafted to help your skin bloom with soft radiance. This silky potion wraps the complexion in lightweight hydration and luminous comfort—a sensorial ritual designed to feel like a drop of magic.',
     benefits: [
       'Lightweight botanical hydration',
@@ -487,7 +483,7 @@ export const PRODUCTS: Product[] = [
     badges: ['Professional Favorite'],
     rating: 4.8,
     reviews: 55,
-    image: PRODUCT_REFERENCE_IMAGE,
+    image: '/bakuchiol-renewal-serum.png',
     description: 'A refined phyto-retinol serum powered by bakuchiol to visibly smooth, brighten, and refine the complexion. Balanced with niacinamide, beta glucan, hyaluronic acid, and soothing botanical extracts, it supports a more even, supple, and renewed appearance without the irritation often associated with traditional retinoids.',
     benefits: [
       'Phyto-retinol alternative for smoother-looking skin',
@@ -521,10 +517,10 @@ export const PRODUCTS: Product[] = [
     categories: ['Moisturizers'],
     skinTypes: ['Combination', 'Normal', 'Oily', 'Sensitive'],
     concerns: ['Acne', 'Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage'],
-    badges: ['Best Seller'],
+    badges: [],
     rating: 4.8,
     reviews: 142,
-    image: PRODUCT_REFERENCE_IMAGE,
+    image: '/hydration-cloud-cream.png',
     description: 'A weightless moisturizing cream that delivers deep hydration, softens the look of fine lines, and leaves skin balanced, smooth, and radiant. Powered by rose water, aloe, hyaluronic acid, and nourishing botanicals, it absorbs effortlessly to replenish moisture and support a healthy, supple complexion.',
     benefits: [
       'Weightless daily hydration',
@@ -557,10 +553,10 @@ export const PRODUCTS: Product[] = [
     categories: ['Moisturizers'],
     skinTypes: ALL_SKIN,
     concerns: ['Acne', 'Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage'],
-    badges: ['Best Seller', 'Professional Favorite'],
+    badges: ['Professional Favorite'],
     rating: 4.9,
     reviews: 241,
-    image: PRODUCT_REFERENCE_IMAGE,
+    image: '/rich-barrier-cream.png',
     description: 'A rich, indulgent cream that envelops the skin in deep, comforting moisture while reinforcing the barrier for lasting suppleness. Powered by shea butter, rosewater, squalane, and hyaluronic acid, it smooths, nourishes, and restores the complexion to a state of velvety, resilient radiance.',
     benefits: [
       'Deep, comforting moisture for dry and depleted skin',
@@ -593,10 +589,10 @@ export const PRODUCTS: Product[] = [
     categories: ['Eye Care'],
     skinTypes: ALL_SKIN,
     concerns: ['Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Preventative', 'Sun Damage'],
-    badges: ['Professional Favorite'],
+    badges: [],
     rating: 4.7,
     reviews: 143,
-    image: PRODUCT_REFERENCE_IMAGE,
+    image: '/eye-recovery-complex.png',
     description: 'A refined eye cream that delivers a refreshing veil of hydration while awakening the delicate eye area with caffeine and antioxidant-rich green tea. Infused with niacinamide, hyaluronic acid, and nourishing botanicals, it smooths the look of tired eyes and leaves the skin feeling cushioned, refreshed, and softly illuminated.',
     benefits: [
       'Hydrates the delicate eye area',
@@ -630,10 +626,10 @@ export const PRODUCTS: Product[] = [
     categories: ['Facial Oils'],
     skinTypes: ALL_SKIN,
     concerns: ALL_CONCERNS,
-    badges: ['Best Seller', 'Professional Favorite'],
+    badges: ['Best Seller'],
     rating: 4.9,
     reviews: 329,
-    image: PRODUCT_REFERENCE_IMAGE,
+    image: '/the-holy-grail-oil.png',
     description: 'A luxurious skin oil that harnesses the ancient wisdom of botanicals and the cutting-edge science of antioxidant-rich squalane to deliver radiant, resilient skin. Infused with Amaranthus-derived squalane, Frankincense, and Myrrh, this skin oil is a ritual of renewal.',
     benefits: [
       'Seals in moisture with plant-derived squalane',
