@@ -64,6 +64,14 @@ function ConcernIcon() {
   )
 }
 
+function Arrow() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" className="shrink-0">
+      <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
 function ProductCard({ product, onNavigate }: { product: typeof PRODUCTS[0]; onNavigate: (page: Page, id?: string) => void }) {
   const badge = product.badges[0]
   return (
@@ -206,8 +214,8 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      {/* Concern cards */}
-      <section id="skin-concerns" className="bg-stone px-6 md:px-8 py-16 scroll-mt-28">
+      {/* Shop by skin concern — the Index */}
+      <section id="skin-concerns" className="bg-ivory px-6 md:px-8 py-16 scroll-mt-28">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
             <div>
@@ -222,19 +230,22 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               View the collection
             </button>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-            {SKIN_CONCERNS.map(c => (
+          <div className="grid grid-cols-2 gap-x-6 md:grid-cols-5 md:gap-x-8">
+            {SKIN_CONCERNS.map((concern, index) => (
               <button
-                key={c.id}
+                key={concern.id}
                 type="button"
                 onClick={() => onNavigate('shop')}
-                className="bg-ivory border border-gray-soft hover:border-rose p-5 text-left transition-colors"
+                className={`flex h-full flex-col border-b border-gray-soft py-5 text-left group ${index < 2 ? 'border-t' : ''} ${index >= 2 && index < 5 ? 'md:border-t' : ''}`}
               >
-                <div className="text-rose mb-3">
-                  <ConcernIcon />
-                </div>
-                <h3 className="text-sm font-medium text-charcoal mb-1">{c.label}</h3>
-                <p className="text-sm text-charcoal/80 leading-relaxed">{c.description}</p>
+                <span className="flex items-center justify-between gap-2">
+                  <span className="text-[11px] tracking-[0.18em] text-rose">{String(index + 1).padStart(2, '0')}</span>
+                  <span className="text-charcoal transition-all group-hover:translate-x-1 group-hover:text-rose">
+                    <Arrow />
+                  </span>
+                </span>
+                <span className="mt-3 block font-serif text-lg leading-snug text-charcoal transition-colors group-hover:text-rose">{concern.label}</span>
+                <span className="mt-1 block text-sm leading-relaxed text-charcoal/70">{concern.description}</span>
               </button>
             ))}
           </div>
