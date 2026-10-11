@@ -4,9 +4,11 @@ type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossa
 
 interface FooterProps {
   onNavigate: (page: Page) => void
+  compareLabel?: string
+  onCompare?: () => void
 }
 
-export default function Footer({ onNavigate }: FooterProps) {
+export default function Footer({ onNavigate, compareLabel, onCompare }: FooterProps) {
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
 
@@ -121,6 +123,11 @@ export default function Footer({ onNavigate }: FooterProps) {
       {/* Bottom bar */}
       <div className="border-t border-white/10 px-5 md:px-8 py-6 max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 text-white/30 text-xs">
         <p>&copy; {new Date().getFullYear()} Skin Protocol RX. All rights reserved.</p>
+        {onCompare && compareLabel && (
+          <button type="button" onClick={onCompare} className="underline underline-offset-2 hover:text-white transition-colors">
+            {compareLabel}
+          </button>
+        )}
         <p className="flex items-center gap-2">
           <span className="inline-block w-2 h-2 rounded-full bg-rose" />
           Cruelty-Free · Never Tested on Animals · Family-Owned in New York

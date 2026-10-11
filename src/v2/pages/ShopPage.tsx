@@ -1,0 +1,308 @@
+import { useState, useMemo, useEffect } from 'react'
+import { PRODUCTS, PRODUCT_PROTOCOL_STEPS, getProtocolStepLabel, getProtocolStepFromParam, type Product, type SkinType, type SkinConcern, type ProductCategory } from '../../data'
+import ProductImage from '../components/ProductImage'
+type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
+
+interface ShopPageProps {
+  onNavigate: (page: Page, productId?: string) => void
+  initialStep?: string
+}
+
+type SortOption = 'featured' | 'protocol-step' | 'protocol-step-desc' | 'best-selling' | 'newest' | 'price-asc' | 'price-desc'
+
+const SKIN_TYPES: SkinType[] = ['Combination', 'Dry', 'Normal', 'Oily', 'Sensitive']
+const SKIN_CONCERNS: SkinConcern[] = ['Acne', 'Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage']
+const CATEGORIES: ProductCategory[] = ['Cleansers', 'Toners', 'Moisturizers', 'Eye Care', 'Serums', 'Facial Oils']
+const PROTOCOL_STEP_OPTIONS = PRODUCT_PROTOCOL_STEPS.map(s => `Step ${s.step} · ${s.name}`)
+const BADGES = ['Best Sellers', 'Sensitive Skin Friendly', 'Professional Favorites']
+
+function StarRating({ rating }: { rating: number }) {
+  return (
+    <div className="flex gap-0.5">
+      {[1, 2, 3, 4, 5].map(i => (
+        <svg key={i} width="11" height="11" viewBox="0 0 24 24" fill={i <= rating ? '#B88E91' : 'none'} stroke="#B88E91" strokeWidth="1.5">
+          <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
+        </svg>
+      ))}
+    </div>
+  )
+}
+
+function ProductCard({ product, onNavigate }: { product: Product; onNavigate: (page: Page, id?: string) => void }) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <div
+      className="group flex flex-col cursor-pointer"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onClick={() => onNavigate('product', product.id)}
+    >
+      <div className="relative mb-4">
+        <ProductImage src={product.image} alt={product.name} hover />
+        {product.badges.slice(0, 1).map(b => (
+          <span key={b} className="absolute top-3 left-3 text-[10px] tracking-widest uppercase px-2 py-1 font-medium bg-ivory/90 text-rose border border-rose/40">
+            {b}
+          </span>
+        ))}
+        <button className="absolute top-3 right-3 w-8 h-8 bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+          onClick={e => e.stopPropagation()} aria-label="Wishlist">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#252525" strokeWidth="1.8">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
+        </button>
+        <div className={`absolute bottom-0 left-0 right-0 transition-all duration-300 ${hovered ? 'opacity-100' : 'opacity-0'}`}>
+          <button className="w-full btn-primary text-[11px] tracking-widest uppercase py-3"
+            onClick={e => e.stopPropagation()}>
+            Quick Add
+          </button>
+        </div>
+      </div>
+      <p className="text-[11px] tracking-[0.16em] uppercase text-rose mb-1">{getProtocolStepLabel(product.protocolStep)}</p>
+      <div className="flex items-start justify-between gap-2 mb-1">
+        <h3 className="text-base font-medium text-charcoal leading-snug">{product.name}</h3>
+        <span className="text-base font-semibold text-charcoal whitespace-nowrap">${product.price}</span>
+      </div>
+      <p className="text-sm text-charcoal/75 mb-2 leading-relaxed">{product.tagline}</p>
+      <div className="flex items-center gap-2">
+        <StarRating rating={Math.round(product.rating)} />
+        <span className="text-[11px] text-charcoal/40">({product.reviews})</span>
+      </div>
+    </div>
+  )
+}
+
+function FilterSection({ title, options, selected, onToggle }: {
+  title: string
+  options: string[]
+  selected: string[]
+  onToggle: (v: string) => void
+}) {
+  const [open, setOpen] = useState(true)
+  return (
+    <div className="border-b border-gray-soft pb-5 mb-5">
+      <button onClick={() => setOpen(v => !v)} className="flex items-center justify-between w-full mb-4">
+        <span className="text-xs tracking-widest uppercase text-charcoal font-medium">{title}</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+          className={`transition-transform ${open ? 'rotate-180' : ''}`}>
+          <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+      {open && (
+        <div className="flex flex-col gap-2.5">
+          {options.map(o => (
+            <label key={o} className="flex items-center gap-3 cursor-pointer group">
+              <div
+                className="w-4 h-4 border flex items-center justify-center transition-colors"
+                style={{ borderColor: selected.includes(o) ? '#B88E91' : '#E4DDD4', backgroundColor: selected.includes(o) ? '#B88E91' : 'transparent' }}
+                onClick={() => onToggle(o)}
+              >
+                {selected.includes(o) && (
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
+                    <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </div>
+              <span className="text-sm text-charcoal/70 group-hover:text-charcoal transition-colors" onClick={() => onToggle(o)}>{o}</span>
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function stepFilterFromParam(param?: string) {
+  const step = getProtocolStepFromParam(param || '')
+  return step ? [getProtocolStepLabel(step)] : []
+}
+
+export default function ShopPage({ onNavigate, initialStep }: ShopPageProps) {
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([])
+  const [selectedConcerns, setSelectedConcerns] = useState<string[]>([])
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [selectedSteps, setSelectedSteps] = useState<string[]>(() => stepFilterFromParam(initialStep))
+  const [selectedBadges, setSelectedBadges] = useState<string[]>([])
+  const [sort, setSort] = useState<SortOption>('protocol-step')
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+
+  useEffect(() => {
+    setSelectedSteps(stepFilterFromParam(initialStep))
+  }, [initialStep])
+
+  const toggle = (arr: string[], setArr: (v: string[]) => void, val: string) => {
+    setArr(arr.includes(val) ? arr.filter(v => v !== val) : [...arr, val])
+  }
+
+  const clearAll = () => {
+    setSelectedTypes([])
+    setSelectedConcerns([])
+    setSelectedCategories([])
+    setSelectedSteps([])
+    setSelectedBadges([])
+  }
+
+  const activeFilterCount = selectedTypes.length + selectedConcerns.length + selectedCategories.length + selectedSteps.length + selectedBadges.length
+
+  const filtered = useMemo(() => {
+    let list = [...PRODUCTS]
+    if (selectedTypes.length) list = list.filter(p => selectedTypes.some(t => p.skinTypes.includes(t as SkinType)))
+    if (selectedConcerns.length) list = list.filter(p => selectedConcerns.some(c => p.concerns.includes(c as SkinConcern)))
+    if (selectedCategories.length) list = list.filter(p => selectedCategories.some(c => p.categories.includes(c as ProductCategory)))
+    if (selectedSteps.length) {
+      list = list.filter(p => selectedSteps.includes(getProtocolStepLabel(p.protocolStep)))
+    }
+    if (selectedBadges.includes('Best Sellers')) list = list.filter(p => p.badges.includes('Best Seller'))
+    if (selectedBadges.includes('Sensitive Skin Friendly')) list = list.filter(p => p.skinTypes.includes('Sensitive'))
+    if (selectedBadges.includes('Professional Favorites')) list = list.filter(p => p.badges.includes('Professional Favorite'))
+
+    switch (sort) {
+      case 'protocol-step':
+        list.sort((a, b) => a.protocolStep - b.protocolStep || a.name.localeCompare(b.name))
+        break
+      case 'protocol-step-desc':
+        list.sort((a, b) => b.protocolStep - a.protocolStep || a.name.localeCompare(b.name))
+        break
+      case 'price-asc': list.sort((a, b) => a.price - b.price); break
+      case 'price-desc': list.sort((a, b) => b.price - a.price); break
+      case 'best-selling': list.sort((a, b) => b.reviews - a.reviews); break
+      case 'newest': list.sort((a, b) => b.reviews - a.reviews); break
+      default: break
+    }
+    return list
+  }, [selectedTypes, selectedConcerns, selectedCategories, selectedSteps, selectedBadges, sort])
+
+  const allActiveFilters = [
+    ...selectedTypes, ...selectedConcerns, ...selectedCategories, ...selectedSteps, ...selectedBadges,
+  ]
+
+  const FiltersPanel = () => (
+    <div className="font-sans">
+      <FilterSection title="Protocol Step" options={PROTOCOL_STEP_OPTIONS} selected={selectedSteps} onToggle={v => toggle(selectedSteps, setSelectedSteps, v)} />
+      <FilterSection title="Skin Type" options={SKIN_TYPES} selected={selectedTypes} onToggle={v => toggle(selectedTypes, setSelectedTypes, v)} />
+      <FilterSection title="Skin Concern" options={SKIN_CONCERNS} selected={selectedConcerns} onToggle={v => toggle(selectedConcerns, setSelectedConcerns, v)} />
+      <FilterSection title="Product Category" options={CATEGORIES} selected={selectedCategories} onToggle={v => toggle(selectedCategories, setSelectedCategories, v)} />
+      <FilterSection title="Special Filters" options={BADGES} selected={selectedBadges} onToggle={v => toggle(selectedBadges, setSelectedBadges, v)} />
+    </div>
+  )
+
+  return (
+    <div className="bg-ivory min-h-screen font-sans">
+      <div className="bg-ivory px-5 md:px-8 pt-14 pb-8 border-b border-gray-soft">
+        <div className="max-w-7xl mx-auto">
+          <p className="text-[11px] tracking-[0.22em] uppercase text-rose mb-3">The Natural Prescription</p>
+          <h1 className="font-serif text-4xl md:text-5xl text-charcoal mb-4">Explore the Collection</h1>
+          <p className="text-base text-charcoal/85 max-w-xl">Find the formulas that fit your skin. Each one has a clear job in a simple routine.</p>
+          <div className="lineup-frame mt-8 h-56 md:h-72">
+            <img
+              src="/v2-collection-lineup.jpg"
+              alt="Skin Protocol RX collection in warm spa light"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-5 md:px-8 py-10">
+        {/* Active filters + controls */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-sm text-charcoal/50">{filtered.length} product{filtered.length !== 1 ? 's' : ''}</span>
+            {allActiveFilters.map(f => (
+              <button
+                key={f}
+                onClick={() => {
+                  toggle(selectedTypes, setSelectedTypes, f)
+                  toggle(selectedConcerns, setSelectedConcerns, f)
+                  toggle(selectedCategories, setSelectedCategories, f)
+                  toggle(selectedSteps, setSelectedSteps, f)
+                  toggle(selectedBadges, setSelectedBadges, f)
+                }}
+                className="flex items-center gap-1.5 bg-white border border-gray-soft px-3 py-1 text-xs text-charcoal hover:border-charcoal transition-colors"
+              >
+                {f}
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
+                </svg>
+              </button>
+            ))}
+            {activeFilterCount > 0 && (
+              <button onClick={clearAll} className="text-xs text-charcoal/40 underline underline-offset-2 hover:text-charcoal transition-colors">
+                Clear all
+              </button>
+            )}
+          </div>
+          <div className="flex items-center gap-4">
+            <button
+              className="lg:hidden flex items-center gap-2 border border-gray-soft bg-white px-4 py-2 text-sm text-charcoal"
+              onClick={() => setMobileFiltersOpen(true)}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              Filters {activeFilterCount > 0 ? `(${activeFilterCount})` : ''}
+            </button>
+            <select
+              value={sort}
+              onChange={e => setSort(e.target.value as SortOption)}
+              className="border border-gray-soft bg-white px-4 py-2 text-sm text-black focus:outline-none focus:border-rose"
+            >
+              <option value="protocol-step">Protocol Step: 1–6</option>
+              <option value="protocol-step-desc">Protocol Step: 6–1</option>
+              <option value="featured">Sort: Featured</option>
+              <option value="best-selling">Best Selling</option>
+              <option value="newest">Newest</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="flex gap-10">
+          {/* Sidebar filters — desktop */}
+          <aside className="hidden lg:block w-60 shrink-0">
+            <FiltersPanel />
+          </aside>
+
+          {/* Product grid */}
+          <div className="flex-1 min-w-0">
+            {filtered.length === 0 ? (
+              <div className="text-center py-24">
+                <p className="font-serif text-2xl text-charcoal/40 mb-4">No products match your filters</p>
+                <button onClick={clearAll} className="text-xs text-rose underline underline-offset-2">Clear all filters</button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-5 md:gap-7">
+                {filtered.map(p => (
+                  <ProductCard key={p.id} product={p} onNavigate={onNavigate} />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile filter drawer */}
+      {mobileFiltersOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setMobileFiltersOpen(false)} />
+          <div className="absolute bottom-0 left-0 right-0 bg-white max-h-[85vh] overflow-y-auto rounded-t-2xl p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-sm font-semibold tracking-widest uppercase text-charcoal">Filters</h3>
+              <button onClick={() => setMobileFiltersOpen(false)}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                  <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
+                </svg>
+              </button>
+            </div>
+            <FiltersPanel />
+            <button
+              onClick={() => setMobileFiltersOpen(false)}
+              className="w-full btn-primary mt-4"
+            >
+              Show {filtered.length} Products
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
