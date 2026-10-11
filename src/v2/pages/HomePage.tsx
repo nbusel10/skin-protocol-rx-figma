@@ -105,9 +105,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       {/* CTA 1 — product-led hero */}
       <section className="grid grid-cols-1 lg:grid-cols-2 items-center bg-ivory">
         <div className="flex flex-col justify-center px-6 md:px-12 lg:px-16 py-14 lg:py-16 order-2 lg:order-1">
-          <p className="font-serif text-lg text-rose mb-3">The Natural Prescription</p>
-          {/* Directional kicker — not final approved copy */}
-          <p className="text-[11px] tracking-[0.22em] uppercase text-charcoal/70 mb-5">
+          <p className="text-[11px] tracking-[0.22em] uppercase text-rose mb-5">
             Clinical Simplicity. Natural Intelligence.
           </p>
           <h1 className="font-serif text-4xl md:text-5xl lg:text-[3.4rem] leading-[1.12] text-charcoal mb-6">
@@ -165,12 +163,32 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               Cleanse, treat, and moisturize. Add eye care or a facial oil only if you want them. Finish the morning with sunscreen.
             </p>
             <ol className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-              {PROTOCOL_STEPS.map(s => (
-                <li key={s.step} className="bg-stone px-4 py-3">
-                  <p className="text-[11px] tracking-[0.16em] uppercase text-rose">Step {s.step}</p>
-                  <p className="font-serif text-lg text-charcoal">{s.name}</p>
-                </li>
-              ))}
+              {PROTOCOL_STEPS.map(s => {
+                const body = (
+                  <>
+                    <p className="text-[11px] tracking-[0.16em] uppercase text-rose">Step {s.step}</p>
+                    <p className="font-serif text-lg text-charcoal">{s.name}</p>
+                  </>
+                )
+                if (s.productBacked === false) {
+                  return (
+                    <li key={s.step} className="bg-stone px-4 py-3">
+                      {body}
+                    </li>
+                  )
+                }
+                return (
+                  <li key={s.step}>
+                    <button
+                      type="button"
+                      onClick={() => onNavigate('shop', String(s.step))}
+                      className="w-full bg-stone px-4 py-3 text-left border border-transparent transition-colors hover:bg-ivory hover:border-rose/50 focus-visible:bg-ivory focus-visible:border-rose/50"
+                    >
+                      {body}
+                    </button>
+                  </li>
+                )
+              })}
             </ol>
             <div className="flex flex-col sm:flex-row flex-wrap gap-3">
               <button type="button" onClick={() => onNavigate('protocol')} className="btn-primary">
@@ -290,31 +308,37 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      {/* CTA 5 — science guided by nature, the charcoal anchor */}
+      {/* Story and formulas, one charcoal section */}
       <section className="bg-charcoal text-white">
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2">
-          <div className="px-6 pt-8 pb-4 lg:px-0 lg:py-14 lg:pr-10">
-            <img
-              src="/family-owned-skin-protocol-rx-founders-skincare-lab-new-york.png"
-              alt="The founders formulating Skin Protocol RX together"
-              className="w-full aspect-[4/3] object-cover object-center"
-            />
+          <div className="flex flex-col px-6 pt-8 pb-2 lg:px-0 lg:py-14 lg:pr-10">
+            <div className="relative flex-1 min-h-[280px]">
+              <img
+                src="/our-story-ritual.jpg"
+                alt="A woman applying Skin Protocol RX cream, with the collection beside her"
+                className="absolute inset-0 w-full h-full object-cover object-[center_28%]"
+              />
+              <div className="absolute bottom-5 left-5 right-5 md:right-auto md:max-w-xs bg-charcoal border border-rose/40 p-5">
+                <p className="text-[10px] tracking-[0.22em] uppercase text-rose mb-2">Why these formulas</p>
+                <p className="font-serif text-lg leading-snug">Clinical enough to trust. Natural enough to live with.</p>
+              </div>
+            </div>
           </div>
           <div className="px-6 md:px-12 py-14 flex flex-col justify-center">
-            <p className="text-[11px] tracking-[0.22em] uppercase text-rose mb-3">Science guided by nature</p>
-            <h2 className="font-serif text-3xl md:text-4xl mb-5">Why these formulas</h2>
+            <p className="text-[11px] tracking-[0.22em] uppercase text-rose mb-3">Our Story</p>
+            <h2 className="font-serif text-3xl md:text-4xl mb-5">Professional standards, personal care</h2>
             <p className="text-base text-white/85 leading-relaxed mb-4">
-              Clinical enough to trust. Natural enough to live with. We choose ingredients for how they behave on skin, then keep the routine short.
+              A family built this line because healthy skin should not need a crowded shelf. A chemist, a nurse practitioner, and an esthetician share the bench, and the formulas follow that care.
             </p>
             <p className="text-base text-white/85 leading-relaxed mb-8">
-              That is why a chemist, a nurse practitioner, and an esthetician share the bench. The result should feel clear, not crowded.
+              Ingredients stay because of how they behave on skin. The routine stays short: the products your skin needs, and nothing it doesn&apos;t.
             </p>
             <button
               type="button"
               onClick={() => onNavigate('story')}
               className="self-start text-sm text-white underline underline-offset-4 decoration-rose hover:text-rose"
             >
-              Our Story
+              Read our story
             </button>
           </div>
         </div>

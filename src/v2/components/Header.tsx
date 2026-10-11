@@ -38,7 +38,7 @@ export default function Header({ currentPage, onNavigate, cartCount }: HeaderPro
         <div className="max-w-7xl mx-auto px-5 md:px-8 flex items-center justify-between h-24 lg:h-28">
           <button
             onClick={() => onNavigate('home')}
-            className="flex flex-col items-start cursor-pointer shrink-0 text-left"
+            className="flex flex-col items-center cursor-pointer shrink-0 text-center"
             aria-label="Skin Protocol RX Home"
           >
             <img
@@ -46,7 +46,7 @@ export default function Header({ currentPage, onNavigate, cartCount }: HeaderPro
               alt="Skin Protocol RX"
               className="h-14 sm:h-16 lg:h-[4.5rem] w-auto"
             />
-            <span className="font-serif text-[0.8rem] sm:text-sm text-charcoal tracking-wide -mt-1">
+            <span className="font-serif text-[0.8rem] sm:text-sm text-rose tracking-wide pt-1.5">
               The Natural Prescription
             </span>
           </button>

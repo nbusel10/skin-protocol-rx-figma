@@ -27,8 +27,8 @@ export default function ProductImage({
       <img
         src={src}
         alt={alt}
-        className={`w-full h-full object-cover object-center scale-[1.04] ${
-          hover ? "transition-transform duration-500 group-hover:scale-110" : ""
+        className={`w-full h-full object-contain object-center ${
+          hover ? "transition-transform duration-500 group-hover:scale-105" : ""
         }`}
       />
     </div>

@@ -55,9 +55,33 @@ function OptionButton({ selected, onClick, label, desc }: { selected: boolean; o
 
 function PeriodBadge({ label }: { label: string }) {
   return (
-    <span className="text-[10px] tracking-widest uppercase text-charcoal/50 border border-gray-soft px-2 py-1 whitespace-nowrap">
+    <span className="border border-rose/30 bg-rose-light px-2.5 py-1 text-[11px] tracking-wide text-charcoal whitespace-nowrap">
       {label}
     </span>
+  )
+}
+
+function StepMark({ mark }: { mark: string }) {
+  return (
+    <div className="relative h-12 w-12 shrink-0 text-gray-soft">
+      <svg viewBox="0 0 64 64" className="h-full w-full" aria-hidden="true">
+        <circle cx="32" cy="32" r="30" fill="none" stroke="currentColor" strokeWidth="1" />
+        <circle
+          cx="32"
+          cy="32"
+          r="30"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          transform="rotate(-90 32 32)"
+          className="text-rose transition-[stroke-dashoffset] duration-700 ease-out [stroke-dasharray:188.5] [stroke-dashoffset:188.5] group-hover:[stroke-dashoffset:0] group-focus-within:[stroke-dashoffset:0] motion-reduce:transition-none motion-reduce:[stroke-dashoffset:0]"
+        />
+      </svg>
+      <span className="absolute inset-0 flex items-center justify-center font-serif text-sm text-charcoal/55 transition-colors duration-500 group-hover:text-rose group-focus-within:text-rose">
+        {mark}
+      </span>
+    </div>
   )
 }
 
@@ -93,10 +117,8 @@ function RoutineProductRow({
   onNavigate: (page: Page, productId?: string) => void
 }) {
   return (
-    <div className="bg-white flex gap-5 p-5 border border-gray-soft">
-      <div className="flex-shrink-0">
-        <div className="w-10 h-10 bg-rose flex items-center justify-center text-white text-xs font-semibold">{product.protocolStep}</div>
-      </div>
+    <div className="group bg-white flex gap-5 p-5 border border-gray-soft">
+      <StepMark mark={String(product.protocolStep).padStart(2, '0')} />
       <div className="w-20 h-20 shrink-0 overflow-hidden">
         <ProductImage src={product.image} alt={product.name} variant="inline" />
       </div>
@@ -123,10 +145,8 @@ function RoutineProductRow({
 
 function ProtectRow() {
   return (
-    <div className="bg-stone flex gap-5 p-5 border border-gray-soft">
-      <div className="flex-shrink-0">
-        <div className="w-10 h-10 bg-black flex items-center justify-center text-white text-xs font-semibold">{PROTECT_GUIDANCE.step}</div>
-      </div>
+    <div className="group bg-stone flex gap-5 p-5 border border-gray-soft">
+      <StepMark mark={String(PROTECT_GUIDANCE.step).padStart(2, '0')} />
       <div className="flex-1">
         <p className="text-[10px] tracking-widest uppercase text-rose mb-1">{PROTECT_GUIDANCE.label}</p>
         <h3 className="font-medium text-charcoal mb-1">Broad-spectrum SPF 30+</h3>
@@ -160,11 +180,9 @@ function OptionalTreatSliver({
         type="button"
         onClick={onToggle}
         aria-expanded={false}
-        className="w-full bg-white flex items-center gap-5 px-5 py-3 border border-dashed border-gray-soft text-left hover:border-rose/40 transition-colors"
+        className="group w-full bg-white flex items-center gap-5 px-5 py-3 border border-dashed border-gray-soft text-left hover:border-rose/40 transition-colors"
       >
-        <div className="w-10 h-10 border border-dashed border-charcoal/25 flex items-center justify-center text-charcoal/40 text-xs font-semibold shrink-0">
-          {product.protocolStep}
-        </div>
+        <StepMark mark={String(product.protocolStep).padStart(2, '0')} />
         <div className="flex-1 min-w-0">
           <p className="text-[10px] tracking-widest uppercase text-rose mb-0.5">{getProtocolStepLabel(product.protocolStep)}</p>
           <p className="text-sm text-charcoal/50">Add a personalized serum</p>
@@ -180,11 +198,9 @@ function OptionalTreatSliver({
         type="button"
         onClick={onToggle}
         aria-expanded={true}
-        className="w-full flex items-center gap-5 px-5 py-3 text-left hover:bg-rose-light/40 transition-colors"
+        className="group w-full flex items-center gap-5 px-5 py-3 text-left hover:bg-rose-light/40 transition-colors"
       >
-        <div className="w-10 h-10 border border-dashed border-rose/50 flex items-center justify-center text-rose text-xs font-semibold shrink-0">
-          {product.protocolStep}
-        </div>
+        <StepMark mark={String(product.protocolStep).padStart(2, '0')} />
         <div className="flex-1 min-w-0">
           <p className="text-[10px] tracking-widest uppercase text-rose mb-0.5">{getProtocolStepLabel(product.protocolStep)}</p>
           <p className="text-sm text-charcoal/50">Add a personalized serum</p>
@@ -193,7 +209,7 @@ function OptionalTreatSliver({
         <span className="sr-only">Hide optional serum</span>
       </button>
       <div className="flex gap-5 p-5 pt-0">
-        <div className="w-10 shrink-0" />
+        <div className="w-12 shrink-0" />
         <div className="w-20 h-20 shrink-0 overflow-hidden">
           <ProductImage src={product.image} alt={product.name} variant="inline" />
         </div>
@@ -406,10 +422,8 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
           {weekly && (
             <div className="mb-10">
               <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-4">Weekly · Polish</p>
-              <div className="bg-white flex gap-5 p-5 border border-gray-soft">
-                <div className="flex-shrink-0">
-                  <div className="w-10 h-10 bg-black flex items-center justify-center text-white text-[10px] tracking-widest uppercase font-semibold">W</div>
-                </div>
+              <div className="group bg-white flex gap-5 p-5 border border-gray-soft">
+                <StepMark mark="W" />
                 <div className="w-20 h-20 shrink-0 overflow-hidden">
                   <ProductImage src={weekly.image} alt={weekly.name} variant="inline" />
                 </div>
