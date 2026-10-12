@@ -205,8 +205,9 @@ export default function SpaPartners({ onNavigate }: SpaPartnersProps) {
 
   return (
     <div className="bg-ivory font-sans">
-      <section className="grid grid-cols-1 lg:grid-cols-2 items-center bg-ivory">
-        <div className="px-5 md:px-12 py-16 flex flex-col justify-center">
+      <section className="bg-ivory">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-8 px-5 py-12 md:px-8 lg:grid-cols-2 lg:gap-14 lg:py-16">
+          <div className="flex flex-col justify-center">
           <p className="text-[11px] tracking-[0.22em] uppercase text-rose mb-4">For spas and estheticians</p>
           <h1 className="font-serif text-4xl md:text-5xl text-charcoal max-w-xl mb-5">
             A home routine your clients can keep
@@ -225,12 +226,14 @@ export default function SpaPartners({ onNavigate }: SpaPartnersProps) {
               Spa Partner Login
             </button>
           </div>
-        </div>
-        <div className="lineup-frame self-center">
-          <img
-            src="/v2-collection-lineup.jpg"
-            alt="Skin Protocol RX products in a calm treatment room"
-          />
+          </div>
+          <div className="aspect-[4/3] w-full overflow-hidden bg-stone">
+            <img
+              src="/spa-partnership-collection.jpg"
+              alt="Skin Protocol RX products on a stone tray in a sunlit treatment room"
+              className="h-full w-full object-cover object-center"
+            />
+          </div>
         </div>
       </section>
 

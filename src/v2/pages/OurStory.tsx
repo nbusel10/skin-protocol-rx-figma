@@ -119,8 +119,8 @@ export default function OurStory({ onNavigate, scrollToId }: OurStoryProps) {
           </div>
           <div className="aspect-[4/3] bg-stone overflow-hidden">
             <img
-              src="/family-owned-skin-protocol-rx-founders-skincare-lab-new-york.png"
-              alt="The Skin Protocol RX founders working together in the lab"
+              src="/our-story-family-line.jpg"
+              alt="Skin Protocol RX bottles and jars on a sunlit marble counter"
               className="w-full h-full object-cover object-center"
             />
           </div>
