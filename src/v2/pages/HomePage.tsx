@@ -376,38 +376,38 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      {/* Story and formulas, one charcoal section */}
-      <section className="bg-charcoal text-white">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2">
-          <div className="flex flex-col px-6 pt-8 pb-2 lg:px-0 lg:py-14 lg:pr-10">
-            <div className="relative flex-1 min-h-[280px]">
-              <img
-                src="/our-story-water-kissed.jpg"
-                alt="A woman with glowing skin, her hand at her jaw as water splashes across her shoulder"
-                className="absolute inset-0 w-full h-full object-cover object-[58%_22%]"
-              />
-              <div className="absolute bottom-5 left-5 right-5 md:right-auto md:max-w-xs bg-charcoal border border-rose/40 p-5">
-                <p className="text-[10px] tracking-[0.22em] uppercase text-rose mb-2">Why these formulas</p>
-                <p className="font-serif text-lg leading-snug">Clinical enough to trust. Natural enough to live with.</p>
-              </div>
-            </div>
-          </div>
-          <div className="px-6 md:px-12 py-14 flex flex-col justify-center">
-            <p className="text-[11px] tracking-[0.22em] uppercase text-rose mb-3">Our Story</p>
-            <h2 className="font-serif text-3xl md:text-4xl mb-5">Professional standards, personal care</h2>
-            <p className="text-base text-white/85 leading-relaxed mb-4">
-              A family built this line because healthy skin should not need a crowded shelf. A chemist, a nurse practitioner, and an esthetician share the bench, and the formulas follow that care.
+      <section className="bg-ivory px-6 md:px-8 py-16 md:py-24">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(18rem,24rem)] gap-10 lg:gap-16 lg:items-center">
+          <div>
+            <p className="text-[11px] tracking-[0.22em] uppercase text-rose mb-5">Our Story</p>
+            <h2 className="font-serif text-4xl md:text-5xl text-charcoal leading-[1.05] mb-10">
+              Professional standards, personal care
+            </h2>
+            <p className="text-base text-charcoal/85 leading-[1.75] mb-6">
+              <span className="float-left font-serif text-7xl leading-[0.75] pr-3 pt-1 text-charcoal">A</span>
+              family built this line because healthy skin should not need a crowded shelf. A chemist, a nurse practitioner, and an esthetician share the bench, and the formulas follow that care.
             </p>
-            <p className="text-base text-white/85 leading-relaxed mb-8">
+            <p className="text-base text-charcoal/85 leading-[1.75] mb-10">
               Ingredients stay because of how they behave on skin. The routine stays short: the products your skin needs, and nothing it doesn&apos;t.
+            </p>
+            <p className="text-[11px] tracking-[0.22em] uppercase text-rose mb-3">Why these formulas</p>
+            <p className="font-serif italic text-2xl text-charcoal leading-snug mb-8">
+              Clinical enough to trust. Natural enough to live with.
             </p>
             <button
               type="button"
               onClick={() => onNavigate('story')}
-              className="link-arrow self-start text-sm text-white hover:text-rose"
+              className="link-arrow self-start text-sm text-charcoal hover:text-rose"
             >
               Read our story
             </button>
+          </div>
+          <div className="aspect-[4/5] overflow-hidden bg-stone w-full max-w-md lg:max-w-none">
+            <img
+              src="/our-story-water-kissed.jpg"
+              alt="A woman with glowing skin, her hand at her jaw as water splashes across her shoulder"
+              className="w-full h-full object-cover object-[68%_16%]"
+            />
           </div>
         </div>
       </section>

@@ -23,6 +23,7 @@ import OurStoryV2 from './v2/pages/OurStory'
 import StandardsSectionPreviewV2 from './v2/pages/StandardsSectionPreview'
 import PhilosophySectionPreviewV2 from './v2/pages/PhilosophySectionPreview'
 import SkinConcernSectionPreviewV2 from './v2/pages/SkinConcernSectionPreview'
+import StorySectionPreviewV2 from './v2/pages/StorySectionPreview'
 import SpaPartnersV2 from './v2/pages/SpaPartners'
 import IngredientGlossaryV2 from './v2/pages/IngredientGlossary'
 import ProductEducationV2 from './v2/pages/ProductEducation'
@@ -78,6 +79,7 @@ function pagePath(page: Page, productId = '', shopStep = '', hash = '', preview 
   if (preview === 'standards') return '/our-standards-preview'
   if (preview === 'philosophy') return '/philosophy-preview'
   if (preview === 'concerns') return '/skin-concern-preview'
+  if (preview === 'story-section') return '/our-story-section-preview'
   const path =
     page === 'home' ? '/' :
     page === 'shop' ? '/shop' :
@@ -115,6 +117,7 @@ function parseLocation(pathname: string, search = '', hash = ''): RouteState {
   if (path === '/our-standards-preview') return route('story', { preview: 'standards', version })
   if (path === '/philosophy-preview') return route('home', { preview: 'philosophy', version: 'v2' })
   if (path === '/skin-concern-preview') return route('home', { preview: 'concerns', version: 'v2' })
+  if (path === '/our-story-section-preview') return route('home', { preview: 'story-section', version: 'v2' })
   if (path === '/spa-partners') return route('spa', { version })
   if (path === '/ingredient-glossary') return route('glossary', { version })
   if (path === '/product-education') return route('education', { version })
@@ -138,6 +141,10 @@ function applyDocumentTitle(page: Page, productId: string, preview = '', version
   }
   if (preview === 'concerns') {
     document.title = 'Shop by Skin Concern Layouts | Skin Protocol RX'
+    return
+  }
+  if (preview === 'story-section') {
+    document.title = 'Our Story Layouts | Skin Protocol RX'
     return
   }
   if (page === 'product' && productId) {
@@ -217,7 +224,7 @@ export default function App() {
 
   const switchVersion = useCallback(() => {
     const nextVersion: Version = version === 'v1' ? 'v2' : 'v1'
-    const leavingRevisionPreview = (preview === 'philosophy' || preview === 'concerns') && nextVersion === 'v1'
+    const leavingRevisionPreview = (preview === 'philosophy' || preview === 'concerns' || preview === 'story-section') && nextVersion === 'v1'
     scrollToTop()
     applyRoute(route(leavingRevisionPreview ? 'home' : page, {
       productId: leavingRevisionPreview ? '' : productId,
@@ -289,9 +296,10 @@ export default function App() {
       <Top currentPage={page} onNavigate={navigate} cartCount={cartCount} />
 
       <main>
-        {page === 'home' && preview !== 'philosophy' && preview !== 'concerns' && <Home onNavigate={navigate} />}
+        {page === 'home' && preview !== 'philosophy' && preview !== 'concerns' && preview !== 'story-section' && <Home onNavigate={navigate} />}
         {preview === 'philosophy' && <PhilosophySectionPreviewV2 onNavigate={navigate} />}
         {preview === 'concerns' && <SkinConcernSectionPreviewV2 onNavigate={navigate} />}
+        {preview === 'story-section' && <StorySectionPreviewV2 onNavigate={navigate} />}
         {page === 'shop' && isV2 && <ShopPageV2 onNavigate={navigate} initialStep={shopStep} />}
         {page === 'shop' && !isV2 && <ShopPage onNavigate={navigate} />}
         {page === 'product' && <Detail productId={productId} onNavigate={navigate} />}
