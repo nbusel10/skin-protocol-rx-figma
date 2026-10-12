@@ -536,8 +536,9 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
 
   return (
     <div className="bg-ivory min-h-screen font-sans">
-      <section className="grid grid-cols-1 lg:grid-cols-2 items-center bg-ivory border-b border-gray-soft">
-        <div className="px-5 md:px-12 py-16 flex flex-col justify-center">
+      <section className="border-b border-gray-soft bg-ivory">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 items-center gap-8 px-5 py-12 md:px-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-14 lg:py-16">
+          <div className="flex flex-col justify-center">
           <p className="text-[11px] tracking-[0.22em] uppercase text-rose mb-4">Find your routine</p>
           <h1 className="font-serif text-4xl md:text-5xl text-charcoal max-w-xl mb-5 leading-[1.12]">
             Build your daily routine.<br />
@@ -552,11 +553,11 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
           >
             Begin
           </button>
-        </div>
-        <div className="lineup-frame self-center">
+          </div>
           <img
-            src="/v2-collection-lineup.jpg"
-            alt="Skin Protocol RX products in warm daylight"
+            src="/find-your-routine.jpg"
+            alt="A woman resting her chin in her hand in warm sunlight"
+            className="mx-auto aspect-[4/5] h-72 w-auto object-cover object-[center_22%] sm:h-80 lg:h-[22rem]"
           />
         </div>
       </section>

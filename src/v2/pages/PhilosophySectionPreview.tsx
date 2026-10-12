@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 
@@ -76,7 +76,7 @@ function LayoutFrame({
 }) {
   return (
     <section id={id} className="scroll-mt-[10rem] md:scroll-mt-[12rem]">
-      <div className="bg-black text-white px-5 md:px-8 py-6 border-t border-white/10">
+      <div className="bg-[#241F1E] text-white px-5 md:px-8 py-6 border-t border-white/10">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end md:justify-between gap-3">
           <div>
             <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-2">Layout {num}</p>
@@ -208,9 +208,9 @@ function InAndOut({ onNavigate }: PhilosophySectionPreviewProps) {
               Cruelty-free is a standard we hold, not a badge on the homepage. Our formulas are never tested on animals.
             </p>
           </div>
-          <div className="p-8 md:p-12 bg-stone">
+          <div className="p-8 md:p-12 bg-stone flex flex-col">
             <p className="text-[11px] tracking-[0.22em] uppercase text-gray-muted mb-8">Left out</p>
-            <ul className="space-y-5">
+            <ul className="flex flex-col gap-5 md:flex-1 md:justify-between">
               {LEFT_OUT.map(item => (
                 <li key={item} className="font-serif text-2xl md:text-3xl text-gray-muted leading-snug">
                   {item}
@@ -237,15 +237,65 @@ function InAndOut({ onNavigate }: PhilosophySectionPreviewProps) {
   )
 }
 
+function PrescriptionMark() {
+  const ref = useRef<HTMLSpanElement>(null)
+  const [drawn, setDrawn] = useState(false)
+
+  useEffect(() => {
+    const node = ref.current
+    if (!node) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setDrawn(true)
+      return
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return
+      setDrawn(true)
+      observer.disconnect()
+    }, { threshold: 0.6 })
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <span ref={ref} className="relative inline-block">
+      <span className="font-serif text-6xl md:text-7xl text-charcoal leading-none">Rx</span>
+      <svg
+        viewBox="0 0 192 116"
+        className="pointer-events-none absolute left-1/2 h-[6.05rem] w-[10rem] -translate-x-1/2 -top-[0.42rem] overflow-visible text-rose md:-top-2 md:h-[7.25rem] md:w-[12rem]"
+        aria-hidden="true"
+      >
+        <ellipse
+          cx="96"
+          cy="52"
+          rx="80"
+          ry="50"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.75"
+          strokeLinecap="round"
+          pathLength={1}
+          transform="rotate(-7 96 52)"
+          style={{
+            strokeDasharray: 1,
+            strokeDashoffset: drawn ? 0 : 1,
+            transition: drawn ? 'stroke-dashoffset 1.15s cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
+          }}
+        />
+      </svg>
+    </span>
+  )
+}
+
 function ThePrescription({ onNavigate }: PhilosophySectionPreviewProps) {
   return (
     <div className="bg-stone px-6 md:px-8 py-16 md:py-24">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[minmax(0,1.35fr)_minmax(16rem,0.75fr)] gap-10 lg:gap-16 items-center">
         <div className="bg-ivory border border-gray-soft px-8 md:px-12 py-12 md:py-14">
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
             <div>
               <p className="text-[11px] tracking-[0.22em] uppercase text-rose mb-3">The Natural Prescription</p>
-              <p className="font-serif text-6xl md:text-7xl text-charcoal leading-none">Rx</p>
+              <PrescriptionMark />
             </div>
             <p className="font-serif text-xl text-charcoal leading-snug sm:text-right">
               Everything your skin needs.
@@ -255,29 +305,31 @@ function ThePrescription({ onNavigate }: PhilosophySectionPreviewProps) {
           </div>
           <ol className="border-t border-gray-soft">
             {PRESCRIPTION.map((line, index) => (
-              <li key={line} className="grid grid-cols-[2.75rem_1fr] gap-3 py-5 border-b border-gray-soft">
+              <li key={line} className="grid grid-cols-[2.75rem_1fr] gap-3 py-5 border-b border-gray-soft last:border-b-0">
                 <span className="font-serif text-lg text-rose">{String(index + 1).padStart(2, '0')}</span>
                 <span className="font-serif text-xl md:text-2xl text-charcoal leading-snug">{line}</span>
               </li>
             ))}
           </ol>
-          <p className="text-sm text-charcoal/75 leading-relaxed mt-8">
-            Cruelty-free is a standard we hold, not a badge on the homepage.
-          </p>
-          <p className="mt-10 pt-6 border-t border-gray-soft text-[11px] tracking-[0.18em] uppercase text-charcoal/55">
+          <p className="mt-2 pt-6 border-t border-gray-soft text-[11px] tracking-[0.18em] uppercase text-charcoal/55">
             Chemist · Nurse Practitioner · Esthetician
           </p>
         </div>
-        <div className="mt-8 flex flex-col sm:flex-row sm:flex-wrap gap-x-8 gap-y-3">
+        <div className="border-t border-gray-soft">
           {LINKS.map(item => (
             <button
               key={item.label}
               type="button"
               onClick={() => onNavigate(item.page, item.id)}
-              className="inline-flex items-center gap-2 text-sm text-charcoal hover:text-rose transition-colors"
+              className="w-full flex items-center justify-between gap-6 py-5 border-b border-gray-soft text-left group"
             >
-              {item.label}
-              <Arrow />
+              <span>
+                <span className="block text-sm font-medium text-charcoal group-hover:text-rose transition-colors">{item.label}</span>
+                <span className="block text-sm text-charcoal/70 mt-1">{item.body}</span>
+              </span>
+              <span className="text-charcoal group-hover:text-rose group-hover:translate-x-1 transition-all">
+                <Arrow />
+              </span>
             </button>
           ))}
         </div>

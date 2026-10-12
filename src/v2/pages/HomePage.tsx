@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { PRODUCTS, SKIN_CONCERNS, PROTOCOL_STEPS, getProtocolStepLabel } from '../../data'
 import ProductImage from '../components/ProductImage'
 
@@ -55,12 +55,65 @@ function StarRating({ rating }: { rating: number }) {
   )
 }
 
-function ConcernIcon() {
+const PRESCRIPTION = [
+  'If an ingredient is in the bottle, it has a job.',
+  'We keep formulas focused.',
+  'Our formulas are never tested on animals.',
+]
+
+const PHILOSOPHY_LINKS: { label: string; body: string; page: Page; id?: string }[] = [
+  { label: 'Ingredient Glossary', body: 'See what is in the formulas and why.', page: 'glossary' },
+  { label: 'Product Education', body: 'Learn what each product is good for.', page: 'education' },
+  { label: 'Our Standards', body: 'How we decide what stays and what stays out.', page: 'story', id: 'our-standards' },
+]
+
+function PrescriptionMark() {
+  const ref = useRef<HTMLSpanElement>(null)
+  const [drawn, setDrawn] = useState(false)
+
+  useEffect(() => {
+    const node = ref.current
+    if (!node) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setDrawn(true)
+      return
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return
+      setDrawn(true)
+      observer.disconnect()
+    }, { threshold: 0.6 })
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [])
+
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-      <circle cx="12" cy="12" r="8" />
-      <circle cx="12" cy="12" r="3" />
-    </svg>
+    <span ref={ref} className="relative inline-block">
+      <span className="font-serif text-6xl md:text-7xl text-charcoal leading-none">Rx</span>
+      <svg
+        viewBox="0 0 192 116"
+        className="pointer-events-none absolute left-1/2 h-[6.05rem] w-[10rem] -translate-x-1/2 -top-[0.42rem] overflow-visible text-rose md:-top-2 md:h-[7.25rem] md:w-[12rem]"
+        aria-hidden="true"
+      >
+        <ellipse
+          cx="96"
+          cy="52"
+          rx="80"
+          ry="50"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.75"
+          strokeLinecap="round"
+          pathLength={1}
+          transform="rotate(-7 96 52)"
+          style={{
+            strokeDasharray: 1,
+            strokeDashoffset: drawn ? 0 : 1,
+            transition: drawn ? 'stroke-dashoffset 1.15s cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
+          }}
+        />
+      </svg>
+    </span>
   )
 }
 
@@ -276,42 +329,46 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      {/* CTA 2 — philosophy, education bridge, cruelty-free */}
-      <section className="bg-stone px-6 md:px-8 py-16">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          <div>
-            <p className="text-[11px] tracking-[0.22em] uppercase text-rose mb-3">Our philosophy</p>
-            <h2 className="font-serif text-3xl md:text-4xl text-charcoal mb-5">
-              Everything your skin needs. Nothing it doesn&apos;t.
-            </h2>
-            <p className="text-base text-charcoal/85 leading-relaxed mb-6">
-              We keep formulas focused. If an ingredient is in the bottle, it has a job. That is the idea behind The Natural Prescription.
-            </p>
-            <div className="bg-ivory border border-gray-soft p-5">
-              <p className="text-[11px] tracking-[0.18em] uppercase text-rose mb-2">Never tested on animals</p>
-              <p className="text-base text-charcoal leading-relaxed">
-                Cruelty-free is a standard we hold, not a badge on the homepage. Our formulas are never tested on animals.
-              </p>
+      <section id="philosophy" className="bg-stone px-6 md:px-8 py-16 md:py-24">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[minmax(0,1.35fr)_minmax(16rem,0.75fr)] gap-10 lg:gap-16 items-center">
+          <div className="bg-ivory border border-gray-soft px-8 md:px-12 py-12 md:py-14">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
+              <div>
+                <p className="text-[11px] tracking-[0.22em] uppercase text-rose mb-3">The Natural Prescription</p>
+                <PrescriptionMark />
+              </div>
+              <h2 className="font-serif text-xl text-charcoal leading-snug sm:text-right">
+                Everything your skin needs.
+                <br />
+                Nothing it doesn&apos;t.
+              </h2>
             </div>
+            <ol className="border-t border-gray-soft">
+              {PRESCRIPTION.map((line, index) => (
+                <li key={line} className="grid grid-cols-[2.75rem_1fr] gap-3 py-5 border-b border-gray-soft last:border-b-0">
+                  <span className="font-serif text-lg text-rose">{String(index + 1).padStart(2, '0')}</span>
+                  <span className="font-serif text-xl md:text-2xl text-charcoal leading-snug">{line}</span>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-2 pt-6 border-t border-gray-soft text-[11px] tracking-[0.18em] uppercase text-charcoal/55">
+              Chemist · Nurse Practitioner · Esthetician
+            </p>
           </div>
-          <div className="grid grid-cols-1 gap-3">
-            {[
-              { label: 'Ingredient Glossary', body: 'See what is in the formulas and why.', page: 'glossary' as Page },
-              { label: 'Product Education', body: 'Learn what each product is good for.', page: 'education' as Page },
-              { label: 'Our Standards', body: 'How we decide what stays and what stays out.', page: 'story' as Page, id: 'our-standards' },
-            ].map(item => (
+          <div className="border-t border-gray-soft">
+            {PHILOSOPHY_LINKS.map(item => (
               <button
                 key={item.label}
                 type="button"
-                onClick={() => onNavigate(item.page, 'id' in item ? item.id : undefined)}
-                className="flex items-center gap-4 bg-ivory border border-gray-soft px-5 py-4 text-left hover:border-rose transition-colors"
+                onClick={() => onNavigate(item.page, item.id)}
+                className="w-full flex items-center justify-between gap-6 py-5 border-b border-gray-soft text-left group"
               >
-                <span className="text-rose shrink-0">
-                  <ConcernIcon />
-                </span>
                 <span>
-                  <span className="block font-medium text-charcoal">{item.label}</span>
-                  <span className="block text-sm text-charcoal/75 mt-0.5">{item.body}</span>
+                  <span className="block text-sm font-medium text-charcoal group-hover:text-rose transition-colors">{item.label}</span>
+                  <span className="block text-sm text-charcoal/70 mt-1">{item.body}</span>
+                </span>
+                <span className="text-charcoal group-hover:text-rose group-hover:translate-x-1 transition-all">
+                  <Arrow />
                 </span>
               </button>
             ))}
