@@ -268,7 +268,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       </section>
 
       {/* Shop by skin concern — the Index */}
-      <section id="skin-concerns" className="bg-ivory px-6 md:px-8 py-16 scroll-mt-28">
+      <section id="skin-concerns" className="bg-stone px-6 md:px-8 py-16 scroll-mt-28">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
             <div>
