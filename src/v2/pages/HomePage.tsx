@@ -382,9 +382,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           <div className="flex flex-col px-6 pt-8 pb-2 lg:px-0 lg:py-14 lg:pr-10">
             <div className="relative flex-1 min-h-[280px]">
               <img
-                src="/hydrated-glowing-skin-water-splash-skin-protocol-rx.png"
-                alt="A person with healthy, hydrated skin"
-                className="absolute inset-0 w-full h-full object-cover object-[62%_18%]"
+                src="/our-story-water-kissed.jpg"
+                alt="A woman with glowing skin, her hand at her jaw as water splashes across her shoulder"
+                className="absolute inset-0 w-full h-full object-cover object-[58%_22%]"
               />
               <div className="absolute bottom-5 left-5 right-5 md:right-auto md:max-w-xs bg-charcoal border border-rose/40 p-5">
                 <p className="text-[10px] tracking-[0.22em] uppercase text-rose mb-2">Why these formulas</p>
