@@ -9,10 +9,10 @@ interface ProductImageProps {
 }
 
 const variantClasses: Record<ProductImageVariant, string> = {
-  card: "aspect-square p-4 md:p-5",
-  thumb: "aspect-square p-1.5",
-  inline: "w-full h-full p-2",
-  detail: "aspect-square p-6 md:p-10 lg:p-12",
+  card: "aspect-[2/3]",
+  thumb: "aspect-[2/3]",
+  inline: "w-full h-full",
+  detail: "aspect-[2/3]",
 }
 
 export default function ProductImage({

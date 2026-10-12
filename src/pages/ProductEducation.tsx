@@ -77,7 +77,7 @@ function BenefitCard({ product, onNavigate }: { product: Product; onNavigate: (p
         )}
         <button
           onClick={() => onNavigate('product', product.id)}
-          className="self-start text-xs text-charcoal/45 hover:text-rose underline underline-offset-2 transition-colors"
+          className="text-link self-start text-xs font-medium text-charcoal/70 hover:text-rose"
         >
           View full details
         </button>

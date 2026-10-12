@@ -54,9 +54,9 @@ export default function ProductDetail({ productId, onNavigate }: ProductDetailPr
       {/* Breadcrumb */}
       <div className="px-5 md:px-8 py-4 border-b border-gray-soft bg-white">
         <div className="max-w-7xl mx-auto flex items-center gap-2 text-xs text-charcoal/40">
-          <button onClick={() => onNavigate('home')} className="hover:text-charcoal transition-colors">Home</button>
+          <button onClick={() => onNavigate('home')} className="text-link text-[11px] font-medium text-charcoal/50 hover:text-charcoal">Home</button>
           <span>/</span>
-          <button onClick={() => onNavigate('shop')} className="hover:text-charcoal transition-colors">Shop</button>
+          <button onClick={() => onNavigate('shop')} className="text-link text-[11px] font-medium text-charcoal/50 hover:text-charcoal">Shop</button>
           <span>/</span>
           <span className="text-charcoal">{product.name}</span>
         </div>
@@ -208,9 +208,9 @@ export default function ProductDetail({ productId, onNavigate }: ProductDetailPr
                 </p>
                 <button
                   onClick={() => onNavigate('glossary')}
-                  className="mt-4 text-rose text-sm underline underline-offset-2"
+                  className="text-link mt-4 text-xs font-medium text-rose hover:text-rose-dark"
                 >
-                  Browse the Ingredient Glossary →
+                  Browse the Ingredient Glossary
                 </button>
               </Accordion>
               <Accordion title="How It Fits Into Your Protocol">
@@ -218,7 +218,7 @@ export default function ProductDetail({ productId, onNavigate }: ProductDetailPr
                   <span className="font-medium text-charcoal">{getProtocolStepLabel(product.protocolStep)}</span>
                   {' — '}use this product in step order with the rest of your protocol for best results.
                 </p>
-                <p>This product works as part of the Skin Protocol RX system. <button onClick={() => onNavigate('protocol')} className="text-rose underline underline-offset-2">Build your full protocol →</button></p>
+                <p>This product works as part of the Skin Protocol RX system. <button onClick={() => onNavigate('protocol')} className="text-link text-xs font-medium text-rose hover:text-rose-dark">Build your full protocol</button></p>
               </Accordion>
               <Accordion title="Shipping & Returns">
                 <p>Free standard shipping on orders over $75. Returns accepted within 30 days of delivery for unopened products. Contact our team for support with opened products.</p>

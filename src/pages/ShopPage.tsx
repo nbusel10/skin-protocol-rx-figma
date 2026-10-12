@@ -221,7 +221,7 @@ export default function ShopPage({ onNavigate, initialStep }: ShopPageProps) {
               </button>
             ))}
             {activeFilterCount > 0 && (
-              <button onClick={clearAll} className="text-xs text-charcoal/40 underline underline-offset-2 hover:text-charcoal transition-colors">
+              <button onClick={clearAll} className="text-link text-xs font-medium text-charcoal/50 hover:text-charcoal">
                 Clear all
               </button>
             )}
@@ -263,7 +263,7 @@ export default function ShopPage({ onNavigate, initialStep }: ShopPageProps) {
             {filtered.length === 0 ? (
               <div className="text-center py-24">
                 <p className="font-serif text-2xl text-charcoal/40 mb-4">No products match your filters</p>
-                <button onClick={clearAll} className="text-xs text-rose underline underline-offset-2">Clear all filters</button>
+                <button onClick={clearAll} className="text-link text-xs font-medium text-rose hover:text-rose-dark">Clear all filters</button>
               </div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 gap-5 md:gap-7">

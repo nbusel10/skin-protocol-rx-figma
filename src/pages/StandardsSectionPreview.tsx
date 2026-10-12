@@ -457,9 +457,9 @@ export default function StandardsSectionPreview({ onNavigate }: StandardsSection
           </div>
           <button
             onClick={() => onNavigate('story', 'our-standards')}
-            className="text-sm text-white/50 hover:text-rose transition-colors"
+            className="text-link text-xs font-medium text-white/60 hover:text-rose"
           >
-            ← Back to Our Story
+            Back to Our Story
           </button>
         </div>
       </section>

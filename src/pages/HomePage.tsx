@@ -89,11 +89,11 @@ export default function HomePage({ onNavigate }: HomePageProps) {
     <div className="bg-ivory font-sans">
 
       {/* ── HERO ─────────────────────────────────────────────────────── */}
-      <section className="relative min-h-[90vh] grid grid-cols-1 lg:grid-cols-2">
+      <section className="relative min-h-[90vh] grid grid-cols-1 lg:grid-cols-2 items-center">
         {/* Left: copy */}
-        <div className="flex flex-col justify-center px-8 md:px-16 lg:px-20 py-24 lg:py-0 order-2 lg:order-1">
+        <div className="flex flex-col justify-center px-8 md:px-16 lg:px-20 py-24 lg:py-16 order-2 lg:order-1">
           <p className="text-[11px] tracking-[0.3em] uppercase text-green font-medium mb-6">
-            New York · Since 2019
+            Clinical Simplicity. Natural Intelligence.
           </p>
           <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.1] text-charcoal mb-7">
             Your Skin Doesn&apos;t Need More.<br />
@@ -122,19 +122,17 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
 
         {/* Right: image */}
-        <div className="relative order-1 lg:order-2 h-72 lg:h-auto bg-white overflow-hidden">
-          <img
-            src="/hero.jpg"
-            alt="Dewy, healthy skin with Skin Protocol RX"
-            className="w-full h-full object-cover object-right"
-          />
-          {/* Floating trust card — compact on mobile so her face stays visible */}
-          <div className="absolute bottom-4 left-4 lg:bottom-8 lg:left-8 bg-white/95 backdrop-blur-sm p-3 lg:p-5 shadow-lg w-[calc(50%-1rem)] max-w-[calc(50%-1rem)] lg:w-auto lg:max-w-xs">
-            <div className="flex items-center gap-1.5 lg:gap-3 mb-1 lg:mb-2">
-              <div className="w-1.5 h-1.5 lg:w-2 lg:h-2 rounded-full bg-green shrink-0" />
-              <p className="text-[0.625rem] lg:text-xs tracking-[0.14em] lg:tracking-widest uppercase text-charcoal/50 font-medium leading-tight">Cruelty-Free Certified</p>
+        <div className="relative order-1 lg:order-2 flex items-center pb-24 lg:pb-16">
+          <div className="relative w-full">
+            <img
+              src="/hero-sunlit-spa.jpg"
+              alt="Skin Protocol RX bottles and jars arranged on sunlit stone"
+              className="w-full h-auto object-cover object-center"
+            />
+            <div className="absolute bottom-0 left-0 z-10 translate-y-[78%] lg:-translate-x-8 bg-black text-white border border-rose/30 p-3 lg:p-5 max-w-[11rem] lg:max-w-xs">
+              <p className="text-[0.625rem] lg:text-xs tracking-[0.14em] lg:tracking-widest uppercase text-rose font-medium leading-tight mb-1 lg:mb-2">Cruelty-Free</p>
+              <p className="text-xs lg:text-sm font-sans leading-snug">Professional formulas. No animal testing. Ever.</p>
             </div>
-            <p className="text-xs lg:text-sm font-sans text-charcoal leading-snug">Professional formulas. No animal testing. Ever.</p>
           </div>
         </div>
       </section>
@@ -149,38 +147,6 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               <p className="text-xs text-white/60 leading-relaxed">{p.body}</p>
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* ── SHOP BY SKIN CONCERN ─────────────────────────────────────── */}
-      <section className="py-20 px-5 md:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-            <div>
-              <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-3">Find Your Focus</p>
-              <h2 className="font-serif text-3xl md:text-4xl text-black">Shop by Skin Concern</h2>
-            </div>
-            <button
-              onClick={() => onNavigate('shop')}
-              className="text-sm text-black underline underline-offset-4 hover:text-rose transition-colors"
-            >
-              View All Products →
-            </button>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-            {SKIN_CONCERNS.map(c => (
-              <button
-                key={c.id}
-                onClick={() => onNavigate('shop')}
-                className="group relative bg-white border border-gray-soft hover:border-rose p-6 text-left transition-all duration-200 hover:shadow-[0_4px_24px_rgba(184,135,139,0.12)]"
-              >
-                <div className="text-2xl text-black/15 group-hover:text-rose transition-colors mb-3 font-serif">{c.icon}</div>
-                <h3 className="text-sm font-medium text-black mb-1">{c.label}</h3>
-                <p className="text-xs text-black/40 leading-relaxed hidden lg:block">{c.description}</p>
-              </button>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -235,15 +201,47 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
+      {/* ── SHOP BY SKIN CONCERN ─────────────────────────────────────── */}
+      <section className="py-20 px-5 md:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+            <div>
+              <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-3">Find Your Focus</p>
+              <h2 className="font-serif text-3xl md:text-4xl text-black">Shop by Skin Concern</h2>
+            </div>
+            <button
+              onClick={() => onNavigate('shop')}
+              className="text-link text-xs font-medium text-black hover:text-rose"
+            >
+              View All Products
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            {SKIN_CONCERNS.map(c => (
+              <button
+                key={c.id}
+                onClick={() => onNavigate('shop')}
+                className="group relative bg-white border border-gray-soft hover:border-rose p-6 text-left transition-all duration-200 hover:shadow-[0_4px_24px_rgba(184,135,139,0.12)]"
+              >
+                <div className="text-2xl text-black/15 group-hover:text-rose transition-colors mb-3 font-serif">{c.icon}</div>
+                <h3 className="text-sm font-medium text-black mb-1">{c.label}</h3>
+                <p className="text-xs text-black/40 leading-relaxed hidden lg:block">{c.description}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── INGREDIENT PHILOSOPHY ────────────────────────────────────── */}
       <section className="relative overflow-hidden min-h-[500px] flex items-center">
         <div className="absolute inset-0">
           <img
             src="https://images.unsplash.com/photo-1748543668687-624e058c367c?w=1600&h=700&fit=crop&auto=format"
             alt="Serum texture"
-            className="w-full h-full object-cover grayscale"
+            className="w-full h-full object-cover grayscale contrast-200 brightness-50"
           />
-          <div className="absolute inset-0 bg-black/75" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/45" />
         </div>
         <div className="relative z-10 max-w-7xl mx-auto px-5 md:px-8 py-24 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
@@ -252,7 +250,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               Everything Your Skin Needs.<br />
               <em>Nothing It Doesn&apos;t.</em>
             </h2>
-            <p className="text-white/60 leading-relaxed mb-8">
+            <p className="text-white leading-relaxed mb-8">
               Skin Protocol RX focuses on purposeful, high-quality formulas rather than trend-driven ingredients or unnecessary fillers. Every product in our line has a clear role in your protocol.
             </p>
           </div>
@@ -267,12 +265,11 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               <button
                 key={l.label}
                 onClick={() => onNavigate(l.page, 'id' in l ? l.id : undefined)}
-                className="flex items-center justify-between text-white/70 hover:text-rose border-b border-white/15 pb-4 text-sm font-medium group transition-colors"
+                className="group w-full border-b border-white pb-4 text-left"
               >
-                {l.label}
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="group-hover:translate-x-1 transition-transform">
-                  <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <span className="aside-arrow text-xs font-medium text-white group-hover:text-rose">
+                  {l.label}
+                </span>
               </button>
             ))}
           </div>
@@ -282,7 +279,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       {/* ── OUR STORY ────────────────────────────────────────────────── */}
       <section className="py-24 px-5 md:px-8 bg-white">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div className="relative">
+          <div className="relative w-[85.5%]">
             <div className="aspect-[4/5] bg-stone overflow-hidden">
               <img
                 src="/hydrated-glowing-skin-water-splash-skin-protocol-rx.png"
@@ -293,9 +290,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               />
             </div>
             {/* Decorative inset card */}
-            <div className="absolute -bottom-6 -right-6 bg-black text-white p-6 max-w-xs hidden md:block border border-rose/30">
-              <p className="text-[10px] tracking-[0.3em] uppercase text-rose mb-2">Est. 2019</p>
-              <p className="font-serif text-lg leading-snug">Created in New York by a family who believes healthy skin doesn&apos;t need more than what works.</p>
+            <div className="absolute -bottom-6 -right-6 bg-black text-white border border-rose/30 p-3 lg:p-5 max-w-xs hidden md:block">
+              <p className="text-[0.625rem] lg:text-xs tracking-[0.14em] lg:tracking-widest uppercase text-rose font-medium leading-tight mb-1 lg:mb-2">Family owned</p>
+              <p className="text-xs lg:text-sm font-sans leading-snug">Created in New York by a family who believes healthy skin doesn&apos;t need more than what works.</p>
             </div>
           </div>
           <div className="lg:pl-8">
@@ -311,12 +308,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             </p>
             <button
               onClick={() => onNavigate('story')}
-              className="flex items-center gap-3 text-sm font-medium text-black group"
+              className="text-link text-xs font-medium text-black hover:text-rose"
             >
-              <span className="border-b border-black pb-0.5 group-hover:border-rose group-hover:text-rose transition-colors">Our Story</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="group-hover:translate-x-1 transition-transform text-black group-hover:text-rose">
-                <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              Our Story
             </button>
           </div>
         </div>
@@ -345,11 +339,11 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               </button>
             </div>
           </div>
-          <div className="relative aspect-video lg:aspect-[4/5] bg-black overflow-hidden">
+          <div className="relative aspect-[1024/625] bg-stone overflow-hidden">
             <img
-              src="https://images.unsplash.com/photo-1761470575018-135c213340eb?w=900&h=1100&fit=crop&auto=format"
-              alt="Spa treatment environment"
-              className="w-full h-full object-cover opacity-90 grayscale-[30%]"
+              src="/spa-professionals-display.jpg"
+              alt="Skin Protocol RX products displayed on a spa counter beside rolled towels"
+              className="w-full h-full object-cover object-center"
             />
           </div>
         </div>

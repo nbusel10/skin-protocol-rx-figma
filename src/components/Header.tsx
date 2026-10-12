@@ -32,7 +32,7 @@ export default function Header({ currentPage, onNavigate, cartCount }: HeaderPro
         style={{
           backgroundColor: scrolled ? 'rgba(255,255,255,0.98)' : '#ffffff',
           backdropFilter: scrolled ? 'blur(12px)' : 'none',
-          borderBottom: scrolled ? '1px solid #E5E5E5' : '1px solid transparent',
+          borderBottom: '1px solid #E5E5E5',
           boxShadow: scrolled ? '0 1px 0 rgba(0,0,0,0.04)' : 'none',
         }}
       >
@@ -56,10 +56,10 @@ export default function Header({ currentPage, onNavigate, cartCount }: HeaderPro
               <button
                 key={n.label}
                 onClick={() => onNavigate(n.page)}
-                className={`text-sm font-sans transition-colors duration-200 ${
+                className={`text-link text-xs font-medium ${
                   currentPage === n.page
-                    ? 'text-rose font-medium'
-                    : 'text-charcoal/60 hover:text-black'
+                    ? 'text-rose'
+                    : 'text-charcoal/70 hover:text-rose'
                 }`}
               >
                 {n.label}
@@ -132,7 +132,7 @@ export default function Header({ currentPage, onNavigate, cartCount }: HeaderPro
                 <button
                   key={n.label}
                   onClick={() => { onNavigate(n.page); setMobileOpen(false) }}
-                  className="text-left text-base font-sans text-charcoal hover:text-rose transition-colors"
+                  className="text-link text-left text-sm font-medium text-charcoal hover:text-rose"
                 >
                   {n.label}
                 </button>

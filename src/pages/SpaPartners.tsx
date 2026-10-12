@@ -147,7 +147,7 @@ export default function SpaPartners({ onNavigate }: SpaPartnersProps) {
           <p className="text-charcoal/60 leading-relaxed mb-8">
             Thank you for applying to become a Skin Protocol RX spa partner. Our team will review your application and follow up within 3–5 business days.
           </p>
-          <button onClick={() => onNavigate('home')} className="text-sm text-rose underline underline-offset-2">Return to Home</button>
+          <button onClick={() => onNavigate('home')} className="text-link text-xs font-medium text-rose hover:text-rose-dark">Return to Home</button>
         </div>
       </div>
     )
@@ -157,10 +157,7 @@ export default function SpaPartners({ onNavigate }: SpaPartnersProps) {
     return (
       <div className="bg-stone min-h-screen font-sans">
         <div className="max-w-2xl mx-auto px-5 md:px-8 py-16">
-          <button onClick={() => setShowForm(false)} className="flex items-center gap-2 text-sm text-black/40 hover:text-black mb-10 transition-colors">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-              <path d="M19 12H5M12 19l-7-7 7-7" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+          <button onClick={() => setShowForm(false)} className="text-link text-xs font-medium text-black/50 hover:text-black mb-10">
             Back
           </button>
           <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-2">Partnership Application</p>
@@ -183,8 +180,8 @@ export default function SpaPartners({ onNavigate }: SpaPartnersProps) {
             <button
               onClick={() => setFormStep(s => Math.max(0, s - 1))}
               disabled={formStep === 0}
-              className="text-sm text-charcoal/40 disabled:opacity-30 hover:text-charcoal transition-colors"
-            >← Back</button>
+              className="text-link text-xs font-medium text-charcoal/50 hover:text-charcoal disabled:opacity-30"
+            >Back</button>
             {formStep < FORM_STEPS.length - 1 ? (
               <button
                 onClick={() => setFormStep(s => s + 1)}

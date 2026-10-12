@@ -68,7 +68,7 @@ export default function Footer({ onNavigate, compareLabel, onCompare }: FooterPr
           </p>
           <div className="flex gap-4">
             {['instagram', 'tiktok', 'facebook'].map(s => (
-              <button key={s} className="text-white/35 hover:text-rose transition-colors text-xs uppercase tracking-widest">{s.slice(0,2).toUpperCase()}</button>
+              <button key={s} className="text-link text-xs font-medium text-white/35 hover:text-rose">{s}</button>
             ))}
           </div>
         </div>
@@ -76,12 +76,12 @@ export default function Footer({ onNavigate, compareLabel, onCompare }: FooterPr
         {/* Shop */}
         <div>
           <h4 className="text-xs tracking-widest uppercase text-rose/70 mb-5">Shop</h4>
-          <ul className="space-y-3">
+          <ul className="space-y-4">
             {['All Products', 'Serums', 'Moisturizers', 'Cleansers', 'Eye Care', 'Facial Oils', 'Sets & Bundles'].map(l => (
               <li key={l}>
                 <button
                   onClick={() => onNavigate('shop')}
-                  className="text-sm text-white/55 hover:text-white transition-colors"
+                  className="text-link text-xs font-medium text-white/55 hover:text-white"
                 >
                   {l}
                 </button>
@@ -93,18 +93,18 @@ export default function Footer({ onNavigate, compareLabel, onCompare }: FooterPr
         {/* Company */}
         <div>
           <h4 className="text-xs tracking-widest uppercase text-rose/70 mb-5">Company</h4>
-          <ul className="space-y-3">
+          <ul className="space-y-4">
             {[
               { label: 'Our Story', page: 'story' as Page },
               { label: 'Spa Partners', page: 'spa' as Page },
               { label: 'Build Your Protocol', page: 'protocol' as Page },
             ].map(l => (
               <li key={l.label}>
-                <button onClick={() => onNavigate(l.page)} className="text-sm text-white/55 hover:text-white transition-colors">{l.label}</button>
+                <button onClick={() => onNavigate(l.page)} className="text-link text-xs font-medium text-white/55 hover:text-white">{l.label}</button>
               </li>
             ))}
             {['Customer Login', 'Spa Partner Login', 'FAQ', 'Contact'].map(l => (
-              <li key={l}><button className="text-sm text-white/55 hover:text-white transition-colors">{l}</button></li>
+              <li key={l}><button className="text-link text-xs font-medium text-white/55 hover:text-white">{l}</button></li>
             ))}
           </ul>
         </div>
@@ -112,9 +112,9 @@ export default function Footer({ onNavigate, compareLabel, onCompare }: FooterPr
         {/* Support */}
         <div>
           <h4 className="text-xs tracking-widest uppercase text-rose/70 mb-5">Support</h4>
-          <ul className="space-y-3">
+          <ul className="space-y-4">
             {['Shipping & Returns', 'Privacy Policy', 'Terms of Service', 'Accessibility'].map(l => (
-              <li key={l}><button className="text-sm text-white/55 hover:text-white transition-colors">{l}</button></li>
+              <li key={l}><button className="text-link text-xs font-medium text-white/55 hover:text-white">{l}</button></li>
             ))}
           </ul>
         </div>
@@ -124,7 +124,7 @@ export default function Footer({ onNavigate, compareLabel, onCompare }: FooterPr
       <div className="border-t border-white/10 px-5 md:px-8 py-6 max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 text-white/30 text-xs">
         <p>&copy; {new Date().getFullYear()} Skin Protocol RX. All rights reserved.</p>
         {onCompare && compareLabel && (
-          <button type="button" onClick={onCompare} className="underline underline-offset-2 hover:text-white transition-colors">
+          <button type="button" onClick={onCompare} className="text-link text-xs font-medium hover:text-white">
             {compareLabel}
           </button>
         )}

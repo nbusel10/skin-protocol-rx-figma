@@ -76,6 +76,126 @@ body {
   }
 }
 
+/* Text links rest with no line. Hover draws a rule past the last letter and ends it with an arrowhead. */
+.text-link {
+  position: relative;
+  width: max-content;
+  max-width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.text-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  height: 1px;
+  width: 0;
+  background-color: currentColor;
+  transition: width 0.35s ease;
+  pointer-events: none;
+}
+
+.text-link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -7.5px;
+  width: 0;
+  height: 0;
+  border-top: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-left: 4px solid currentColor;
+  opacity: 0;
+  transition: left 0.35s ease, opacity 0.15s ease;
+  pointer-events: none;
+}
+
+.group:hover .text-link::after,
+.group:focus-visible .text-link::after,
+.text-link:hover::after,
+.text-link:focus-visible::after {
+  width: calc(100% + 10px);
+}
+
+.group:hover .text-link::before,
+.group:focus-visible .text-link::before,
+.text-link:hover::before,
+.text-link:focus-visible::before {
+  left: calc(100% + 10px);
+  opacity: 1;
+  transition: left 0.35s ease, opacity 0.15s ease 0.12s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-link,
+  .text-link::before,
+  .text-link::after {
+    transition: none;
+  }
+}
+
+/* Philosophy links: the arrow draws to the right of the last word, with a gap so it never touches the letters. */
+.aside-arrow {
+  position: relative;
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  transition: color 0.2s ease;
+}
+
+.aside-arrow::after {
+  content: '';
+  position: absolute;
+  left: calc(100% + 0.75rem);
+  top: 50%;
+  height: 1px;
+  width: 0;
+  background-color: currentColor;
+  transform: translateY(-50%);
+  transition: width 0.35s ease;
+  pointer-events: none;
+}
+
+.aside-arrow::before {
+  content: '';
+  position: absolute;
+  left: calc(100% + 0.75rem);
+  top: 50%;
+  width: 0;
+  height: 0;
+  border-top: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-left: 4px solid currentColor;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: left 0.35s ease, opacity 0.15s ease;
+  pointer-events: none;
+}
+
+.group:hover .aside-arrow::after,
+.group:focus-visible .aside-arrow::after {
+  width: 1.5rem;
+}
+
+.group:hover .aside-arrow::before,
+.group:focus-visible .aside-arrow::before {
+  left: calc(100% + 0.75rem + 1.5rem);
+  opacity: 1;
+  transition: left 0.35s ease, opacity 0.15s ease 0.12s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aside-arrow,
+  .aside-arrow::before,
+  .aside-arrow::after {
+    transition: none;
+  }
+}
+
 /* Version 2 palette is scoped so the original design keeps its colors. */
 .theme-v2 {
   --color-rose: #B88E91;
