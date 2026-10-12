@@ -283,8 +283,20 @@ export default function SpaPartners({ onNavigate }: SpaPartnersProps) {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {PROCESS.map(p => (
-              <div key={p.step} className="flex flex-col gap-4">
-                <div className="font-serif text-4xl text-rose/50">{p.step}</div>
+              <div key={p.step} className="group flex flex-col gap-4">
+                <span className="relative inline-flex h-[4.75rem] w-[4.75rem] items-center justify-center">
+                  <span className="font-serif text-2xl text-charcoal/45 transition-colors duration-500 group-hover:text-rose">{p.step}</span>
+                  <svg viewBox="0 0 80 80" className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true">
+                    <circle cx="40" cy="40" r="36" className="step-circle-rest" />
+                    <circle
+                      cx="40"
+                      cy="40"
+                      r="36"
+                      pathLength={1}
+                      className="step-circle"
+                    />
+                  </svg>
+                </span>
                 <h3 className="text-lg font-medium text-black">{p.title}</h3>
                 <p className="text-black/50 text-sm leading-relaxed">{p.body}</p>
               </div>

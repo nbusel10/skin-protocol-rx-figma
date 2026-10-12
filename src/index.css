@@ -48,6 +48,34 @@ body {
 ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-rose); }
 
+/* A perfect circle rests light, then a darker ring draws around the number on hover. */
+.theme-v2 .step-circle-rest {
+  fill: none;
+  stroke: #D5CFC8;
+  stroke-width: 1.25;
+}
+
+.theme-v2 .step-circle {
+  fill: none;
+  stroke: #B88E91;
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.75s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.theme-v2 .group:hover .step-circle,
+.theme-v2 .group:focus-within .step-circle {
+  stroke-dashoffset: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-v2 .step-circle {
+    transition: none;
+  }
+}
+
 /* Version 2 palette is scoped so the original design keeps its colors. */
 .theme-v2 {
   --color-rose: #B88E91;
