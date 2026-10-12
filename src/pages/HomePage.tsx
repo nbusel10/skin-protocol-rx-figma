@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { PRODUCTS, SKIN_CONCERNS, PROTOCOL_STEPS, getProtocolStepLabel } from '../data'
-import ProductImage from '../components/ProductImage'
+import { SKIN_CONCERNS, PROTOCOL_STEPS } from '../data'
 
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 
@@ -82,85 +81,9 @@ function StarRating({ rating }: { rating: number }) {
   )
 }
 
-function ProductCard({ product, onNavigate, dark = false }: { product: typeof PRODUCTS[0]; onNavigate: (page: Page, id?: string) => void; dark?: boolean }) {
-  const [hovered, setHovered] = useState(false)
-  const textPrimary = dark ? 'text-white' : 'text-charcoal'
-  const textMuted = dark ? 'text-white/45' : 'text-charcoal/40'
-  const textSoft = dark ? 'text-white/55' : 'text-charcoal/50'
-
-  return (
-    <div
-      className="group flex flex-col cursor-pointer"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onClick={() => onNavigate('product', product.id)}
-    >
-      {/* Image */}
-      <div className="relative mb-4">
-        <ProductImage src={product.image} alt={product.name} hover />
-        {/* Badges */}
-        <div className="absolute top-3 left-3 flex flex-col gap-1.5">
-          {product.badges.slice(0, 1).map(b => (
-            <span
-              key={b}
-              className="text-[10px] tracking-widest uppercase px-2 py-1 font-medium"
-              style={{ backgroundColor: b === 'Best Seller' ? '#B8878B' : '#0A0A0A', color: '#fff' }}
-            >
-              {b}
-            </span>
-          ))}
-        </div>
-        {/* Wishlist */}
-        <button
-          className="absolute top-3 right-3 w-8 h-8 bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-          onClick={e => e.stopPropagation()}
-          aria-label="Add to wishlist"
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" strokeWidth="1.8">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-          </svg>
-        </button>
-        {/* Quick add */}
-        <div className={`absolute bottom-0 left-0 right-0 transition-all duration-300 ${hovered ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'}`}>
-          <button
-            className="w-full bg-black text-white text-xs tracking-widest uppercase py-3 hover:bg-rose transition-colors duration-200 font-medium"
-            onClick={e => { e.stopPropagation() }}
-          >
-            Quick Add
-          </button>
-        </div>
-      </div>
-
-      {/* Info */}
-      <div className="flex flex-col gap-1.5 flex-1">
-        <div className="flex items-start justify-between gap-2">
-          <div>
-            <p className={`text-[11px] tracking-widest uppercase text-rose mb-0.5 font-sans`}>
-              {getProtocolStepLabel(product.protocolStep)}
-            </p>
-            <p className={`text-[11px] tracking-widest uppercase ${textMuted} mb-0.5 font-sans`}>
-              {product.categories[0]}
-            </p>
-            <h3 className={`font-sans text-sm font-medium ${textPrimary} leading-snug`}>{product.name}</h3>
-          </div>
-          <p className={`font-sans text-sm font-semibold ${textPrimary} whitespace-nowrap`}>${product.price}</p>
-        </div>
-        <p className={`text-xs ${textSoft} leading-relaxed`}>{product.tagline}</p>
-        <div className="flex items-center gap-2 mt-1">
-          <StarRating rating={Math.round(product.rating)} />
-          <span className={`text-[11px] ${textMuted}`}>({product.reviews})</span>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 export default function HomePage({ onNavigate }: HomePageProps) {
   const [testimonialTab, setTestimonialTab] = useState<'customer' | 'pro'>('customer')
   const testimonials = testimonialTab === 'customer' ? TESTIMONIALS_CUSTOMER : TESTIMONIALS_PRO
-  const featuredProducts = PRODUCTS.filter(p =>
-    ['brighten-glow-c-20', 'hyaluronic-acid-serum', 'rich-barrier-cream', 'the-holy-grail'].includes(p.id)
-  )
 
   return (
     <div className="bg-ivory font-sans">
@@ -256,26 +179,6 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                 <h3 className="text-sm font-medium text-black mb-1">{c.label}</h3>
                 <p className="text-xs text-black/40 leading-relaxed hidden lg:block">{c.description}</p>
               </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── FEATURED PRODUCTS ────────────────────────────────────────── */}
-      <section className="bg-white py-20 px-5 md:px-8 border-y border-gray-soft">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-            <div>
-              <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-3">Professional Favorites</p>
-              <h2 className="font-serif text-3xl md:text-4xl text-black">Featured Products</h2>
-            </div>
-            <button onClick={() => onNavigate('shop')} className="text-sm text-black underline underline-offset-4 hover:text-rose transition-colors">
-              Shop All →
-            </button>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-            {featuredProducts.map(p => (
-              <ProductCard key={p.id} product={p} onNavigate={onNavigate} />
             ))}
           </div>
         </div>
