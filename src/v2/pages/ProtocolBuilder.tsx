@@ -55,7 +55,7 @@ function OptionButton({ selected, onClick, label, desc }: { selected: boolean; o
 
 function PeriodBadge({ label }: { label: string }) {
   return (
-    <span className="border border-rose/30 bg-rose-light px-2.5 py-1 text-[11px] tracking-wide text-charcoal whitespace-nowrap">
+    <span className="border border-gray-soft px-2.5 py-1 text-[11px] tracking-wide text-charcoal/50 whitespace-nowrap transition-colors duration-500 group-hover:border-rose/30 group-hover:bg-rose-light group-hover:text-charcoal group-focus-within:border-rose/30 group-focus-within:bg-rose-light group-focus-within:text-charcoal">
       {label}
     </span>
   )
@@ -193,7 +193,7 @@ function OptionalTreatSliver({
     )
   }
   return (
-    <div className="bg-white border border-dashed border-rose/40">
+    <div className="group bg-white border border-dashed border-rose/40">
       <button
         type="button"
         onClick={onToggle}
