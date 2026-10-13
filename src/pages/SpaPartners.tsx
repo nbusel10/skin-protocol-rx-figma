@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import SplitHero from './SplitHero'
 
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 
@@ -202,37 +203,30 @@ export default function SpaPartners({ onNavigate }: SpaPartnersProps) {
 
   return (
     <div className="bg-white font-sans">
-      {/* Hero */}
-      <section className="relative min-h-[60vh] flex items-center overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1761470575018-135c213340eb?w=1600&h=900&fit=crop&auto=format"
-            alt="Spa environment"
-            className="w-full h-full object-cover grayscale"
-          />
-          <div className="absolute inset-0 bg-black/70" />
-        </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-5 md:px-8 py-24">
-          <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-5">For Spas & Estheticians</p>
-          <h1 className="font-serif text-4xl md:text-6xl text-white max-w-2xl mb-6">
-            Bring a Better Protocol to Your Treatment Room
-          </h1>
-          <p className="text-white/60 max-w-xl mb-10 leading-relaxed">
-            Partner with Skin Protocol RX to give your clients a coordinated, professional skincare routine they can continue at home.
-          </p>
-          <div className="flex flex-wrap gap-4">
-            <button
-              onClick={() => setShowForm(true)}
-              className="bg-rose text-white px-8 py-4 text-sm font-medium hover:bg-rose-dark transition-colors"
-            >
-              Apply to Become a Spa Partner
-            </button>
-            <button className="border border-white/35 text-white px-8 py-4 text-sm font-medium hover:border-rose hover:text-rose transition-colors">
-              Spa Partner Login
-            </button>
-          </div>
-        </div>
-      </section>
+      <SplitHero
+        eyebrow="For Spas & Estheticians"
+        title={<>Bring a Better Protocol<br /><em>to Your Treatment Room</em></>}
+        body="Partner with Skin Protocol RX to give your clients a coordinated, professional skincare routine they can continue at home."
+        image="/original/spa-hero.jpg"
+        imageAlt="Skin Protocol RX bottles on sunlit stone beside a treatment table"
+        badgeLabel="For professionals"
+        badgeText="A home routine clients can keep between visits."
+        footnote="Professional formulas · Home care between appointments"
+      >
+        <button
+          type="button"
+          onClick={() => setShowForm(true)}
+          className="w-full sm:w-auto whitespace-nowrap bg-charcoal text-white px-7 py-3.5 text-sm tracking-wide font-medium hover:bg-charcoal/80 transition-colors"
+        >
+          Apply to Become a Spa Partner
+        </button>
+        <button
+          type="button"
+          className="w-full sm:w-auto whitespace-nowrap border border-charcoal text-charcoal px-7 py-3.5 text-sm tracking-wide font-medium hover:bg-charcoal hover:text-white transition-colors"
+        >
+          Spa Partner Login
+        </button>
+      </SplitHero>
 
       {/* Benefits */}
       <section className="bg-black py-20 px-5 md:px-8">

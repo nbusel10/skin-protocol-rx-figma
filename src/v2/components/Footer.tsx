@@ -6,9 +6,10 @@ interface FooterProps {
   onNavigate: (page: Page) => void
   compareLabel?: string
   onCompare?: () => void
+  onDesigns?: () => void
 }
 
-export default function Footer({ onNavigate, compareLabel, onCompare }: FooterProps) {
+export default function Footer({ onNavigate, compareLabel, onCompare, onDesigns }: FooterProps) {
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
 
@@ -120,6 +121,11 @@ export default function Footer({ onNavigate, compareLabel, onCompare }: FooterPr
           <span className="inline-block w-2 h-2 rounded-full bg-rose" />
           Cruelty-free · Never tested on animals
         </p>
+        {onDesigns && (
+          <button type="button" onClick={onDesigns} className="underline underline-offset-2 hover:text-white transition-colors">
+            All designs
+          </button>
+        )}
         {onCompare && compareLabel && (
           <button type="button" onClick={onCompare} className="underline underline-offset-2 hover:text-white transition-colors">
             {compareLabel}

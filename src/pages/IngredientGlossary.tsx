@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { PRODUCTS } from '../data'
 import { INGREDIENTS } from '../ingredients'
+import SplitHero from './SplitHero'
 
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 
@@ -34,17 +35,26 @@ export default function IngredientGlossary({ onNavigate }: IngredientGlossaryPro
 
   return (
     <div className="bg-white font-sans min-h-[70vh]">
-      <section className="bg-black py-20 md:py-28 px-5 md:px-8">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-5">Learn</p>
-          <h1 className="font-serif text-4xl md:text-5xl text-white mb-6">Ingredient Glossary</h1>
-          <p className="text-white/55 leading-relaxed max-w-xl mx-auto">
-            A clear reference for the purposeful ingredients in Skin Protocol RX formulas — what they do, why they&apos;re included, and which products contain them.
-          </p>
-        </div>
-      </section>
+      <SplitHero
+        eyebrow="Learn"
+        title={<>Ingredient<br /><em>Glossary</em></>}
+        body="A clear reference for the purposeful ingredients in Skin Protocol RX formulas — what they do, why they are included, and which products contain them."
+        image="/original/glossary-hero.jpg"
+        imageAlt="Botanical ingredients and a black dropper bottle on sunlit cream stone"
+        badgeLabel="The formulas"
+        badgeText="If it is in the bottle, it has a job."
+        footnote="What is in the formula, and why"
+      >
+        <button
+          type="button"
+          onClick={() => document.getElementById('ingredient-search')?.scrollIntoView({ behavior: 'smooth' })}
+          className="w-full sm:w-auto whitespace-nowrap bg-charcoal text-white px-7 py-3.5 text-sm tracking-wide font-medium hover:bg-charcoal/80 transition-colors"
+        >
+          Search Ingredients
+        </button>
+      </SplitHero>
 
-      <section className="bg-ivory border-b border-gray-soft px-5 md:px-8 py-8">
+      <section id="ingredient-search" className="bg-ivory border-b border-gray-soft px-5 md:px-8 py-8 scroll-mt-28">
         <div className="max-w-5xl mx-auto flex flex-col gap-6">
           <label className="block">
             <span className="sr-only">Search ingredients</span>

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,600;1,6..96,500&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Manrope:wght@400;500;600&family=Outfit:wght@300;400;500;600&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
 
 @theme {
@@ -355,4 +356,279 @@ body {
   .theme-v2 .link-arrow::after {
     transition: none;
   }
+}
+
+/* Prototype storefronts. Scoped so the original and rose sites keep their type and color. */
+.design-picker {
+  min-height: 100vh;
+  background: #F2F2F0;
+  color: #161616;
+  font-family: 'Schibsted Grotesk', 'Avenir Next', system-ui, sans-serif;
+}
+
+.design-picker a,
+.design-picker button,
+.theme-clear button,
+.theme-grove button,
+.theme-night button {
+  cursor: pointer;
+}
+
+.theme-clear :focus-visible,
+.theme-grove :focus-visible,
+.theme-night :focus-visible,
+.design-picker :focus-visible {
+  outline: 2px solid var(--d-accent, #2A5E74);
+  outline-offset: 3px;
+}
+
+.theme-clear {
+  --d-bg: #F7F4EF;
+  --d-ink: #1A1916;
+  --d-muted: #5C574E;
+  --d-line: #D9D2C6;
+  --d-accent: #6E3B32;
+  --d-field: #FFFFFF;
+  --d-inverse: #1A1916;
+  --d-inverse-text: #F7F4EF;
+  background: var(--d-bg);
+  color: var(--d-ink);
+  font-family: 'Schibsted Grotesk', 'Avenir Next', system-ui, sans-serif;
+}
+
+.theme-grove {
+  --d-bg: #F3F0E6;
+  --d-ink: #243026;
+  --d-muted: #5C6556;
+  --d-line: #D5D0C2;
+  --d-accent: #3E5236;
+  --d-field: #E5EBDF;
+  --d-inverse: #2A3328;
+  --d-inverse-text: #F3F0E6;
+  background: var(--d-bg);
+  color: var(--d-ink);
+  font-family: 'Outfit', 'Avenir Next', system-ui, sans-serif;
+}
+
+.theme-grove .font-display {
+  font-family: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  font-optical-sizing: auto;
+}
+
+.theme-grove .lab-blob {
+  border-radius: 58% 42% 62% 38% / 42% 58% 38% 62%;
+}
+
+.theme-night {
+  --d-bg: #121311;
+  --d-ink: #E7E4DC;
+  --d-muted: #A7A79F;
+  --d-line: #3A3C38;
+  --d-accent: #C9CED6;
+  --d-field: #0C0C0B;
+  --d-inverse: #E7E4DC;
+  --d-inverse-text: #121311;
+  background: var(--d-bg);
+  color: var(--d-ink);
+  font-family: 'Manrope', 'Avenir Next', system-ui, sans-serif;
+}
+
+.theme-night .font-display {
+  font-family: 'Bodoni Moda', Didot, Georgia, serif;
+  font-optical-sizing: auto;
+}
+
+.d-frame {
+  width: 100%;
+  max-width: 64rem;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .d-frame {
+    padding-inline: 2rem;
+  }
+}
+
+.theme-clear .d-bottle,
+.theme-grove .d-bottle,
+.theme-night .d-bottle {
+  background: var(--d-field);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 5 / 4;
+  max-height: 13rem;
+}
+
+.theme-clear .d-bottle-row {
+  aspect-ratio: 3 / 4;
+  width: 6.5rem;
+}
+
+.theme-clear .d-bottle img,
+.theme-grove .d-bottle img,
+.theme-night .d-bottle img {
+  width: 78%;
+  height: 88%;
+  object-fit: contain;
+}
+
+.theme-clear .d-bottle-stage,
+.theme-grove .d-bottle-stage,
+.theme-night .d-bottle-stage {
+  aspect-ratio: auto;
+  height: 22rem;
+  max-height: 22rem;
+  min-height: 22rem;
+}
+
+.theme-clear .d-bottle-stage img,
+.theme-grove .d-bottle-stage img,
+.theme-night .d-bottle-stage img {
+  width: auto;
+  height: 16rem;
+  max-width: 70%;
+}
+
+.theme-clear .d-fill {
+  background: var(--d-ink);
+  color: #F4F6F6;
+  padding: 0.9rem 1.2rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.theme-clear .d-fill:hover {
+  background: var(--d-accent);
+}
+
+.theme-clear .d-line {
+  background: transparent;
+  color: var(--d-ink);
+  border: 1px solid var(--d-ink);
+  padding: 0.9rem 1.2rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.theme-clear .d-line:hover {
+  border-color: var(--d-accent);
+  color: var(--d-accent);
+}
+
+.theme-grove .d-fill {
+  background: var(--d-accent);
+  color: #F6F3EA;
+  border-radius: 999px;
+  padding: 0.85rem 1.4rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.theme-grove .d-fill:hover {
+  background: var(--d-ink);
+}
+
+.theme-grove .d-line {
+  background: transparent;
+  color: var(--d-ink);
+  border-radius: 999px;
+  border: 1px solid var(--d-accent);
+  padding: 0.85rem 1.4rem;
+  font-size: 0.95rem;
+}
+
+.theme-grove .d-line:hover {
+  background: var(--d-field);
+}
+
+.theme-night .d-fill {
+  background: transparent;
+  color: var(--d-accent);
+  border: 1px solid var(--d-accent);
+  padding: 0.9rem 1.4rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+}
+
+.theme-night .d-fill:hover {
+  background: var(--d-accent);
+  color: #121311;
+}
+
+.theme-night .d-line {
+  color: var(--d-ink);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  border-bottom: 1px solid var(--d-accent);
+  padding-bottom: 0.35rem;
+}
+
+.theme-clear .d-input,
+.theme-grove .d-input,
+.theme-night .d-input {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--d-line);
+  color: var(--d-ink);
+  padding: 0.75rem 0.85rem;
+  font-size: 0.875rem;
+}
+
+.theme-grove .d-input {
+  border-radius: 999px;
+  background: #F6F3EA;
+  padding-left: 1.1rem;
+}
+
+.theme-night .d-input {
+  border-color: var(--d-accent);
+}
+
+.theme-clear .d-input:focus,
+.theme-grove .d-input:focus,
+.theme-night .d-input:focus {
+  outline: none;
+  border-color: var(--d-accent);
+}
+
+.theme-clear .d-input::placeholder,
+.theme-grove .d-input::placeholder,
+.theme-night .d-input::placeholder {
+  color: var(--d-muted);
+}
+
+.theme-clear footer .d-fill {
+  background: #F4F6F6;
+  color: #14181A;
+}
+
+.theme-clear footer .d-fill:hover {
+  background: #2A5E74;
+  color: #fff;
+}
+
+.theme-clear footer .d-input {
+  color: #F4F6F6;
+  border-color: rgba(255, 255, 255, 0.35);
+  background: transparent;
+}
+
+.theme-grove footer .d-fill {
+  background: #F3F0E6;
+  color: #243026;
+}
+
+.theme-grove footer .d-fill:hover {
+  background: #fff;
 }

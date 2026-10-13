@@ -8,6 +8,7 @@ import {
   type ProductProtocolStep,
 } from '../data'
 import ProductImage from '../components/ProductImage'
+import SplitHero from './SplitHero'
 
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 
@@ -105,17 +106,26 @@ export default function ProductEducation({ onNavigate }: ProductEducationProps) 
 
   return (
     <div className="bg-white font-sans min-h-[70vh]">
-      <section className="bg-black py-20 md:py-28 px-5 md:px-8">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-5">Learn</p>
-          <h1 className="font-serif text-4xl md:text-5xl text-white mb-6">Product Education</h1>
-          <p className="text-white/55 leading-relaxed max-w-xl mx-auto">
-            What each product is good for. Every formula has one clear job — use this guide to choose the products that fit your skin and your routine.
-          </p>
-        </div>
-      </section>
+      <SplitHero
+        eyebrow="Learn"
+        title={<>Product<br /><em>Education</em></>}
+        body="What each product is good for. Every formula has one clear job. Use this guide to choose the products that fit your skin and your routine."
+        image="/original/education-hero.jpg"
+        imageAlt="A cleanser, serum, and cream from Skin Protocol RX on sunlit cream stone"
+        badgeLabel="How to choose"
+        badgeText="Start with cleanser, moisturizer, and SPF."
+        footnote="One product per step · Serums chosen for your concern"
+      >
+        <button
+          type="button"
+          onClick={() => document.getElementById('product-guide')?.scrollIntoView({ behavior: 'smooth' })}
+          className="w-full sm:w-auto whitespace-nowrap bg-charcoal text-white px-7 py-3.5 text-sm tracking-wide font-medium hover:bg-charcoal/80 transition-colors"
+        >
+          Read the Guide
+        </button>
+      </SplitHero>
 
-      <section className="bg-rose-light border-b border-rose/15 px-5 md:px-8 py-10">
+      <section id="product-guide" className="bg-rose-light border-b border-rose/15 px-5 md:px-8 py-10 scroll-mt-28">
         <div className="max-w-3xl mx-auto text-center">
           <p className="text-[11px] tracking-[0.25em] uppercase text-rose mb-3">Start Here</p>
           <h2 className="font-serif text-2xl md:text-3xl text-charcoal mb-3">

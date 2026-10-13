@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import { PRODUCTS, PRODUCT_PROTOCOL_STEPS, getProtocolStepLabel, getProtocolStepFromParam, type Product, type SkinType, type SkinConcern, type ProductCategory } from '../data'
 import ProductImage from '../components/ProductImage'
+import SplitHero from './SplitHero'
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 
 interface ShopPageProps {
@@ -188,16 +189,33 @@ export default function ShopPage({ onNavigate, initialStep }: ShopPageProps) {
 
   return (
     <div className="bg-white min-h-screen font-sans">
-      {/* Header */}
-      <div className="bg-black px-5 md:px-8 py-14">
-        <div className="max-w-7xl mx-auto">
-          <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-3">The Collection</p>
-          <h1 className="font-serif text-4xl md:text-5xl text-white mb-4">Shop Skin Protocol RX</h1>
-          <p className="text-white/50 max-w-xl">Find purposeful skincare based on your skin type, primary concern, or preferred product category.</p>
-        </div>
-      </div>
+      <SplitHero
+        eyebrow="The Collection"
+        title={<>Shop<br /><em>Skin Protocol RX</em></>}
+        body="Find purposeful skincare based on your skin type, primary concern, or preferred product category."
+        image="/original/shop-hero.jpg"
+        imageAlt="The Skin Protocol RX collection arranged on sunlit cream stone"
+        badgeLabel="The collection"
+        badgeText="One job for every bottle."
+        footnote="Simple formulas · Professional performance · Healthier-looking skin"
+      >
+        <button
+          type="button"
+          onClick={() => document.getElementById('collection')?.scrollIntoView({ behavior: 'smooth' })}
+          className="w-full sm:w-auto whitespace-nowrap bg-charcoal text-white px-7 py-3.5 text-sm tracking-wide font-medium hover:bg-charcoal/80 transition-colors"
+        >
+          Browse the Collection
+        </button>
+        <button
+          type="button"
+          onClick={() => onNavigate('protocol')}
+          className="w-full sm:w-auto whitespace-nowrap border border-charcoal text-charcoal px-7 py-3.5 text-sm tracking-wide font-medium hover:bg-charcoal hover:text-white transition-colors"
+        >
+          Find Your Protocol
+        </button>
+      </SplitHero>
 
-      <div className="max-w-7xl mx-auto px-5 md:px-8 py-10">
+      <div id="collection" className="max-w-7xl mx-auto px-5 md:px-8 py-10 scroll-mt-28">
         {/* Active filters + controls */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-3 flex-wrap">

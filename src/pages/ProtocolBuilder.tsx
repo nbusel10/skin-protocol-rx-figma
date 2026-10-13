@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import SplitHero from './SplitHero'
 import { PRODUCTS, getProtocolStepLabel, PROTECT_GUIDANCE, type SkinType, type SkinConcern } from '../data'
 import {
   buildProtocol,
@@ -537,36 +538,24 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
 
   return (
     <div className="bg-white min-h-screen font-sans">
-      {/* Hero */}
-      <section className="relative min-h-[60vh] flex items-center overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            src="/protocol-hero.jpg"
-            alt="Amber serum bottle with eucalyptus on wood"
-            className="w-full h-full object-cover object-[70%_center]"
-          />
-          <div className="absolute inset-0 bg-black/55" />
-        </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-5 md:px-8 py-24 w-full">
-          <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-5">Personalize Your Protocol</p>
-          <h1 className="font-serif text-4xl md:text-6xl text-white max-w-2xl mb-6 leading-[1.1]">
-            Build your daily routine.<br />
-            <em>You do not need every product.</em>
-          </h1>
-          <p className="text-white/60 max-w-xl mb-10 leading-relaxed">
-            Choose products that fit your skin — cleanser and moisturizer as daily essentials, then add a serum or optional care based on your needs. Finish mornings with SPF.
-          </p>
-          <button
-            onClick={() => document.getElementById('protocol-quiz')?.scrollIntoView({ behavior: 'smooth' })}
-            className="bg-rose text-white px-8 py-4 text-sm font-medium hover:bg-rose-dark transition-colors"
-          >
-            Begin
-          </button>
-          <p className="text-xs tracking-widest uppercase text-white/35 mt-8">
-            5 questions · About 2 minutes · Tailored to your skin
-          </p>
-        </div>
-      </section>
+      <SplitHero
+        eyebrow="Personalize Your Protocol"
+        title={<>Build your daily routine.<br /><em>You do not need every product.</em></>}
+        body="Choose products that fit your skin. Cleanser and moisturizer are the daily essentials, then add a serum or optional care based on your needs. Finish mornings with SPF."
+        image="/original/protocol-hero.jpg"
+        imageAlt="Skin Protocol RX bottles on sunlit cream stone, with a black serum dropper in front"
+        badgeLabel="About 2 minutes"
+        badgeText="Five questions. A routine built for your skin."
+        footnote="5 questions · Tailored to your skin · Morning SPF included"
+      >
+        <button
+          type="button"
+          onClick={() => document.getElementById('protocol-quiz')?.scrollIntoView({ behavior: 'smooth' })}
+          className="w-full sm:w-auto whitespace-nowrap bg-charcoal text-white px-7 py-3.5 text-sm tracking-wide font-medium hover:bg-charcoal/80 transition-colors"
+        >
+          Begin
+        </button>
+      </SplitHero>
 
       <div id="protocol-quiz" className="max-w-3xl mx-auto px-5 md:px-8 py-16 scroll-mt-44 bg-stone">
         {/* Progress */}

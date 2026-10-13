@@ -27,10 +27,14 @@ import StorySectionPreviewV2 from './v2/pages/StorySectionPreview'
 import SpaPartnersV2 from './v2/pages/SpaPartners'
 import IngredientGlossaryV2 from './v2/pages/IngredientGlossary'
 import ProductEducationV2 from './v2/pages/ProductEducation'
+import PickerPage from './designs/picker/PickerPage'
+import DesignSite from './designs/DesignSite'
+import type { DesignId, DesignPage, GalleryTarget } from './designs/shared'
 import { PRODUCTS } from './data'
 
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 type Version = 'v1' | 'v2'
+type Design = '' | 'picker' | DesignId
 
 type RouteState = {
   page: Page
@@ -39,6 +43,8 @@ type RouteState = {
   hash: string
   preview: string
   version: Version
+  design: Design
+  designPage: DesignPage
 }
 
 const ORIGINAL_PREFIX = '/original'
@@ -60,7 +66,7 @@ function normalizeBase(): string {
 }
 
 function route(page: Page, extras: Partial<Omit<RouteState, 'page'>> = {}): RouteState {
-  return { page, productId: '', shopStep: '', hash: '', preview: '', version: 'v2', ...extras }
+  return { page, productId: '', shopStep: '', hash: '', preview: '', version: 'v2', design: '', designPage: 'home', ...extras }
 }
 
 function splitVersion(pathname: string): { version: Version; path: string } {
@@ -95,8 +101,24 @@ function pagePath(page: Page, productId = '', shopStep = '', hash = '', preview 
   return `${path}${query}${fragment}`
 }
 
-function toUrl(page: Page, productId = '', shopStep = '', hash = '', preview = '', version: Version = 'v2'): string {
+function toUrl(
+  page: Page,
+  productId = '',
+  shopStep = '',
+  hash = '',
+  preview = '',
+  version: Version = 'v2',
+  design: Design = '',
+  designPage: DesignPage = 'home',
+): string {
   const base = normalizeBase()
+  if (design === 'picker') return `${base}/designs`
+  if (design === 'clear' || design === 'grove' || design === 'night') {
+    const root = `${base}/designs/${design}`
+    if (designPage === 'shop') return `${root}/shop`
+    if (designPage === 'product') return `${root}/product/${encodeURIComponent(productId || 'unknown')}`
+    return root
+  }
   let path = pagePath(page, productId, shopStep, hash, preview)
   if (version === 'v1') {
     path = path === '/' ? ORIGINAL_PREFIX : `${ORIGINAL_PREFIX}${path}`
@@ -109,6 +131,25 @@ function parseLocation(pathname: string, search = '', hash = ''): RouteState {
   const { version, path } = splitVersion(pathname)
   const shopStep = new URLSearchParams(search).get('step') || ''
   const storyHash = hash.replace(/^#/, '')
+
+  if (path === '/designs' || path === '/designs/') return route('home', { design: 'picker', version: 'v2' })
+  const designMatch = path.match(/^\/designs\/(clear|grove|night)(\/.*)?$/)
+  if (designMatch) {
+    const id = designMatch[1] as DesignId
+    const rest = designMatch[2] || ''
+    if (rest === '' || rest === '/') return route('home', { design: id, designPage: 'home', version: 'v2' })
+    if (rest === '/shop' || rest === '/shop/') return route('shop', { design: id, designPage: 'shop', version: 'v2' })
+    const designProduct = rest.match(/^\/product\/([^/]+)\/?$/)
+    if (designProduct) {
+      return route('product', {
+        design: id,
+        designPage: 'product',
+        productId: decodeURIComponent(designProduct[1]),
+        version: 'v2',
+      })
+    }
+    return route('home', { design: id, designPage: 'home', version: 'v2' })
+  }
 
   if (path === '/' || path === '') return route('home', { version })
   if (path === '/shop') return route('shop', { shopStep, version })
@@ -130,7 +171,32 @@ function parseLocation(pathname: string, search = '', hash = ''): RouteState {
   return route('home', { version })
 }
 
-function applyDocumentTitle(page: Page, productId: string, preview = '', version: Version = 'v2') {
+function applyDocumentTitle(
+  page: Page,
+  productId: string,
+  preview = '',
+  version: Version = 'v2',
+  design: Design = '',
+  designPage: DesignPage = 'home',
+) {
+  if (design === 'picker') {
+    document.title = 'Designs | Skin Protocol RX'
+    return
+  }
+  if (design === 'clear' || design === 'grove' || design === 'night') {
+    const label = design === 'clear' ? 'Clear' : design === 'grove' ? 'Grove' : 'Night'
+    if (designPage === 'product' && productId) {
+      const product = PRODUCTS.find(item => item.id === productId)
+      document.title = `${product?.name || 'Product'} | ${label}`
+      return
+    }
+    if (designPage === 'shop') {
+      document.title = `Collection | ${label}`
+      return
+    }
+    document.title = `${label} | Skin Protocol RX`
+    return
+  }
   if (preview === 'standards') {
     document.title = 'Our Standards Layouts | Skin Protocol RX'
     return
@@ -181,6 +247,8 @@ export default function App() {
   const [storyHash, setStoryHash] = useState(initial.hash)
   const [preview, setPreview] = useState(initial.preview)
   const [version, setVersion] = useState<Version>(initial.version)
+  const [design, setDesign] = useState<Design>(initial.design)
+  const [designPage, setDesignPage] = useState<DesignPage>(initial.designPage)
   const [cartCount, setCartCount] = useState(0)
 
   const applyRoute = useCallback((next: RouteState, mode: 'push' | 'replace' | 'none') => {
@@ -190,15 +258,19 @@ export default function App() {
     setStoryHash(next.page === 'story' && next.preview !== 'standards' ? (next.hash || '') : '')
     setPreview(next.preview || '')
     setVersion(next.version || 'v2')
-    applyDocumentTitle(next.page, next.productId, next.preview, next.version)
+    setDesign(next.design || '')
+    setDesignPage(next.designPage || 'home')
+    applyDocumentTitle(next.page, next.productId, next.preview, next.version, next.design, next.designPage)
     if (mode === 'none') return
-    const url = toUrl(next.page, next.productId, next.shopStep, next.hash, next.preview, next.version)
+    const url = toUrl(next.page, next.productId, next.shopStep, next.hash, next.preview, next.version, next.design, next.designPage)
     const state = route(next.page, {
       productId: next.productId,
       shopStep: next.shopStep || '',
       hash: next.hash || '',
       preview: next.preview || '',
       version: next.version || 'v2',
+      design: next.design || '',
+      designPage: next.designPage || 'home',
     })
     if (mode === 'replace') window.history.replaceState(state, '', url)
     else window.history.pushState(state, '', url)
@@ -235,13 +307,42 @@ export default function App() {
     }), 'push')
   }, [applyRoute, page, productId, shopStep, storyHash, preview, version])
 
+  const openPicker = useCallback(() => {
+    scrollToTop()
+    applyRoute(route('home', { design: 'picker', designPage: 'home', version: 'v2' }), 'push')
+  }, [applyRoute])
+
+  const openGalleryTarget = useCallback((target: GalleryTarget) => {
+    scrollToTop()
+    if (target === 'original') {
+      applyRoute(route('home', { version: 'v1', design: '', designPage: 'home' }), 'push')
+      return
+    }
+    if (target === 'rose') {
+      applyRoute(route('home', { version: 'v2', design: '', designPage: 'home' }), 'push')
+      return
+    }
+    applyRoute(route('home', { design: target, designPage: 'home', version: 'v2' }), 'push')
+  }, [applyRoute])
+
+  const navigateDesign = useCallback((nextPage: DesignPage, id?: string) => {
+    if (design !== 'clear' && design !== 'grove' && design !== 'night') return
+    scrollToTop()
+    applyRoute(route(nextPage === 'product' ? 'product' : nextPage === 'shop' ? 'shop' : 'home', {
+      design,
+      designPage: nextPage,
+      productId: nextPage === 'product' ? (id || '') : '',
+      version: 'v2',
+    }), 'push')
+  }, [applyRoute, design])
+
   // After the new page commits, pin scroll at the top before paint (skip in-page story hashes).
   useLayoutEffect(() => {
-    if (storyHash) return
+    if (storyHash && !design) return
     scrollToTop()
     const frame = requestAnimationFrame(() => scrollToTop())
     return () => cancelAnimationFrame(frame)
-  }, [page, productId, shopStep, preview, storyHash, version])
+  }, [page, productId, shopStep, preview, storyHash, version, design, designPage])
 
   // Sync initial URL + browser back/forward
   useEffect(() => {
@@ -261,6 +362,8 @@ export default function App() {
             hash: state.hash || '',
             preview: state.preview || '',
             version: state.version || 'v2',
+            design: state.design || '',
+            designPage: state.designPage || 'home',
           })
         : parseLocation(window.location.pathname, window.location.search, window.location.hash)
       setPage(next.page)
@@ -269,8 +372,10 @@ export default function App() {
       setStoryHash(next.page === 'story' && next.preview !== 'standards' ? next.hash : '')
       setPreview(next.preview || '')
       setVersion(next.version || 'v2')
-      applyDocumentTitle(next.page, next.productId, next.preview, next.version)
-      if (!next.hash) scrollToTop()
+      setDesign(next.design || '')
+      setDesignPage(next.designPage || 'home')
+      applyDocumentTitle(next.page, next.productId, next.preview, next.version, next.design, next.designPage)
+      if (!next.hash || next.design) scrollToTop()
     }
 
     window.addEventListener('popstate', onPopState)
@@ -289,6 +394,23 @@ export default function App() {
   const Spa = isV2 ? SpaPartnersV2 : SpaPartners
   const Glossary = isV2 ? IngredientGlossaryV2 : IngredientGlossary
   const Education = isV2 ? ProductEducationV2 : ProductEducation
+
+  if (design === 'picker') {
+    return <PickerPage onOpen={openGalleryTarget} />
+  }
+
+  if (design === 'clear' || design === 'grove' || design === 'night') {
+    return (
+      <DesignSite
+        key={design}
+        id={design}
+        page={designPage}
+        productId={productId}
+        onNavigate={navigateDesign}
+        onPicker={openPicker}
+      />
+    )
+  }
 
   return (
     <div className={isV2 ? 'theme-v2 min-h-screen bg-ivory' : 'min-h-screen bg-white'}>
@@ -315,6 +437,7 @@ export default function App() {
         onNavigate={navigate}
         compareLabel={isV2 ? 'View original design' : 'View revision'}
         onCompare={switchVersion}
+        onDesigns={openPicker}
       />
       <ScrollIndicator />
     </div>

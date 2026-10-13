@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import SplitHero from './SplitHero'
 
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 
@@ -12,21 +13,21 @@ const FOUNDERS = [
     name: 'Linda D. Amend, MS',
     role: 'Co-Founder | Chemist',
     blurb: 'Formulation-driven. Decades of ingredient development. Focused on stability, delivery, and performance.',
-    image: '/linda-amend-chemist-co-founder-skin-protocol-rx.jpg',
+    image: '/original/founder-linda.jpg',
     alt: 'Linda D. Amend, MS — chemist and co-founder of Skin Protocol RX, in a branded white lab coat',
   },
   {
     name: 'Susanna Amend, NP',
     role: 'Co-Founder | Nurse Practitioner',
     blurb: 'Patient-facing insight. Translates clinical needs into product design. Focus on real-world skin response.',
-    image: '/susanna-amend-np-co-founder-skin-protocol-rx.jpg',
+    image: '/original/founder-susanna.jpg',
     alt: 'Susanna Amend, NP — nurse practitioner and co-founder of Skin Protocol RX, in a branded white lab coat',
   },
   {
     name: 'Christina Corbin, LME',
     role: 'Co-Founder | Licensed Medical Esthetician',
     blurb: 'Hands-on skin expertise. Refines formulations through treatment experience. Focus on texture, tolerance, and results.',
-    image: '/christina-corbin-lme-co-founder-skin-protocol-rx.jpg',
+    image: '/original/founder-christina.jpg',
     alt: 'Christina Corbin, LME — licensed medical esthetician and co-founder of Skin Protocol RX',
   },
 ]
@@ -106,30 +107,31 @@ export default function OurStory({ onNavigate, scrollToId }: OurStoryProps) {
 
   return (
     <div className="bg-white font-sans">
-      {/* Hero */}
-      <section className="bg-black">
-        <div className="max-w-7xl mx-auto px-5 md:px-8 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center min-h-[60vh] py-16 lg:py-0">
-          <div className="order-2 lg:order-1">
-            <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-4">Family-Owned · New York</p>
-            <h1 className="font-serif text-4xl md:text-6xl text-white">
-              Skincare With a Purpose Behind Every Product
-            </h1>
-          </div>
-          <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
-            {/* Wrapper hugs the image so the blend gradient tracks its actual edge */}
-            <div className="relative w-fit">
-              <img
-                src="/our-story-serum.png"
-                alt="Skin Protocol RX Hyaluronic Acid Serum being dispensed in the lab"
-                className="block w-auto max-h-[60vh] object-contain"
-              />
-              {/* The shot's own backdrop is navy, not black, so its edges would otherwise read as seams */}
-              <div className="absolute inset-y-0 left-0 w-2/5 bg-gradient-to-r from-black via-black/70 to-transparent pointer-events-none" />
-              <div className="absolute inset-y-0 right-0 w-1/5 bg-gradient-to-l from-black to-transparent pointer-events-none" />
-            </div>
-          </div>
-        </div>
-      </section>
+      <SplitHero
+        eyebrow="Family-Owned · New York"
+        title={<>Skincare With a Purpose<br /><em>Behind Every Product</em></>}
+        body="A family built this line so healthy skin would not need a crowded shelf. A chemist, a nurse practitioner, and an esthetician share the work."
+        image="/original/story-hero.jpg"
+        imageAlt="Hyaluronic Acid Serum on sunlit cream stone, with a drop of serum falling into the bottle"
+        badgeLabel="Family-Owned"
+        badgeText="Created in New York. Never tested on animals."
+        footnote="Chemist · Nurse Practitioner · Esthetician"
+      >
+        <button
+          type="button"
+          onClick={() => onNavigate('shop')}
+          className="w-full sm:w-auto whitespace-nowrap bg-charcoal text-white px-7 py-3.5 text-sm tracking-wide font-medium hover:bg-charcoal/80 transition-colors"
+        >
+          Explore the Collection
+        </button>
+        <button
+          type="button"
+          onClick={() => document.getElementById('our-standards')?.scrollIntoView({ behavior: 'smooth' })}
+          className="w-full sm:w-auto whitespace-nowrap border border-charcoal text-charcoal px-7 py-3.5 text-sm tracking-wide font-medium hover:bg-charcoal hover:text-white transition-colors"
+        >
+          Our Standards
+        </button>
+      </SplitHero>
 
       {/* Intro */}
       <section className="max-w-3xl mx-auto px-5 md:px-8 py-20 text-center bg-stone">
@@ -164,7 +166,7 @@ export default function OurStory({ onNavigate, scrollToId }: OurStoryProps) {
         </div>
         <div className="aspect-[3/2] bg-stone overflow-hidden">
           <img
-            src="/family-owned-skin-protocol-rx-founders-skincare-lab-new-york.png"
+            src="/original/founders-lab.jpg"
             alt="Skin Protocol RX founders Linda D. Amend, Susanna Amend, and Christina Corbin formulating skincare in a New York lab"
             loading="lazy"
             decoding="async"
@@ -197,7 +199,7 @@ export default function OurStory({ onNavigate, scrollToId }: OurStoryProps) {
                     title={`${founder.name} — ${founder.role.replace('|', '·')}, Skin Protocol RX`}
                     loading="lazy"
                     decoding="async"
-                    className="w-full h-full object-cover grayscale-[20%]"
+                    className="w-full h-full object-cover"
                   />
                 </div>
                 <h3 className="font-serif text-xl text-white mb-2">{founder.name}</h3>
@@ -299,11 +301,11 @@ export default function OurStory({ onNavigate, scrollToId }: OurStoryProps) {
       <section className="relative py-28 px-5 md:px-8 overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1748543668709-793b38a2810d?w=1600&h=700&fit=crop&auto=format"
-            alt="Skincare texture"
-            className="w-full h-full object-cover grayscale"
+            src="/original/story-texture.jpg"
+            alt="A drop of serum on warm cream stone"
+            className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-black/80" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/35 to-black/20" />
         </div>
         <div className="relative z-10 max-w-3xl mx-auto text-center">
           <p className="font-serif text-3xl md:text-4xl text-white italic mb-6">

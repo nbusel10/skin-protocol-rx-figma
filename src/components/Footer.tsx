@@ -6,9 +6,10 @@ interface FooterProps {
   onNavigate: (page: Page) => void
   compareLabel?: string
   onCompare?: () => void
+  onDesigns?: () => void
 }
 
-export default function Footer({ onNavigate, compareLabel, onCompare }: FooterProps) {
+export default function Footer({ onNavigate, compareLabel, onCompare, onDesigns }: FooterProps) {
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
 
@@ -123,11 +124,18 @@ export default function Footer({ onNavigate, compareLabel, onCompare }: FooterPr
       {/* Bottom bar */}
       <div className="border-t border-white/10 px-5 md:px-8 py-6 max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 text-white/30 text-xs">
         <p>&copy; {new Date().getFullYear()} Skin Protocol RX. All rights reserved.</p>
-        {onCompare && compareLabel && (
-          <button type="button" onClick={onCompare} className="text-link text-xs font-medium hover:text-white">
-            {compareLabel}
-          </button>
-        )}
+        <div className="flex items-center gap-4">
+          {onDesigns && (
+            <button type="button" onClick={onDesigns} className="text-link text-xs font-medium hover:text-white">
+              All designs
+            </button>
+          )}
+          {onCompare && compareLabel && (
+            <button type="button" onClick={onCompare} className="text-link text-xs font-medium hover:text-white">
+              {compareLabel}
+            </button>
+          )}
+        </div>
         <p className="flex items-center gap-2">
           <span className="inline-block w-2 h-2 rounded-full bg-rose" />
           Cruelty-Free · Never Tested on Animals · Family-Owned in New York
