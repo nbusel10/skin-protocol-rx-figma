@@ -11,9 +11,13 @@ Options -MultiViews
   # RewriteCond %{HTTPS} !=on
   # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-  # Serve existing files and directories as-is
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
+  # Real files (images, scripts, styles) are served as-is.
+  # Directories are not: /designs is both a photo folder and an app route.
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+
+  # A missing asset should stay a 404. App routes have no file extension.
+  RewriteCond %{REQUEST_URI} \.[A-Za-z0-9]{1,8}$
   RewriteRule ^ - [L]
 
   # SPA fallback (safe even with client-side page state)
