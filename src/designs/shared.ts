@@ -1,6 +1,11 @@
 import { PRODUCTS, PROTOCOL_STEP_META, getProtocolStepLabel, type Product } from '../data'
 
-export type DesignId = 'clear' | 'grove' | 'night'
+export type DesignId = 'clear' | 'grove' | 'boutique' | 'luxe' | 'ritual'
+export const DESIGN_IDS: DesignId[] = ['clear', 'grove', 'boutique', 'luxe', 'ritual']
+
+export function isDesignId(value: string): value is DesignId {
+  return (DESIGN_IDS as string[]).includes(value)
+}
 export type GalleryTarget = 'original' | 'rose' | DesignId
 export type DesignPage = 'home' | 'shop' | 'product'
 export type DesignNavigate = (page: DesignPage, id?: string) => void
@@ -51,8 +56,6 @@ export const CLEAR_ROWS = [
 
 export const GROVE_FEATURES = ['hyaluronic-acid-serum', 'rich-barrier-cream']
 export const GROVE_MORE = ['clarifying-cleanser', 'brighten-glow-c-20', 'the-holy-grail']
-export const NIGHT_TILES = ['clarifying-cleanser', 'hyaluronic-acid-serum', 'rich-barrier-cream', 'the-holy-grail']
-
 export const FOUNDERS = [
   {
     name: 'Linda D. Amend, MS',

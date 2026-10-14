@@ -35,7 +35,7 @@ export default function Header({ page, cartCount, onNavigate }: HeaderProps) {
   }
 
   return (
-    <header className="sticky top-0 z-30 border-b border-[#CBD2C4] bg-[#F6F3E9]/97 backdrop-blur-sm">
+    <header className="sticky top-11 z-30 border-b border-[#CBD2C4] bg-[#F6F3E9]/97 backdrop-blur-sm">
       <div className={`${wrap} flex min-h-[76px] items-center justify-between gap-6`}>
         <button
           type="button"

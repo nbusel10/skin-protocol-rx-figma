@@ -28,7 +28,7 @@ export default function Header({ currentPage, onNavigate, cartCount }: HeaderPro
   return (
     <>
       <header
-        className="sticky top-0 z-50 transition-all duration-300 font-sans bg-white"
+        className="relative z-50 transition-all duration-300 font-sans bg-white"
         style={{
           backgroundColor: scrolled ? 'rgba(255,255,255,0.98)' : '#ffffff',
           backdropFilter: scrolled ? 'blur(12px)' : 'none',

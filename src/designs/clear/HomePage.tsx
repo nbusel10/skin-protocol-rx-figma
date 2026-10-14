@@ -83,18 +83,18 @@ export default function HomePage({ onNavigate }: HomePageProps) {
   const activeConcern = SKIN_CONCERNS.find(item => item.id === concern) ?? SKIN_CONCERNS[0]
 
   return (
-    <article className="bg-[#F7F4EF] text-[#252520]">
+    <article className="bg-[#F7F4EF] font-sans text-[#252520]">
       <section id="feature" className="scroll-mt-28 bg-[#FFFDFA]">
-        <div className="grid lg:min-h-[610px] lg:grid-cols-[48%_52%]">
-          <div className="flex flex-col justify-center py-16 pl-6 pr-6 sm:pl-[max(1.5rem,calc((100vw-1120px)/2))] sm:pr-[9%] lg:py-[4.5rem]">
+        <div className="grid min-[681px]:min-h-[clamp(320px,36vw,520px)] min-[681px]:grid-cols-[48%_52%]">
+          <div className="flex flex-col justify-center px-6 py-8 min-[681px]:py-8 min-[681px]:pr-[8%] min-[681px]:pl-[max(36px,8vw)]">
             <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">Considered skincare · New York</p>
-            <h1 className="mt-6 max-w-[560px] font-serif text-[clamp(3.05rem,5.6vw,5.5rem)] leading-[1.05] tracking-[-0.044em]">
-              Give the skin exactly what <em>it needs.</em>
+            <h1 className="my-3 max-w-[650px] font-serif text-[clamp(49px,12vw,67px)] leading-[1.08] tracking-[-0.044em] min-[681px]:text-[clamp(52px,4.6vw,72px)]">
+              Give your skin exactly what <em className="italic whitespace-nowrap">it needs.</em>
             </h1>
-            <p className="mt-6 max-w-[340px] text-[15px] leading-relaxed text-[#595750]">
+            <p className="mb-4 max-w-[420px] text-[15px] leading-relaxed text-[#595750]">
               And nothing it does not. Professional skincare shaped by a chemist, a nurse practitioner, and an esthetician. Purposeful formulas. A simpler routine.
             </p>
-            <div className="mt-7 flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3">
               <button type="button" onClick={() => document.getElementById('collection')?.scrollIntoView({ behavior: 'smooth' })} className="inline-flex min-h-12 items-center gap-4 bg-[#252520] px-5 text-[11px] font-semibold tracking-[0.1em] uppercase text-white hover:bg-[#4A4942]">
                 Explore the collection <span aria-hidden="true">↗</span>
               </button>
@@ -103,13 +103,15 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               </button>
             </div>
           </div>
-          <div className="relative min-h-[380px] overflow-hidden bg-gradient-to-br from-[#EEE8DD] via-[#D5CABE] to-[#FAF8F3] lg:min-h-[560px]">
+          <div className="relative min-h-[300px] overflow-hidden bg-gradient-to-br from-[#EEE8DD] via-[#D5CABE] to-[#FAF8F3]">
             <div className="pointer-events-none absolute -top-[10%] right-[8%] h-[125%] w-[62%] rounded-t-[200px] border-[32px] border-white/50" />
-            <img
-              src="/original/shop-hero.jpg"
-              alt="Skin Protocol RX bottles and jars on cream stone"
-              className="absolute inset-[8%] h-auto max-h-[84%] w-[84%] object-cover"
-            />
+            <div className="absolute inset-[8%] overflow-hidden">
+              <img
+                src="/original/shop-hero.jpg"
+                alt="Skin Protocol RX bottles and jars on cream stone"
+                className="h-full w-full object-cover"
+              />
+            </div>
             <p className="absolute bottom-8 left-8 max-w-[250px] bg-[#252520] px-5 py-4 font-serif text-xl italic leading-snug text-white">
               Science guided by nature.
             </p>
@@ -138,9 +140,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           <div className="lg:pt-4">
             <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">The family behind the formulas</p>
             <h2 className="mt-3 font-serif text-[clamp(2.125rem,3.2vw,3.25rem)] leading-[1.12] tracking-[-0.044em]">
-              Three disciplines.
+              Three perspectives.
               <br />
-              <em>One bench.</em>
+              <em>One purpose.</em>
             </h2>
             <p className="mt-5 max-w-[330px] text-sm leading-relaxed text-[#5B574F]">
               A chemist, a nurse practitioner, and a licensed medical esthetician bring three perspectives to one practical idea: skincare should make sense.
@@ -222,11 +224,11 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      <section className="grid bg-[#FFFDFA] lg:min-h-[590px] lg:grid-cols-[44%_56%]">
+      <section className="grid bg-[#FFFDFA] lg:grid-cols-[22%_1fr] lg:items-center">
         <img
-          src="/designs/clear/routine.jpg"
-          alt="A woman applying cream in morning light"
-          className="h-[330px] w-full object-cover object-[center_30%] lg:h-full lg:min-h-[550px]"
+          src="/designs/clear/ritual-glow.jpg"
+          alt="A woman with glowing skin applying cream in warm morning light"
+          className="h-[165px] w-full object-cover object-[center_30%] lg:h-[275px]"
         />
         <div className="px-6 py-12 sm:px-8 lg:py-[70px] lg:pr-[clamp(2.25rem,7vw,7rem)] lg:pl-16">
           <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">The daily ritual</p>

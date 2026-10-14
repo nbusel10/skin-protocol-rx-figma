@@ -38,7 +38,7 @@ export default function Footer({ onNavigate, onPicker }: FooterProps) {
   }
 
   return (
-    <footer id="footer" className="scroll-mt-28 border-t border-[#D6CEC3] bg-[#E8E2D9] text-[#252520]">
+    <footer id="footer" className="scroll-mt-28 border-t border-[#D6CEC3] bg-[#E8E2D9] font-sans text-[#252520]">
       <div className={`${wrap} pt-[60px] pb-6`}>
         <div className="grid grid-cols-2 gap-9 md:grid-cols-[2fr_1fr_1fr_1.7fr]">
           <div className="col-span-2 md:col-span-1">

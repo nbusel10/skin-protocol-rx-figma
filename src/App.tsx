@@ -29,7 +29,8 @@ import IngredientGlossaryV2 from './v2/pages/IngredientGlossary'
 import ProductEducationV2 from './v2/pages/ProductEducation'
 import PickerPage from './designs/picker/PickerPage'
 import DesignSite from './designs/DesignSite'
-import type { DesignId, DesignPage, GalleryTarget } from './designs/shared'
+import DesignTabs from './designs/DesignTabs'
+import { isDesignId, type DesignId, type DesignPage, type GalleryTarget } from './designs/shared'
 import { PRODUCTS } from './data'
 
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
@@ -113,7 +114,7 @@ function toUrl(
 ): string {
   const base = normalizeBase()
   if (design === 'picker') return `${base}/designs`
-  if (design === 'clear' || design === 'grove' || design === 'night') {
+  if (isDesignId(design)) {
     const root = `${base}/designs/${design}`
     if (designPage === 'shop') return `${root}/shop`
     if (designPage === 'product') return `${root}/product/${encodeURIComponent(productId || 'unknown')}`
@@ -133,9 +134,9 @@ function parseLocation(pathname: string, search = '', hash = ''): RouteState {
   const storyHash = hash.replace(/^#/, '')
 
   if (path === '/designs' || path === '/designs/') return route('home', { design: 'picker', version: 'v2' })
-  const designMatch = path.match(/^\/designs\/(clear|grove|night)(\/.*)?$/)
-  if (designMatch) {
-    const id = designMatch[1] as DesignId
+  const designMatch = path.match(/^\/designs\/([a-z]+)(\/.*)?$/)
+  if (designMatch && isDesignId(designMatch[1])) {
+    const id = designMatch[1]
     const rest = designMatch[2] || ''
     if (rest === '' || rest === '/') return route('home', { design: id, designPage: 'home', version: 'v2' })
     if (rest === '/shop' || rest === '/shop/') return route('shop', { design: id, designPage: 'shop', version: 'v2' })
@@ -183,8 +184,8 @@ function applyDocumentTitle(
     document.title = 'Designs | Skin Protocol RX'
     return
   }
-  if (design === 'clear' || design === 'grove' || design === 'night') {
-    const label = design === 'clear' ? 'Clear' : design === 'grove' ? 'Grove' : 'Night'
+  if (isDesignId(design)) {
+    const label = design === 'clear' ? 'Clear' : design === 'grove' ? 'Grove' : design === 'boutique' ? 'Boutique' : design === 'luxe' ? 'Luxury Editorial' : 'Skin Ritual'
     if (designPage === 'product' && productId) {
       const product = PRODUCTS.find(item => item.id === productId)
       document.title = `${product?.name || 'Product'} | ${label}`
@@ -326,7 +327,7 @@ export default function App() {
   }, [applyRoute])
 
   const navigateDesign = useCallback((nextPage: DesignPage, id?: string) => {
-    if (design !== 'clear' && design !== 'grove' && design !== 'night') return
+    if (!isDesignId(design)) return
     scrollToTop()
     applyRoute(route(nextPage === 'product' ? 'product' : nextPage === 'shop' ? 'shop' : 'home', {
       design,
@@ -399,7 +400,7 @@ export default function App() {
     return <PickerPage onOpen={openGalleryTarget} />
   }
 
-  if (design === 'clear' || design === 'grove' || design === 'night') {
+  if (isDesignId(design)) {
     return (
       <DesignSite
         key={design}
@@ -408,14 +409,18 @@ export default function App() {
         productId={productId}
         onNavigate={navigateDesign}
         onPicker={openPicker}
+        onOpen={openGalleryTarget}
       />
     )
   }
 
   return (
     <div className={isV2 ? 'theme-v2 min-h-screen bg-ivory' : 'min-h-screen bg-white'}>
-      <Bar />
-      <Top currentPage={page} onNavigate={navigate} cartCount={cartCount} />
+      <div className="sticky top-0 z-50">
+        <DesignTabs pinned={false} current={isV2 ? 'rose' : 'original'} onOpen={openGalleryTarget} />
+        <Bar />
+        <Top currentPage={page} onNavigate={navigate} cartCount={cartCount} />
+      </div>
 
       <main>
         {page === 'home' && preview !== 'philosophy' && preview !== 'concerns' && preview !== 'story-section' && <Home onNavigate={navigate} />}

@@ -7,6 +7,7 @@ const ITEMS: {
   href: string
   image: string
   bar: string
+  separate?: boolean
 }[] = [
   {
     id: 'original',
@@ -41,12 +42,31 @@ const ITEMS: {
     bar: '#3E5236',
   },
   {
-    id: 'night',
-    name: 'Treatment Room',
-    line: 'A walk through the protocol, one chapter at a time. Dark stone, quiet type, the line at the end.',
-    href: '/designs/night',
-    image: '/designs/night/hero.jpg',
-    bar: '#1A1C1A',
+    id: 'boutique',
+    name: '01 — Modern Skincare Boutique',
+    line: 'Warm ivory, champagne rose, and a product-led shop with the quiz on the page.',
+    href: '/designs/boutique',
+    image: '/v2-collection-lineup.jpg',
+    bar: '#B88E91',
+    separate: true,
+  },
+  {
+    id: 'luxe',
+    name: '02 — Luxury Editorial',
+    line: 'Larger type and split frames. Warm drama, with the formulas kept in view.',
+    href: '/designs/luxe',
+    image: '/original/spa-hero.jpg',
+    bar: '#8E6A64',
+    separate: true,
+  },
+  {
+    id: 'ritual',
+    name: '03 — Personalized Skin Ritual',
+    line: 'A soft ritual with a rectangular portrait, concern discovery, and the quiz up front.',
+    href: '/designs/ritual',
+    image: '/original/shop-hero.jpg',
+    bar: '#C4B09A',
+    separate: true,
   },
 ]
 
@@ -60,9 +80,9 @@ export default function PickerPage({ onOpen }: PickerPageProps) {
       <header className="border-b border-[#D9D9D6] px-6 py-6 md:px-10">
         <p className="text-[11px] font-semibold tracking-[0.22em] uppercase text-[#5E5E5A]">Skin Protocol RX</p>
         <div className="mt-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <h1 className="max-w-xl text-4xl font-medium tracking-tight md:text-5xl">Five ways to see the line.</h1>
+            <h1 className="max-w-xl text-4xl font-medium tracking-tight md:text-5xl">Seven ways to see the line.</h1>
           <p className="max-w-sm text-sm leading-relaxed text-[#4E4E4A]">
-            Original and Rose stay as they are. Editorial, Botanical Laboratory, and Treatment Room are three separate homepage pitches for the same brand.
+            Original, Rose, Editorial, and Botanical Laboratory stay as they are. Modern Skincare Boutique, Luxury Editorial, and Personalized Skin Ritual are three more homepage directions.
           </p>
         </div>
       </header>
@@ -88,12 +108,12 @@ export default function PickerPage({ onOpen }: PickerPageProps) {
             </span>
             <span className="flex flex-1 flex-col px-5 py-5">
               <span className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[#6A6A66]">
-                {item.id === 'original' || item.id === 'rose' ? 'Existing site' : 'New prototype'}
+                {item.id === 'original' || item.id === 'rose' ? 'Existing site' : item.separate ? 'Separate prototype' : 'New prototype'}
               </span>
               <span className="mt-2 text-lg font-medium tracking-tight">{item.name}</span>
               <span className="mt-2 flex-1 text-sm leading-relaxed text-[#4E4E4A]">{item.line}</span>
               <span className="mt-5 text-sm font-medium underline decoration-[#161616] underline-offset-4 group-hover:decoration-[#2A5E74]">
-                View prototype
+                {item.separate ? 'View Full Design' : 'View prototype'}
               </span>
             </span>
           </a>
