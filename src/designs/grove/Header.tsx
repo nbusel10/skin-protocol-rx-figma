@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type { DesignNavigate, DesignPage } from '../shared'
 
 interface HeaderProps {
@@ -6,43 +7,76 @@ interface HeaderProps {
   onNavigate: DesignNavigate
 }
 
+const LINKS = [
+  { id: 'story', label: 'Our philosophy' },
+  { id: 'shop', label: 'Shop' },
+  { id: 'routine', label: 'The routine' },
+  { id: 'founders', label: 'Our story' },
+  { id: 'professionals', label: 'For professionals' },
+]
+
+const wrap = 'mx-auto w-[min(1160px,calc(100%-38px))] lg:w-[min(1160px,calc(100%-76px))]'
+
 export default function Header({ page, cartCount, onNavigate }: HeaderProps) {
+  const [open, setOpen] = useState(false)
+
   function jump(id: string) {
+    setOpen(false)
+    if (id === 'shop') {
+      onNavigate('shop')
+      return
+    }
     const node = document.getElementById(id)
     if (node) {
       node.scrollIntoView({ behavior: 'smooth' })
       return
     }
-    onNavigate(id === 'grove-bench' ? 'shop' : 'home')
+    onNavigate('home')
   }
 
   return (
-    <header className="sticky top-0 z-30 px-4 py-4 md:px-8">
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 rounded-full border border-[#C9C2B0] bg-[#F7F3EA]/95 px-5 py-3 shadow-[0_10px_30px_rgba(36,48,38,0.08)] backdrop-blur md:px-7">
-        <button type="button" onClick={() => onNavigate('home')} className="shrink-0 font-display text-2xl italic leading-none text-[#243026] md:text-3xl">
+    <header className="sticky top-0 z-30 border-b border-[#CBD2C4] bg-[#F6F3E9]/97 backdrop-blur-sm">
+      <div className={`${wrap} flex min-h-[76px] items-center justify-between gap-6`}>
+        <button
+          type="button"
+          onClick={() => onNavigate('home')}
+          className="shrink-0 font-display text-[21px] font-medium tracking-[-0.05em] text-[#23332A] lg:text-[25px]"
+        >
           Skin Protocol RX
         </button>
-        <nav className="flex min-w-0 flex-1 items-center gap-4 overflow-x-auto text-[13px] md:gap-6" aria-label="Primary">
-          <button type="button" onClick={() => jump('grove-philosophy')} className="shrink-0 py-2 text-[#3E4A38] hover:text-[#243026]">
-            Ingredients
-          </button>
-          <button type="button" onClick={() => jump('grove-bench')} className="shrink-0 py-2 text-[#3E4A38] hover:text-[#243026]">
-            The bench
-          </button>
-          <button type="button" onClick={() => jump('grove-match')} className="shrink-0 py-2 text-[#3E4A38] hover:text-[#243026]">
-            A formula
+        <nav
+          className={`${open ? 'flex' : 'hidden'} absolute inset-x-0 top-full flex-col gap-4 border-b border-[#CBD2C4] bg-[#F6F3E9] px-5 py-4 text-[13px] font-semibold lg:static lg:flex lg:flex-row lg:items-center lg:gap-7 lg:border-0 lg:bg-transparent lg:p-0`}
+          aria-label="Primary"
+        >
+          {LINKS.map(item => (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => jump(item.id)}
+              className={`shrink-0 text-left hover:text-[#61755B] ${item.id === 'shop' && (page === 'shop' || page === 'product') ? 'text-[#61755B]' : 'text-[#23332A]'}`}
+            >
+              {item.label}
+            </button>
+          ))}
+        </nav>
+        <div className="flex shrink-0 items-center gap-3">
+          <button
+            type="button"
+            onClick={() => jump('shop')}
+            className="rounded-full border border-[#CBD2C4] px-[13px] py-[7px] text-xs font-semibold text-[#23332A]"
+          >
+            Bag ({cartCount})
           </button>
           <button
             type="button"
-            onClick={() => onNavigate('shop')}
-            className={`shrink-0 py-2 ${page === 'shop' || page === 'product' ? 'text-[#243026]' : 'text-[#3E4A38] hover:text-[#243026]'}`}
+            className="rounded-full border border-[#CBD2C4] px-3 py-2 text-[13px] font-semibold lg:hidden"
+            aria-expanded={open}
+            aria-label="Toggle menu"
+            onClick={() => setOpen(value => !value)}
           >
-            Shop all
+            Menu
           </button>
-          <button type="button" onClick={() => onNavigate('shop')} className="shrink-0 rounded-full bg-[#3E5236] px-3 py-2 text-[#F6F3EA]">
-            Bag {cartCount}
-          </button>
-        </nav>
+        </div>
       </div>
     </header>
   )

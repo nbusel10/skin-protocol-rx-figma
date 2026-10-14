@@ -13,13 +13,14 @@ interface HomePageProps {
   onNavigate: DesignNavigate
 }
 
-const SPREAD = [
-  'hyaluronic-acid-serum',
-  'brighten-glow-c-20',
-  'rich-barrier-cream',
-  'the-holy-grail',
+const ESSENTIALS = [
   'clarifying-cleanser',
+  'rosewater-niacinamide-toner',
+  'hyaluronic-acid-serum',
+  'rich-barrier-cream',
 ]
+
+const ESSENTIAL_NOTE = ['Daily essential', 'Optional care', 'Optional care', 'Daily essential']
 
 const FOUNDERS = [
   {
@@ -63,277 +64,192 @@ const LEFT_OUT = [
 
 const STEP_MARK: Record<number, string> = {
   1: 'Essential',
-  2: 'If you want it',
-  3: 'For the concern',
+  2: 'Optional',
+  3: 'Optional',
   4: 'Optional',
   5: 'Essential',
   6: 'Optional',
-  7: 'Morning',
+  7: 'AM · SPF',
 }
 
+const wrap = 'mx-auto w-[min(1120px,calc(100%-2.75rem))] md:w-[min(1120px,calc(100%-5.5rem))]'
+
 export default function HomePage({ onNavigate }: HomePageProps) {
-  const bottles = pickProducts(SPREAD)
-  const [concern, setConcern] = useState(SKIN_CONCERNS[7].id)
+  const essentials = pickProducts(ESSENTIALS)
+  const [concern, setConcern] = useState('dry-skin')
   const [voices, setVoices] = useState<'clients' | 'studios'>('clients')
   const focus = focusProduct(concern)
   const notes = voices === 'clients' ? CLIENT_NOTES : STUDIO_NOTES
   const activeConcern = SKIN_CONCERNS.find(item => item.id === concern) ?? SKIN_CONCERNS[0]
-  const lead = bottles[0]
-  const rest = bottles.slice(1)
 
   return (
-    <article className="bg-[#F7F4EF] text-[#1A1916]">
-      <section id="feature" className="grid scroll-mt-40 lg:grid-cols-12 lg:min-h-[86vh]">
-        <div className="flex flex-col justify-end px-5 pb-12 pt-10 md:px-10 lg:col-span-7 lg:pb-20 lg:pt-14">
-          <p className="text-[11px] tracking-[0.32em] uppercase text-[#6E3B32]">Skin Protocol RX · New York</p>
-          <h1 className="mt-8 max-w-4xl font-serif text-[clamp(3.2rem,7.4vw,6.6rem)] leading-[0.88] tracking-tight">
-            Give the skin
-            <br />
-            exactly what
-            <br />
-            <em>it needs.</em>
-          </h1>
-          <p className="mt-8 max-w-md text-lg leading-relaxed text-[#3C3832]">
-            And nothing it does not. Skin Protocol RX is a New York family line: a chemist, a nurse practitioner, and a licensed medical esthetician. One job per bottle. A short routine. Never tested on animals.
-          </p>
-          <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-            <button
-              type="button"
-              onClick={() => onNavigate('shop')}
-              className="bg-[#1A1916] px-7 py-3.5 text-[13px] tracking-[0.16em] uppercase text-[#F7F4EF] hover:bg-[#6E3B32]"
-            >
-              Shop the collection
-            </button>
-            <button
-              type="button"
-              onClick={() => document.getElementById('protocol')?.scrollIntoView({ behavior: 'smooth' })}
-              className="border-b-2 border-[#1A1916] pb-1 font-serif text-xl italic hover:border-[#6E3B32] hover:text-[#6E3B32]"
-            >
-              Build your protocol
-            </button>
+    <article className="bg-[#F7F4EF] text-[#252520]">
+      <section id="feature" className="scroll-mt-28 bg-[#FFFDFA]">
+        <div className="grid lg:min-h-[610px] lg:grid-cols-[48%_52%]">
+          <div className="flex flex-col justify-center py-16 pl-6 pr-6 sm:pl-[max(1.5rem,calc((100vw-1120px)/2))] sm:pr-[9%] lg:py-[4.5rem]">
+            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">Considered skincare · New York</p>
+            <h1 className="mt-6 max-w-[560px] font-serif text-[clamp(3.05rem,5.6vw,5.5rem)] leading-[1.05] tracking-[-0.044em]">
+              Give the skin exactly what <em>it needs.</em>
+            </h1>
+            <p className="mt-6 max-w-[340px] text-[15px] leading-relaxed text-[#595750]">
+              And nothing it does not. Professional skincare shaped by a chemist, a nurse practitioner, and an esthetician. Purposeful formulas. A simpler routine.
+            </p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <button type="button" onClick={() => document.getElementById('collection')?.scrollIntoView({ behavior: 'smooth' })} className="inline-flex min-h-12 items-center gap-4 bg-[#252520] px-5 text-[11px] font-semibold tracking-[0.1em] uppercase text-white hover:bg-[#4A4942]">
+                Explore the collection <span aria-hidden="true">↗</span>
+              </button>
+              <button type="button" onClick={() => document.getElementById('protocol')?.scrollIntoView({ behavior: 'smooth' })} className="inline-flex min-h-12 items-center gap-4 border border-[#252520] px-5 text-[11px] font-semibold tracking-[0.1em] uppercase hover:bg-[#252520] hover:text-white">
+                Find your protocol <span aria-hidden="true">↗</span>
+              </button>
+            </div>
+          </div>
+          <div className="relative min-h-[380px] overflow-hidden bg-gradient-to-br from-[#EEE8DD] via-[#D5CABE] to-[#FAF8F3] lg:min-h-[560px]">
+            <div className="pointer-events-none absolute -top-[10%] right-[8%] h-[125%] w-[62%] rounded-t-[200px] border-[32px] border-white/50" />
+            <img
+              src="/original/shop-hero.jpg"
+              alt="Skin Protocol RX bottles and jars on cream stone"
+              className="absolute inset-[8%] h-auto max-h-[84%] w-[84%] object-cover"
+            />
+            <p className="absolute bottom-8 left-8 max-w-[250px] bg-[#252520] px-5 py-4 font-serif text-xl italic leading-snug text-white">
+              Science guided by nature.
+            </p>
           </div>
         </div>
-        <figure className="relative min-h-[46vh] lg:col-span-5 lg:min-h-full">
-          <img
-            src="/original/shop-hero.jpg"
-            alt="Skin Protocol RX bottles and jars on cream stone"
-            className="h-full min-h-[46vh] w-full object-cover lg:absolute lg:inset-0"
-          />
-          <figcaption className="absolute bottom-6 left-5 max-w-[16rem] bg-[#1A1916] px-4 py-3 text-[#F7F4EF] md:left-8 lg:-left-8">
-            <p className="text-[10px] tracking-[0.22em] uppercase text-[#E4C7B8]">Skin Protocol RX</p>
-            <p className="mt-1 font-serif text-lg leading-snug">The collection, arranged the way a day actually goes.</p>
-          </figcaption>
-        </figure>
       </section>
 
-      <section className="grid border-y border-[#1A1916] md:grid-cols-3">
-        {[
-          ['01', 'What it is', 'Professional formulas with a natural point of view. Clear enough to explain. Calm enough to keep.'],
-          ['02', 'What is different', 'Each product has one job. Ingredients stay because they earn a place, not because a trend asked.'],
-          ['03', 'Why trust it', 'Linda formulates. Susanna watches how skin responds. Christina tests what a client will actually use at home.'],
-        ].map(([n, title, body]) => (
-          <div key={n} className="border-[#1A1916] px-5 py-8 md:border-r md:px-8 md:py-10 md:last:border-r-0">
-            <p className="font-serif text-3xl text-[#6E3B32]">{n}</p>
-            <h2 className="mt-3 font-serif text-2xl">{title}</h2>
-            <p className="mt-3 max-w-sm text-sm leading-relaxed text-[#3C3832]">{body}</p>
-          </div>
-        ))}
-      </section>
-
-      <section className="grid items-start gap-12 px-5 py-16 md:px-10 lg:grid-cols-12 lg:gap-10 lg:py-24">
-        <div className="lg:col-span-5 lg:pt-4">
-          <p className="text-[11px] tracking-[0.28em] uppercase text-[#6E3B32]">The feature</p>
-          <h2 className="mt-4 font-serif text-4xl leading-[1.02] md:text-6xl">
-            Three disciplines.
-            <br />
-            One bench.
-          </h2>
-          <p className="mt-6 text-base leading-relaxed text-[#3C3832]">
-            <span className="float-left pr-3 font-serif text-7xl leading-[0.75]">A</span>
-            family built this line because healthy skin should not need a crowded shelf. The chemist keeps the formula honest. The nurse practitioner brings back what she sees on real skin. The esthetician will not keep a product a client will not finish.
-          </p>
-          <p className="mt-4 text-base leading-relaxed text-[#3C3832]">
-            Born in New York. The mission stayed small on purpose: the products your skin needs, and nothing it does not.
-          </p>
-        </div>
-        <div className="grid grid-cols-3 items-end gap-3 sm:gap-5 lg:col-span-7">
-          {FOUNDERS.map((founder, index) => (
-            <figure key={founder.name} className={index === 1 ? 'mb-8 md:mb-12' : ''}>
-              <img src={founder.image} alt={founder.alt} className="aspect-[3/4] w-full object-cover" />
-              <figcaption className="mt-3 border-t border-[#1A1916] pt-3">
-                <p className="font-serif text-base leading-tight sm:text-xl">{founder.name}</p>
-                <p className="mt-1 text-xs leading-snug tracking-[0.12em] uppercase text-[#6E3B32]">{founder.role}</p>
-                <p className="mt-2 text-sm leading-relaxed text-[#3C3832]">{founder.blurb}</p>
-              </figcaption>
-            </figure>
+      <div className="border-y border-[#D6CEC3] bg-[#EDE8DF]">
+        <div className={`${wrap} grid md:grid-cols-3`}>
+          {[
+            ['01', 'What it is', 'Purposeful skincare for daily routines, made with professional expertise.'],
+            ['02', 'What is different', 'Three complementary disciplines. One carefully considered line.'],
+            ['03', 'Why trust it', 'Family-owned, hands-on, and grounded in the work of real skin professionals.'],
+          ].map(([n, title, body]) => (
+            <div key={n} className="border-[#C9BFB3] py-5 md:border-r md:px-6 md:py-7 md:first:pl-0 md:last:border-r-0 md:last:pr-0">
+              <p className="font-serif text-[17px] italic text-[#9E8060]">{n}</p>
+              <h2 className="mt-1 font-serif text-[22px]">{title}</h2>
+              <p className="mt-1 max-w-[300px] text-xs leading-relaxed text-[#66615A]">{body}</p>
+            </div>
           ))}
         </div>
+      </div>
+
+      <section id="story" className="scroll-mt-28 py-16 md:py-[90px]">
+        <div className={`${wrap} grid items-start gap-8 lg:grid-cols-[32%_1fr] lg:gap-11`}>
+          <div className="lg:pt-4">
+            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">The family behind the formulas</p>
+            <h2 className="mt-3 font-serif text-[clamp(2.125rem,3.2vw,3.25rem)] leading-[1.12] tracking-[-0.044em]">
+              Three disciplines.
+              <br />
+              <em>One bench.</em>
+            </h2>
+            <p className="mt-5 max-w-[330px] text-sm leading-relaxed text-[#5B574F]">
+              A chemist, a nurse practitioner, and a licensed medical esthetician bring three perspectives to one practical idea: skincare should make sense.
+            </p>
+            <p className="mt-3 max-w-[330px] text-sm leading-relaxed text-[#5B574F]">
+              From formulation to treatment room to daily routine, every product has a purpose.
+            </p>
+          </div>
+          <div className="grid grid-cols-3 gap-2 sm:gap-4">
+            {FOUNDERS.map(founder => (
+              <figure key={founder.name}>
+                <img src={founder.image} alt={founder.alt} className="aspect-[3/4] w-full object-cover object-[center_22%]" />
+                <figcaption>
+                  <h3 className="mt-3 font-serif text-sm leading-tight sm:text-[17px]">{founder.name}</h3>
+                  <p className="mt-0.5 min-h-[2.8rem] text-[10px] font-semibold leading-snug tracking-[0.1em] uppercase text-[#9E8060]">{founder.role}</p>
+                  <p className="mt-2 hidden text-xs leading-relaxed text-[#6D6A63] sm:block">{founder.blurb}</p>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
       </section>
 
-      <section id="collection" className="scroll-mt-40 px-5 py-16 md:px-10 lg:py-24">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="text-[11px] tracking-[0.28em] uppercase text-[#6E3B32]">The collection</p>
-            <h2 className="mt-2 font-serif text-5xl md:text-6xl">The edit</h2>
+      <section id="collection" className="scroll-mt-28 bg-[#EEEAE2] py-16 md:py-[90px]">
+        <div className={wrap}>
+          <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+            <div>
+              <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">The collection</p>
+              <h2 className="mt-1.5 font-serif text-[clamp(2rem,3.2vw,3.05rem)] leading-[1.12] tracking-[-0.044em]">A good place to start.</h2>
+              <p className="mt-3 max-w-[390px] text-sm text-[#6D6A63]">Cleanse and moisturize every day. Add targeted care only when your skin calls for it.</p>
+            </div>
+            <button type="button" onClick={() => onNavigate('shop')} className="border-b border-[#252520] pb-1 text-[11px] font-semibold tracking-[0.12em] uppercase hover:text-[#9E8060]">
+              Shop all products ↗
+            </button>
           </div>
-          <button type="button" onClick={() => onNavigate('shop')} className="border-b-2 border-[#1A1916] py-2 text-[13px] tracking-[0.16em] uppercase hover:border-[#6E3B32] hover:text-[#6E3B32]">
-            Shop all products
-          </button>
-        </div>
-        <div className="mt-12 grid gap-x-10 gap-y-12 lg:grid-cols-12">
-          <button type="button" onClick={() => onNavigate('product', lead.id)} className="group text-left lg:col-span-5">
-            <span className="block bg-[#EFEAE2] px-6 py-10">
-              <img src={lead.image} alt={lead.name} className="mx-auto h-80 object-contain transition-transform duration-500 motion-safe:group-hover:scale-[1.03] md:h-96" />
-            </span>
-            <p className="mt-5 text-[11px] tracking-[0.18em] uppercase text-[#6E3B32]">{stepLabel(lead.protocolStep)}</p>
-            <h3 className="mt-2 font-serif text-4xl leading-tight group-hover:text-[#6E3B32]">{lead.name}</h3>
-            <p className="mt-2 text-sm text-[#3C3832]">{lead.tagline}</p>
-            <p className="mt-3 font-serif text-2xl">${lead.price} <span className="font-sans text-sm text-[#5C574E]">{lead.size}</span></p>
-          </button>
-          <div className="grid content-start gap-10 sm:grid-cols-2 lg:col-span-7">
-            {rest.map(product => (
-              <button key={product.id} type="button" onClick={() => onNavigate('product', product.id)} className="group border-t border-[#1A1916] pt-4 text-left">
-                <img src={product.image} alt={product.name} className="h-60 object-contain transition-transform duration-500 motion-safe:group-hover:scale-[1.03] md:h-64" />
-                <p className="mt-4 text-[11px] tracking-[0.16em] uppercase text-[#6E3B32]">{stepLabel(product.protocolStep)}</p>
-                <h3 className="mt-1 font-serif text-2xl leading-tight group-hover:text-[#6E3B32]">{product.name}</h3>
-                <p className="mt-1 text-sm text-[#3C3832]">{product.tagline}</p>
-                <p className="mt-2 font-serif text-xl">${product.price}</p>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-4 lg:gap-[18px]">
+            {essentials.map((product, index) => (
+              <button key={product.id} type="button" onClick={() => onNavigate('product', product.id)} className="group text-left">
+                <span className="flex aspect-[1/1.03] items-center justify-center bg-[#FFFDFA]">
+                  <img src={product.image} alt="" className="h-[90%] w-[90%] object-contain transition-transform duration-500 motion-safe:group-hover:scale-[1.03]" />
+                </span>
+                <span className="mt-3 block border-t border-[#BDB5AA] pt-3.5">
+                  <span className="block text-[10px] font-semibold tracking-[0.12em] uppercase text-[#9E8060]">{String(index + 1).padStart(2, '0')} · {PROTOCOL_STEPS.find(step => step.step === product.protocolStep)?.name}</span>
+                  <span className="mt-1 block min-h-[2.7rem] font-serif text-[19px] leading-tight group-hover:text-[#9E8060]">{product.name}</span>
+                  <span className="mt-1 block text-[13px]">${product.price} · {ESSENTIAL_NOTE[index]}</span>
+                </span>
               </button>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="border-y border-[#1A1916]">
-        <div className="grid md:grid-cols-2">
-          <div className="px-5 py-12 md:px-10 md:py-16">
-            <p className="text-[11px] tracking-[0.28em] uppercase text-[#6E3B32]">In the formula</p>
-            <h2 className="mt-3 font-serif text-5xl md:text-6xl">Kept</h2>
-            <ol className="mt-8">
-              {KEPT.map((item, index) => (
-                <li key={item} className="grid grid-cols-[2.5rem_1fr] items-baseline gap-3 border-t border-[#1A1916] py-4">
-                  <span className="font-serif text-lg text-[#6E3B32]">{String(index + 1).padStart(2, '0')}</span>
-                  <span className="font-serif text-2xl leading-snug">{item}</span>
+      <section className="bg-[#252520] py-16 text-[#FFFDFA] md:py-[75px]">
+        <div className="mx-auto grid w-[min(940px,calc(100%-2.75rem))] gap-8 md:w-[min(940px,calc(100%-5.5rem))] md:grid-cols-2 md:gap-0">
+          <div className="md:pr-9">
+            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">Our philosophy</p>
+            <h2 className="mt-1 font-serif text-[41px] italic leading-none">Kept.</h2>
+            <ul className="mt-5">
+              {KEPT.map(item => (
+                <li key={item} className="flex gap-4 border-b border-white/20 py-2.5 text-sm">
+                  <span className="text-[#B99C77]">—</span>
+                  <span>{item}</span>
                 </li>
               ))}
-            </ol>
+            </ul>
           </div>
-          <div className="bg-[#1A1916] px-5 py-12 text-[#F7F4EF] md:px-10 md:py-16">
-            <p className="text-[11px] tracking-[0.28em] uppercase text-[#E4C7B8]">Not in the formula</p>
-            <h2 className="mt-3 font-serif text-5xl italic md:text-6xl">Left out</h2>
-            <ol className="mt-8">
-              {LEFT_OUT.map((item, index) => (
-                <li key={item} className="grid grid-cols-[2.5rem_1fr] items-baseline gap-3 border-t border-white/25 py-4">
-                  <span className="font-serif text-lg text-[#E4C7B8]">{String(index + 1).padStart(2, '0')}</span>
-                  <span className="font-serif text-2xl italic leading-snug text-white/80">{item}</span>
+          <div className="md:border-l md:border-[#655F55] md:pl-9">
+            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">Without the unnecessary</p>
+            <h2 className="mt-1 font-serif text-[41px] italic leading-none">Left out.</h2>
+            <ul className="mt-5 text-[#CAC5BB]">
+              {LEFT_OUT.map(item => (
+                <li key={item} className="flex gap-4 border-b border-white/20 py-2.5 text-sm">
+                  <span className="text-[#B99C77]">—</span>
+                  <span>{item}</span>
                 </li>
               ))}
-            </ol>
+            </ul>
           </div>
         </div>
       </section>
 
-      <section id="protocol" className="scroll-mt-40 bg-[#EFEAE2] px-5 py-16 md:px-10 lg:py-24">
-        <div className="grid items-end gap-8 lg:grid-cols-12">
-          <div className="lg:col-span-6">
-            <p className="text-[11px] tracking-[0.28em] uppercase text-[#6E3B32]">Build your protocol</p>
-            <h2 className="mt-3 font-serif text-4xl leading-[1.05] md:text-6xl">You do not need every bottle.</h2>
-          </div>
-          <p className="max-w-md text-base leading-relaxed text-[#3C3832] lg:col-span-6 lg:justify-self-end">
-            Cleanse. One serum for the concern you actually have. Moisturize. Morning sunscreen. Eye care and a facial oil only if you want them.
+      <section className="grid bg-[#FFFDFA] lg:min-h-[590px] lg:grid-cols-[44%_56%]">
+        <img
+          src="/designs/clear/routine.jpg"
+          alt="A woman applying cream in morning light"
+          className="h-[330px] w-full object-cover object-[center_30%] lg:h-full lg:min-h-[550px]"
+        />
+        <div className="px-6 py-12 sm:px-8 lg:py-[70px] lg:pr-[clamp(2.25rem,7vw,7rem)] lg:pl-16">
+          <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">The daily ritual</p>
+          <h2 className="mt-3 max-w-[460px] font-serif text-[clamp(2.125rem,3.5vw,3.2rem)] leading-[1.12] tracking-[-0.044em]">
+            A routine that makes <em>room for real life.</em>
+          </h2>
+          <p className="mt-4 max-w-[420px] text-sm leading-relaxed text-[#6D6A63]">
+            You do not need every bottle. Start with a cleanser and moisturizer; choose additional care for your skin, and finish mornings with SPF.
           </p>
-        </div>
-
-        <div className="mt-12 grid items-center gap-10 border-t border-[#1A1916] pt-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-          <div>
-            <p id="editorial-concern-label" className="text-[11px] tracking-[0.22em] uppercase text-[#6E3B32]">
-              Start with a concern
-            </p>
-            <div aria-labelledby="editorial-concern-label" className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
-              {SKIN_CONCERNS.map(item => {
-                const selected = item.id === concern
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    aria-pressed={selected}
-                    onClick={() => setConcern(item.id)}
-                    className={`inline-flex min-h-11 items-center font-serif text-2xl leading-tight md:text-3xl ${selected ? 'italic text-[#6E3B32] underline decoration-[#6E3B32] underline-offset-[6px]' : 'text-[#1A1916] hover:text-[#6E3B32]'}`}
-                  >
-                    {item.label}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-          <div className="grid items-center gap-6 sm:grid-cols-[14rem_1fr]">
-            <button type="button" onClick={() => onNavigate('product', focus.id)} aria-label={focus.name} className="bg-[#F7F4EF] px-4 py-8">
-              <img src={focus.image} alt={focus.name} className="mx-auto h-64 object-contain sm:h-72" />
-            </button>
-            <div>
-              <p className="text-[11px] tracking-[0.2em] uppercase text-[#6E3B32]">{stepLabel(focus.protocolStep)}</p>
-              <h3 className="mt-2 font-serif text-4xl leading-[1.05]">{focus.name}</h3>
-              <p className="mt-3 font-serif text-3xl">${focus.price}</p>
-              <p className="mt-1 text-sm text-[#5C574E]">{focus.size}</p>
-              <p className="mt-4 text-base leading-relaxed text-[#3C3832]">{focus.tagline}</p>
-              <p className="mt-2 text-sm leading-relaxed text-[#3C3832]">{activeConcern.description}</p>
-              <div className="mt-6 flex flex-col items-start gap-3">
-                <button
-                  type="button"
-                  onClick={() => onNavigate('product', focus.id)}
-                  className="bg-[#1A1916] px-5 py-3 text-[12px] tracking-[0.16em] uppercase text-[#F7F4EF] hover:bg-[#6E3B32]"
-                >
-                  Read the formula
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onNavigate('shop')}
-                  className="border-b border-[#1A1916] pb-0.5 text-[12px] tracking-[0.16em] uppercase hover:border-[#6E3B32] hover:text-[#6E3B32]"
-                >
-                  Shop the full line
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-16">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <h3 className="font-serif text-4xl">The day, in order</h3>
-            <p className="max-w-sm text-sm leading-relaxed text-[#3C3832]">
-              Four marks carry the day. Tone, eye care, and a facial oil stay optional, for the days you want them.
-            </p>
-          </div>
-          <ol className="mt-6 border-t border-[#1A1916]">
+          <ol className="mt-8 grid grid-cols-2 gap-x-3 sm:gap-x-6">
             {PROTOCOL_STEPS.map(step => {
               const mark = STEP_MARK[step.step]
-              const quiet = mark === 'Optional' || mark === 'If you want it'
               const row = (
-                <>
-                  <span className={`font-serif ${quiet ? 'text-2xl text-[#6E3B32]' : 'text-4xl text-[#6E3B32]'}`}>
-                    {String(step.step).padStart(2, '0')}
-                  </span>
-                  <span>
-                    <span className={`block font-serif leading-tight ${quiet ? 'text-2xl' : 'text-3xl md:text-4xl'}`}>{step.name}</span>
-                    <span className="mt-1 block text-sm leading-relaxed text-[#3C3832]">{step.description}</span>
-                  </span>
-                  <span className={`text-[11px] tracking-[0.16em] uppercase ${quiet ? 'text-[#8A847A]' : 'text-[#6E3B32]'}`}>{mark}</span>
-                </>
+                <span className="flex items-baseline gap-2.5 border-t border-[#D6CEC3] py-3">
+                  <span className="font-serif text-[15px] italic text-[#9E8060]">{String(step.step).padStart(2, '0')}</span>
+                  <span className="text-[13px] font-semibold">{step.name}</span>
+                  <span className="ml-auto text-[10px] whitespace-nowrap text-[#6D6A63]">{mark}</span>
+                </span>
               )
-              if (step.productBacked === false) {
-                return (
-                  <li key={step.step} className="grid grid-cols-[3.5rem_1fr] items-baseline gap-x-4 gap-y-1 border-b border-[#C9C1B4] py-5 sm:grid-cols-[4.5rem_1fr_auto]">
-                    {row}
-                  </li>
-                )
-              }
+              if (step.productBacked === false) return <li key={step.step}>{row}</li>
               return (
-                <li key={step.step} className="border-b border-[#C9C1B4]">
-                  <button
-                    type="button"
-                    onClick={() => onNavigate('shop')}
-                    className="grid w-full grid-cols-[3.5rem_1fr] items-baseline gap-x-4 gap-y-1 py-5 text-left hover:bg-[#F7F4EF] sm:grid-cols-[4.5rem_1fr_auto]"
-                  >
+                <li key={step.step}>
+                  <button type="button" onClick={() => onNavigate('shop')} className="w-full text-left hover:text-[#9E8060]">
                     {row}
                   </button>
                 </li>
@@ -343,72 +259,115 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      <section id="concerns" className="scroll-mt-40 border-t border-[#1A1916] px-5 py-16 md:px-10 lg:py-24">
-        <div className="max-w-2xl">
-          <p className="text-[11px] tracking-[0.28em] uppercase text-[#6E3B32]">An index</p>
-          <h2 className="mt-3 font-serif text-4xl leading-tight md:text-6xl">Shop by concern</h2>
-          <p className="mt-4 text-base leading-relaxed text-[#3C3832]">Pick the focus. The line stays short.</p>
-        </div>
-        <div className="mt-10 grid gap-x-16 md:grid-cols-2">
-          {SKIN_CONCERNS.map((item, index) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => onNavigate('product', focusProduct(item.id).id)}
-              className="group min-h-16 border-b border-[#D9D2C6] py-6 text-left"
-            >
-              <span className="flex items-baseline justify-between gap-4">
-                <span className="text-[11px] tracking-[0.18em] text-[#6E3B32]">{String(index + 1).padStart(2, '0')}</span>
-                <span className="text-[11px] tracking-[0.16em] uppercase text-[#6E3B32]">Open</span>
-              </span>
-              <span className="mt-2 block font-serif text-3xl leading-tight transition-colors group-hover:text-[#6E3B32] md:text-4xl">{item.label}</span>
-              <span className="mt-2 block max-w-md text-sm leading-relaxed text-[#3C3832]">{item.description}</span>
+      <section id="protocol" className="scroll-mt-28 bg-[#EDE8DF] py-16 md:py-[90px]">
+        <div className={`${wrap} grid items-center gap-8 lg:grid-cols-[39%_1fr] lg:gap-[60px]`}>
+          <div>
+            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">Find your formula</p>
+            <h2 className="mt-2 font-serif text-[clamp(2.25rem,3.3vw,3.2rem)] leading-[1.12] tracking-[-0.044em]">
+              You do not need <em>every bottle.</em>
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-[#6D6A63]">
+              Start with what matters to your skin. Explore a concern and discover a formula that may fit your routine.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-2" role="group" aria-label="Skin concerns">
+              {SKIN_CONCERNS.map(item => {
+                const selected = item.id === concern
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => setConcern(item.id)}
+                    className={`min-h-10 border px-3 py-2 text-xs ${selected ? 'border-[#252520] bg-[#252520] text-white' : 'border-[#BFB6A9] bg-transparent hover:border-[#252520] hover:bg-[#252520] hover:text-white'}`}
+                  >
+                    {item.label}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+          <div className="grid min-h-[290px] grid-cols-[40%_1fr] border border-[#E1D9CD] bg-[#FFFDFA] sm:grid-cols-[45%_1fr]">
+            <button type="button" onClick={() => onNavigate('product', focus.id)} aria-label={focus.name} className="flex items-center justify-center bg-[#E3DFD5]">
+              <img src={focus.image} alt="" className="h-[90%] w-[90%] object-contain" />
             </button>
-          ))}
+            <div className="flex flex-col justify-center px-4 py-5 sm:px-6">
+              <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">{stepLabel(focus.protocolStep)}</p>
+              <h3 className="mt-1 font-serif text-[21px] leading-tight sm:text-[26px]">{focus.name}</h3>
+              <p className="mt-2 text-sm">${focus.price} · {focus.size}</p>
+              <p className="mt-2 text-xs leading-relaxed text-[#6D6A63]">{activeConcern.description}</p>
+              <button type="button" onClick={() => onNavigate('product', focus.id)} className="mt-4 self-start border-b border-[#252520] pb-1 text-[11px] font-semibold tracking-[0.12em] uppercase hover:text-[#9E8060]">
+                Explore formula ↗
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section id="studios" className="scroll-mt-40 grid lg:grid-cols-12">
-        <img
-          src="/original/spa-hero.jpg"
-          alt="Skin Protocol RX bottles beside a cream treatment bed"
-          className="h-[28rem] w-full object-cover lg:col-span-7 lg:h-auto lg:min-h-[36rem]"
-        />
-        <div className="flex flex-col justify-center bg-[#1A1916] px-6 py-14 text-[#F7F4EF] md:px-10 lg:col-span-5 lg:py-20">
-          <p className="text-[11px] tracking-[0.28em] uppercase text-[#E4C7B8]">For studios</p>
-          <h2 className="mt-4 font-serif text-4xl leading-tight md:text-5xl">A home routine your clients will keep.</h2>
-          <p className="mt-5 max-w-md text-base leading-relaxed text-white/75">
-            Recommend a short, coordinated line between visits. The same formulas, explained in plain language, so the work in the treatment room does not stop at the door.
+      <section id="concerns" className="scroll-mt-28 py-16 md:py-[90px]">
+        <div className={wrap}>
+          <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+            <div>
+              <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">Explore your options</p>
+              <h2 className="mt-1.5 font-serif text-[clamp(2rem,3.2vw,3.05rem)] leading-[1.12] tracking-[-0.044em]">Shop by concern.</h2>
+            </div>
+            <p className="max-w-[390px] text-sm text-[#6D6A63]">Find the formulas that fit the way your skin feels today.</p>
+          </div>
+          <div className="grid sm:grid-cols-2 sm:gap-x-10">
+            {SKIN_CONCERNS.map(item => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => onNavigate('product', focusProduct(item.id).id)}
+                className="group flex min-h-14 items-center justify-between gap-4 border-t border-[#D6CEC3] py-4 text-left"
+              >
+                <span className="font-serif text-[22px] leading-tight group-hover:italic">{item.label}</span>
+                <span className="text-[10px] font-semibold tracking-[0.1em] uppercase text-[#9E8060]">Explore ↗</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="studios" className="scroll-mt-28 grid bg-[#252520] text-white lg:min-h-[440px] lg:grid-cols-2">
+        <img src="/original/spa-hero.jpg" alt="Skin Protocol RX bottles beside a cream treatment bed" className="h-[300px] w-full object-cover lg:h-auto lg:min-h-[440px]" />
+        <div className="flex flex-col justify-center px-6 py-14 sm:px-10 lg:px-[clamp(2.5rem,8vw,7.8rem)]">
+          <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">For professionals</p>
+          <h2 className="mt-2 max-w-md font-serif text-[clamp(2.125rem,3.2vw,3.05rem)] leading-[1.12] tracking-[-0.044em]">
+            A home routine your clients <em>will keep.</em>
+          </h2>
+          <p className="mt-4 max-w-[390px] text-sm leading-relaxed text-[#DED8CF]">
+            Give clients a thoughtful, coordinated line they can continue using between visits. Professional formulas, simple routines, and a story worth sharing.
           </p>
-          <button type="button" onClick={() => onNavigate('shop')} className="mt-8 self-start border-b border-[#E4C7B8] pb-1 text-[13px] tracking-[0.16em] uppercase text-[#E4C7B8] hover:text-white">
-            See the professional line
+          <button type="button" onClick={() => onNavigate('shop')} className="mt-5 self-start border-b border-white pb-1 text-[11px] font-semibold tracking-[0.12em] uppercase hover:text-[#E4C7B8]">
+            See the professional line ↗
           </button>
         </div>
       </section>
 
-      <section className="px-5 py-20 md:px-10 lg:py-28">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <h2 className="font-serif text-4xl md:text-5xl">In their words</h2>
-          <div className="flex gap-6 text-[13px] tracking-[0.16em] uppercase">
-            <button type="button" onClick={() => setVoices('clients')} className={voices === 'clients' ? 'border-b-2 border-[#1A1916] pb-1' : 'pb-1 text-[#5C574E] hover:text-[#1A1916]'}>
-              Clients
-            </button>
-            <button type="button" onClick={() => setVoices('studios')} className={voices === 'studios' ? 'border-b-2 border-[#1A1916] pb-1' : 'pb-1 text-[#5C574E] hover:text-[#1A1916]'}>
-              Spa professionals
-            </button>
+      <section className="bg-[#FFFDFA] py-16 md:py-[90px]">
+        <div className={wrap}>
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">Real perspectives</p>
+              <h2 className="mt-1.5 font-serif text-[clamp(2rem,3.2vw,3.05rem)] leading-[1.12] tracking-[-0.044em]">In their words.</h2>
+            </div>
+            <div className="flex gap-5 text-[11px] font-semibold tracking-[0.12em] uppercase">
+              <button type="button" onClick={() => setVoices('clients')} className={voices === 'clients' ? 'border-b border-[#252520] pb-1' : 'pb-1 text-[#6D6A63] hover:text-[#252520]'}>
+                Clients
+              </button>
+              <button type="button" onClick={() => setVoices('studios')} className={voices === 'studios' ? 'border-b border-[#252520] pb-1' : 'pb-1 text-[#6D6A63] hover:text-[#252520]'}>
+                Studios
+              </button>
+            </div>
           </div>
-        </div>
-        <div className="mt-14 grid gap-16 lg:grid-cols-3 lg:gap-12">
-          {notes.map(note => (
-            <blockquote key={note.name}>
-              <p className="font-serif text-5xl leading-none text-[#6E3B32]" aria-hidden="true">&ldquo;</p>
-              <p className="mt-4 font-serif text-2xl leading-snug md:text-[1.7rem]">&ldquo;{note.text}&rdquo;</p>
-              <footer className="mt-6 border-t border-[#1A1916] pt-4 text-sm">
-                {note.name}
-                <span className="text-[#5C574E]"> — {note.place}</span>
-              </footer>
-            </blockquote>
-          ))}
+          <div className="grid gap-6 md:grid-cols-3">
+            {notes.map(note => (
+              <blockquote key={note.name} className="border-t border-[#D6CEC3] pt-5">
+                <p className="font-serif text-[21px] italic leading-snug">&ldquo;{note.text}&rdquo;</p>
+                <footer className="mt-5 text-[11px] text-[#6D6A63]">{note.name} · {note.place}</footer>
+              </blockquote>
+            ))}
+          </div>
         </div>
       </section>
     </article>

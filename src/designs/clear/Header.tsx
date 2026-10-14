@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type { DesignNavigate, DesignPage } from '../shared'
 
 interface HeaderProps {
@@ -6,17 +7,22 @@ interface HeaderProps {
   onNavigate: DesignNavigate
 }
 
-const SECTIONS = [
-  { id: 'feature', label: 'Feature' },
-  { id: 'protocol', label: 'Protocol' },
-  { id: 'collection', label: 'The Edit' },
-  { id: 'concerns', label: 'Concerns' },
-  { id: 'studios', label: 'Studios' },
+const LINKS = [
+  { id: 'shop', label: 'Shop' },
+  { id: 'story', label: 'Our Story' },
+  { id: 'protocol', label: 'Build Your Protocol' },
+  { id: 'studios', label: 'For Professionals' },
+  { id: 'footer', label: 'Contact' },
 ]
 
+const wrap = 'mx-auto w-[min(1120px,calc(100%-2.75rem))] md:w-[min(1120px,calc(100%-5.5rem))]'
+
 export default function Header({ page, cartCount, onNavigate }: HeaderProps) {
+  const [open, setOpen] = useState(false)
+
   function jump(id: string) {
-    if ((id === 'collection' || id === 'shop') && page !== 'home') {
+    setOpen(false)
+    if (id === 'shop') {
       onNavigate('shop')
       return
     }
@@ -25,43 +31,51 @@ export default function Header({ page, cartCount, onNavigate }: HeaderProps) {
       node.scrollIntoView({ behavior: 'smooth' })
       return
     }
-    onNavigate(id === 'collection' ? 'shop' : 'home')
+    onNavigate('home')
   }
 
   return (
-    <header className="sticky top-0 z-30 border-b border-[#1A1916] bg-[#F7F4EF]/95 backdrop-blur-sm">
-      <div className="flex items-end justify-between gap-4 px-5 pt-4 md:grid md:grid-cols-[1fr_auto_1fr] md:px-10 md:pt-5">
-        <p className="hidden pb-1 text-[11px] tracking-[0.28em] uppercase text-[#5C574E] md:block">New York</p>
+    <header className="sticky top-0 z-30 border-b border-[#D6CEC3] bg-[#F7F4EF]/95 backdrop-blur-sm">
+      <div className={`${wrap} flex h-[66px] items-center justify-between gap-6 md:h-[78px]`}>
         <button
           type="button"
           onClick={() => onNavigate('home')}
-          className="font-serif text-[1.65rem] leading-none tracking-tight text-[#1A1916] sm:text-4xl md:text-5xl"
+          className="font-serif text-[21px] font-medium tracking-[-0.06em] text-[#252520] md:text-2xl"
         >
           Skin Protocol RX
         </button>
         <button
           type="button"
-          onClick={() => onNavigate('shop')}
-          className="pb-1 text-[12px] tracking-[0.18em] uppercase hover:text-[#6E3B32] md:justify-self-end"
+          className="text-[13px] font-bold md:hidden"
+          aria-expanded={open}
+          aria-label="Toggle navigation"
+          onClick={() => setOpen(value => !value)}
         >
-          Bag {cartCount}
+          Menu
         </button>
-      </div>
-      <div className="mx-5 mt-3 border-t border-[#1A1916] md:mx-10" />
-      <nav className="flex flex-wrap items-center justify-center gap-x-7 gap-y-2 px-5 py-3 text-[13px] tracking-[0.16em] uppercase md:gap-x-10 md:px-10 md:py-3.5">
-        {SECTIONS.map(item => (
-          <button key={item.id} type="button" onClick={() => jump(item.id)} className="text-[#1A1916] hover:text-[#6E3B32]">
-            {item.label}
+        <nav
+          className={`${open ? 'flex' : 'hidden'} absolute inset-x-0 top-full flex-col gap-4 border-b border-[#D6CEC3] bg-[#F7F4EF] px-6 py-4 text-xs font-semibold md:static md:flex md:flex-row md:items-center md:gap-[27px] md:border-0 md:bg-transparent md:p-0`}
+          aria-label="Main navigation"
+        >
+          {LINKS.map(item => (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => jump(item.id)}
+              className={`text-left hover:text-[#9E8060] ${item.id === 'shop' && (page === 'shop' || page === 'product') ? 'text-[#9E8060]' : ''}`}
+            >
+              {item.label}
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={() => jump('shop')}
+            className="w-fit border border-[#D6CEC3] px-[13px] py-[9px] text-[11px] hover:text-[#9E8060]"
+          >
+            Bag ({cartCount})
           </button>
-        ))}
-        <button
-          type="button"
-          onClick={() => onNavigate('shop')}
-          className={page === 'shop' || page === 'product' ? 'text-[#6E3B32]' : 'text-[#1A1916] hover:text-[#6E3B32]'}
-        >
-          Shop
-        </button>
-      </nav>
+        </nav>
+      </div>
     </header>
   )
 }
