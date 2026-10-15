@@ -20,7 +20,7 @@ const FOUNDERS = [
     name: 'Linda D. Amend, MS',
     role: 'Chemist',
     blurb: 'Formulation-driven. Decades of ingredient development. Focused on stability, delivery, and performance.',
-    image: '/original/founder-linda.jpg',
+    image: '/designs/grove/founder-linda.jpg',
     alt: 'Linda D. Amend, MS, chemist and co-founder of Skin Protocol RX',
   },
   {

@@ -90,7 +90,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             <p className="intro">Created by a chemist, a nurse practitioner, and a licensed medical esthetician, Skin Protocol RX brings professional experience and personal care together.</p>
             <button type="button" className="micro-link" onClick={() => scrollTo('spa')}>Get to know the brand ↗</button>
           </div>
-          <FounderCards />
+          <FounderCards lindaImage="/designs/boutique/founder-linda.jpg" />
         </div>
       </section>
       <SpaClose background="#e5dbd2" />

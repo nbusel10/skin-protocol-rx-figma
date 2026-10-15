@@ -94,7 +94,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         <div className="image" style={{ display: 'flex', alignItems: 'stretch' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 4, width: '100%', minHeight: 450 }}>
             {FOUNDERS.map(person => (
-              <img key={person.name} className="full-image founder-graded" alt={person.name} src={person.image} style={{ objectPosition: '50% 20%', height: '100%' }} />
+              <img key={person.name} className="full-image founder-graded" alt={person.name} src={person.name.startsWith('Linda') ? '/designs/luxe/founder-linda.jpg' : person.image} style={{ objectPosition: '50% 20%', height: '100%' }} />
             ))}
           </div>
         </div>

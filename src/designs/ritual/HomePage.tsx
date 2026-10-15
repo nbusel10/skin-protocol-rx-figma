@@ -90,7 +90,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             <p className="intro">A chemist, a nurse practitioner, and a licensed medical esthetician came together around a simple conviction: caring for skin should feel clear, personal, and considered.</p>
             <button type="button" className="micro-link" onClick={() => scrollTo('spa')}>Our story ↗</button>
           </div>
-          <FounderCards />
+          <FounderCards lindaImage="/designs/ritual/founder-linda.jpg" />
         </div>
       </section>
       <SpaClose background="#e4d3c8" />

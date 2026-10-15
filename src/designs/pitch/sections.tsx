@@ -177,12 +177,12 @@ export function ConcernTiles() {
   )
 }
 
-export function FounderCards() {
+export function FounderCards({ lindaImage }: { lindaImage: string }) {
   return (
     <div className="founder-row">
       {FOUNDERS.map(person => (
         <div key={person.name} className="founder">
-          <img className="founder-graded" alt={person.alt} src={person.image} />
+          <img className="founder-graded" alt={person.alt} src={person.name.startsWith('Linda') ? lindaImage : person.image} />
           <div className="caption">
             <h3>{person.name}</h3>
             <p>{person.role}</p>
