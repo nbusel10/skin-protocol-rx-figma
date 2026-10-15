@@ -224,13 +224,13 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      <section className="grid bg-[#FFFDFA] lg:grid-cols-[22%_1fr] lg:items-center">
+      <section className="grid items-center gap-8 bg-[#FFFDFA] px-6 py-10 sm:px-8 lg:grid-cols-[280px_1fr] lg:gap-16 lg:px-[max(36px,6vw)] lg:py-16">
         <img
           src="/designs/clear/ritual-glow.jpg"
           alt="A woman with glowing skin applying cream in warm morning light"
-          className="h-[165px] w-full object-cover object-[center_30%] lg:h-[275px]"
+          className="mx-auto h-auto w-full max-w-[220px] object-cover lg:mx-0 lg:max-w-none"
         />
-        <div className="px-6 py-12 sm:px-8 lg:py-[70px] lg:pr-[clamp(2.25rem,7vw,7rem)] lg:pl-16">
+        <div className="lg:py-2 lg:pr-[clamp(1rem,4vw,3rem)]">
           <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">The daily ritual</p>
           <h2 className="mt-3 max-w-[460px] font-serif text-[clamp(2.125rem,3.5vw,3.2rem)] leading-[1.12] tracking-[-0.044em]">
             A routine that makes <em>room for real life.</em>
