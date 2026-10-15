@@ -26,6 +26,15 @@ const ITEMS: {
     bar: '#B88E91',
   },
   {
+    id: 'protocol',
+    name: 'The Protocol',
+    line: 'Modern Editorial · Newsreader Light',
+    href: '/designs/the-protocol.html',
+    image: '/designs/the-protocol-card.jpg',
+    bar: '#413b38',
+    separate: true,
+  },
+  {
     id: 'clear',
     name: 'Editorial',
     line: 'A beauty magazine turned into a shop. Oversized type, uneven grids, the family in the feature.',
@@ -80,9 +89,9 @@ export default function PickerPage({ onOpen }: PickerPageProps) {
       <header className="border-b border-[#D9D9D6] px-6 py-6 md:px-10">
         <p className="text-[11px] font-semibold tracking-[0.22em] uppercase text-[#5E5E5A]">Skin Protocol RX</p>
         <div className="mt-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <h1 className="max-w-xl text-4xl font-medium tracking-tight md:text-5xl">Seven ways to see the line.</h1>
+            <h1 className="max-w-xl text-4xl font-medium tracking-tight md:text-5xl">Eight ways to see the line.</h1>
           <p className="max-w-sm text-sm leading-relaxed text-[#4E4E4A]">
-            Original, Rose, Editorial, and Botanical Laboratory stay as they are. Modern Skincare Boutique, Luxury Editorial, and Personalized Skin Ritual are three more homepage directions.
+            Original and Rose stay as they are. The Protocol is the third homepage direction, followed by Editorial, Botanical Laboratory, and the three later prototypes.
           </p>
         </div>
       </header>

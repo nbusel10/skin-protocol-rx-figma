@@ -3,6 +3,7 @@ import type { GalleryTarget } from './shared'
 const CHOICES: { id: GalleryTarget; label: string; href: string }[] = [
   { id: 'original', label: 'Original', href: '/original' },
   { id: 'rose', label: 'Rose', href: '/' },
+  { id: 'protocol', label: 'The Protocol', href: '/designs/the-protocol.html' },
   { id: 'clear', label: 'Editorial', href: '/designs/clear' },
   { id: 'grove', label: 'Botanical Laboratory', href: '/designs/grove' },
   { id: 'boutique', label: 'Modern Skincare Boutique', href: '/designs/boutique' },

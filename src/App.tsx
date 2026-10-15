@@ -323,6 +323,10 @@ export default function App() {
       applyRoute(route('home', { version: 'v2', design: '', designPage: 'home' }), 'push')
       return
     }
+    if (target === 'protocol') {
+      window.location.assign(`${normalizeBase()}/designs/the-protocol.html`)
+      return
+    }
     applyRoute(route('home', { design: target, designPage: 'home', version: 'v2' }), 'push')
   }, [applyRoute])
 
