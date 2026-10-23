@@ -8,6 +8,7 @@ import {
   stepLabel,
   type DesignNavigate,
 } from '../shared'
+import ProtocolOverviewSection from '../ProtocolOverviewSection'
 
 interface HomePageProps {
   onNavigate: DesignNavigate
@@ -46,32 +47,6 @@ const FOUNDERS = [
   },
 ]
 
-const KEPT = [
-  'Clinically relevant active ingredients',
-  'Intentional concentrations',
-  'Balanced, skin-supportive formulas',
-  'Multi-functional ingredients selected with purpose',
-  'Formulation decisions grounded in long-term skin health',
-]
-
-const LEFT_OUT = [
-  'Overloaded ingredient lists',
-  'Redundant actives',
-  'Trend-driven formulation',
-  'Unnecessary fillers',
-  'Fragrance added without purpose',
-]
-
-const STEP_MARK: Record<number, string> = {
-  1: 'Essential',
-  2: 'Optional',
-  3: 'Optional',
-  4: 'Optional',
-  5: 'Essential',
-  6: 'Optional',
-  7: 'AM · SPF',
-}
-
 const wrap = 'mx-auto w-[min(1120px,calc(100%-2.75rem))] md:w-[min(1120px,calc(100%-5.5rem))]'
 
 export default function HomePage({ onNavigate }: HomePageProps) {
@@ -84,22 +59,22 @@ export default function HomePage({ onNavigate }: HomePageProps) {
 
   return (
     <article className="bg-[#F7F4EF] font-sans text-[#252520]">
-      <section id="feature" className="scroll-mt-28 bg-[#FFFDFA]">
+      <section id="feature" className="scroll-mt-28 bg-[#FFFDFA] py-10 md:py-14">
         <div className="grid min-[681px]:min-h-[clamp(320px,36vw,520px)] min-[681px]:grid-cols-[48%_52%]">
-          <div className="flex flex-col justify-center px-6 py-8 min-[681px]:py-8 min-[681px]:pr-[8%] min-[681px]:pl-[max(36px,8vw)]">
-            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">Considered skincare · New York</p>
-            <h1 className="my-3 max-w-[650px] font-serif text-[clamp(49px,12vw,67px)] leading-[1.08] tracking-[-0.044em] min-[681px]:text-[clamp(52px,4.6vw,72px)]">
-              Give your skin exactly what <em className="italic whitespace-nowrap">it needs.</em>
+          <div className="flex flex-col justify-center px-6 py-6 min-[681px]:py-8 min-[681px]:pr-[8%] min-[681px]:pl-[max(36px,8vw)]">
+            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">Skincare with intention</p>
+            <h1 className="my-3 max-w-[650px] font-serif text-[clamp(40px,8vw,56px)] leading-[1.08] tracking-[-0.044em] min-[681px]:text-[clamp(44px,4vw,60px)]">
+              Your Skin Doesn&apos;t Need More. <em className="italic">It Needs What Works.</em>
             </h1>
-            <p className="mb-4 max-w-[420px] text-[15px] leading-relaxed text-[#595750]">
-              And nothing it does not. Professional skincare shaped by a chemist, a nurse practitioner, and an esthetician. Purposeful formulas. A simpler routine.
+            <p className="mb-4 max-w-[540px] text-[15px] leading-relaxed text-[#595750]">
+              Each formula is constructed for performance — using only what the skin needs to function, repair, and improve. Formulated with proven actives chosen for performance, not trends. Thoughtfully selected ingredients and formulas, bringing professional skincare into your everyday routine. Every formulation is created with one goal: effective, evidence-driven skincare that supports long-term skin function. Just thoughtful formulas, professional insight, and a routine that feels right for you.
             </p>
             <div className="flex flex-wrap gap-3">
               <button type="button" onClick={() => document.getElementById('collection')?.scrollIntoView({ behavior: 'smooth' })} className="inline-flex min-h-12 items-center gap-4 bg-[#252520] px-5 text-[11px] font-semibold tracking-[0.1em] uppercase text-white hover:bg-[#4A4942]">
                 Explore the collection <span aria-hidden="true">↗</span>
               </button>
               <button type="button" onClick={() => document.getElementById('protocol')?.scrollIntoView({ behavior: 'smooth' })} className="inline-flex min-h-12 items-center gap-4 border border-[#252520] px-5 text-[11px] font-semibold tracking-[0.1em] uppercase hover:bg-[#252520] hover:text-white">
-                Find your protocol <span aria-hidden="true">↗</span>
+                Build your protocol <span aria-hidden="true">↗</span>
               </button>
             </div>
           </div>
@@ -118,6 +93,69 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           </div>
         </div>
       </section>
+
+      <section id="philosophy" className="scroll-mt-28 bg-[#252520] py-16 text-[#FFFDFA] md:py-[75px]">
+        <div className={`${wrap} grid grid-cols-1 gap-12 lg:grid-cols-[1.1fr_.9fr] lg:items-center lg:gap-16`}>
+          <div>
+            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">Our philosophy</p>
+            <h2 className="mt-3 mb-7 font-serif text-[clamp(2.25rem,3.5vw,3.4rem)] leading-[1.1] tracking-[-0.044em]">
+              Everything your skin needs.
+              <br />
+              <em>Nothing it doesn&apos;t.</em>
+            </h2>
+            <p className="text-sm leading-relaxed text-[#CAC5BB]">
+              We formulate with thoughtfully selected actives and botanical ingredients, each chosen for a reason—to support healthy, resilient skin. Every product has a clear role in a simplified, effective routine. Our focus is on high-quality formulas and useful product education, without chasing trends or adding unnecessary extras.
+            </p>
+            <div className="mt-7 grid grid-cols-1 border-t border-white/20 min-[701px]:grid-cols-3">
+              {[
+                { href: '/our-story#our-standards', label: 'Our Standards', body: 'How we decide what stays and what stays out.' },
+                { href: '/ingredient-glossary', label: 'Ingredient Glossary', body: 'See what is in the formulas and why.' },
+                { href: '/product-education', label: 'Product Education', body: 'Learn what each product is good for.' },
+              ].map((item, i) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className={`group flex items-center justify-between gap-2.5 border-b border-white/20 py-[18px] text-left min-[701px]:border-b-0 min-[701px]:border-l min-[701px]:px-3 min-[701px]:py-5 min-[701px]:first:border-l-0 min-[701px]:first:pl-0 min-[701px]:last:pr-0 ${i === 2 ? 'border-b-0' : ''}`}
+                >
+                  <span>
+                    <span className="relative inline-block whitespace-nowrap text-sm font-semibold text-[#F7F1E8] transition-colors group-hover:text-[#B99C77] after:absolute after:left-0 after:bottom-[-4px] after:h-px after:w-0 after:bg-[#B99C77] after:transition-[width] after:duration-300 group-hover:after:w-full">
+                      {item.label}
+                    </span>
+                    <span className="mt-1.5 block text-xs leading-snug text-[#CAC5BB]">{item.body}</span>
+                  </span>
+                  <span className="shrink-0 text-[#F7F1E8] transition-all duration-200 group-hover:translate-x-1 group-hover:text-[#B99C77]" aria-hidden="true">→</span>
+                </a>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-7">
+            {[
+              ['✳', 'Thoughtfully selected', 'Purposeful formulations. A protocol with purpose.'],
+              ['◌', 'Tried and true', 'Supported by research and evidence-based information.'],
+              ['✧', 'Results without hype', 'Backed by research. No unnecessary extras.'],
+              ['+', 'Clinical intention', 'Where clinical intention meets natural intelligence.'],
+              ['♡', 'Never tested on animals', 'A standard we hold, not a badge.'],
+              ['◎', 'Expert founded', 'Chemist · Nurse Practitioner · Esthetician'],
+            ].map(([symbol, title, body], i, arr) => (
+              <div
+                key={title}
+                className={`flex items-center gap-5 border-t border-white/20 py-6 ${i >= arr.length - 2 ? 'border-b border-white/20' : ''}`}
+              >
+                <span className="shrink-0 font-serif text-[30px] leading-none text-[#B99C77]" aria-hidden="true">{symbol}</span>
+                <div>
+                  <p className="font-serif text-[22px] leading-tight text-[#F7F1E8]">{title}</p>
+                  <p className="mt-1 text-[11px] leading-relaxed text-[#CAC5BB]">{body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <ProtocolOverviewSection
+        tone="editorial"
+        onCta={() => document.getElementById('protocol')?.scrollIntoView({ behavior: 'smooth' })}
+      />
 
       <div className="border-y border-[#D6CEC3] bg-[#EDE8DF]">
         <div className={`${wrap} grid md:grid-cols-3`}>
@@ -195,72 +233,6 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      <section className="bg-[#252520] py-16 text-[#FFFDFA] md:py-[75px]">
-        <div className="mx-auto grid w-[min(940px,calc(100%-2.75rem))] gap-8 md:w-[min(940px,calc(100%-5.5rem))] md:grid-cols-2 md:gap-0">
-          <div className="md:pr-9">
-            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">Our philosophy</p>
-            <h2 className="mt-1 font-serif text-[41px] italic leading-none">Kept.</h2>
-            <ul className="mt-5">
-              {KEPT.map(item => (
-                <li key={item} className="flex gap-4 border-b border-white/20 py-2.5 text-sm">
-                  <span className="text-[#B99C77]">—</span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="md:border-l md:border-[#655F55] md:pl-9">
-            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">Without the unnecessary</p>
-            <h2 className="mt-1 font-serif text-[41px] italic leading-none">Left out.</h2>
-            <ul className="mt-5 text-[#CAC5BB]">
-              {LEFT_OUT.map(item => (
-                <li key={item} className="flex gap-4 border-b border-white/20 py-2.5 text-sm">
-                  <span className="text-[#B99C77]">—</span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section className="grid items-center gap-8 bg-[#FFFDFA] px-6 py-10 sm:px-8 lg:grid-cols-[280px_1fr] lg:gap-16 lg:px-[max(36px,6vw)] lg:py-16">
-        <img
-          src="/designs/clear/ritual-glow.jpg"
-          alt="A woman with glowing skin applying cream in warm morning light"
-          className="mx-auto h-auto w-full max-w-[220px] object-cover lg:mx-0 lg:max-w-none"
-        />
-        <div className="lg:py-2 lg:pr-[clamp(1rem,4vw,3rem)]">
-          <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">The daily ritual</p>
-          <h2 className="mt-3 max-w-[460px] font-serif text-[clamp(2.125rem,3.5vw,3.2rem)] leading-[1.12] tracking-[-0.044em]">
-            A routine that makes <em>room for real life.</em>
-          </h2>
-          <p className="mt-4 max-w-[420px] text-sm leading-relaxed text-[#6D6A63]">
-            You do not need every bottle. Start with a cleanser and moisturizer; choose additional care for your skin, and finish mornings with SPF.
-          </p>
-          <ol className="mt-8 grid grid-cols-2 gap-x-3 sm:gap-x-6">
-            {PROTOCOL_STEPS.map(step => {
-              const mark = STEP_MARK[step.step]
-              const row = (
-                <span className="flex items-baseline gap-2.5 border-t border-[#D6CEC3] py-3">
-                  <span className="font-serif text-[15px] italic text-[#9E8060]">{String(step.step).padStart(2, '0')}</span>
-                  <span className="text-[13px] font-semibold">{step.name}</span>
-                  <span className="ml-auto text-[10px] whitespace-nowrap text-[#6D6A63]">{mark}</span>
-                </span>
-              )
-              if (step.productBacked === false) return <li key={step.step}>{row}</li>
-              return (
-                <li key={step.step}>
-                  <button type="button" onClick={() => onNavigate('shop')} className="w-full text-left hover:text-[#9E8060]">
-                    {row}
-                  </button>
-                </li>
-              )
-            })}
-          </ol>
-        </div>
-      </section>
-
       <section id="protocol" className="scroll-mt-28 bg-[#EDE8DF] py-16 md:py-[90px]">
         <div className={`${wrap} grid items-center gap-8 lg:grid-cols-[39%_1fr] lg:gap-[60px]`}>
           <div>
@@ -301,31 +273,6 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                 Explore formula ↗
               </button>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="concerns" className="scroll-mt-28 py-16 md:py-[90px]">
-        <div className={wrap}>
-          <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
-            <div>
-              <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">Explore your options</p>
-              <h2 className="mt-1.5 font-serif text-[clamp(2rem,3.2vw,3.05rem)] leading-[1.12] tracking-[-0.044em]">Shop by concern.</h2>
-            </div>
-            <p className="max-w-[390px] text-sm text-[#6D6A63]">Find the formulas that fit the way your skin feels today.</p>
-          </div>
-          <div className="grid sm:grid-cols-2 sm:gap-x-10">
-            {SKIN_CONCERNS.map(item => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => onNavigate('product', focusProduct(item.id).id)}
-                className="group flex min-h-14 items-center justify-between gap-4 border-t border-[#D6CEC3] py-4 text-left"
-              >
-                <span className="font-serif text-[22px] leading-tight group-hover:italic">{item.label}</span>
-                <span className="text-[10px] font-semibold tracking-[0.1em] uppercase text-[#9E8060]">Explore ↗</span>
-              </button>
-            ))}
           </div>
         </div>
       </section>

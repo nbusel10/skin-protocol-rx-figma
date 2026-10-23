@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
-import { PRODUCTS, SKIN_CONCERNS, PROTOCOL_STEPS, getProtocolStepLabel } from '../../data'
+import { useState } from 'react'
+import { PRODUCTS, getProtocolStepLabel } from '../../data'
+import ProtocolOverviewSection from '../../designs/ProtocolOverviewSection'
 import ProductImage from '../components/ProductImage'
 
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
@@ -7,21 +8,6 @@ type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossa
 interface HomePageProps {
   onNavigate: (page: Page, productId?: string) => void
 }
-
-const DIFFERENCE = [
-  {
-    title: 'What it is',
-    body: 'A clinical line with a natural point of view. Clear formulas, calm routines, and packaging you can recognize.',
-  },
-  {
-    title: 'What makes it different',
-    body: 'Each product has one job. Ingredients stay because they earn their place, not because a trend asked for them.',
-  },
-  {
-    title: 'Why you can trust it',
-    body: 'Built by a chemist, a nurse practitioner, and a licensed medical esthetician who work with skin every day.',
-  },
-]
 
 const TESTIMONIALS_CUSTOMER = [
   { name: 'Rachel M.', location: 'Client', text: 'The Hyaluronic Acid Serum changed my morning routine completely. My skin has never felt this hydrated by midday.', rating: 5 },
@@ -55,75 +41,20 @@ function StarRating({ rating }: { rating: number }) {
   )
 }
 
-const PRESCRIPTION = [
-  'If an ingredient is in the bottle, it has a job.',
-  'We keep formulas focused.',
-  'Our formulas are never tested on animals.',
+const PHILOSOPHY_POINTS = [
+  { symbol: '✳', title: 'Thoughtfully selected', body: 'Purposeful formulations. A protocol with purpose.' },
+  { symbol: '◌', title: 'Tried and true', body: 'Supported by research and evidence-based information.' },
+  { symbol: '✧', title: 'Results without hype', body: 'Backed by research. No unnecessary extras.' },
+  { symbol: '+', title: 'Clinical intention', body: 'Where clinical intention meets natural intelligence.' },
+  { symbol: '♡', title: 'Never tested on animals', body: 'A standard we hold, not a badge.' },
+  { symbol: '◎', title: 'Expert founded', body: 'Chemist · Nurse Practitioner · Esthetician' },
 ]
 
 const PHILOSOPHY_LINKS: { label: string; body: string; page: Page; id?: string }[] = [
+  { label: 'Our Standards', body: 'How we decide what stays and what stays out.', page: 'story', id: 'our-standards' },
   { label: 'Ingredient Glossary', body: 'See what is in the formulas and why.', page: 'glossary' },
   { label: 'Product Education', body: 'Learn what each product is good for.', page: 'education' },
-  { label: 'Our Standards', body: 'How we decide what stays and what stays out.', page: 'story', id: 'our-standards' },
 ]
-
-function PrescriptionMark() {
-  const ref = useRef<HTMLSpanElement>(null)
-  const [drawn, setDrawn] = useState(false)
-
-  useEffect(() => {
-    const node = ref.current
-    if (!node) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setDrawn(true)
-      return
-    }
-    const observer = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) return
-      setDrawn(true)
-      observer.disconnect()
-    }, { threshold: 0.6 })
-    observer.observe(node)
-    return () => observer.disconnect()
-  }, [])
-
-  return (
-    <span ref={ref} className="relative inline-block">
-      <span className="font-serif text-6xl md:text-7xl text-charcoal leading-none">Rx</span>
-      <svg
-        viewBox="0 0 192 116"
-        className="pointer-events-none absolute left-1/2 h-[6.05rem] w-[10rem] -translate-x-1/2 -top-[0.42rem] overflow-visible text-rose md:-top-2 md:h-[7.25rem] md:w-[12rem]"
-        aria-hidden="true"
-      >
-        <ellipse
-          cx="96"
-          cy="52"
-          rx="80"
-          ry="50"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinecap="round"
-          pathLength={1}
-          transform="rotate(-7 96 52)"
-          style={{
-            strokeDasharray: 1,
-            strokeDashoffset: drawn ? 0 : 1,
-            transition: drawn ? 'stroke-dashoffset 1.15s cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
-          }}
-        />
-      </svg>
-    </span>
-  )
-}
-
-function Arrow() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" className="shrink-0">
-      <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
 
 function ProductCard({ product, onNavigate }: { product: typeof PRODUCTS[0]; onNavigate: (page: Page, id?: string) => void }) {
   const badge = product.badges[0]
@@ -167,21 +98,21 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <section className="grid grid-cols-1 lg:grid-cols-2 items-center bg-ivory">
         <div className="flex flex-col justify-center px-6 md:px-12 lg:px-16 py-14 lg:py-16 order-2 lg:order-1">
           <p className="text-[11px] tracking-[0.22em] uppercase text-rose mb-5">
-            Clinical Simplicity. Natural Intelligence.
+            Skincare with intention
           </p>
           <h1 className="font-serif text-4xl md:text-5xl lg:text-[3.4rem] leading-[1.12] text-charcoal mb-6">
             Your Skin Doesn&apos;t Need More.<br />
             <em>It Needs What Works.</em>
           </h1>
-          <p className="text-base md:text-lg text-charcoal/85 leading-relaxed max-w-md mb-8">
-            A calm clinical line for real skin. Start with the collection, or answer a few questions and we&apos;ll suggest a simple routine.
+          <p className="text-base md:text-lg text-charcoal/85 leading-relaxed mb-8">
+            Each formula is constructed for performance — using only what the skin needs to function, repair, and improve. Formulated with proven actives chosen for performance, not trends. Thoughtfully selected ingredients and formulas, bringing professional skincare into your everyday routine. Every formulation is created with one goal: effective, evidence-driven skincare that supports long-term skin function. Just thoughtful formulas, professional insight, and a routine that feels right for you.
           </p>
           <div className="flex flex-col sm:flex-row flex-wrap gap-3">
             <button type="button" onClick={() => onNavigate('shop')} className="btn-primary">
-              Explore the Collection
+              Explore the collection
             </button>
             <button type="button" onClick={() => onNavigate('protocol')} className="btn-secondary">
-              Find Your Protocol
+              Build your protocol
             </button>
           </div>
         </div>
@@ -193,117 +124,59 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      {/* What it is, why it is different, why to trust it */}
-      <section className="bg-stone px-6 md:px-8 py-14">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-          {DIFFERENCE.map(item => (
-            <div key={item.title} className="difference-card" tabIndex={0}>
-              <h2 className="difference-title font-serif text-2xl">{item.title}</h2>
-              <p className="text-base text-charcoal/85 leading-relaxed">{item.body}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA 3 — model and routine steps together */}
-      <section className="px-6 md:px-8 py-16 bg-ivory">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-          <div className="aspect-[4/5] bg-stone overflow-hidden">
-            <img
-              src="/our-story-ritual.jpg"
-              alt="A woman applying Skin Protocol RX cream, with the collection beside her"
-              className="w-full h-full object-cover object-[center_28%]"
-            />
-          </div>
+      <section id="philosophy" className="bg-stone px-6 md:px-8 py-16 md:py-24">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1.1fr_.9fr] gap-12 lg:gap-16 lg:items-center">
           <div>
-            <p className="text-[11px] tracking-[0.22em] uppercase text-rose mb-3">A simple routine</p>
-            <h2 className="font-serif text-3xl md:text-4xl text-charcoal mb-4">
-              Start with the steps your skin actually needs
+            <p className="text-[11px] tracking-[0.22em] uppercase text-rose mb-4">Our philosophy</p>
+            <h2 className="font-serif text-3xl md:text-5xl text-charcoal leading-[1.08] mb-7">
+              Everything your skin needs.
+              <br />
+              <em>Nothing it doesn&apos;t.</em>
             </h2>
-            <p className="text-base text-charcoal/85 leading-relaxed mb-6">
-              Cleanse, treat, and moisturize. Add eye care or a facial oil only if you want them. Finish the morning with sunscreen.
+            <p className="text-base md:text-lg text-charcoal/85 leading-relaxed">
+              We formulate with thoughtfully selected actives and botanical ingredients, each chosen for a reason—to support healthy, resilient skin. Every product has a clear role in a simplified, effective routine. Our focus is on high-quality formulas and useful product education, without chasing trends or adding unnecessary extras.
             </p>
-            <ol className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-              {PROTOCOL_STEPS.map(s => {
-                const body = (
-                  <>
-                    <p className="text-[11px] tracking-[0.16em] uppercase text-rose">Step {s.step}</p>
-                    <p className="font-serif text-lg text-charcoal">{s.name}</p>
-                  </>
-                )
-                if (s.productBacked === false) {
-                  return (
-                    <li key={s.step} className="bg-stone px-4 py-3">
-                      {body}
-                    </li>
-                  )
-                }
-                return (
-                  <li key={s.step}>
-                    <button
-                      type="button"
-                      onClick={() => onNavigate('shop', String(s.step))}
-                      className="w-full bg-stone px-4 py-3 text-left border border-transparent transition-colors hover:bg-ivory hover:border-rose/50 focus-visible:bg-ivory focus-visible:border-rose/50"
-                    >
-                      {body}
-                    </button>
-                  </li>
-                )
-              })}
-            </ol>
-            <div className="flex flex-col sm:flex-row flex-wrap gap-3">
-              <button type="button" onClick={() => onNavigate('protocol')} className="btn-primary">
-                Build My Routine
-              </button>
-              <button
-                type="button"
-                onClick={() => document.getElementById('skin-concerns')?.scrollIntoView({ behavior: 'smooth' })}
-                className="btn-secondary"
-              >
-                Search by Skin Concern
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Shop by skin concern — the Index */}
-      <section id="skin-concerns" className="bg-stone px-6 md:px-8 py-16 scroll-mt-28">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-            <div>
-              <p className="text-[11px] tracking-[0.22em] uppercase text-rose mb-2">Find your focus</p>
-              <h2 className="font-serif text-3xl md:text-4xl text-charcoal">Shop by skin concern</h2>
-            </div>
-            <button
-              type="button"
-              onClick={() => onNavigate('shop')}
-              className="link-arrow text-sm text-charcoal hover:text-rose"
-            >
-              View the collection
-            </button>
-          </div>
-          <div className="grid grid-cols-2 gap-x-6 md:grid-cols-5 md:gap-x-8">
-            {SKIN_CONCERNS.map((concern, index) => (
-              <button
-                key={concern.id}
-                type="button"
-                onClick={() => onNavigate('shop')}
-                className={`flex h-full flex-col border-b border-gray-soft py-5 text-left group ${index < 2 ? 'border-t' : ''} ${index >= 2 && index < 5 ? 'md:border-t' : ''}`}
-              >
-                <span className="flex items-center justify-between gap-2">
-                  <span className="text-[11px] tracking-[0.18em] text-rose">{String(index + 1).padStart(2, '0')}</span>
-                  <span className="text-charcoal transition-all group-hover:translate-x-1 group-hover:text-rose">
-                    <Arrow />
+            <div className="mt-7 grid grid-cols-1 border-t border-gray-soft min-[701px]:grid-cols-3">
+              {PHILOSOPHY_LINKS.map((item, i) => (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={() => onNavigate(item.page, item.id)}
+                  className={`group flex w-full items-center justify-between gap-2.5 border-b border-gray-soft py-[18px] text-left min-[701px]:border-b-0 min-[701px]:border-l min-[701px]:px-3 min-[701px]:py-5 min-[701px]:first:border-l-0 min-[701px]:first:pl-0 min-[701px]:last:pr-0 ${i === 2 ? 'border-b-0' : ''}`}
+                >
+                  <span>
+                    <span className="relative inline-block whitespace-nowrap text-sm font-medium text-charcoal transition-colors group-hover:text-rose after:absolute after:left-0 after:bottom-[-4px] after:h-px after:w-0 after:bg-rose after:transition-[width] after:duration-300 group-hover:after:w-full">
+                      {item.label}
+                    </span>
+                    <span className="mt-1.5 block text-xs leading-snug text-charcoal/70">{item.body}</span>
                   </span>
-                </span>
-                <span className="mt-3 block font-serif text-lg leading-snug text-charcoal transition-colors group-hover:text-rose">{concern.label}</span>
-                <span className="mt-1 block text-sm leading-relaxed text-charcoal/70">{concern.description}</span>
-              </button>
+                  <span className="shrink-0 text-charcoal transition-all duration-200 group-hover:translate-x-1 group-hover:text-rose" aria-hidden="true">→</span>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-7">
+            {PHILOSOPHY_POINTS.map((point, i) => (
+              <div
+                key={point.title}
+                className={`flex items-center gap-5 border-t border-gray-soft py-6 ${i >= PHILOSOPHY_POINTS.length - 2 ? 'border-b border-gray-soft' : ''}`}
+              >
+                <span className="shrink-0 font-serif text-[30px] leading-none text-rose" aria-hidden="true">{point.symbol}</span>
+                <div>
+                  <p className="font-serif text-[22px] text-charcoal leading-tight">{point.title}</p>
+                  <p className="mt-1 text-[11px] leading-relaxed text-charcoal/60">{point.body}</p>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
+
+      <ProtocolOverviewSection
+        tone="rose"
+        id="protocol-overview"
+        onCta={() => onNavigate('protocol')}
+      />
 
       {/* CTA 4 — featured products */}
       <section className="bg-ivory px-6 md:px-8 py-16">
@@ -324,53 +197,6 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             {featuredProducts.map(p => (
               <ProductCard key={p.id} product={p} onNavigate={onNavigate} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="philosophy" className="bg-stone px-6 md:px-8 py-16 md:py-24">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[minmax(0,1.35fr)_minmax(16rem,0.75fr)] gap-10 lg:gap-16 items-center">
-          <div className="bg-ivory border border-gray-soft px-8 md:px-12 py-12 md:py-14">
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
-              <div>
-                <p className="text-[11px] tracking-[0.22em] uppercase text-rose mb-3">The Natural Prescription</p>
-                <PrescriptionMark />
-              </div>
-              <h2 className="font-serif text-xl text-charcoal leading-snug sm:text-right">
-                Everything your skin needs.
-                <br />
-                Nothing it doesn&apos;t.
-              </h2>
-            </div>
-            <ol className="border-t border-gray-soft">
-              {PRESCRIPTION.map((line, index) => (
-                <li key={line} className="grid grid-cols-[2.75rem_1fr] gap-3 py-5 border-b border-gray-soft last:border-b-0">
-                  <span className="font-serif text-lg text-rose">{String(index + 1).padStart(2, '0')}</span>
-                  <span className="font-serif text-xl md:text-2xl text-charcoal leading-snug">{line}</span>
-                </li>
-              ))}
-            </ol>
-            <p className="mt-2 pt-6 border-t border-gray-soft text-[11px] tracking-[0.18em] uppercase text-charcoal/55">
-              Chemist · Nurse Practitioner · Esthetician
-            </p>
-          </div>
-          <div className="border-t border-gray-soft">
-            {PHILOSOPHY_LINKS.map(item => (
-              <button
-                key={item.label}
-                type="button"
-                onClick={() => onNavigate(item.page, item.id)}
-                className="w-full flex items-center justify-between gap-6 py-5 border-b border-gray-soft text-left group"
-              >
-                <span>
-                  <span className="block text-sm font-medium text-charcoal group-hover:text-rose transition-colors">{item.label}</span>
-                  <span className="block text-sm text-charcoal/70 mt-1">{item.body}</span>
-                </span>
-                <span className="text-charcoal group-hover:text-rose group-hover:translate-x-1 transition-all">
-                  <Arrow />
-                </span>
-              </button>
             ))}
           </div>
         </div>

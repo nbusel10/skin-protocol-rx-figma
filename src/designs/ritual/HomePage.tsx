@@ -1,10 +1,56 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import type { DesignNavigate } from '../shared'
-import { Assessment, Collection, ConcernTiles, FounderCards, SpaClose, Steps, scrollTo } from '../pitch/sections'
+import { Assessment, Collection, FounderCards, SpaClose, scrollTo } from '../pitch/sections'
 import { consumeSection } from '../pitch/ui'
+import ProtocolOverviewSection from '../ProtocolOverviewSection'
 
 interface HomePageProps {
   onNavigate: DesignNavigate
+}
+
+const RIBBON_PHRASES = [
+  'Skin science meets everyday care',
+  'Created with expertise',
+  'Never tested on animals',
+  'Everything your skin needs',
+  'Nothing it doesn\'t',
+  'Thoughtfully selected',
+  'Clinical intention',
+  'Expert founded',
+  'Purposeful formulations',
+  'Family-created formulas',
+]
+
+function RibbonBanner() {
+  const [paused, setPaused] = useState(false)
+  const sequence = `${RIBBON_PHRASES.join('     ·     ')}     ·     `
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setPaused(true)
+    }
+  }, [])
+
+  return (
+    <div className={`c-ribbon${paused ? ' is-paused' : ''}`}>
+      <p className="c-ribbon-sr">{RIBBON_PHRASES.join('. ')}</p>
+      <div className="c-ribbon-viewport" aria-hidden="true">
+        <div className="c-ribbon-track">
+          <span className="c-ribbon-group">{sequence}</span>
+          <span className="c-ribbon-group">{sequence}</span>
+        </div>
+      </div>
+      <button
+        type="button"
+        className="c-ribbon-pause"
+        aria-pressed={paused}
+        aria-label={paused ? 'Play scrolling banner' : 'Pause scrolling banner'}
+        onClick={() => setPaused(p => !p)}
+      >
+        {paused ? 'Play' : 'Pause'}
+      </button>
+    </div>
+  )
 }
 
 export default function HomePage({ onNavigate }: HomePageProps) {
@@ -18,12 +64,12 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <section className="hero-c">
         <div className="c-inner">
           <div className="copy">
-            <span className="eyebrow">The natural prescription</span>
-            <h1 className="heading">A little less.<br /><em>A lot more you.</em></h1>
-            <p className="lead">Beautifully considered skincare for real skin and real routines. Discover what feels right for you, without the overwhelm.</p>
+            <span className="eyebrow">Skincare with intention</span>
+            <h1 className="heading">Your Skin Doesn&apos;t Need More.<br /><em>It Needs What Works.</em></h1>
+            <p className="lead">Each formula is constructed for performance — using only what the skin needs to function, repair, and improve. Formulated with proven actives chosen for performance, not trends. Thoughtfully selected ingredients and formulas, bringing professional skincare into your everyday routine. Every formulation is created with one goal: effective, evidence-driven skincare that supports long-term skin function. Just thoughtful formulas, professional insight, and a routine that feels right for you.</p>
             <div className="buttons">
-              <button type="button" className="btn" onClick={() => scrollTo('quiz')}>Build Your Protocol ↗</button>
-              <button type="button" className="btn outline" onClick={() => scrollTo('collection')}>Explore the Collection ↗</button>
+              <button type="button" className="btn" onClick={() => scrollTo('collection')}>Explore the collection ↗</button>
+              <button type="button" className="btn outline" onClick={() => scrollTo('quiz')}>Build your protocol ↗</button>
             </div>
           </div>
           <div className="scene">
@@ -31,46 +77,53 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           </div>
         </div>
       </section>
-      <div className="c-ribbon">Skin science meets everyday care · Created with expertise · Never tested on animals</div>
-      <section className="section">
+      <RibbonBanner />
+      <section className="section" id="philosophy">
         <div className="wrap c-philosophy">
           <div>
-            <span className="eyebrow">A thoughtful approach</span>
-            <h2 className="heading">Skincare that makes <em>space for you.</em></h2>
-            <p className="intro">A collection grounded in professional experience and made to be understood. Choose your essentials, then add targeted support based on your own skin.</p>
-          </div>
-          <div className="c-points">
-            <div className="c-point"><div className="symbol">✳</div><div><strong>Selected with intention</strong><span>Ingredients chosen for a clear purpose.</span></div></div>
-            <div className="c-point"><div className="symbol">◌</div><div><strong>Professional perspective</strong><span>Three co-founders with complementary expertise.</span></div></div>
-            <div className="c-point"><div className="symbol">✧</div><div><strong>A simpler routine</strong><span>Good foundations before optional extras.</span></div></div>
-          </div>
-        </div>
-      </section>
-      <section className="section c-concern-block" id="concerns">
-        <div className="wrap">
-          <div className="section-top">
-            <div>
-              <span className="eyebrow">Your skin is the starting point</span>
-              <h2 className="heading">What does your skin need today?</h2>
+            <span className="eyebrow">Our philosophy</span>
+            <h2 className="heading">Everything your skin needs.<br /><em>Nothing it doesn&apos;t.</em></h2>
+            <p className="intro">We formulate with thoughtfully selected actives and botanical ingredients, each chosen for a reason—to support healthy, resilient skin. Every product has a clear role in a simplified, effective routine. Our focus is on high-quality formulas and useful product education, without chasing trends or adding unnecessary extras.</p>
+            <div className="phil-link-row">
+              <a className="phil-link" href="/our-story#our-standards">
+                <span>
+                  <span className="phil-link-title">Our Standards</span>
+                  <span className="phil-link-body">How we decide what stays and what stays out.</span>
+                </span>
+                <span className="phil-link-arrow" aria-hidden="true">→</span>
+              </a>
+              <a className="phil-link" href="/ingredient-glossary">
+                <span>
+                  <span className="phil-link-title">Ingredient Glossary</span>
+                  <span className="phil-link-body">See what is in the formulas and why.</span>
+                </span>
+                <span className="phil-link-arrow" aria-hidden="true">→</span>
+              </a>
+              <a className="phil-link" href="/product-education">
+                <span>
+                  <span className="phil-link-title">Product Education</span>
+                  <span className="phil-link-body">Learn what each product is good for.</span>
+                </span>
+                <span className="phil-link-arrow" aria-hidden="true">→</span>
+              </a>
             </div>
-            <button type="button" className="micro-link" onClick={() => scrollTo('quiz')}>Take the protocol quiz ↗</button>
           </div>
-          <ConcernTiles />
+          <div className="c-points c-points-grid">
+            <div className="c-point"><div className="symbol">✳</div><div><strong>Thoughtfully selected</strong><span>Purposeful formulations. A protocol with purpose.</span></div></div>
+            <div className="c-point"><div className="symbol">◌</div><div><strong>Tried and true</strong><span>Supported by research and evidence-based information.</span></div></div>
+            <div className="c-point"><div className="symbol">✧</div><div><strong>Results without hype</strong><span>Backed by research. No unnecessary extras.</span></div></div>
+            <div className="c-point"><div className="symbol">+</div><div><strong>Clinical intention</strong><span>Where clinical intention meets natural intelligence.</span></div></div>
+            <div className="c-point"><div className="symbol">♡</div><div><strong>Never tested on animals</strong><span>A standard we hold, not a badge.</span></div></div>
+            <div className="c-point"><div className="symbol">◎</div><div><strong>Expert founded</strong><span>Chemist · Nurse Practitioner · Esthetician</span></div></div>
+          </div>
         </div>
       </section>
+      <ProtocolOverviewSection
+        tone="ritual"
+        id="routine"
+        onCta={() => scrollTo('quiz')}
+      />
       <Assessment />
-      <section className="section" id="routine">
-        <div className="wrap">
-          <div className="section-top">
-            <div>
-              <span className="eyebrow">Build your protocol</span>
-              <h2 className="heading">Simple steps. Personal to you.</h2>
-            </div>
-            <p className="intro">Start with essentials, then choose what fits.</p>
-          </div>
-          <Steps callout action={{ label: 'See the collection ↗', id: 'collection' }} />
-        </div>
-      </section>
       <section className="section" id="collection" style={{ background: '#f1eae3' }}>
         <div className="wrap">
           <div className="section-top">

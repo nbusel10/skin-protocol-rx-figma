@@ -1,53 +1,11 @@
 import { useState } from 'react'
-import { SKIN_CONCERNS, PROTOCOL_STEPS } from '../data'
+import ProtocolOverviewSection from '../designs/ProtocolOverviewSection'
 
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 
 interface HomePageProps {
   onNavigate: (page: Page, productId?: string) => void
 }
-
-const BRAND_PROMISES = [
-  {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z" />
-        <path d="M12 8v4l3 3" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
-    title: 'Purposeful Formulas',
-    body: 'Every ingredient has a reason for being there.',
-  },
-  {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-        <path d="M9 12l2 2 4-4" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z" />
-      </svg>
-    ),
-    title: 'No Unnecessary Additives',
-    body: 'Nothing extra. Just targeted skincare support.',
-  },
-  {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-      </svg>
-    ),
-    title: 'Never Tested on Animals',
-    body: 'Professional skincare created with care and integrity.',
-  },
-  {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-        <polyline points="9,22 9,12 15,12 15,22" />
-      </svg>
-    ),
-    title: 'Family-Owned in New York',
-    body: 'Personal standards, professional formulas, and a commitment to healthy skin.',
-  },
-]
 
 const TESTIMONIALS_CUSTOMER = [
   { name: 'Rachel M.', location: 'New York, NY', text: 'The Hyaluronic Acid Serum changed my morning routine completely. My skin has never felt this hydrated by midday.', rating: 5 },
@@ -93,27 +51,27 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         {/* Left: copy */}
         <div className="flex flex-col justify-center px-8 md:px-16 lg:px-20 py-24 lg:py-16 order-2 lg:order-1">
           <p className="text-[11px] tracking-[0.3em] uppercase text-green font-medium mb-6">
-            Clinical Simplicity. Natural Intelligence.
+            Skincare with intention
           </p>
           <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-[1.1] text-charcoal mb-7">
             Your Skin Doesn&apos;t Need More.<br />
             <em>It Needs What Works.</em>
           </h1>
-          <p className="text-base text-charcoal/60 leading-relaxed max-w-md mb-10">
-            Purposeful, professional skincare made without unnecessary additives. Family-owned, created in New York, and never tested on animals.
+          <p className="text-base text-charcoal/60 leading-relaxed max-w-xl mb-10">
+            Each formula is constructed for performance — using only what the skin needs to function, repair, and improve. Formulated with proven actives chosen for performance, not trends. Thoughtfully selected ingredients and formulas, bringing professional skincare into your everyday routine. Every formulation is created with one goal: effective, evidence-driven skincare that supports long-term skin function. Just thoughtful formulas, professional insight, and a routine that feels right for you.
           </p>
           <div className="flex flex-col sm:flex-row flex-wrap gap-4 mb-10 w-full">
             <button
               onClick={() => onNavigate('shop')}
               className="w-full sm:w-auto whitespace-nowrap bg-charcoal text-white px-7 py-3.5 text-sm tracking-wide font-medium hover:bg-charcoal/80 transition-colors"
             >
-              Shop Skin Protocol RX
+              Explore the collection
             </button>
             <button
               onClick={() => onNavigate('protocol')}
               className="w-full sm:w-auto whitespace-nowrap border border-charcoal text-charcoal px-7 py-3.5 text-sm tracking-wide font-medium hover:bg-charcoal hover:text-white transition-colors"
             >
-              Find Your Protocol
+              Build your protocol
             </button>
           </div>
           <p className="text-xs tracking-widest uppercase text-charcoal/40">
@@ -137,144 +95,74 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      {/* ── BRAND PROMISE ────────────────────────────────────────────── */}
-      <section className="bg-black py-16 px-5 md:px-8">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-10">
-          {BRAND_PROMISES.map(p => (
-            <div key={p.title} className="flex flex-col items-center text-center gap-4">
-              <div className="text-green">{p.icon}</div>
-              <h3 className="font-sans text-sm font-semibold text-white tracking-wide">{p.title}</h3>
-              <p className="text-xs text-white/60 leading-relaxed">{p.body}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── BUILD YOUR PROTOCOL ──────────────────────────────────────── */}
-      <section className="py-24 px-5 md:px-8 bg-stone border-y border-gray-soft">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div>
-            <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-4">Personalize Your Protocol</p>
-            <h2 className="font-serif text-3xl md:text-4xl text-black mb-6">
-              Build Your Daily Routine With Products That Fit Your Skin
-            </h2>
-            <p className="text-base text-black/55 leading-relaxed mb-10 max-w-lg">
-              Choose one cleanser and one moisturizer, then add a serum or optional care based on your needs. You do not need every product in the collection. Daily essentials: cleanser, moisturizer, and morning sunscreen.
-            </p>
-            <button
-              onClick={() => onNavigate('protocol')}
-              className="bg-black text-white px-8 py-4 text-sm tracking-wide font-medium hover:bg-rose transition-colors"
-            >
-              Build My Protocol
-            </button>
-          </div>
-
-          {/* Protocol steps */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {PROTOCOL_STEPS.map(s => (
-              <button
-                key={s.step}
-                type="button"
-                onClick={() => {
-                  if (s.productBacked === false) {
-                    onNavigate('protocol')
-                    return
-                  }
-                  onNavigate('shop', s.name.toLowerCase())
-                }}
-                className="bg-white p-5 flex flex-col gap-2 border border-gray-soft text-left transition-all duration-200 hover:border-rose hover:shadow-[0_4px_24px_rgba(184,135,139,0.12)]"
-              >
-                <span className="text-[10px] tracking-[0.25em] uppercase text-rose font-medium">Step {s.step}</span>
-                <h3 className="font-serif text-xl text-black">{s.name}</h3>
-                <p className="text-xs text-black/45 leading-relaxed">
-                  {s.step === 6 ? (
-                    <><em>Optional</em> — facial oil after moisturizer when desired</>
-                  ) : s.step === 7 ? (
-                    <><em>Morning</em> — finish with broad-spectrum SPF 30+</>
-                  ) : (
-                    s.description
-                  )}
-                </p>
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── SHOP BY SKIN CONCERN ─────────────────────────────────────── */}
-      <section className="py-20 px-5 md:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-            <div>
-              <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-3">Find Your Focus</p>
-              <h2 className="font-serif text-3xl md:text-4xl text-black">Shop by Skin Concern</h2>
-            </div>
-            <button
-              onClick={() => onNavigate('shop')}
-              className="text-link text-xs font-medium text-black hover:text-rose"
-            >
-              View All Products
-            </button>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-            {SKIN_CONCERNS.map(c => (
-              <button
-                key={c.id}
-                onClick={() => onNavigate('shop')}
-                className="group relative bg-white border border-gray-soft hover:border-rose p-6 text-left transition-all duration-200 hover:shadow-[0_4px_24px_rgba(184,135,139,0.12)]"
-              >
-                <div className="text-2xl text-black/15 group-hover:text-rose transition-colors mb-3 font-serif">{c.icon}</div>
-                <h3 className="text-sm font-medium text-black mb-1">{c.label}</h3>
-                <p className="text-xs text-black/40 leading-relaxed hidden lg:block">{c.description}</p>
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── INGREDIENT PHILOSOPHY ────────────────────────────────────── */}
-      <section className="relative overflow-hidden min-h-[500px] flex items-center">
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1748543668687-624e058c367c?w=1600&h=700&fit=crop&auto=format"
-            alt="Serum texture"
-            className="w-full h-full object-cover grayscale contrast-200 brightness-50"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/45" />
-        </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-5 md:px-8 py-24 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <section className="bg-stone py-24 px-5 md:px-8 border-y border-gray-soft">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1.1fr_.9fr] gap-12 lg:gap-16 lg:items-center">
           <div>
             <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-5">Our Philosophy</p>
-            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-white mb-6">
+            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-charcoal mb-7">
               Everything Your Skin Needs.<br />
               <em>Nothing It Doesn&apos;t.</em>
             </h2>
-            <p className="text-white leading-relaxed mb-8">
-              Skin Protocol RX focuses on purposeful, high-quality formulas rather than trend-driven ingredients or unnecessary fillers. Every product in our line has a clear role in your protocol.
+            <p className="text-base text-charcoal/70 leading-relaxed">
+              We formulate with thoughtfully selected actives and botanical ingredients, each chosen for a reason—to support healthy, resilient skin. Every product has a clear role in a simplified, effective routine. Our focus is on high-quality formulas and useful product education, without chasing trends or adding unnecessary extras.
             </p>
+            <div className="mt-7 grid grid-cols-1 border-t border-gray-soft min-[701px]:grid-cols-3">
+              {(
+                [
+                  { label: 'Our Standards', body: 'How we decide what stays and what stays out.', page: 'story' as Page, id: 'our-standards' },
+                  { label: 'Ingredient Glossary', body: 'See what is in the formulas and why.', page: 'glossary' as Page },
+                  { label: 'Product Education', body: 'Learn what each product is good for.', page: 'education' as Page },
+                ] as const
+              ).map((l, i) => (
+                <button
+                  key={l.label}
+                  type="button"
+                  onClick={() => onNavigate(l.page, 'id' in l ? l.id : undefined)}
+                  className={`group flex w-full items-center justify-between gap-2.5 border-b border-gray-soft py-[18px] text-left min-[701px]:border-b-0 min-[701px]:border-l min-[701px]:px-3 min-[701px]:py-5 min-[701px]:first:border-l-0 min-[701px]:first:pl-0 min-[701px]:last:pr-0 ${i === 2 ? 'border-b-0' : ''}`}
+                >
+                  <span>
+                    <span className="relative inline-block whitespace-nowrap text-sm font-medium text-charcoal transition-colors group-hover:text-rose after:absolute after:left-0 after:bottom-[-4px] after:h-px after:w-0 after:bg-rose after:transition-[width] after:duration-300 group-hover:after:w-full">
+                      {l.label}
+                    </span>
+                    <span className="mt-1.5 block text-xs leading-snug text-charcoal/60">{l.body}</span>
+                  </span>
+                  <span className="shrink-0 text-charcoal transition-all duration-200 group-hover:translate-x-1 group-hover:text-rose" aria-hidden="true">→</span>
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="flex flex-col gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-7">
             {(
               [
-                { label: 'Our Standards', page: 'story' as Page, id: 'our-standards' },
-                { label: 'Ingredient Glossary', page: 'glossary' as Page },
-                { label: 'Product Education', page: 'education' as Page },
+                { symbol: '✳', title: 'Thoughtfully selected', body: 'Purposeful formulations. A protocol with purpose.' },
+                { symbol: '◌', title: 'Tried and true', body: 'Supported by research and evidence-based information.' },
+                { symbol: '✧', title: 'Results without hype', body: 'Backed by research. No unnecessary extras.' },
+                { symbol: '+', title: 'Clinical intention', body: 'Where clinical intention meets natural intelligence.' },
+                { symbol: '♡', title: 'Never tested on animals', body: 'A standard we hold, not a badge.' },
+                { symbol: '◎', title: 'Expert founded', body: 'Chemist · Nurse Practitioner · Esthetician' },
               ] as const
-            ).map(l => (
-              <button
-                key={l.label}
-                onClick={() => onNavigate(l.page, 'id' in l ? l.id : undefined)}
-                className="group w-full border-b border-white pb-4 text-left"
+            ).map((point, i, arr) => (
+              <div
+                key={point.title}
+                className={`flex items-center gap-5 border-t border-gray-soft py-6 ${i >= arr.length - 2 ? 'border-b border-gray-soft' : ''}`}
               >
-                <span className="aside-arrow text-xs font-medium text-white group-hover:text-rose">
-                  {l.label}
-                </span>
-              </button>
+                <span className="shrink-0 font-serif text-[30px] leading-none text-rose" aria-hidden="true">{point.symbol}</span>
+                <div>
+                  <p className="font-serif text-[22px] text-charcoal leading-tight">{point.title}</p>
+                  <p className="mt-1 text-[11px] leading-relaxed text-charcoal/60">{point.body}</p>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
+
+      <ProtocolOverviewSection
+        tone="original"
+        id="protocol-overview"
+        onCta={() => onNavigate('protocol')}
+      />
 
       {/* ── OUR STORY ────────────────────────────────────────────────── */}
       <section className="py-24 px-5 md:px-8 bg-white">
