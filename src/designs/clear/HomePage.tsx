@@ -62,18 +62,18 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <section id="feature" className="scroll-mt-28 bg-[#FFFDFA] py-10 md:py-14">
         <div className="grid min-[681px]:min-h-[clamp(320px,36vw,520px)] min-[681px]:grid-cols-[48%_52%]">
           <div className="flex flex-col justify-center px-6 py-6 min-[681px]:py-8 min-[681px]:pr-[8%] min-[681px]:pl-[max(36px,8vw)]">
-            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">Skincare with intention</p>
-            <h1 className="my-3 max-w-[650px] font-serif text-[clamp(40px,8vw,56px)] leading-[1.08] tracking-[-0.044em] min-[681px]:text-[clamp(44px,4vw,60px)]">
+            <p className="text-[13px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">Skincare with intention</p>
+            <h1 className="my-3 max-w-[650px] font-serif text-[clamp(40px,8vw,56px)] font-normal leading-[1.08] tracking-[-0.044em] min-[681px]:text-[clamp(44px,4vw,60px)]">
               Your Skin Doesn&apos;t Need More. <em className="italic text-[#ab8584]">It Needs What Works.</em>
             </h1>
-            <p className="mb-4 max-w-[540px] text-[15px] leading-relaxed text-[#595750]">
+            <p className="mb-4 max-w-[540px] text-[17px] leading-relaxed text-[#595750]">
               Every formula is thoughtfully crafted with evidence-based science to support healthier skin—without trends or unnecessary extras.
             </p>
-            <div className="flex flex-wrap gap-3">
-              <button type="button" onClick={() => document.getElementById('collection')?.scrollIntoView({ behavior: 'smooth' })} className="inline-flex min-h-12 items-center gap-4 bg-[#252520] px-5 text-[11px] font-semibold tracking-[0.1em] uppercase text-white hover:bg-[#4A4942]">
+            <div className="flex flex-col gap-3 min-[480px]:flex-row min-[480px]:flex-wrap">
+              <button type="button" onClick={() => document.getElementById('collection')?.scrollIntoView({ behavior: 'smooth' })} className="inline-flex min-h-12 w-full items-center justify-center gap-4 bg-[#252520] px-5 text-[11px] font-semibold tracking-[0.1em] uppercase text-white hover:bg-[#4A4942] min-[480px]:w-auto">
                 Explore the collection <span aria-hidden="true">↗</span>
               </button>
-              <button type="button" onClick={() => document.getElementById('protocol')?.scrollIntoView({ behavior: 'smooth' })} className="inline-flex min-h-12 items-center gap-4 border border-[#252520] px-5 text-[11px] font-semibold tracking-[0.1em] uppercase hover:bg-[#252520] hover:text-white">
+              <button type="button" onClick={() => document.getElementById('protocol')?.scrollIntoView({ behavior: 'smooth' })} className="inline-flex min-h-12 w-full items-center justify-center gap-4 border border-[#252520] px-5 text-[11px] font-semibold tracking-[0.1em] uppercase hover:bg-[#252520] hover:text-white min-[480px]:w-auto">
                 Build your protocol <span aria-hidden="true">↗</span>
               </button>
             </div>
@@ -87,26 +87,26 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                 className="h-full w-full object-cover"
               />
             </div>
-            <p className="absolute bottom-8 left-8 max-w-[250px] bg-[#252520] px-5 py-4 font-serif text-xl italic leading-snug text-white">
+            <p className="absolute bottom-8 left-8 max-w-[250px] bg-[#EDE6DC]/40 px-5 py-4 font-serif text-xl italic leading-snug text-[#252520] backdrop-blur-sm">
               Science guided by nature.
             </p>
           </div>
         </div>
       </section>
 
-      <section id="philosophy" className="scroll-mt-28 bg-[#252520] py-16 text-[#FFFDFA] md:py-[75px]">
-        <div className={`${wrap} grid grid-cols-1 gap-12 lg:grid-cols-[1.1fr_.9fr] lg:items-center lg:gap-16`}>
-          <div>
-            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">Our philosophy</p>
-            <h2 className="mt-3 mb-7 font-serif text-[clamp(2.25rem,3.5vw,3.4rem)] leading-[1.1] tracking-[-0.044em]">
+      <section id="philosophy" className="scroll-mt-28 bg-[#f8f4ef] py-16 text-[#252520] md:py-[75px]">
+        <div className="grid grid-cols-1 gap-12 min-[681px]:grid-cols-[48%_52%] min-[681px]:items-center">
+          <div className="flex flex-col px-6 min-[681px]:pr-[8%] min-[681px]:pl-[max(36px,8vw)]">
+            <p className="text-[13px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">Our philosophy</p>
+            <h2 className="my-3 max-w-[650px] font-serif text-[clamp(40px,8vw,56px)] font-normal leading-[1.08] tracking-[-0.044em] min-[681px]:text-[clamp(44px,4vw,60px)]">
               Everything your skin needs.
               <br />
               <em className="text-[#ab8584]">Nothing it doesn&apos;t.</em>
             </h2>
-            <p className="text-sm leading-relaxed text-[#CAC5BB]">
-              We formulate with thoughtfully selected actives and botanical ingredients, each chosen for a reason—to support healthy, resilient skin. Every product has a clear role in a simplified, effective routine. Our focus is on high-quality formulas and useful product education, without chasing trends or adding unnecessary extras.
+            <p className="mb-4 max-w-[540px] text-[17px] leading-relaxed text-[#595750]">
+              We combine thoughtfully selected actives and botanicals to create effective skincare with a purpose. Every formula has a role, making your daily routine simple, intentional, and effective.
             </p>
-            <div className="mt-7 grid grid-cols-1 border-t border-white/20 min-[701px]:grid-cols-3">
+            <div className="mt-3 grid max-w-[650px] grid-cols-1 border-t border-[#D6CEC3] min-[701px]:grid-cols-3">
               {[
                 { href: '/our-story#our-standards', label: 'Our Standards', body: 'How we decide what stays and what stays out.' },
                 { href: '/ingredient-glossary', label: 'Ingredient Glossary', body: 'See what is in the formulas and why.' },
@@ -115,20 +115,20 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                 <a
                   key={item.label}
                   href={item.href}
-                  className={`group flex items-center justify-between gap-2.5 border-b border-white/20 py-[18px] text-left min-[701px]:border-b-0 min-[701px]:border-l min-[701px]:px-3 min-[701px]:py-5 min-[701px]:first:border-l-0 min-[701px]:first:pl-0 min-[701px]:last:pr-0 ${i === 2 ? 'border-b-0' : ''}`}
+                  className={`group flex items-center justify-between gap-2.5 border-b border-[#D6CEC3] py-[18px] text-left min-[701px]:border-b-0 min-[701px]:border-l min-[701px]:px-3 min-[701px]:py-5 min-[701px]:first:border-l-0 min-[701px]:first:pl-0 min-[701px]:last:pr-0 ${i === 2 ? 'border-b-0' : ''}`}
                 >
                   <span>
-                    <span className="relative inline-block whitespace-nowrap text-sm font-semibold text-[#F7F1E8] transition-colors group-hover:text-[#B99C77] after:absolute after:left-0 after:bottom-[-4px] after:h-px after:w-0 after:bg-[#B99C77] after:transition-[width] after:duration-300 group-hover:after:w-full">
+                    <span className="relative inline-block whitespace-nowrap text-sm font-semibold text-[#252520] transition-colors group-hover:text-[#ab8584] after:absolute after:left-0 after:bottom-[-4px] after:h-px after:w-0 after:bg-[#ab8584] after:transition-[width] after:duration-300 group-hover:after:w-full">
                       {item.label}
                     </span>
-                    <span className="mt-1.5 block text-xs leading-snug text-[#CAC5BB]">{item.body}</span>
+                    <span className="mt-1.5 block text-xs leading-snug text-[#6D6A63]">{item.body}</span>
                   </span>
-                  <span className="shrink-0 text-[#F7F1E8] transition-all duration-200 group-hover:translate-x-1 group-hover:text-[#B99C77]" aria-hidden="true">→</span>
+                  <span className="shrink-0 text-[#252520] transition-all duration-200 group-hover:translate-x-1 group-hover:text-[#ab8584]" aria-hidden="true">→</span>
                 </a>
               ))}
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-7">
+          <div className="grid grid-cols-1 px-6 sm:grid-cols-2 sm:gap-x-7 min-[681px]:pr-[max(36px,8vw)] min-[681px]:pl-0">
             {[
               ['✳', 'Thoughtfully selected', 'Purposeful formulations. A protocol with purpose.'],
               ['◌', 'Tried and true', 'Supported by research and evidence-based information.'],
@@ -139,12 +139,12 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             ].map(([symbol, title, body], i, arr) => (
               <div
                 key={title}
-                className={`flex items-center gap-5 border-t border-white/20 py-6 ${i >= arr.length - 2 ? 'border-b border-white/20' : ''}`}
+                className={`flex items-center gap-5 border-t border-[#D6CEC3] py-6 ${i >= arr.length - 2 ? 'border-b border-[#D6CEC3]' : ''}`}
               >
                 <span className="shrink-0 font-serif text-[30px] leading-none text-[#ab8584]" aria-hidden="true">{symbol}</span>
                 <div>
-                  <p className="font-serif text-[22px] leading-tight text-[#F7F1E8]">{title}</p>
-                  <p className="mt-1 text-[11px] leading-relaxed text-[#CAC5BB]">{body}</p>
+                  <p className="font-serif text-[22px] leading-tight text-[#252520]">{title}</p>
+                  <p className="mt-1 text-[11px] leading-relaxed text-[#6D6A63]">{body}</p>
                 </div>
               </div>
             ))}
@@ -176,7 +176,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <section id="story" className="scroll-mt-28 py-16 md:py-[90px]">
         <div className={`${wrap} grid items-start gap-8 lg:grid-cols-[32%_1fr] lg:gap-11`}>
           <div className="lg:pt-4">
-            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">The family behind the formulas</p>
+            <p className="text-[13px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">The family behind the formulas</p>
             <h2 className="mt-3 font-serif text-[clamp(2.125rem,3.2vw,3.25rem)] leading-[1.12] tracking-[-0.044em]">
               Three perspectives.
               <br />
@@ -208,7 +208,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         <div className={wrap}>
           <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
             <div>
-              <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">The collection</p>
+              <p className="text-[13px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">The collection</p>
               <h2 className="mt-1.5 font-serif text-[clamp(2rem,3.2vw,3.05rem)] leading-[1.12] tracking-[-0.044em]">A good place to start.</h2>
               <p className="mt-3 max-w-[390px] text-sm text-[#6D6A63]">Cleanse and moisturize every day. Add targeted care only when your skin calls for it.</p>
             </div>
@@ -236,7 +236,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <section id="protocol" className="scroll-mt-28 bg-[#EDE8DF] py-16 md:py-[90px]">
         <div className={`${wrap} grid items-center gap-8 lg:grid-cols-[39%_1fr] lg:gap-[60px]`}>
           <div>
-            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">Find your formula</p>
+            <p className="text-[13px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">Find your formula</p>
             <h2 className="mt-2 font-serif text-[clamp(2.25rem,3.3vw,3.2rem)] leading-[1.12] tracking-[-0.044em]">
               You do not need <em>every bottle.</em>
             </h2>
@@ -265,7 +265,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               <img src={focus.image} alt="" className="h-[90%] w-[90%] object-contain" />
             </button>
             <div className="flex flex-col justify-center px-4 py-5 sm:px-6">
-              <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">{stepLabel(focus.protocolStep)}</p>
+              <p className="text-[13px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">{stepLabel(focus.protocolStep)}</p>
               <h3 className="mt-1 font-serif text-[21px] leading-tight sm:text-[26px]">{focus.name}</h3>
               <p className="mt-2 text-sm">${focus.price} · {focus.size}</p>
               <p className="mt-2 text-xs leading-relaxed text-[#6D6A63]">{activeConcern.description}</p>
@@ -280,7 +280,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <section id="studios" className="scroll-mt-28 grid bg-[#252520] text-white lg:min-h-[440px] lg:grid-cols-2">
         <img src="/original/spa-hero.jpg" alt="Skin Protocol RX bottles beside a cream treatment bed" className="h-[300px] w-full object-cover lg:h-auto lg:min-h-[440px]" />
         <div className="flex flex-col justify-center px-6 py-14 sm:px-10 lg:px-[clamp(2.5rem,8vw,7.8rem)]">
-          <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">For professionals</p>
+          <p className="text-[13px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">For professionals</p>
           <h2 className="mt-2 max-w-md font-serif text-[clamp(2.125rem,3.2vw,3.05rem)] leading-[1.12] tracking-[-0.044em]">
             A home routine your clients <em>will keep.</em>
           </h2>
@@ -297,7 +297,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         <div className={wrap}>
           <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">Real perspectives</p>
+              <p className="text-[13px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">Real perspectives</p>
               <h2 className="mt-1.5 font-serif text-[clamp(2rem,3.2vw,3.05rem)] leading-[1.12] tracking-[-0.044em]">In their words.</h2>
             </div>
             <div className="flex gap-5 text-[11px] font-semibold tracking-[0.12em] uppercase">

@@ -30,6 +30,7 @@ import ProductEducationV2 from './v2/pages/ProductEducation'
 import PickerPage from './designs/picker/PickerPage'
 import DesignSite from './designs/DesignSite'
 import DesignTabs from './designs/DesignTabs'
+import WorkingHomePage from './designs/working/HomePage'
 import { isDesignId, type DesignId, type DesignPage, type GalleryTarget } from './designs/shared'
 import { PRODUCTS } from './data'
 
@@ -418,8 +419,11 @@ export default function App() {
 
   if (design === 'working') {
     return (
-      <div className="min-h-screen bg-[#F7F4EF]">
+      <div className="theme-clear min-h-screen bg-[#F7F4EF]">
         <DesignTabs current="working" onOpen={openGalleryTarget} />
+        <main className="overflow-x-hidden">
+          <WorkingHomePage />
+        </main>
       </div>
     )
   }

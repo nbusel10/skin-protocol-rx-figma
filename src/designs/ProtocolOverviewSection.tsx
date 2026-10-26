@@ -26,7 +26,7 @@ const TONE: Record<
     wrap: 'mx-auto w-[min(1120px,calc(100%-2.75rem))] md:w-[min(1120px,calc(100%-5.5rem))]',
     imageWell:
       'relative -ml-6 min-h-[420px] w-[calc(100%+1.5rem)] overflow-hidden bg-[#EDE8DF] sm:-ml-8 sm:min-h-[480px] sm:w-[calc(100%+2rem)] lg:-ml-[max(36px,6vw)] lg:min-h-0 lg:w-[calc(100%+max(36px,6vw))]',
-    eyebrow: 'text-[11px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]',
+    eyebrow: 'text-[13px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]',
     title: 'max-w-[460px] font-serif text-[clamp(2.125rem,3.5vw,3.2rem)] leading-[1.12] tracking-[-0.044em] text-[#252520] [&_em]:text-[#ab8584]',
     muted: 'max-w-[420px] text-sm leading-relaxed text-[#6D6A63]',
     border: 'border-t border-[#D6CEC3]',
