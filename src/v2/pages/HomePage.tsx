@@ -95,32 +95,34 @@ export default function HomePage({ onNavigate }: HomePageProps) {
     <div className="bg-ivory font-sans text-charcoal">
 
       {/* CTA 1 — product-led hero */}
-      <section className="grid grid-cols-1 lg:grid-cols-2 items-center bg-ivory">
-        <div className="flex flex-col justify-center px-6 md:px-12 lg:px-16 py-14 lg:py-16 order-2 lg:order-1">
-          <p className="text-[11px] tracking-[0.22em] uppercase text-rose mb-5">
-            Skincare with intention
-          </p>
-          <h1 className="font-serif text-4xl md:text-5xl lg:text-[3.4rem] leading-[1.12] text-charcoal mb-6">
-            Your Skin Doesn&apos;t Need More.<br />
-            <em>It Needs What Works.</em>
-          </h1>
-          <p className="text-base md:text-lg text-charcoal/85 leading-relaxed mb-8">
-            Each formula is constructed for performance — using only what the skin needs to function, repair, and improve. Formulated with proven actives chosen for performance, not trends. Thoughtfully selected ingredients and formulas, bringing professional skincare into your everyday routine. Every formulation is created with one goal: effective, evidence-driven skincare that supports long-term skin function. Just thoughtful formulas, professional insight, and a routine that feels right for you.
-          </p>
-          <div className="flex flex-col sm:flex-row flex-wrap gap-3">
-            <button type="button" onClick={() => onNavigate('shop')} className="btn-primary">
-              Explore the collection
-            </button>
-            <button type="button" onClick={() => onNavigate('protocol')} className="btn-secondary">
-              Build your protocol
-            </button>
+      <section className="bg-ivory py-10 md:py-14">
+        <div className="grid items-center min-[681px]:min-h-[clamp(320px,36vw,520px)] min-[681px]:grid-cols-[48%_52%]">
+          <div className="flex flex-col justify-center px-6 py-6 order-2 min-[681px]:order-1 min-[681px]:py-8 min-[681px]:pr-[8%] min-[681px]:pl-[max(36px,8vw)]">
+            <p className="text-[11px] tracking-[0.21em] uppercase text-rose font-medium">
+              Skincare with intention
+            </p>
+            <h1 className="my-3 max-w-[650px] font-serif text-[clamp(40px,8vw,56px)] leading-[1.08] tracking-[-0.044em] text-charcoal min-[681px]:text-[clamp(44px,4vw,60px)]">
+              Your Skin Doesn&apos;t Need More.<br />
+              <em>It Needs What Works.</em>
+            </h1>
+            <p className="mb-4 max-w-[540px] text-[15px] leading-relaxed text-charcoal/85">
+              Each formula is constructed for performance — using only what the skin needs to function, repair, and improve. Formulated with proven actives chosen for performance, not trends. Thoughtfully selected ingredients and formulas, bringing professional skincare into your everyday routine. Every formulation is created with one goal: effective, evidence-driven skincare that supports long-term skin function. Just thoughtful formulas, professional insight, and a routine that feels right for you.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <button type="button" onClick={() => onNavigate('shop')} className="btn-primary">
+                Explore the collection
+              </button>
+              <button type="button" onClick={() => onNavigate('protocol')} className="btn-secondary">
+                Build your protocol
+              </button>
+            </div>
           </div>
-        </div>
-        <div className="lineup-frame order-1 lg:order-2 self-center">
-          <img
-            src="/v2-collection-lineup.jpg"
-            alt="Skin Protocol RX bottles and jars arranged in warm spa light"
-          />
+          <div className="lineup-frame order-1 aspect-auto h-full min-h-[300px] self-stretch min-[681px]:order-2 min-[681px]:min-h-[clamp(320px,36vw,520px)]">
+            <img
+              src="/v2-collection-lineup.jpg"
+              alt="Skin Protocol RX bottles and jars arranged in warm spa light"
+            />
+          </div>
         </div>
       </section>
 

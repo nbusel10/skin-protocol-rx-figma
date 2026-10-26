@@ -57,19 +57,29 @@ export default function HomePage({ onNavigate }: HomePageProps) {
 
   return (
     <main>
-      <section className="hero-c">
-        <div className="c-inner">
-          <div className="copy">
-            <span className="eyebrow">Skincare with intention</span>
-            <h1 className="heading">Your Skin Doesn&apos;t Need More.<br /><em>It Needs What Works.</em></h1>
-            <p className="lead">Each formula is constructed for performance — using only what the skin needs to function, repair, and improve. Formulated with proven actives chosen for performance, not trends. Thoughtfully selected ingredients and formulas, bringing professional skincare into your everyday routine. Every formulation is created with one goal: effective, evidence-driven skincare that supports long-term skin function. Just thoughtful formulas, professional insight, and a routine that feels right for you.</p>
-            <div className="buttons">
+      <section className="bg-[#FFFDFA] py-10 md:py-14">
+        <div className="mx-auto grid w-[min(1280px,calc(100%-5%))] items-center gap-7 min-[681px]:min-h-[clamp(320px,36vw,520px)] min-[681px]:grid-cols-[48%_52%]">
+          <div className="flex flex-col justify-center px-6 py-6 min-[681px]:py-8 min-[681px]:pr-[8%] min-[681px]:pl-[max(12px,2vw)]">
+            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#a78381]">Skincare with intention</p>
+            <h1 className="heading my-3 max-w-[650px] font-serif text-[clamp(40px,8vw,56px)] leading-[1.08] tracking-[-0.044em] min-[681px]:text-[clamp(44px,4vw,60px)]">
+              Your Skin Doesn&apos;t Need More.<br /><em>It Needs What Works.</em>
+            </h1>
+            <p className="mb-4 max-w-[540px] text-[15px] leading-relaxed text-[#6e6763]">
+              Each formula is constructed for performance — using only what the skin needs to function, repair, and improve. Formulated with proven actives chosen for performance, not trends. Thoughtfully selected ingredients and formulas, bringing professional skincare into your everyday routine. Every formulation is created with one goal: effective, evidence-driven skincare that supports long-term skin function. Just thoughtful formulas, professional insight, and a routine that feels right for you.
+            </p>
+            <div className="flex flex-wrap gap-3">
               <button type="button" className="btn" onClick={() => scrollTo('collection')}>Explore the collection ↗</button>
               <button type="button" className="btn outline" onClick={() => scrollTo('quiz')}>Build your protocol ↗</button>
             </div>
           </div>
-          <div className="scene">
-            <img className="full-image" alt="Skin Protocol RX products photographed in a tranquil treatment room" src="/original/shop-hero.jpg" />
+          <div className="relative min-h-[300px] overflow-hidden rounded-[28px] bg-[#efe7de] shadow-[0_20px_60px_rgba(60,47,43,.12)] min-[681px]:min-h-[clamp(320px,36vw,520px)]">
+            <div className="absolute inset-[5%] overflow-hidden rounded-[18px]">
+              <img
+                className="h-full w-full object-cover object-center"
+                alt="Skin Protocol RX products photographed in a tranquil treatment room"
+                src="/original/shop-hero.jpg"
+              />
+            </div>
           </div>
         </div>
       </section>
