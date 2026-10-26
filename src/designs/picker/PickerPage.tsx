@@ -28,7 +28,7 @@ const ITEMS: {
   {
     id: 'protocol',
     name: 'The Protocol',
-    line: 'Modern Editorial · Newsreader Light',
+    line: 'Modern Editorial · Playfair Display',
     href: '/designs/the-protocol.html',
     image: '/designs/the-protocol-card.jpg',
     bar: '#413b38',
@@ -41,6 +41,14 @@ const ITEMS: {
     href: '/designs/clear',
     image: '/designs/clear/hero.jpg',
     bar: '#6E3B32',
+  },
+  {
+    id: 'ritual',
+    name: 'Personalized Skin Ritual',
+    line: 'A soft ritual with a rectangular portrait, concern discovery, and the quiz up front.',
+    href: '/designs/ritual',
+    image: '/original/shop-hero.jpg',
+    bar: '#C4B09A',
   },
   {
     id: 'grove',
@@ -68,15 +76,6 @@ const ITEMS: {
     bar: '#8E6A64',
     separate: true,
   },
-  {
-    id: 'ritual',
-    name: '03 — Personalized Skin Ritual',
-    line: 'A soft ritual with a rectangular portrait, concern discovery, and the quiz up front.',
-    href: '/designs/ritual',
-    image: '/original/shop-hero.jpg',
-    bar: '#C4B09A',
-    separate: true,
-  },
 ]
 
 interface PickerPageProps {
@@ -91,7 +90,7 @@ export default function PickerPage({ onOpen }: PickerPageProps) {
         <div className="mt-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <h1 className="max-w-xl text-4xl font-medium tracking-tight md:text-5xl">Eight ways to see the line.</h1>
           <p className="max-w-sm text-sm leading-relaxed text-[#4E4E4A]">
-            Original and Rose stay as they are. The Protocol is the third homepage direction, followed by Editorial, Botanical Laboratory, and the three later prototypes.
+            Original and Rose stay as they are. The Protocol is the third homepage direction, followed by Editorial, Personalized Skin Ritual, Botanical Laboratory, and the later prototypes.
           </p>
         </div>
       </header>

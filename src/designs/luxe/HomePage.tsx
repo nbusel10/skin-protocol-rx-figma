@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import type { DesignNavigate } from '../shared'
-import { Assessment, Collection, ConcernPills, FOUNDERS, SpaClose, Steps, scrollTo } from '../pitch/sections'
+import { Assessment, Collection, FOUNDERS, SpaClose, Steps, scrollTo } from '../pitch/sections'
 import { consumeSection } from '../pitch/ui'
 
 interface HomePageProps {
@@ -18,12 +18,36 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <section className="hero-b">
         <img alt="Skin Protocol RX skincare range in a beautiful, naturally lit medspa" src="/original/spa-hero.jpg" />
         <div className="copy">
-          <span className="eyebrow">Skin Protocol RX · The natural prescription</span>
-          <h1 className="heading">Less noise.<br /><em>More intention.</em></h1>
-          <p className="lead">Where considered formulations meet the quiet luxury of a routine that feels entirely your own.</p>
+          <span className="eyebrow">Skincare with intention</span>
+          <h1 className="heading">Your Skin Doesn&apos;t Need More.<br /><em>It Needs What Works.</em></h1>
+          <p className="lead" style={{ maxWidth: '42rem' }}>Each formula is constructed for performance — using only what the skin needs to function, repair, and improve. Formulated with proven actives chosen for performance, not trends. Thoughtfully selected ingredients and formulas, bringing professional skincare into your everyday routine. Every formulation is created with one goal: effective, evidence-driven skincare that supports long-term skin function. Just thoughtful formulas, professional insight, and a routine that feels right for you.</p>
           <div className="buttons">
-            <button type="button" className="btn" onClick={() => scrollTo('collection')}>Explore the Collection ↗</button>
-            <button type="button" className="btn outline" onClick={() => scrollTo('quiz')}>Take the Quiz ↗</button>
+            <button type="button" className="btn" onClick={() => scrollTo('collection')}>Explore the collection ↗</button>
+            <button type="button" className="btn outline" onClick={() => scrollTo('quiz')}>Build your protocol ↗</button>
+          </div>
+        </div>
+      </section>
+      <section className="section" id="philosophy" style={{ background: '#f4ebe4' }}>
+        <div className="wrap">
+          <div className="section-top" style={{ marginBottom: 30 }}>
+            <div>
+              <span className="eyebrow">Our philosophy</span>
+              <h2 className="heading">Everything your skin needs.<br /><em>Nothing it doesn&apos;t.</em></h2>
+            </div>
+            <p className="intro" style={{ maxWidth: '34rem' }}>We formulate with thoughtfully selected actives and botanical ingredients, each chosen for a reason—to support healthy, resilient skin. Every product has a clear role in a simplified, effective routine. Our focus is on high-quality formulas and useful product education, without chasing trends or adding unnecessary extras.</p>
+          </div>
+          <div className="c-points" style={{ marginBottom: 32 }}>
+            <div className="c-point"><div className="symbol">✳</div><div><strong>Thoughtfully selected</strong><span>Purposeful formulations. A protocol with purpose.</span></div></div>
+            <div className="c-point"><div className="symbol">◌</div><div><strong>Tried and true</strong><span>Supported by research and evidence-based information.</span></div></div>
+            <div className="c-point"><div className="symbol">✧</div><div><strong>Results without hype</strong><span>Backed by research. No unnecessary extras.</span></div></div>
+            <div className="c-point"><div className="symbol">+</div><div><strong>Clinical intention</strong><span>Where clinical intention meets natural intelligence.</span></div></div>
+            <div className="c-point"><div className="symbol">♡</div><div><strong>Never tested on animals</strong><span>A standard we hold, not a badge.</span></div></div>
+            <div className="c-point"><div className="symbol">◎</div><div><strong>Expert founded</strong><span>Chemist · Nurse Practitioner · Esthetician</span></div></div>
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 22 }}>
+            <a className="micro-link" href="/our-story#our-standards">Our Standards ↗</a>
+            <a className="micro-link" href="/ingredient-glossary">Ingredient Glossary ↗</a>
+            <a className="micro-link" href="/product-education">Product Education ↗</a>
           </div>
         </div>
       </section>
@@ -37,7 +61,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           <span className="eyebrow">The everyday ritual</span>
           <h2 className="heading">A few good steps. <em>One beautiful routine.</em></h2>
           <p className="intro">Cleansing. Thoughtful treatment. Daily hydration. Protection. Your protocol begins with a strong foundation and grows around your skin.</p>
-          <button type="button" className="btn" onClick={() => scrollTo('concerns')}>Explore your skin needs ↗</button>
+          <button type="button" className="btn" onClick={() => scrollTo('quiz')}>Build your protocol ↗</button>
         </div>
         <div className="image">
           <img className="full-image" alt="A woman with glowing skin applying serum in warm light" src="/designs/luxe/ritual-glow.jpg" style={{ objectPosition: 'center 30%' }} />
@@ -63,25 +87,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               <span className="eyebrow">A curated collection</span>
               <h2 className="heading">Discover what belongs in your routine.</h2>
             </div>
-            <button type="button" className="micro-link" onClick={() => scrollTo('concerns')}>Browse by concern ↗</button>
+            <button type="button" className="micro-link" onClick={() => scrollTo('quiz')}>Build your protocol ↗</button>
           </div>
           <Collection onNavigate={onNavigate} linkLabel="Find it in your protocol ↗" />
-        </div>
-      </section>
-      <div className="b-quote">
-        <span className="eyebrow" style={{ color: '#6d494c' }}>What we believe</span>
-        <h2 className="heading">“Your skin does not need more.<br /><em>It needs what works.</em>”</h2>
-        <p>Cruelty-free · Never tested on animals</p>
-      </div>
-      <section className="section" id="concerns">
-        <div className="wrap">
-          <div className="section-top">
-            <div>
-              <span className="eyebrow">Explore by skin concern</span>
-              <h2 className="heading">Start with what is on your mind.</h2>
-            </div>
-          </div>
-          <ConcernPills message="Shopping filters will be connected to product information in Shopify." />
         </div>
       </section>
       <section className="b-split flip" id="story" style={{ background: '#eee5dc' }}>

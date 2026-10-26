@@ -1,12 +1,27 @@
-import { useState } from 'react'
-import { PRODUCTS, getProtocolStepLabel, PROTECT_GUIDANCE, type SkinType, type SkinConcern } from '../../data'
+import { useState, type ReactNode } from 'react'
+import { PRODUCTS, getProtocolStepLabel, PROTECT_GUIDANCE } from '../../data'
 import {
   buildProtocol,
   optionalTreat,
   isEveningOnlySerum,
+  isVitaminC,
+  otherVitaminC,
+  vitaminCPair,
+  vitaminCReason,
+  recommendedVitaminCId,
   routineEntries,
   routinePeriodLabel,
-  type SkinState,
+  funOption,
+  funQuestionById,
+  FUN_QUESTIONS,
+  DEFAULT_FUN_QUESTION,
+  QUIZ_CONCERNS,
+  QUIZ_SKIN_TYPES,
+  REACTIVITY_OPTIONS,
+  type FunQuestion,
+  type QuizConcern,
+  type QuizSkinType,
+  type Reactivity,
   type StepsPreference,
   type RoutinePeriod,
 } from '../../lib/buildProtocol'
@@ -21,21 +36,33 @@ interface ProtocolBuilderProps {
   onAddToCart?: (count: number) => void
 }
 
-const SKIN_TYPES: SkinType[] = ['Combination', 'Dry', 'Normal', 'Oily', 'Sensitive']
-const SKIN_CONCERNS: SkinConcern[] = ['Acne', 'Aging', 'Brightening', 'Dry Skin', 'Eye Area', 'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage']
+type Product = (typeof PRODUCTS)[number]
 
 const STEPS_PREFERENCE: { value: StepsPreference; label: string; desc: string }[] = [
-  { value: 'minimal', label: 'Essentials · 3 products', desc: 'Cleanser, toner, moisturizer + morning SPF' },
+  { value: 'minimal', label: 'Essentials · 3 products', desc: 'Cleanser, toner, moisturizer' },
   { value: 'moderate', label: 'Essentials + serum · 4 products', desc: 'Add one personalized treatment' },
-  { value: 'complete', label: 'Full personalized · up to 6 products', desc: 'Serum plus optional eye care and oil' },
+  { value: 'complete', label: 'Full personalized · up to 6 products', desc: 'Serum, eye cream, and finishing oil' },
 ]
 
-const SKIN_STATES: { value: SkinState; label: string; desc: string }[] = [
-  { value: 'calm', label: 'Calm and comfortable', desc: "Nothing's really bothering me" },
-  { value: 'dehydrated', label: 'Dull and dehydrated', desc: 'Looks flat, drinks up moisturizer' },
-  { value: 'breakout', label: 'Breaking out', desc: 'Active blemishes or congestion' },
-  { value: 'irritated', label: 'Irritated', desc: 'Red, stinging, or peeling' },
-]
+const NO_CONCERNS_LABEL = 'No specific concerns'
+
+/** `?fun=1..4` previews each candidate fun question. */
+function activeFunQuestion(): FunQuestion {
+  const n = Number(new URLSearchParams(window.location.search).get('fun'))
+  return FUN_QUESTIONS[n - 1] ?? funQuestionById(DEFAULT_FUN_QUESTION)
+}
+
+function reactivityLabel(value: Reactivity | ''): string | undefined {
+  const option = REACTIVITY_OPTIONS.find(o => o.value === value)
+  return option ? `Stings, burns, or turns red: ${option.label.toLowerCase()}` : undefined
+}
+
+function tonerNote(tonerOmitted: boolean, tonerSwap: Product | null): string | undefined {
+  if (!tonerOmitted) return undefined
+  return tonerSwap
+    ? `Because your skin often stings or turns red, we swapped the toner for ${tonerSwap.name}, a calming serum, and left out exfoliating products.`
+    : 'Because your skin often stings or turns red, we left out the toner and exfoliating products to keep your routine gentle.'
+}
 
 function OptionButton({ selected, onClick, label, desc }: { selected: boolean; onClick: () => void; label: string; desc?: string }) {
   return (
@@ -103,18 +130,106 @@ function AddToCartButton({ added, onAdd }: { added: boolean; onAdd: () => void }
   )
 }
 
+function VitaminCChoice({
+  selectedId,
+  recommendedId,
+  reason,
+  onSelect,
+}: {
+  selectedId: string
+  recommendedId: string
+  reason: string
+  onSelect: (id: string) => void
+}) {
+  return (
+    <div className="mt-3">
+      <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Vitamin C strength">
+        {vitaminCPair().map(c => {
+          const selected = c.id === selectedId
+          return (
+            <button
+              key={c.id}
+              type="button"
+              role="radio"
+              aria-checked={selected}
+              onClick={() => onSelect(c.id)}
+              className="flex flex-col items-start gap-0.5 border px-3 py-2 text-left transition-colors"
+              style={{
+                borderColor: selected ? '#B88E91' : '#E4DDD4',
+                backgroundColor: selected ? '#F6F0F0' : '#fff',
+              }}
+            >
+              <span className="text-xs font-medium" style={{ color: selected ? '#8E6367' : '#45403F' }}>
+                {c.name.replace('Brighten & Glow C Serum ', '')} · ${c.price}
+              </span>
+              {c.id === recommendedId && (
+                <span className="text-[10px] tracking-widest uppercase text-rose">Recommended for you</span>
+              )}
+            </button>
+          )
+        })}
+      </div>
+      <p className="mt-2 text-xs text-charcoal/50">{reason} You can choose the other strength if you prefer.</p>
+    </div>
+  )
+}
+
+function SuggestionRow({
+  eyebrow,
+  note,
+  product,
+  added,
+  onAdd,
+  onNavigate,
+  extra,
+}: {
+  eyebrow: string
+  note: string
+  product: Product
+  added: boolean
+  onAdd: () => void
+  onNavigate: (page: Page, productId?: string) => void
+  extra?: ReactNode
+}) {
+  return (
+    <div className="group bg-white flex gap-5 p-5 border border-gray-soft">
+      <div className="w-20 h-20 shrink-0 overflow-hidden">
+        <ProductImage src={product.image} alt={product.name} variant="inline" />
+      </div>
+      <div className="flex-1">
+        <p className="text-[10px] tracking-widest uppercase text-rose mb-1">{eyebrow}</p>
+        <h3 className="font-medium text-charcoal mb-1">{product.name}</h3>
+        <p className="text-xs text-charcoal/50 mb-2">{note}</p>
+        <p className="text-sm font-semibold text-charcoal">${product.price}</p>
+        {extra}
+      </div>
+      <div className="flex flex-col items-end justify-center gap-2 shrink-0">
+        <AddToCartButton added={added} onAdd={onAdd} />
+        <button
+          onClick={() => onNavigate('product', product.id)}
+          className="hidden md:flex items-center text-xs text-rose underline underline-offset-2 whitespace-nowrap"
+        >
+          View →
+        </button>
+      </div>
+    </div>
+  )
+}
+
 function RoutineProductRow({
   product,
   period,
   added,
   onAdd,
   onNavigate,
+  extra,
 }: {
-  product: (typeof PRODUCTS)[number]
+  product: Product
   period: RoutinePeriod
   added: boolean
   onAdd: () => void
   onNavigate: (page: Page, productId?: string) => void
+  extra?: ReactNode
 }) {
   return (
     <div className="group bg-white flex gap-5 p-5 border border-gray-soft">
@@ -128,6 +243,7 @@ function RoutineProductRow({
         <h3 className="font-medium text-charcoal mb-1">{product.name}</h3>
         <p className="text-xs text-charcoal/50 mb-2">{product.tagline}</p>
         <p className="text-sm font-semibold text-charcoal">${product.price}</p>
+        {extra}
       </div>
       <div className="flex flex-col items-end justify-center gap-2 shrink-0">
         <PeriodBadge label={routinePeriodLabel(period)} />
@@ -166,12 +282,14 @@ function OptionalTreatSliver({
   onToggle,
   onAddToProtocol,
   onNavigate,
+  extra,
 }: {
-  product: (typeof PRODUCTS)[number]
+  product: Product
   open: boolean
   onToggle: () => void
   onAddToProtocol: () => void
   onNavigate: (page: Page, productId?: string) => void
+  extra?: ReactNode
 }) {
   const period: RoutinePeriod = isEveningOnlySerum(product) ? 'pm' : 'both'
   if (!open) {
@@ -218,6 +336,7 @@ function OptionalTreatSliver({
           <h3 className="font-medium text-charcoal mb-1">{product.name}</h3>
           <p className="text-xs text-charcoal/50 mb-2">{product.tagline}</p>
           <p className="text-sm font-semibold text-charcoal">${product.price}</p>
+          {extra}
         </div>
         <div className="flex flex-col items-end justify-center gap-2 shrink-0">
           <PeriodBadge label={routinePeriodLabel(period)} />
@@ -243,30 +362,51 @@ function OptionalTreatSliver({
 
 export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBuilderProps) {
   const [step, setStep] = useState(0)
-  const [skinType, setSkinType] = useState<SkinType | ''>('')
-  const [concerns, setConcerns] = useState<SkinConcern[]>([])
+  const [funQuestion] = useState(activeFunQuestion)
+  const [skinType, setSkinType] = useState<QuizSkinType | ''>('')
+  const [reactivity, setReactivity] = useState<Reactivity | ''>('')
+  const [concerns, setConcerns] = useState<QuizConcern[]>([])
+  const [noConcerns, setNoConcerns] = useState(false)
   const [stepsPreference, setStepsPreference] = useState<StepsPreference>('moderate')
-  const [sensitive, setSensitive] = useState<boolean | null>(null)
-  const [skinRightNow, setSkinRightNow] = useState<SkinState | ''>('')
+  const [funAnswer, setFunAnswer] = useState('')
 
-  const toggleConcern = (c: SkinConcern) =>
+  const toggleConcern = (c: QuizConcern) => {
+    setNoConcerns(false)
     setConcerns(prev => prev.includes(c) ? prev.filter(x => x !== c) : [...prev, c])
+  }
+  const chooseNoConcerns = () => {
+    setConcerns([])
+    setNoConcerns(prev => !prev)
+  }
 
   const canAdvance = [
     skinType !== '',
-    concerns.length > 0,
+    reactivity !== '',
+    concerns.length > 0 || noConcerns,
     true,
-    sensitive !== null,
-    skinRightNow !== '',
+    funAnswer !== '',
   ]
 
-  const [recommendations, setRecommendations] = useState<typeof PRODUCTS>([])
-  const [weekly, setWeekly] = useState<(typeof PRODUCTS)[number] | null>(null)
+  const [recommendations, setRecommendations] = useState<Product[]>([])
+  const [weekly, setWeekly] = useState<Product | null>(null)
+  const [alternative, setAlternative] = useState<Product | null>(null)
+  const [bonus, setBonus] = useState<Product | null>(null)
+  const [tonerSwap, setTonerSwap] = useState<Product | null>(null)
+  const [tonerOmitted, setTonerOmitted] = useState(false)
+  const [cRecommendedId, setCRecommendedId] = useState('')
+  const [cReason, setCReason] = useState('')
+  const [cChoiceId, setCChoiceId] = useState('')
   const [done, setDone] = useState(false)
   const [emailModalOpen, setEmailModalOpen] = useState(false)
   const [addedIds, setAddedIds] = useState<string[]>([])
-  const [treatOffer, setTreatOffer] = useState<(typeof PRODUCTS)[number] | null>(null)
+  const [treatOffer, setTreatOffer] = useState<Product | null>(null)
   const [treatOpen, setTreatOpen] = useState(false)
+
+  const withCChoice = (p: Product): Product => (isVitaminC(p) && cChoiceId && p.id !== cChoiceId ? otherVitaminC(p) : p)
+  const cPicker = (p: Product) =>
+    isVitaminC(p) ? (
+      <VitaminCChoice selectedId={p.id} recommendedId={cRecommendedId} reason={cReason} onSelect={setCChoiceId} />
+    ) : undefined
 
   const addToCart = (ids: string[]) => {
     const fresh = ids.filter(id => !addedIds.includes(id))
@@ -276,33 +416,55 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
   }
 
   const finish = () => {
-    if (!skinType || !concerns.length || sensitive === null || !skinRightNow) return
+    if (!skinType || !reactivity || (!concerns.length && !noConcerns) || !funAnswer) return
     const answers = {
       skinType,
       concerns,
+      reactivity,
       stepsPreference,
-      sensitive,
-      skinRightNow,
+      funAnswer,
     }
     const result = buildProtocol(answers)
+    const cId = recommendedVitaminCId(answers)
     setRecommendations(result.products)
     setWeekly(result.weekly)
+    setAlternative(result.alternative)
+    setBonus(result.bonus)
+    setTonerSwap(result.tonerSwap)
+    setTonerOmitted(result.tonerOmitted)
+    setCRecommendedId(cId)
+    setCReason(vitaminCReason(answers))
+    setCChoiceId(cId)
     setTreatOffer(optionalTreat(answers))
     setTreatOpen(false)
     setDone(true)
   }
 
-  const emailedProducts = weekly ? [...recommendations, weekly] : recommendations
+  const routine = recommendations.map(withCChoice)
+  const emailedProducts = weekly ? [...routine, weekly] : routine
   const totalPrice = emailedProducts.reduce((s, p) => s + p.price, 0)
-  const entries = routineEntries(recommendations)
+  const entries = routineEntries(routine)
+  const shownAlternative = alternative && withCChoice(alternative)
+  const shownTreatOffer = treatOffer && withCChoice(treatOffer)
+  const note = tonerNote(tonerOmitted, tonerSwap)
 
   const QUESTIONS = [
     {
       title: 'What is your skin type?',
       content: (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {SKIN_TYPES.map(t => (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {QUIZ_SKIN_TYPES.map(t => (
             <OptionButton key={t} selected={skinType === t} onClick={() => setSkinType(t)} label={t} />
+          ))}
+        </div>
+      ),
+    },
+    {
+      title: 'How often does your skin sting, burn, or turn red from new products or weather?',
+      content: (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {REACTIVITY_OPTIONS.map(r => (
+            <OptionButton key={r.value} selected={reactivity === r.value} onClick={() => setReactivity(r.value)} label={r.label} />
           ))}
         </div>
       ),
@@ -313,9 +475,10 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
         <>
           <p className="text-sm text-charcoal/40 mb-4">Select all that apply</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {SKIN_CONCERNS.map(c => (
+            {QUIZ_CONCERNS.map(c => (
               <OptionButton key={c} selected={concerns.includes(c)} onClick={() => toggleConcern(c)} label={c} />
             ))}
+            <OptionButton selected={noConcerns} onClick={chooseNoConcerns} label={NO_CONCERNS_LABEL} />
           </div>
         </>
       ),
@@ -331,20 +494,11 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
       ),
     },
     {
-      title: 'Is your skin sensitive or reactive?',
-      content: (
-        <div className="grid grid-cols-2 gap-4 max-w-xs">
-          <OptionButton selected={sensitive === true} onClick={() => setSensitive(true)} label="Yes" />
-          <OptionButton selected={sensitive === false} onClick={() => setSensitive(false)} label="No" />
-        </div>
-      ),
-    },
-    {
-      title: 'How is your skin feeling right now?',
+      title: funQuestion.title,
       content: (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {SKIN_STATES.map(s => (
-            <OptionButton key={s.value} selected={skinRightNow === s.value} onClick={() => setSkinRightNow(s.value)} label={s.label} desc={s.desc} />
+          {funQuestion.options.map(o => (
+            <OptionButton key={o.value} selected={funAnswer === o.value} onClick={() => setFunAnswer(o.value)} label={o.label} />
           ))}
         </div>
       ),
@@ -359,19 +513,16 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
             <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-3">Your Custom Protocol</p>
             <h1 className="font-serif text-4xl text-black mb-4">Your Recommended Protocol</h1>
             <p className="text-charcoal/50 max-w-xl mx-auto">
-              Based on your {skinType?.toLowerCase()} skin type and {concerns.slice(0, 2).join(', ').toLowerCase()} concerns.
+              Based on your {skinType?.toLowerCase()} skin type
+              {concerns.length ? ` and ${concerns.slice(0, 2).join(', ').toLowerCase()} concerns` : ''}.
               Daily essentials are cleanser, moisturizer, and morning sunscreen — personalized additions only where they help.
             </p>
           </div>
 
-          {skinRightNow === 'irritated' && (
+          {note && (
             <div className="border border-rose/40 bg-rose-light p-6 mb-10">
-              <p className="text-[11px] tracking-widest uppercase text-rose mb-2">Let&apos;s Calm Things First</p>
-              <p className="text-sm text-charcoal/60 leading-relaxed">
-                You told us your skin is irritated right now, so we&apos;ve left the active ingredients out. This is a
-                short recovery routine built to settle things down. Once your skin feels comfortable again — usually two
-                to three weeks — come back and we&apos;ll add your treatment serum.
-              </p>
+              <p className="text-[11px] tracking-widest uppercase text-rose mb-2">Kept Gentle for You</p>
+              <p className="text-sm text-charcoal/60 leading-relaxed">{note}</p>
             </div>
           )}
 
@@ -394,10 +545,12 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
                       added={addedIds.includes(product.id)}
                       onAdd={() => addToCart([product.id])}
                       onNavigate={onNavigate}
+                      extra={cPicker(product)}
                     />
-                    {treatOffer && product.protocolStep === 2 && (
+                    {treatOffer && shownTreatOffer && product.protocolStep === 2 && (
                       <OptionalTreatSliver
-                        product={treatOffer}
+                        product={shownTreatOffer}
+                        extra={cPicker(shownTreatOffer)}
                         open={treatOpen}
                         onToggle={() => setTreatOpen(open => !open)}
                         onAddToProtocol={() => {
@@ -448,6 +601,35 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
             </div>
           )}
 
+          {shownAlternative && (
+            <div className="mb-10">
+              <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-4">Also Consider</p>
+              <SuggestionRow
+                eyebrow="Alternative serum"
+                note="Ranked next for your answers. Use it in place of your serum, not alongside it."
+                product={shownAlternative}
+                added={addedIds.includes(shownAlternative.id)}
+                onAdd={() => addToCart([shownAlternative.id])}
+                onNavigate={onNavigate}
+                extra={cPicker(shownAlternative)}
+              />
+            </div>
+          )}
+
+          {bonus && (
+            <div className="mb-10">
+              <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-4">A Little Extra</p>
+              <SuggestionRow
+                eyebrow="Bonus pick"
+                note={`Because you chose “${funOption(funAnswer)?.label ?? ''}”.`}
+                product={bonus}
+                added={addedIds.includes(bonus.id)}
+                onAdd={() => addToCart([bonus.id])}
+                onNavigate={onNavigate}
+              />
+            </div>
+          )}
+
           {/* Total + CTA */}
           <div className="bg-black p-8 text-white">
             <div className="flex items-center justify-between mb-6">
@@ -483,11 +665,9 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
             onClose={() => setEmailModalOpen(false)}
             protocol={{
               skinType: skinType || '',
-              concerns,
-              skinRightNow: SKIN_STATES.find(s => s.value === skinRightNow)?.label,
-              note: skinRightNow === 'irritated'
-                ? "Your skin is irritated right now, so this is a short recovery routine without active ingredients. Come back in two to three weeks and we'll add your treatment serum."
-                : undefined,
+              concerns: concerns.length ? concerns : [NO_CONCERNS_LABEL],
+              skinRightNow: reactivityLabel(reactivity),
+              note,
               products: [
                 ...entries.map(({ product, period }) => ({
                   name: product.name,
@@ -516,11 +696,19 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
                 setStep(0)
                 setWeekly(null)
                 setRecommendations([])
+                setAlternative(null)
+                setBonus(null)
+                setTonerSwap(null)
+                setTonerOmitted(false)
+                setCRecommendedId('')
+                setCReason('')
+                setCChoiceId('')
                 setSkinType('')
+                setReactivity('')
                 setConcerns([])
+                setNoConcerns(false)
                 setStepsPreference('moderate')
-                setSensitive(null)
-                setSkinRightNow('')
+                setFunAnswer('')
                 setTreatOffer(null)
                 setTreatOpen(false)
               }}

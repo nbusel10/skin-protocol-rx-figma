@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import type { DesignNavigate } from '../shared'
-import { Assessment, Collection, ConcernPills, FounderCards, SpaClose, Steps, scrollTo } from '../pitch/sections'
+import { Assessment, Collection, FounderCards, SpaClose, Steps, scrollTo } from '../pitch/sections'
 import { consumeSection } from '../pitch/ui'
 
 interface HomePageProps {
@@ -18,11 +18,11 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <section className="hero-a">
         <div className="copy">
           <span className="eyebrow">Skincare with intention</span>
-          <h1 className="heading">Your skin deserves <em>thoughtful</em> care.</h1>
-          <p className="lead">A family-created collection of thoughtfully selected ingredients and formulas, bringing professional skincare into your everyday routine.</p>
+          <h1 className="heading">Your Skin Doesn&apos;t Need More.<br /><em>It Needs What Works.</em></h1>
+          <p className="lead">Each formula is constructed for performance — using only what the skin needs to function, repair, and improve. Formulated with proven actives chosen for performance, not trends. Thoughtfully selected ingredients and formulas, bringing professional skincare into your everyday routine. Every formulation is created with one goal: effective, evidence-driven skincare that supports long-term skin function. Just thoughtful formulas, professional insight, and a routine that feels right for you.</p>
           <div className="buttons">
-            <button type="button" className="btn" onClick={() => scrollTo('collection')}>Explore the Collection ↗</button>
-            <button type="button" className="btn outline" onClick={() => scrollTo('quiz')}>Take the Quiz ↗</button>
+            <button type="button" className="btn" onClick={() => scrollTo('collection')}>Explore the collection ↗</button>
+            <button type="button" className="btn outline" onClick={() => scrollTo('quiz')}>Build your protocol ↗</button>
           </div>
         </div>
         <div className="scene">
@@ -34,15 +34,27 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         <span>Science guided</span>
         <span>Never tested on animals</span>
       </div>
-      <section className="section">
-        <div className="wrap a-feature">
-          <div>
-            <span className="eyebrow">The philosophy</span>
-            <h2 className="heading">Good skincare does not have to be <em>complicated.</em></h2>
+      <section className="section" id="philosophy">
+        <div className="wrap">
+          <div className="section-top" style={{ marginBottom: 28 }}>
+            <div>
+              <span className="eyebrow">Our philosophy</span>
+              <h2 className="heading">Everything your skin needs.<br /><em>Nothing it doesn&apos;t.</em></h2>
+            </div>
+            <p className="intro" style={{ maxWidth: '34rem' }}>We formulate with thoughtfully selected actives and botanical ingredients, each chosen for a reason—to support healthy, resilient skin. Every product has a clear role in a simplified, effective routine. Our focus is on high-quality formulas and useful product education, without chasing trends or adding unnecessary extras.</p>
           </div>
-          <div>
-            <p className="intro">We believe in a considered approach: formulas chosen for what they do, rather than how many ingredients they contain. Start with what your skin needs and build from there.</p>
-            <button type="button" className="micro-link" onClick={() => scrollTo('routine')}>See how a routine comes together ↗</button>
+          <div className="c-points" style={{ marginBottom: 34 }}>
+            <div className="c-point"><div className="symbol">✳</div><div><strong>Thoughtfully selected</strong><span>Purposeful formulations. A protocol with purpose.</span></div></div>
+            <div className="c-point"><div className="symbol">◌</div><div><strong>Tried and true</strong><span>Supported by research and evidence-based information.</span></div></div>
+            <div className="c-point"><div className="symbol">✧</div><div><strong>Results without hype</strong><span>Backed by research. No unnecessary extras.</span></div></div>
+            <div className="c-point"><div className="symbol">+</div><div><strong>Clinical intention</strong><span>Where clinical intention meets natural intelligence.</span></div></div>
+            <div className="c-point"><div className="symbol">♡</div><div><strong>Never tested on animals</strong><span>A standard we hold, not a badge.</span></div></div>
+            <div className="c-point"><div className="symbol">◎</div><div><strong>Expert founded</strong><span>Chemist · Nurse Practitioner · Esthetician</span></div></div>
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 22 }}>
+            <a className="micro-link" href="/our-story#our-standards">Our Standards ↗</a>
+            <a className="micro-link" href="/ingredient-glossary">Ingredient Glossary ↗</a>
+            <a className="micro-link" href="/product-education">Product Education ↗</a>
           </div>
         </div>
       </section>
@@ -56,7 +68,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             </div>
             <p className="intro">A simple foundation. Targeted care when you need it.</p>
           </div>
-          <Steps dark callout action={{ label: 'Find your starting point ↗', id: 'concerns', light: true }} />
+          <Steps dark callout action={{ label: 'See the collection ↗', id: 'collection', light: true }} />
         </div>
       </section>
       <section className="section" id="collection">
@@ -66,20 +78,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               <span className="eyebrow">Explore the collection</span>
               <h2 className="heading">The essentials, thoughtfully chosen.</h2>
             </div>
-            <button type="button" className="micro-link" onClick={() => scrollTo('concerns')}>Shop by skin concern ↗</button>
+            <button type="button" className="micro-link" onClick={() => scrollTo('quiz')}>Build your protocol ↗</button>
           </div>
           <Collection onNavigate={onNavigate} linkLabel="Find it in your protocol ↗" />
-        </div>
-      </section>
-      <section className="section" id="concerns" style={{ background: '#e8d3cc' }}>
-        <div className="wrap">
-          <div className="section-top">
-            <div>
-              <span className="eyebrow">Explore by need</span>
-              <h2 className="heading">What would you like to focus on?</h2>
-            </div>
-          </div>
-          <ConcernPills message="Choose a concern to preview the future Shopify shopping journey." />
         </div>
       </section>
       <section className="section a-story" id="story" style={{ background: '#fffdf9' }}>

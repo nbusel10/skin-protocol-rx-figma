@@ -3,23 +3,24 @@ import {
   buildProtocol,
   optionalTreat,
   protocolSize,
-  preferGentleSkin,
+  isReactive,
   splitRoutine,
   routineEntries,
-  isEveningOnlySerum,
+  scoreSerums,
+  recommendedVitaminCId,
+  SERUM_RANKINGS,
+  FUN_QUESTIONS,
+  QUIZ_CONCERNS,
+  QUIZ_SKIN_TYPES,
+  REACTIVITY_OPTIONS,
   type ProtocolAnswers,
-  type SkinState,
+  type QuizConcern,
   type StepsPreference,
 } from '../src/lib/buildProtocol'
-import type { SkinConcern, SkinType } from '../src/data'
 
-const SKIN_TYPES: SkinType[] = ['Combination', 'Dry', 'Normal', 'Oily', 'Sensitive']
-const CONCERNS: SkinConcern[] = [
-  'Acne', 'Aging', 'Brightening', 'Dry Skin', 'Eye Area',
-  'Hyperpigmentation', 'Large Pores', 'Preventative', 'Redness', 'Sun Damage',
-]
 const STEPS: StepsPreference[] = ['minimal', 'moderate', 'complete']
-const SKIN_STATES: SkinState[] = ['calm', 'dehydrated', 'breakout', 'irritated']
+const REACTIVITY = REACTIVITY_OPTIONS.map(r => r.value)
+const FUN_ANSWERS: (string | undefined)[] = [undefined, ...FUN_QUESTIONS.flatMap(q => q.options.map(o => o.value))]
 
 const CORE = {
   chamomile: 'clarifying-cleanser',
@@ -39,218 +40,154 @@ const CORE = {
   oil: 'the-holy-grail',
 }
 
-const TREATMENTS = new Set([
-  CORE.c5, CORE.c20, CORE.matrix, CORE.peptide, CORE.elixir, CORE.bakuchiol, CORE.ha,
-])
+const SERUMS = new Set([CORE.c5, CORE.c20, CORE.matrix, CORE.peptide, CORE.elixir, CORE.bakuchiol, CORE.ha])
 const CLEANSERS = new Set([CORE.chamomile, CORE.gel])
 const MOISTURIZERS = new Set([CORE.cloud, CORE.rich])
 
-function concernSubsets(): SkinConcern[][] {
-  const out: SkinConcern[][] = []
-  const n = CONCERNS.length
-  for (let mask = 1; mask < 1 << n; mask++) {
-    const subset: SkinConcern[] = []
-    for (let i = 0; i < n; i++) if (mask & (1 << i)) subset.push(CONCERNS[i])
-    out.push(subset)
+function concernSubsets(): QuizConcern[][] {
+  const out: QuizConcern[][] = []
+  for (let mask = 0; mask < 1 << QUIZ_CONCERNS.length; mask++) {
+    out.push(QUIZ_CONCERNS.filter((_, i) => mask & (1 << i)))
   }
   return out
 }
 
-function ids(products: { id: string }[]): string[] {
-  return products.map(p => p.id)
-}
-
-function expectedTreatment(answers: ProtocolAnswers): string | null {
-  if (answers.stepsPreference === 'minimal' && answers.skinRightNow !== 'irritated') return null
-  const { concerns } = answers
-  const gentle = preferGentleSkin(answers)
-  const has = (c: SkinConcern) => concerns.includes(c)
-  if (answers.skinRightNow === 'irritated') return CORE.matrix
-  if (answers.skinRightNow === 'breakout') return gentle ? CORE.matrix : CORE.bakuchiol
-  if (has('Hyperpigmentation') || has('Brightening') || has('Sun Damage')) return gentle ? CORE.c5 : CORE.c20
-  if (has('Aging')) return CORE.bakuchiol
-  if (has('Redness')) return CORE.matrix
-  if (has('Dry Skin')) return CORE.elixir
-  if (has('Acne') || has('Large Pores')) return gentle ? CORE.matrix : CORE.bakuchiol
-  if (answers.skinRightNow === 'dehydrated') return CORE.ha
-  return CORE.peptide
-}
-
-function expectedCleanser(answers: ProtocolAnswers): string {
-  const gentle = preferGentleSkin(answers)
-  if (answers.skinRightNow === 'irritated' || gentle || answers.skinType === 'Dry') return CORE.chamomile
-  if (
-    answers.skinRightNow === 'breakout' ||
-    answers.skinType === 'Oily' ||
-    answers.concerns.includes('Acne') ||
-    answers.concerns.includes('Large Pores')
-  ) {
-    return CORE.gel
+function shuffled<T>(list: T[], seed: number): T[] {
+  const out = [...list]
+  let s = seed
+  for (let i = out.length - 1; i > 0; i--) {
+    s = (s * 1103515245 + 12345) & 0x7fffffff
+    const j = s % (i + 1)
+    ;[out[i], out[j]] = [out[j], out[i]]
   }
-  return CORE.chamomile
-}
-
-function expectedMoisturizer(answers: ProtocolAnswers): string {
-  if (answers.skinRightNow === 'irritated') return CORE.rich
-  if (answers.skinType === 'Dry' || answers.concerns.includes('Dry Skin')) return CORE.rich
-  if (answers.skinRightNow === 'breakout') return CORE.cloud
-  if (answers.skinRightNow === 'dehydrated' && answers.skinType !== 'Oily') return CORE.rich
-  return CORE.cloud
+  return out
 }
 
 const failures: string[] = []
-const seenProducts = new Set<string>()
-const seenWeekly = new Set<string>()
+const seenTopSerums = new Set<string>()
+const seenDaily = new Set<string>()
 let checked = 0
 
-for (const skinType of SKIN_TYPES) {
+const rankedSerums = new Set(Object.values(SERUM_RANKINGS).flat())
+if (rankedSerums.size !== 6) failures.push(`serum guide covers ${rankedSerums.size} serums, expected 6`)
+
+for (const skinType of QUIZ_SKIN_TYPES) {
   for (const concerns of concernSubsets()) {
-    for (const stepsPreference of STEPS) {
-      for (const sensitive of [false, true]) {
-        for (const skinRightNow of SKIN_STATES) {
-          const answers: ProtocolAnswers = { skinType, concerns, stepsPreference, sensitive, skinRightNow }
+    for (const reactivity of REACTIVITY) {
+      for (const stepsPreference of STEPS) {
+        for (const funAnswer of FUN_ANSWERS) {
+          const answers: ProtocolAnswers = { skinType, concerns, reactivity, stepsPreference, funAnswer }
           const result = buildProtocol(answers)
-          const daily = ids(result.products)
-          const size = protocolSize(answers)
-          const gentle = preferGentleSkin(answers)
-          const label = `${skinType} | ${concerns.join('+')} | ${stepsPreference} | ${sensitive ? 'sensitive' : 'not-sensitive'} | ${skinRightNow}`
-          const wantEye =
-            stepsPreference === 'complete' &&
-            concerns.includes('Eye Area') &&
-            skinRightNow !== 'irritated'
-          const expectsOil =
-            stepsPreference === 'complete' && skinRightNow !== 'breakout' && skinRightNow !== 'irritated'
-          const treatmentId = expectedTreatment(answers)
+          const daily = result.products.map(p => p.id)
+          const label = `${skinType} | ${concerns.join('+') || 'none'} | ${reactivity} | ${stepsPreference} | ${funAnswer ?? '-'}`
+          const often = reactivity === 'often'
+          const reactive = isReactive(answers)
+          const has = (c: QuizConcern) => concerns.includes(c)
+          const serumsInRoutine = daily.filter(id => SERUMS.has(id))
 
           checked++
-          daily.forEach(id => seenProducts.add(id))
-          if (result.weekly) seenWeekly.add(result.weekly.id)
+          daily.forEach(id => seenDaily.add(id))
+          seenTopSerums.add(result.serum.id)
 
-          if (!result.products.length) failures.push(`${label}: empty protocol`)
-          if (result.products.length !== size) {
-            failures.push(`${label}: expected ${size} products, got ${result.products.length} [${daily.join(', ')}]`)
+          if (daily.length !== protocolSize(answers)) {
+            failures.push(`${label}: expected ${protocolSize(answers)} products, got ${daily.length} [${daily.join(', ')}]`)
           }
           if (new Set(daily).size !== daily.length) failures.push(`${label}: duplicate ids`)
           if (daily.some(id => !PRODUCTS.some(p => p.id === id))) failures.push(`${label}: unknown product`)
           if (!CLEANSERS.has(daily[0])) failures.push(`${label}: first product is not a daily cleanser`)
-          if (!daily.includes(CORE.toner)) failures.push(`${label}: missing toner`)
           if (!daily.some(id => MOISTURIZERS.has(id))) failures.push(`${label}: missing moisturizer`)
-          if (treatmentId && !daily.includes(treatmentId)) {
-            failures.push(`${label}: treatment ${treatmentId} missing`)
+          if (serumsInRoutine.length > 1) failures.push(`${label}: ${serumsInRoutine.length} serums in one routine`)
+
+          // Toner and exfoliation stay out for "often" reactive skin.
+          if (often && daily.includes(CORE.toner)) failures.push(`${label}: toner on often-reactive skin`)
+          if (!often && !daily.includes(CORE.toner)) failures.push(`${label}: missing toner`)
+          if (often && (result.weekly || result.bonus?.id === CORE.tripleglow)) {
+            failures.push(`${label}: exfoliating cleanser on often-reactive skin`)
           }
-          if (!treatmentId && daily.some(id => TREATMENTS.has(id))) {
-            failures.push(`${label}: unexpected treatment on essentials-only path`)
-          }
-          if (daily.includes(CORE.tripleglow)) failures.push(`${label}: TripleGlow in daily routine`)
-          if (gentle && daily.includes(CORE.c20)) failures.push(`${label}: 20% C on sensitive skin`)
-          if (gentle && daily.includes(CORE.gel)) failures.push(`${label}: gel cleanser on sensitive skin`)
-          if (skinType === 'Dry' && daily.includes(CORE.gel)) failures.push(`${label}: gel cleanser on dry skin`)
-          if (daily[0] !== expectedCleanser(answers)) {
-            failures.push(`${label}: cleanser ${daily[0]} != ${expectedCleanser(answers)}`)
-          }
-          if (!daily.includes(expectedMoisturizer(answers))) {
-            failures.push(`${label}: moisturizer ${expectedMoisturizer(answers)} missing`)
-          }
-          if (wantEye && !daily.includes(CORE.eye)) failures.push(`${label}: missing eye cream`)
-          if (!wantEye && daily.includes(CORE.eye)) failures.push(`${label}: eye cream without Eye Area / complete`)
-          if (expectsOil && !daily.includes(CORE.oil)) failures.push(`${label}: missing finishing oil`)
-          if (!expectsOil && daily.includes(CORE.oil)) failures.push(`${label}: unexpected finishing oil`)
-          if (result.weekly && (gentle || skinType === 'Dry')) {
-            failures.push(`${label}: weekly exfoliant on gentle/dry path`)
-          }
-          if (result.weekly && result.weekly.id !== CORE.tripleglow) {
-            failures.push(`${label}: unexpected weekly product`)
+          if (often !== result.tonerOmitted) failures.push(`${label}: tonerOmitted flag is wrong`)
+          if (often && stepsPreference === 'minimal') {
+            if (!result.tonerSwap || ![CORE.ha, CORE.matrix].includes(result.tonerSwap.id)) {
+              failures.push(`${label}: toner not swapped for a calming serum`)
+            }
+          } else if (result.tonerSwap) {
+            failures.push(`${label}: unexpected toner swap`)
           }
 
-          // AM/PM split checks
+          // Serum placement
+          if (stepsPreference !== 'minimal' && !daily.includes(result.serum.id)) {
+            failures.push(`${label}: top serum ${result.serum.id} missing from routine`)
+          }
+          if (stepsPreference === 'minimal' && !often && serumsInRoutine.length) {
+            failures.push(`${label}: serum in an Essentials routine`)
+          }
+          const offer = optionalTreat(answers)
+          if (stepsPreference === 'minimal' && !often) {
+            if (offer?.id !== result.serum.id) failures.push(`${label}: Essentials offer is not the top serum`)
+          } else if (offer) {
+            failures.push(`${label}: unexpected Essentials serum offer`)
+          }
+          if (result.alternative) {
+            if (daily.includes(result.alternative.id)) failures.push(`${label}: alternative already in routine`)
+            if (offer && result.alternative.id === offer.id) failures.push(`${label}: alternative equals the offer`)
+          }
+
+          // Vitamin C strength
+          const expectedC = has('Acne') || reactive ? CORE.c5 : CORE.c20
+          if (recommendedVitaminCId(answers) !== expectedC) failures.push(`${label}: wrong recommended vitamin C`)
+          for (const p of [result.serum, result.alternative, ...result.products]) {
+            if (p && (p.id === CORE.c5 || p.id === CORE.c20) && p.id !== expectedC) {
+              failures.push(`${label}: ${p.id} recommended, expected ${expectedC}`)
+            }
+          }
+          if (reactive && daily.includes(CORE.c20)) failures.push(`${label}: 20% C on reactive skin`)
+
+          // Cleanser and moisturizer
+          const expectedCleanser =
+            skinType === 'Dry' || reactive
+              ? CORE.chamomile
+              : skinType === 'Oily' || has('Acne') || has('Large Pores') || has('Oily Skin')
+                ? CORE.gel
+                : CORE.chamomile
+          if (daily[0] !== expectedCleanser) failures.push(`${label}: cleanser ${daily[0]} != ${expectedCleanser}`)
+          const expectedMoisturizer =
+            skinType === 'Dry' || has('Dryness') || (often && skinType !== 'Oily') ? CORE.rich : CORE.cloud
+          if (!daily.includes(expectedMoisturizer)) failures.push(`${label}: moisturizer ${expectedMoisturizer} missing`)
+
+          // Eye cream, oil, weekly
+          const complete = stepsPreference === 'complete'
+          if (complete !== daily.includes(CORE.eye)) failures.push(`${label}: eye cream should be ${complete ? 'in' : 'out'}`)
+          const expectsOil = complete && !has('Acne') && !has('Oily Skin')
+          if (expectsOil !== daily.includes(CORE.oil)) failures.push(`${label}: oil should be ${expectsOil ? 'in' : 'out'}`)
+          if (daily.includes(CORE.tripleglow)) failures.push(`${label}: TripleGlow in daily routine`)
+          if (result.weekly && (!complete || skinType === 'Dry' || reactive)) {
+            failures.push(`${label}: weekly exfoliant where it is excluded`)
+          }
+          if (result.bonus && (daily.includes(result.bonus.id) || result.bonus.id === result.weekly?.id)) {
+            failures.push(`${label}: bonus pick already in the routine`)
+          }
+
+          // Order independence
+          const reordered = { ...answers, concerns: shuffled(concerns, checked) }
+          if (JSON.stringify(scoreSerums(answers)) !== JSON.stringify(scoreSerums(reordered))) {
+            failures.push(`${label}: concern order changed the scores`)
+          }
+
+          // AM/PM split
           const routine = splitRoutine(result.products)
-          const morningIds = routine.morning
-            .filter(l => l.kind === 'product')
-            .map(l => l.kind === 'product' ? l.product.id : '')
-          const eveningIds = routine.evening
-            .filter(l => l.kind === 'product')
-            .map(l => l.kind === 'product' ? l.product.id : '')
-          if (!routine.morning.some(l => l.kind === 'protect')) {
-            failures.push(`${label}: morning missing Protect guidance`)
-          }
-          if (daily.includes(CORE.bakuchiol) && morningIds.includes(CORE.bakuchiol)) {
-            failures.push(`${label}: Bakuchiol appears in morning routine`)
-          }
+          const ids = (lines: typeof routine.morning) => lines.flatMap(l => (l.kind === 'product' ? [l.product.id] : []))
+          const morningIds = ids(routine.morning)
+          const eveningIds = ids(routine.evening)
+          if (!routine.morning.some(l => l.kind === 'protect')) failures.push(`${label}: morning missing Protect guidance`)
+          if (morningIds.includes(CORE.bakuchiol)) failures.push(`${label}: Bakuchiol in morning routine`)
           if (daily.includes(CORE.bakuchiol) && !eveningIds.includes(CORE.bakuchiol)) {
             failures.push(`${label}: Bakuchiol missing from evening routine`)
           }
-          const treatProduct = result.products.find(p => p.protocolStep === 3)
-          if (treatProduct && isEveningOnlySerum(treatProduct) && morningIds.includes(treatProduct.id)) {
-            failures.push(`${label}: evening-only serum in morning`)
-          }
-
-          // Single-list view: one row per product, priced once, period agreeing with the AM/PM split
           const entries = routineEntries(result.products)
-          if (entries.length !== result.products.length) {
-            failures.push(`${label}: ${entries.length} routine entries for ${result.products.length} products`)
-          }
-          if (new Set(entries.map(e => e.product.id)).size !== entries.length) {
-            failures.push(`${label}: duplicate product in routine entries`)
-          }
+          if (entries.length !== result.products.length) failures.push(`${label}: routine entries mismatch`)
           for (const entry of entries) {
-            const am = morningIds.includes(entry.product.id)
-            const pm = eveningIds.includes(entry.product.id)
-            const expected = am && pm ? 'both' : am ? 'am' : 'pm'
-            if (entry.period !== expected) {
-              failures.push(`${label}: ${entry.product.id} period ${entry.period} != ${expected}`)
+            if (!morningIds.includes(entry.product.id) && !eveningIds.includes(entry.product.id)) {
+              failures.push(`${label}: ${entry.product.id} is in neither routine`)
             }
-            if (!am && !pm) failures.push(`${label}: ${entry.product.id} is in neither routine`)
-          }
-          const listedTotal = entries.reduce((sum, e) => sum + e.product.price, 0)
-          const shownTotal = result.products.reduce((sum, p) => sum + p.price, 0)
-          if (listedTotal !== shownTotal) {
-            failures.push(`${label}: listed rows total ${listedTotal} but protocol total is ${shownTotal}`)
-          }
-
-          const offer = optionalTreat(answers)
-          if (skinRightNow === 'irritated' || stepsPreference !== 'minimal') {
-            if (offer) failures.push(`${label}: optionalTreat should be null`)
-          } else {
-            if (!offer) failures.push(`${label}: optionalTreat missing on Essentials`)
-            else if (daily.includes(offer.id)) {
-              failures.push(`${label}: optionalTreat ${offer.id} is already in the protocol`)
-            }
-          }
-
-          if (skinRightNow === 'irritated') {
-            const recovery = [CORE.chamomile, CORE.toner, CORE.matrix, CORE.rich]
-            if (size !== 4) failures.push(`${label}: irritated protocol is ${size} steps, expected 4`)
-            if (recovery.some(id => !daily.includes(id))) {
-              failures.push(`${label}: recovery protocol missing [${recovery.filter(id => !daily.includes(id)).join(', ')}]`)
-            }
-            const banned = [CORE.c5, CORE.c20, CORE.bakuchiol, CORE.tripleglow, CORE.oil, CORE.gel]
-            const found = banned.filter(id => daily.includes(id))
-            if (found.length) failures.push(`${label}: active in recovery protocol [${found.join(', ')}]`)
-            if (result.weekly) failures.push(`${label}: weekly exfoliant on irritated skin`)
-          }
-
-          if (skinRightNow === 'breakout') {
-            if (daily.includes(CORE.oil)) failures.push(`${label}: finishing oil while breaking out`)
-            if (stepsPreference !== 'minimal' && !gentle && !daily.includes(CORE.bakuchiol)) {
-              failures.push(`${label}: breakout treatment is not the bakuchiol`)
-            }
-          }
-
-          if (skinRightNow === 'dehydrated') {
-            if (stepsPreference !== 'minimal' && treatmentId === CORE.ha && !daily.includes(CORE.ha)) {
-              failures.push(`${label}: dehydrated protocol missing HA serum`)
-            }
-            if (result.weekly) failures.push(`${label}: weekly exfoliant on dehydrated skin`)
-          }
-
-          // Eye product step number
-          const eyeProduct = result.products.find(p => p.id === CORE.eye)
-          if (eyeProduct && eyeProduct.protocolStep !== 4) {
-            failures.push(`${label}: eye cream protocolStep is ${eyeProduct.protocolStep}, expected 4`)
-          }
-          const haProduct = PRODUCTS.find(p => p.id === CORE.ha)
-          if (haProduct && haProduct.protocolStep !== 3) {
-            failures.push(`HA serum protocolStep is ${haProduct.protocolStep}, expected 3`)
           }
         }
       }
@@ -258,16 +195,13 @@ for (const skinType of SKIN_TYPES) {
   }
 }
 
-const catalogIds = PRODUCTS.map(p => p.id)
-const unusedDaily = catalogIds.filter(id => id !== CORE.tripleglow && !seenProducts.has(id))
-const unusedWeekly = !seenWeekly.has(CORE.tripleglow)
-
-if (unusedDaily.length) failures.push(`products never recommended: ${unusedDaily.join(', ')}`)
-if (unusedWeekly) failures.push('TripleGlow never recommended as weekly')
+const neverTop = [...SERUMS].filter(id => !seenTopSerums.has(id))
+if (neverTop.length) failures.push(`serums never the top pick: ${neverTop.join(', ')}`)
+const neverDaily = PRODUCTS.map(p => p.id).filter(id => id !== CORE.tripleglow && !seenDaily.has(id))
+if (neverDaily.length) failures.push(`products never in a routine: ${neverDaily.join(', ')}`)
 
 console.log(`Checked ${checked} quiz combinations`)
-console.log(`Daily products seen: ${[...seenProducts].sort().join(', ')}`)
-console.log(`Weekly products seen: ${[...seenWeekly].join(', ') || '(none)'}`)
+console.log(`Top serums seen: ${[...seenTopSerums].sort().join(', ')}`)
 if (failures.length) {
   console.error(`FAILED ${failures.length} checks`)
   failures.slice(0, 40).forEach(f => console.error(' - ' + f))

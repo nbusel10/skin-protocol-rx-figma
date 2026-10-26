@@ -9,16 +9,12 @@ interface HomePageProps {
 }
 
 const RIBBON_PHRASES = [
-  'Skin science meets everyday care',
-  'Created with expertise',
-  'Never tested on animals',
-  'Everything your skin needs',
-  'Nothing it doesn\'t',
-  'Thoughtfully selected',
-  'Clinical intention',
-  'Expert founded',
-  'Purposeful formulations',
-  'Family-created formulas',
+  'EVERY INGREDIENT HAS A PURPOSE',
+  'MORE THOUGHT. FEWER STEPS.',
+  'SCIENCE GUIDED BY NATURE',
+  'YOUR SKIN. YOUR PROTOCOL.',
+  'FAMILY FOUNDED',
+  'NEVER TESTED ON ANIMALS',
 ]
 
 function RibbonBanner() {

@@ -49,7 +49,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       {/* ── HERO ─────────────────────────────────────────────────────── */}
       <section className="relative min-h-[90vh] grid grid-cols-1 lg:grid-cols-2 items-center">
         {/* Left: copy */}
-        <div className="flex flex-col justify-center px-8 md:px-16 lg:px-20 py-24 lg:py-16 order-2 lg:order-1">
+        <div className="flex flex-col justify-center px-8 md:px-16 lg:px-20 pt-6 pb-24 lg:pt-4 lg:pb-16 order-2 lg:order-1">
           <p className="text-[11px] tracking-[0.3em] uppercase text-green font-medium mb-6">
             Skincare with intention
           </p>

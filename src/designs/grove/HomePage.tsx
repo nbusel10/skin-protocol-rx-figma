@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { PROTOCOL_STEPS, SKIN_CONCERNS } from '../../data'
-import { CLIENT_NOTES, STUDIO_NOTES, focusProduct, pickProducts, stepLabel, type DesignNavigate } from '../shared'
+import { PROTOCOL_STEPS } from '../../data'
+import { CLIENT_NOTES, STUDIO_NOTES, pickProducts, stepLabel, type DesignNavigate } from '../shared'
 
 interface HomePageProps {
   onNavigate: DesignNavigate
@@ -39,22 +39,6 @@ const FOUNDERS = [
   },
 ]
 
-const KEPT = [
-  'Clinically relevant active ingredients',
-  'Intentional concentrations',
-  'Balanced, skin-supportive formulas',
-  'Multi-functional ingredients selected with purpose',
-  'Formulation decisions grounded in long-term skin health',
-]
-
-const LEFT_OUT = [
-  'Overloaded ingredient lists',
-  'Redundant actives',
-  'Trend-driven formulation',
-  'Unnecessary fillers',
-  'Fragrance added without purpose',
-]
-
 const STEP_NOTE: Record<number, string> = {
   1: 'Daily foundation',
   2: 'Optional',
@@ -71,11 +55,8 @@ function scrollTo(id: string) {
 
 export default function HomePage({ onNavigate }: HomePageProps) {
   const products = pickProducts(ESSENTIALS.map(item => item.id))
-  const [concern, setConcern] = useState('dry-skin')
   const [voices, setVoices] = useState<'clients' | 'studios'>('clients')
-  const focus = focusProduct(concern)
   const notes = voices === 'clients' ? CLIENT_NOTES : STUDIO_NOTES
-  const activeConcern = SKIN_CONCERNS.find(item => item.id === concern) ?? SKIN_CONCERNS[0]
 
   return (
     <article className="bg-[#F6F3E9] text-[#23332A]">
@@ -84,12 +65,12 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         <div className="pointer-events-none absolute -right-[110px] top-[145px] z-0 h-[190px] w-[190px] rounded-full bg-[#ECD9C5]" />
         <div className={`relative z-[1] ${wrap}`}>
           <div className="mx-auto mb-[53px] max-w-[740px] text-center">
-            <p className="text-[11px] font-bold tracking-[0.19em] uppercase text-[#61755B]">Family laboratory · New York</p>
-            <h1 className="mx-auto mt-[15px] mb-[23px] max-w-[770px] font-display text-[clamp(46px,5.4vw,77px)] leading-[1.14] tracking-[-0.035em]">
-              Where nature meets <em className="italic">science.</em>
+            <p className="text-[11px] font-bold tracking-[0.19em] uppercase text-[#61755B]">Skincare with intention</p>
+            <h1 className="mx-auto mt-[15px] mb-[23px] max-w-[820px] font-display text-[clamp(40px,4.6vw,64px)] leading-[1.14] tracking-[-0.035em]">
+              Your Skin Doesn&apos;t Need More. <em className="italic">It Needs What Works.</em>
             </h1>
-            <p className="mx-auto max-w-[525px] text-[#5D665C]">
-              Science guided by nature, and a family who believes your skin needs thoughtful formulas — not an overwhelming routine.
+            <p className="mx-auto max-w-[680px] text-[#5D665C]">
+              Each formula is constructed for performance — using only what the skin needs to function, repair, and improve. Formulated with proven actives chosen for performance, not trends. Thoughtfully selected ingredients and formulas, bringing professional skincare into your everyday routine. Every formulation is created with one goal: effective, evidence-driven skincare that supports long-term skin function. Just thoughtful formulas, professional insight, and a routine that feels right for you.
             </p>
           </div>
           <div className="mx-auto grid max-w-[1000px] items-center gap-[26px] min-[851px]:grid-cols-[1.15fr_0.85fr] min-[851px]:gap-[35px]">
@@ -108,11 +89,11 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                 Three professional perspectives, one shared belief: purposeful ingredients and skincare simple enough to live with.
               </p>
               <div className="flex flex-wrap gap-3">
-                <button type="button" onClick={() => scrollTo('founders')} className="rounded-[40px] border border-[#FFFCF5] bg-[#FFFCF5] px-5 py-3 text-xs font-bold text-[#284235]">
-                  Meet the family
+                <button type="button" onClick={() => scrollTo('collection')} className="rounded-[40px] border border-[#FFFCF5] bg-[#FFFCF5] px-5 py-3 text-xs font-bold text-[#284235]">
+                  Explore the collection
                 </button>
-                <button type="button" onClick={() => scrollTo('discovery')} className="rounded-[40px] border border-[#A9B7A9] bg-transparent px-5 py-3 text-xs font-bold text-white">
-                  Find your protocol
+                <button type="button" onClick={() => scrollTo('routine')} className="rounded-[40px] border border-[#A9B7A9] bg-transparent px-5 py-3 text-xs font-bold text-white">
+                  Build your protocol
                 </button>
               </div>
             </div>
@@ -120,40 +101,38 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      <section id="story" className="scroll-mt-24 bg-[#FFFCF5] py-[65px] min-[851px]:py-[84px]">
-        <div className={`${wrap} grid items-center gap-[26px] min-[851px]:grid-cols-2 min-[851px]:gap-[70px]`}>
-          <img
-            src="/original/founders-lab.jpg"
-            alt="The founders with Skin Protocol RX bottles on a cream marble table"
-            className="min-h-[380px] w-full object-cover min-[851px]:min-h-[500px]"
-            style={{ borderRadius: '180px 180px 16px 16px' }}
-          />
-          <div>
-            <p className="text-[11px] font-bold tracking-[0.19em] uppercase text-[#61755B]">What stays in the beaker</p>
-            <h2 className="mt-2 mb-[18px] font-display text-[clamp(35px,3.4vw,52px)] leading-[1.14] tracking-[-0.035em]">
-              Only what earns <em className="italic">its place.</em>
+      <section id="philosophy" className="scroll-mt-24 bg-[#FFFCF5] py-[65px] min-[851px]:py-[84px]">
+        <div className={wrap}>
+          <div className="mx-auto mb-10 max-w-[720px] text-center">
+            <p className="text-[11px] font-bold tracking-[0.19em] uppercase text-[#61755B]">Our philosophy</p>
+            <h2 className="mt-3 mb-5 font-display text-[clamp(35px,3.6vw,54px)] leading-[1.14] tracking-[-0.035em]">
+              Everything your skin needs.
+              <br />
+              <em className="italic">Nothing it doesn&apos;t.</em>
             </h2>
-            <p className="text-[#5D665C]">
-              We approach each formula with professional standards and a simple question: what does skin actually need?
+            <p className="mx-auto max-w-[620px] text-[#5D665C]">
+              We formulate with thoughtfully selected actives and botanical ingredients, each chosen for a reason—to support healthy, resilient skin. Every product has a clear role in a simplified, effective routine. Our focus is on high-quality formulas and useful product education, without chasing trends or adding unnecessary extras.
             </p>
-            <div className="mt-6 grid grid-cols-1 gap-[22px] min-[561px]:grid-cols-2">
-              <div>
-                <h3 className="mb-3.5 font-display text-[23px] tracking-[-0.035em]">Kept</h3>
-                <ul className="list-disc pl-[17px] text-sm leading-8">
-                  {KEPT.map(item => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
+          </div>
+          <div className="grid gap-5 min-[561px]:grid-cols-2 min-[851px]:grid-cols-3">
+            {[
+              ['Thoughtfully selected', 'Purposeful formulations. A protocol with purpose.'],
+              ['Tried and true', 'Supported by research and evidence-based information.'],
+              ['Results without hype', 'Backed by research. No unnecessary extras.'],
+              ['Clinical intention', 'Where clinical intention meets natural intelligence.'],
+              ['Never tested on animals', 'A standard we hold, not a badge.'],
+              ['Expert founded', 'Chemist · Nurse Practitioner · Esthetician'],
+            ].map(([title, body]) => (
+              <div key={title} className="rounded-[4px_28px_4px_4px] bg-[#E2EADD] px-5 py-5">
+                <h3 className="mb-2 font-display text-[22px] tracking-[-0.035em]">{title}</h3>
+                <p className="text-sm leading-relaxed text-[#5D665C]">{body}</p>
               </div>
-              <div className="rounded-[4px_35px_4px_4px] bg-[#E2EADD] p-[22px]">
-                <h3 className="mb-3.5 font-display text-[23px] tracking-[-0.035em]">Left out</h3>
-                <ul className="list-disc pl-[17px] text-sm leading-8">
-                  {LEFT_OUT.map(item => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+            ))}
+          </div>
+          <div className="mt-9 flex flex-wrap justify-center gap-x-7 gap-y-3 text-xs font-bold">
+            <a href="/our-story#our-standards" className="text-[#284235] hover:underline">Our Standards ↗</a>
+            <a href="/ingredient-glossary" className="text-[#284235] hover:underline">Ingredient Glossary ↗</a>
+            <a href="/product-education" className="text-[#284235] hover:underline">Product Education ↗</a>
           </div>
         </div>
       </section>
@@ -230,8 +209,8 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                 )
               })}
             </ol>
-            <button type="button" onClick={() => scrollTo('discovery')} className="mt-6 rounded-[40px] border border-[#284235] bg-[#284235] px-5 py-3 text-xs font-bold text-white">
-              Find your starting point
+            <button type="button" onClick={() => onNavigate('shop')} className="mt-6 rounded-[40px] border border-[#284235] bg-[#284235] px-5 py-3 text-xs font-bold text-white">
+              Explore the collection
             </button>
           </div>
           <img
@@ -240,50 +219,6 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             className="min-h-[380px] w-full object-cover min-[851px]:min-h-[560px]"
             style={{ borderRadius: '16px 180px 16px 16px' }}
           />
-        </div>
-      </section>
-
-      <section id="discovery" className="scroll-mt-24 bg-[#E9D8C5] py-[55px] min-[851px]:py-[75px]">
-        <div className={`${wrap} grid items-center gap-[26px] min-[851px]:grid-cols-2 min-[851px]:gap-[65px]`}>
-          <div>
-            <p className="text-[11px] font-bold tracking-[0.19em] uppercase text-[#61755B]">Your skin, your routine</p>
-            <h2 className="mt-2 mb-[18px] font-display text-[clamp(37px,3.5vw,54px)] leading-[1.14] tracking-[-0.035em]">
-              Name the concern.
-              <br />
-              <em className="italic">We will point to a formula.</em>
-            </h2>
-            <p className="text-[#5D665C]">A gentle starting point for exploring products. Select a concern below.</p>
-            <div className="mt-[25px] flex flex-wrap gap-[9px]" role="group" aria-label="Choose a skin concern">
-              {SKIN_CONCERNS.map(item => {
-                const selected = item.id === concern
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    aria-pressed={selected}
-                    onClick={() => setConcern(item.id)}
-                    className={`rounded-[30px] border px-3.5 py-[9px] text-[13px] ${selected ? 'border-[#284235] bg-[#284235] text-white' : 'border-[#B49F89] bg-transparent text-[#23332A] hover:border-[#284235] hover:bg-[#284235] hover:text-white'}`}
-                  >
-                    {item.label}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-          <div className="grid grid-cols-1 gap-[17px] rounded-[24px] bg-[#FFFCF5] p-[22px] min-[561px]:grid-cols-[42%_58%] min-[561px]:rounded-[80px_12px_12px_12px]">
-            <button type="button" onClick={() => onNavigate('product', focus.id)} aria-label={focus.name} className="flex min-h-[230px] items-center justify-center rounded-[110px_110px_12px_12px] bg-[#F0F3E9] px-4 min-[561px]:min-h-[285px]">
-              <img src={focus.image} alt="" className="h-52 w-auto object-contain" />
-            </button>
-            <div className="flex flex-col justify-center">
-              <p className="text-[11px] font-bold tracking-[0.19em] uppercase text-[#61755B]">{stepLabel(focus.protocolStep)}</p>
-              <h3 className="mt-3 font-display text-[28px] leading-[1.14] tracking-[-0.035em]">{focus.name}</h3>
-              <p className="mt-2 text-[13px]">${focus.price} · {focus.size}</p>
-              <p className="mt-2 text-[13px] leading-relaxed text-[#5D665C]">{activeConcern.description}</p>
-              <button type="button" onClick={() => onNavigate('product', focus.id)} className="mt-5 w-fit rounded-[40px] border border-[#284235] bg-[#284235] px-5 py-3 text-xs font-bold text-white">
-                View formula ↗
-              </button>
-            </div>
-          </div>
         </div>
       </section>
 

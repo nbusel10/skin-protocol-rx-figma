@@ -5,10 +5,10 @@ const CHOICES: { id: GalleryTarget; label: string; href: string }[] = [
   { id: 'rose', label: 'Rose', href: '/' },
   { id: 'protocol', label: 'The Protocol', href: '/designs/the-protocol.html' },
   { id: 'clear', label: 'Editorial', href: '/designs/clear' },
+  { id: 'ritual', label: 'Personalized Skin Ritual', href: '/designs/ritual' },
   { id: 'grove', label: 'Botanical Laboratory', href: '/designs/grove' },
   { id: 'boutique', label: 'Modern Skincare Boutique', href: '/designs/boutique' },
   { id: 'luxe', label: 'Luxury Editorial', href: '/designs/luxe' },
-  { id: 'ritual', label: 'Personalized Skin Ritual', href: '/designs/ritual' },
 ]
 
 interface DesignTabsProps {
