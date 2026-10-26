@@ -31,6 +31,7 @@ import PickerPage from './designs/picker/PickerPage'
 import DesignSite from './designs/DesignSite'
 import DesignTabs from './designs/DesignTabs'
 import WorkingHomePage from './designs/working/HomePage'
+import WorkingHeader from './designs/working/Header'
 import { isDesignId, type DesignId, type DesignPage, type GalleryTarget } from './designs/shared'
 import { PRODUCTS } from './data'
 
@@ -421,6 +422,7 @@ export default function App() {
     return (
       <div className="theme-clear min-h-screen bg-[#F7F4EF]">
         <DesignTabs current="working" onOpen={openGalleryTarget} />
+        <WorkingHeader />
         <main className="overflow-x-hidden">
           <WorkingHomePage />
         </main>

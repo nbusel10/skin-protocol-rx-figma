@@ -97,6 +97,15 @@ interface ProtocolOverviewSectionProps {
   imageSrc?: string
   imageAlt?: string
   id?: string
+  imageRight?: boolean
+}
+
+function flipImageWell(classes: string) {
+  return classes
+    .replace(/-ml-(\S+)/g, '-mr-$1')
+    .replace(/sm:-ml-(\S+)/g, 'sm:-mr-$1')
+    .replace(/md:-ml-(\S+)/g, 'md:-mr-$1')
+    .replace(/lg:-ml-(\S+)/g, 'lg:-mr-$1')
 }
 
 export default function ProtocolOverviewSection({
@@ -105,53 +114,78 @@ export default function ProtocolOverviewSection({
   imageSrc = '/designs/clear/ritual-glow.jpg',
   imageAlt = 'A woman with glowing skin applying cream in warm morning light',
   id = 'what-is-the-protocol',
+  imageRight = false,
 }: ProtocolOverviewSectionProps) {
   const t = TONE[tone]
   const stepGridRef = useProtocolStepReveal<HTMLOListElement>()
+  const imageWellClass = imageRight ? flipImageWell(t.imageWell) : t.imageWell
+
+  const image = (
+    <div className={imageWellClass}>
+      <img
+        src={imageSrc}
+        alt={imageAlt}
+        className="absolute inset-0 h-full w-full object-cover object-[center_top]"
+      />
+    </div>
+  )
+
+  const copy = (
+    <div className="flex flex-col lg:py-0">
+      <p className={t.eyebrow}>{PROTOCOL_SECTION.eyebrow}</p>
+      <div className="mt-3 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
+        <h2 className={t.title}>
+          {PROTOCOL_SECTION.titleLead}{' '}
+          <em>{PROTOCOL_SECTION.titleEm}</em>
+        </h2>
+        <div className="shrink-0 sm:pt-1 sm:text-right">
+          <button type="button" onClick={onCta} className={t.button}>
+            {PROTOCOL_SECTION.cta} <span aria-hidden="true">↗</span>
+          </button>
+          <p className={t.note}>{PROTOCOL_SECTION.ctaNote}</p>
+        </div>
+      </div>
+      <p className={`mt-4 ${t.muted}`}>{PROTOCOL_SECTION.paragraph}</p>
+      <ol
+        ref={stepGridRef}
+        className="protocol-step-reveal mt-8 grid grid-cols-1 gap-x-6 sm:grid-cols-2"
+      >
+        {PROTOCOL_SECTION.steps.map(step => (
+          <li key={step.step} className={`${t.border} py-3`}>
+            <span className="flex items-baseline gap-2.5">
+              <span className={t.number}>{String(step.step).padStart(2, '0')}</span>
+              <span>
+                <span className={t.name}>{step.name}</span>
+                <span className={t.tag}>{step.tag}</span>
+              </span>
+            </span>
+          </li>
+        ))}
+      </ol>
+      <p className={t.spf}>{PROTOCOL_SECTION.spf}</p>
+    </div>
+  )
 
   return (
     <section id={id} className={t.section}>
-      <div className={`${t.wrap} grid items-stretch gap-10 lg:grid-cols-[minmax(280px,0.9fr)_1.2fr] lg:gap-10 xl:gap-14`}>
-        <div className={t.imageWell}>
-          <img
-            src={imageSrc}
-            alt={imageAlt}
-            className="absolute inset-0 h-full w-full object-cover object-[center_top]"
-          />
-        </div>
-        <div className="flex flex-col lg:py-0">
-          <p className={t.eyebrow}>{PROTOCOL_SECTION.eyebrow}</p>
-          <div className="mt-3 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
-            <h2 className={t.title}>
-              {PROTOCOL_SECTION.titleLead}{' '}
-              <em>{PROTOCOL_SECTION.titleEm}</em>
-            </h2>
-            <div className="shrink-0 sm:pt-1 sm:text-right">
-              <button type="button" onClick={onCta} className={t.button}>
-                {PROTOCOL_SECTION.cta} <span aria-hidden="true">↗</span>
-              </button>
-              <p className={t.note}>{PROTOCOL_SECTION.ctaNote}</p>
-            </div>
-          </div>
-          <p className={`mt-4 ${t.muted}`}>{PROTOCOL_SECTION.paragraph}</p>
-          <ol
-            ref={stepGridRef}
-            className="protocol-step-reveal mt-8 grid grid-cols-1 gap-x-6 sm:grid-cols-2"
-          >
-            {PROTOCOL_SECTION.steps.map(step => (
-              <li key={step.step} className={`${t.border} py-3`}>
-                <span className="flex items-baseline gap-2.5">
-                  <span className={t.number}>{String(step.step).padStart(2, '0')}</span>
-                    <span>
-                      <span className={t.name}>{step.name}</span>
-                      <span className={t.tag}>{step.tag}</span>
-                    </span>
-                </span>
-              </li>
-            ))}
-          </ol>
-          <p className={t.spf}>{PROTOCOL_SECTION.spf}</p>
-        </div>
+      <div
+        className={`${t.wrap} grid items-stretch gap-10 lg:gap-10 xl:gap-14 ${
+          imageRight
+            ? 'lg:grid-cols-[1.2fr_minmax(280px,0.9fr)]'
+            : 'lg:grid-cols-[minmax(280px,0.9fr)_1.2fr]'
+        }`}
+      >
+        {imageRight ? (
+          <>
+            {copy}
+            {image}
+          </>
+        ) : (
+          <>
+            {image}
+            {copy}
+          </>
+        )}
       </div>
     </section>
   )

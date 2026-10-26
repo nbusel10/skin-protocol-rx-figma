@@ -26,7 +26,7 @@ export default function HomePage() {
             <div className="pointer-events-none absolute -top-[10%] right-[8%] h-[125%] w-[62%] rounded-t-[200px] border-[32px] border-white/50" />
             <div className="absolute inset-[8%] overflow-hidden">
               <img
-                src="/original/shop-hero.jpg"
+                src="/designs/working/shop-hero.jpg"
                 alt="Skin Protocol RX bottles and jars on cream stone"
                 className="h-full w-full object-cover"
               />
@@ -61,7 +61,7 @@ export default function HomePage() {
               We approach each formula with professional standards and a simple question: what does skin actually need?
             </p>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
-              <div>
+              <div className="px-5 py-5 sm:px-6 sm:py-6">
                 <h3 className="mb-4 font-serif text-[22px] text-[#252520]">Kept</h3>
                 <ul className="space-y-3">
                   {[
@@ -123,6 +123,7 @@ export default function HomePage() {
 
       <ProtocolOverviewSection
         tone="editorial"
+        imageRight
         onCta={() => document.getElementById('protocol')?.scrollIntoView({ behavior: 'smooth' })}
       />
     </article>
