@@ -62,9 +62,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <section id="feature" className="scroll-mt-28 bg-[#FFFDFA] py-10 md:py-14">
         <div className="grid min-[681px]:min-h-[clamp(320px,36vw,520px)] min-[681px]:grid-cols-[48%_52%]">
           <div className="flex flex-col justify-center px-6 py-6 min-[681px]:py-8 min-[681px]:pr-[8%] min-[681px]:pl-[max(36px,8vw)]">
-            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">Skincare with intention</p>
+            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">Skincare with intention</p>
             <h1 className="my-3 max-w-[650px] font-serif text-[clamp(40px,8vw,56px)] leading-[1.08] tracking-[-0.044em] min-[681px]:text-[clamp(44px,4vw,60px)]">
-              Your Skin Doesn&apos;t Need More. <em className="italic">It Needs What Works.</em>
+              Your Skin Doesn&apos;t Need More. <em className="italic text-[#ab8584]">It Needs What Works.</em>
             </h1>
             <p className="mb-4 max-w-[540px] text-[15px] leading-relaxed text-[#595750]">
               Each formula is constructed for performance — using only what the skin needs to function, repair, and improve. Formulated with proven actives chosen for performance, not trends. Thoughtfully selected ingredients and formulas, bringing professional skincare into your everyday routine. Every formulation is created with one goal: effective, evidence-driven skincare that supports long-term skin function. Just thoughtful formulas, professional insight, and a routine that feels right for you.
@@ -97,11 +97,11 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <section id="philosophy" className="scroll-mt-28 bg-[#252520] py-16 text-[#FFFDFA] md:py-[75px]">
         <div className={`${wrap} grid grid-cols-1 gap-12 lg:grid-cols-[1.1fr_.9fr] lg:items-center lg:gap-16`}>
           <div>
-            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">Our philosophy</p>
+            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">Our philosophy</p>
             <h2 className="mt-3 mb-7 font-serif text-[clamp(2.25rem,3.5vw,3.4rem)] leading-[1.1] tracking-[-0.044em]">
               Everything your skin needs.
               <br />
-              <em>Nothing it doesn&apos;t.</em>
+              <em className="text-[#ab8584]">Nothing it doesn&apos;t.</em>
             </h2>
             <p className="text-sm leading-relaxed text-[#CAC5BB]">
               We formulate with thoughtfully selected actives and botanical ingredients, each chosen for a reason—to support healthy, resilient skin. Every product has a clear role in a simplified, effective routine. Our focus is on high-quality formulas and useful product education, without chasing trends or adding unnecessary extras.
@@ -141,7 +141,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                 key={title}
                 className={`flex items-center gap-5 border-t border-white/20 py-6 ${i >= arr.length - 2 ? 'border-b border-white/20' : ''}`}
               >
-                <span className="shrink-0 font-serif text-[30px] leading-none text-[#B99C77]" aria-hidden="true">{symbol}</span>
+                <span className="shrink-0 font-serif text-[30px] leading-none text-[#ab8584]" aria-hidden="true">{symbol}</span>
                 <div>
                   <p className="font-serif text-[22px] leading-tight text-[#F7F1E8]">{title}</p>
                   <p className="mt-1 text-[11px] leading-relaxed text-[#CAC5BB]">{body}</p>
@@ -176,7 +176,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <section id="story" className="scroll-mt-28 py-16 md:py-[90px]">
         <div className={`${wrap} grid items-start gap-8 lg:grid-cols-[32%_1fr] lg:gap-11`}>
           <div className="lg:pt-4">
-            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">The family behind the formulas</p>
+            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">The family behind the formulas</p>
             <h2 className="mt-3 font-serif text-[clamp(2.125rem,3.2vw,3.25rem)] leading-[1.12] tracking-[-0.044em]">
               Three perspectives.
               <br />
@@ -208,7 +208,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         <div className={wrap}>
           <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
             <div>
-              <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">The collection</p>
+              <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">The collection</p>
               <h2 className="mt-1.5 font-serif text-[clamp(2rem,3.2vw,3.05rem)] leading-[1.12] tracking-[-0.044em]">A good place to start.</h2>
               <p className="mt-3 max-w-[390px] text-sm text-[#6D6A63]">Cleanse and moisturize every day. Add targeted care only when your skin calls for it.</p>
             </div>
@@ -236,7 +236,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <section id="protocol" className="scroll-mt-28 bg-[#EDE8DF] py-16 md:py-[90px]">
         <div className={`${wrap} grid items-center gap-8 lg:grid-cols-[39%_1fr] lg:gap-[60px]`}>
           <div>
-            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">Find your formula</p>
+            <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">Find your formula</p>
             <h2 className="mt-2 font-serif text-[clamp(2.25rem,3.3vw,3.2rem)] leading-[1.12] tracking-[-0.044em]">
               You do not need <em>every bottle.</em>
             </h2>
@@ -265,7 +265,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               <img src={focus.image} alt="" className="h-[90%] w-[90%] object-contain" />
             </button>
             <div className="flex flex-col justify-center px-4 py-5 sm:px-6">
-              <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">{stepLabel(focus.protocolStep)}</p>
+              <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">{stepLabel(focus.protocolStep)}</p>
               <h3 className="mt-1 font-serif text-[21px] leading-tight sm:text-[26px]">{focus.name}</h3>
               <p className="mt-2 text-sm">${focus.price} · {focus.size}</p>
               <p className="mt-2 text-xs leading-relaxed text-[#6D6A63]">{activeConcern.description}</p>
@@ -280,7 +280,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <section id="studios" className="scroll-mt-28 grid bg-[#252520] text-white lg:min-h-[440px] lg:grid-cols-2">
         <img src="/original/spa-hero.jpg" alt="Skin Protocol RX bottles beside a cream treatment bed" className="h-[300px] w-full object-cover lg:h-auto lg:min-h-[440px]" />
         <div className="flex flex-col justify-center px-6 py-14 sm:px-10 lg:px-[clamp(2.5rem,8vw,7.8rem)]">
-          <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">For professionals</p>
+          <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">For professionals</p>
           <h2 className="mt-2 max-w-md font-serif text-[clamp(2.125rem,3.2vw,3.05rem)] leading-[1.12] tracking-[-0.044em]">
             A home routine your clients <em>will keep.</em>
           </h2>
@@ -297,7 +297,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         <div className={wrap}>
           <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#9C755C]">Real perspectives</p>
+              <p className="text-[11px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">Real perspectives</p>
               <h2 className="mt-1.5 font-serif text-[clamp(2rem,3.2vw,3.05rem)] leading-[1.12] tracking-[-0.044em]">In their words.</h2>
             </div>
             <div className="flex gap-5 text-[11px] font-semibold tracking-[0.12em] uppercase">
