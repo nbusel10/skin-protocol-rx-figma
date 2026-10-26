@@ -65,7 +65,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               Your Skin Doesn&apos;t Need More.<br /><em>It Needs What Works.</em>
             </h1>
             <p className="mb-4 max-w-[540px] text-[15px] leading-relaxed text-[#6e6763]">
-              Each formula is constructed for performance — using only what the skin needs to function, repair, and improve. Formulated with proven actives chosen for performance, not trends. Thoughtfully selected ingredients and formulas, bringing professional skincare into your everyday routine. Every formulation is created with one goal: effective, evidence-driven skincare that supports long-term skin function. Just thoughtful formulas, professional insight, and a routine that feels right for you.
+              Every formula is thoughtfully crafted with evidence-based science to support healthier skin—without trends or unnecessary extras.
             </p>
             <div className="flex flex-wrap gap-3">
               <button type="button" className="btn" onClick={() => scrollTo('collection')}>Explore the collection ↗</button>

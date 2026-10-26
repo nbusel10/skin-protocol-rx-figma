@@ -35,7 +35,7 @@ import { PRODUCTS } from './data'
 
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 type Version = 'v1' | 'v2'
-type Design = '' | 'picker' | DesignId
+type Design = '' | 'picker' | 'working' | DesignId
 
 type RouteState = {
   page: Page
@@ -114,6 +114,7 @@ function toUrl(
 ): string {
   const base = normalizeBase()
   if (design === 'picker') return `${base}/designs`
+  if (design === 'working') return `${base}/designs/working`
   if (isDesignId(design)) {
     const root = `${base}/designs/${design}`
     if (designPage === 'shop') return `${root}/shop`
@@ -134,6 +135,9 @@ function parseLocation(pathname: string, search = '', hash = ''): RouteState {
   const storyHash = hash.replace(/^#/, '')
 
   if (path === '/designs' || path === '/designs/') return route('home', { design: 'picker', version: 'v2' })
+  if (path === '/designs/working' || path === '/designs/working/') {
+    return route('home', { design: 'working', designPage: 'home', version: 'v2' })
+  }
   const designMatch = path.match(/^\/designs\/([a-z]+)(\/.*)?$/)
   if (designMatch && isDesignId(designMatch[1])) {
     const id = designMatch[1]
@@ -182,6 +186,10 @@ function applyDocumentTitle(
 ) {
   if (design === 'picker') {
     document.title = 'Designs | Skin Protocol RX'
+    return
+  }
+  if (design === 'working') {
+    document.title = 'Working | Skin Protocol RX'
     return
   }
   if (isDesignId(design)) {
@@ -315,6 +323,10 @@ export default function App() {
 
   const openGalleryTarget = useCallback((target: GalleryTarget) => {
     scrollToTop()
+    if (target === 'working') {
+      applyRoute(route('home', { design: 'working', designPage: 'home', version: 'v2' }), 'push')
+      return
+    }
     if (target === 'original') {
       applyRoute(route('home', { version: 'v1', design: '', designPage: 'home' }), 'push')
       return
@@ -402,6 +414,14 @@ export default function App() {
 
   if (design === 'picker') {
     return <PickerPage onOpen={openGalleryTarget} />
+  }
+
+  if (design === 'working') {
+    return (
+      <div className="min-h-screen bg-[#F7F4EF]">
+        <DesignTabs current="working" onOpen={openGalleryTarget} />
+      </div>
+    )
   }
 
   if (isDesignId(design)) {

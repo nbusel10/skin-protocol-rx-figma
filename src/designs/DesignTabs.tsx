@@ -1,6 +1,7 @@
 import type { GalleryTarget } from './shared'
 
 const CHOICES: { id: GalleryTarget; label: string; href: string }[] = [
+  { id: 'working', label: 'Working', href: '/designs/working' },
   { id: 'original', label: 'Original', href: '/original' },
   { id: 'rose', label: 'Rose', href: '/' },
   { id: 'protocol', label: 'The Protocol', href: '/designs/the-protocol.html' },
