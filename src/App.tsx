@@ -32,6 +32,7 @@ import DesignSite from './designs/DesignSite'
 import DesignTabs from './designs/DesignTabs'
 import WorkingHomePage from './designs/working/HomePage'
 import WorkingHeader from './designs/working/Header'
+import WorkingHeroBackgroundPreview from './designs/working/HeroBackgroundPreview'
 import { isDesignId, type DesignId, type DesignPage, type GalleryTarget } from './designs/shared'
 import { PRODUCTS } from './data'
 
@@ -116,7 +117,10 @@ function toUrl(
 ): string {
   const base = normalizeBase()
   if (design === 'picker') return `${base}/designs`
-  if (design === 'working') return `${base}/designs/working`
+  if (design === 'working') {
+    if (preview === 'hero-backgrounds') return `${base}/designs/working/hero-backgrounds`
+    return `${base}/designs/working`
+  }
   if (isDesignId(design)) {
     const root = `${base}/designs/${design}`
     if (designPage === 'shop') return `${root}/shop`
@@ -139,6 +143,9 @@ function parseLocation(pathname: string, search = '', hash = ''): RouteState {
   if (path === '/designs' || path === '/designs/') return route('home', { design: 'picker', version: 'v2' })
   if (path === '/designs/working' || path === '/designs/working/') {
     return route('home', { design: 'working', designPage: 'home', version: 'v2' })
+  }
+  if (path === '/designs/working/hero-backgrounds' || path === '/designs/working/hero-backgrounds/') {
+    return route('home', { design: 'working', designPage: 'home', preview: 'hero-backgrounds', version: 'v2' })
   }
   const designMatch = path.match(/^\/designs\/([a-z]+)(\/.*)?$/)
   if (designMatch && isDesignId(designMatch[1])) {
@@ -191,7 +198,9 @@ function applyDocumentTitle(
     return
   }
   if (design === 'working') {
-    document.title = 'Working | Skin Protocol RX'
+    document.title = preview === 'hero-backgrounds'
+      ? 'Hero Background Explorations | Working | Skin Protocol RX'
+      : 'Working | Skin Protocol RX'
     return
   }
   if (isDesignId(design)) {
@@ -422,9 +431,9 @@ export default function App() {
     return (
       <div className="theme-clear min-h-screen bg-[#F7F4EF]">
         <DesignTabs current="working" onOpen={openGalleryTarget} />
-        <WorkingHeader />
+        {preview !== 'hero-backgrounds' && <WorkingHeader />}
         <main className="overflow-x-hidden">
-          <WorkingHomePage />
+          {preview === 'hero-backgrounds' ? <WorkingHeroBackgroundPreview /> : <WorkingHomePage />}
         </main>
       </div>
     )

@@ -164,6 +164,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         tone="original"
         id="protocol-overview"
         onCta={() => onNavigate('protocol')}
+        onStepClick={step => onNavigate('shop', String(step))}
       />
 
       {/* ── OUR STORY ────────────────────────────────────────────────── */}

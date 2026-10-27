@@ -14,24 +14,49 @@ export default function HomePage() {
               Every formula is thoughtfully crafted with evidence-based science to support healthier skin—without trends or unnecessary extras.
             </p>
             <div className="flex flex-col gap-3 min-[480px]:flex-row min-[480px]:flex-wrap">
-              <button type="button" className="inline-flex min-h-12 w-full items-center justify-center gap-4 bg-[#252520] px-5 text-[11px] font-semibold tracking-[0.1em] uppercase text-white hover:bg-[#4A4942] min-[480px]:w-auto">
-                Explore the collection <span aria-hidden="true">↗</span>
+              <button type="button" className="group inline-flex min-h-12 w-full items-center justify-center gap-4 bg-[#252520] px-5 text-[11px] font-semibold tracking-[0.1em] uppercase text-white transition-colors duration-200 hover:bg-[#141412] min-[480px]:w-auto">
+                <span className="relative inline-block whitespace-nowrap">
+                  <span>Explore the collection</span>
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 text-[#ab8584] transition-[clip-path] duration-500 ease-out [clip-path:inset(0_100%_0_0)] group-hover:[clip-path:inset(0_0_0_0)]"
+                  >
+                    Explore the collection
+                  </span>
+                </span>
+                <span className="relative inline-block">
+                  <span className="inline-block transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true">
+                    ↗
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 text-[#ab8584] transition-[clip-path,transform] duration-500 ease-out [clip-path:inset(0_100%_0_0)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:[clip-path:inset(0_0_0_0)]"
+                  >
+                    ↗
+                  </span>
+                </span>
               </button>
-              <button type="button" className="inline-flex min-h-12 w-full items-center justify-center gap-4 border border-[#252520] px-5 text-[11px] font-semibold tracking-[0.1em] uppercase hover:bg-[#252520] hover:text-white min-[480px]:w-auto">
-                Build your protocol <span aria-hidden="true">↗</span>
+              <button type="button" className="group inline-flex min-h-12 w-full items-center justify-center gap-4 border border-[#252520] px-5 text-[11px] font-semibold tracking-[0.1em] uppercase transition-colors duration-200 hover:bg-[#252520] hover:text-white min-[480px]:w-auto">
+                Build your protocol{' '}
+                <span className="inline-block transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true">
+                  ↗
+                </span>
               </button>
             </div>
           </div>
-          <div className="relative min-h-[300px] overflow-hidden bg-gradient-to-br from-[#EEE8DD] via-[#D5CABE] to-[#FAF8F3]">
-            <div className="pointer-events-none absolute -top-[10%] right-[8%] h-[125%] w-[62%] rounded-t-[200px] border-[32px] border-white/50" />
+          <div className="relative min-h-[300px] overflow-hidden bg-[#FFFDFA]">
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#FFFDFA] via-[#F7F2EB] to-[#F0E9E0]" />
+            <div className="pointer-events-none absolute -bottom-[20%] right-[10%] h-[130%] w-[58%] rounded-t-[240px] bg-[#EDE6DC]/55" />
+            <div className="pointer-events-none absolute -bottom-[14%] right-[18%] h-[122%] w-[52%] rounded-t-[220px] border border-[#D6CEC3]/70 bg-transparent" />
+            <div className="pointer-events-none absolute top-[12%] left-[8%] h-[42%] w-[28%] rounded-full bg-[#F3EDE5]/40 blur-2xl" />
             <div className="absolute inset-[8%] overflow-hidden">
               <img
                 src="/designs/working/shop-hero.jpg"
                 alt="Skin Protocol RX bottles and jars on cream stone"
-                className="h-full w-full object-cover"
+                className="h-full w-full object-cover object-[center_58%]"
               />
             </div>
-            <p className="absolute bottom-8 left-8 max-w-[250px] bg-[#EDE6DC]/40 px-5 py-4 font-serif text-xl italic leading-snug text-[#252520] backdrop-blur-sm">
+            <p className="absolute bottom-8 left-8 max-w-[250px] bg-[#EDE6DC]/20 px-5 py-4 font-serif text-xl leading-snug text-[#252520] backdrop-blur-sm">
               Science guided by nature.
             </p>
           </div>
@@ -41,13 +66,19 @@ export default function HomePage() {
       <section id="philosophy-beaker" className="scroll-mt-28 bg-[#f8f4ef] py-16 text-[#252520] md:py-[75px]">
         <div className="grid grid-cols-1 items-center gap-12 min-[681px]:grid-cols-[48%_52%]">
           <div className="px-6 min-[681px]:pl-[max(36px,8vw)] min-[681px]:pr-[8%]">
-            <div className="relative aspect-square w-[90%] overflow-hidden bg-[#EDE8DF]">
-              <img
-                src="/original/founders-lab.jpg"
-                alt="Skin Protocol RX founders formulating skincare in a New York lab"
-                className="h-full w-full object-contain object-center"
-              />
-              <p className="absolute bottom-8 left-8 max-w-[250px] bg-[#EDE6DC]/40 px-5 py-4 font-serif text-xl italic leading-snug text-[#252520] backdrop-blur-sm">
+            <div className="relative aspect-square w-[90%] overflow-hidden bg-[#FFFDFA]">
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#FFFDFA] via-[#F7F2EB] to-[#F0E9E0]" />
+              <div className="pointer-events-none absolute -bottom-[20%] right-[10%] h-[130%] w-[58%] rounded-t-[240px] bg-[#EDE6DC]/55" />
+              <div className="pointer-events-none absolute -bottom-[14%] right-[18%] h-[122%] w-[52%] rounded-t-[220px] border border-[#D6CEC3]/70 bg-transparent" />
+              <div className="pointer-events-none absolute top-[12%] left-[8%] h-[42%] w-[28%] rounded-full bg-[#F3EDE5]/40 blur-2xl" />
+              <div className="absolute inset-[8%] overflow-hidden">
+                <img
+                  src="/original/founders-lab.jpg"
+                  alt="Skin Protocol RX founders formulating skincare in a New York lab"
+                  className="h-full w-full object-cover object-center"
+                />
+              </div>
+              <p className="absolute bottom-8 left-8 max-w-[250px] bg-[#EDE6DC]/20 px-5 py-4 font-serif text-xl leading-snug text-[#252520] backdrop-blur-sm">
                 What stays in the beaker
               </p>
             </div>
@@ -124,7 +155,11 @@ export default function HomePage() {
       <ProtocolOverviewSection
         tone="editorial"
         imageRight
+        alignHero
         onCta={() => document.getElementById('protocol')?.scrollIntoView({ behavior: 'smooth' })}
+        onStepClick={step => {
+          window.location.assign(`/shop?step=${step}`)
+        }}
       />
     </article>
   )
