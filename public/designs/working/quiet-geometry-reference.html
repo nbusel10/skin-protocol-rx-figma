@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<title>Skin Protocol RX · Quiet Geometry with Image Placeholders</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&amp;family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&amp;display=swap" rel="stylesheet"/>
+<style>
+:root{--linen:#f5f0eb;--alabaster:#f3eceb;--lily:#D6C3C2;--rose:#ab8584;--charcoal:#2B2727;--white:#fffcfa;--ink:var(--charcoal);--line:var(--rose);--line-alpha:.44;--line-quiet:.12;--ease:cubic-bezier(.2,.65,.2,1)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--white);color:var(--charcoal);font-family:'DM Sans',Arial,sans-serif;-webkit-font-smoothing:antialiased}button{font:inherit;cursor:pointer}a{color:inherit;text-decoration:none}img{display:block;width:100%;height:100%;object-fit:cover}p{line-height:1.65}::selection{background:var(--lily)}
+.strip{height:6px;background:linear-gradient(90deg,var(--linen) 0%,var(--alabaster) 25%,var(--lily) 50%,var(--rose) 75%,var(--charcoal) 100%)}
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;background:rgba(255,252,250,.96);backdrop-filter:blur(14px);border-bottom:1px solid rgba(43,39,39,.075);padding:16px clamp(20px,5vw,84px)}.logo{font-weight:700;font-size:14px;letter-spacing:.2em;line-height:1.3}.logo small{display:block;color:var(--rose);font-size:9px;letter-spacing:.27em;margin-top:4px}.topnav{display:flex;gap:25px;align-items:center;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:600}.topnav a:hover{color:var(--rose)}.playground-tag{display:inline-flex;align-items:center;border:1px solid var(--lily);padding:9px 13px;gap:8px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#715a59}.playground-tag b{width:5px;height:5px;border-radius:100%;background:var(--rose)}
+.container{width:min(1260px,calc(100% - 72px));margin:auto}.eyebrow{font-size:11px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--rose)}h1,h2,h3,.serif{font-family:'Newsreader',Georgia,serif;font-weight:300;letter-spacing:-.035em}h1{font-size:clamp(53px,6.3vw,102px);line-height:.95;margin:16px 0 24px}h2{font-size:clamp(43px,5vw,76px);line-height:1.02;margin:16px 0 20px}h3{font-size:clamp(24px,2.9vw,40px);line-height:1.08;margin:9px 0 12px}h1 em,h2 em{color:var(--rose);font-weight:300}p{font-size:15px;color:#68605d;margin:0 0 24px}.cta{display:inline-flex;align-items:center;justify-content:space-between;gap:36px;border:1px solid var(--charcoal);font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;padding:17px 22px;background:transparent;transition:background .25s,color .25s,transform .25s}.cta.dark{background:var(--charcoal);color:white}.cta:hover{background:var(--rose);border-color:var(--rose);color:white;transform:translateY(-2px)}.cta span{font-size:16px;letter-spacing:0}.small-note{font-size:12px;line-height:1.6;color:#867c78}
+.intro{background:var(--white);border-bottom:1px solid #ece3dd;padding:76px 0 62px}.intro-header{display:grid;grid-template-columns:1fr 370px;gap:80px;align-items:end}.intro h1{font-size:clamp(48px,5.2vw,84px);line-height:1.04;margin:14px 0 0}.intro p{font-size:15px;line-height:1.75}.controls{display:flex;gap:16px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-top:38px;padding:19px 21px;border:1px solid #e8ddda;background:var(--linen)}.controls-group{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.control-label{font-size:10px;letter-spacing:.19em;font-weight:700;color:#85716f;text-transform:uppercase}.pill{font-size:11px;background:transparent;border:1px solid #cfbfba;padding:9px 14px;color:var(--charcoal)}.pill[aria-pressed="true"]{background:var(--charcoal);color:#fff;border-color:var(--charcoal)}
+.gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:22px}.gallery-card{background:var(--linen);padding:18px 22px 16px;min-width:0;display:grid;grid-template-columns:1.1fr 1fr;align-items:center;gap:4px;border:1px solid rgba(171,133,132,.10)}.gallery-card:nth-child(even){background:var(--alabaster)}.gallery-card .word{font-size:13px;font-weight:600;letter-spacing:-.02em}.gallery-card .sub{font-size:10px;color:#766b67;margin-top:6px}.gallery-card svg{width:100%;height:104px}
+.sketch{color:var(--line);stroke:currentColor;stroke-width:1.24;stroke-linecap:round;stroke-linejoin:round;fill:none;opacity:var(--line-alpha);vector-effect:non-scaling-stroke}.sketch.secondary{color:var(--lily);opacity:.75}.sketch .hairline{stroke-width:.85}.sketch .accent{stroke:var(--lily);stroke-width:1.24}.gallery .sketch{opacity:.72}.wide-sketch{position:absolute;z-index:0;pointer-events:none}.wide-sketch svg{width:100%;height:100%;overflow:visible}.artfloat{transform-origin:50% 50%}body.motion-on .draw path,body.motion-on .draw ellipse,body.motion-on .draw circle{stroke-dasharray:var(--dash-length,1000);stroke-dashoffset:var(--dash-length,1000);transition:stroke-dashoffset 1.8s ease}body.motion-on .draw.in-view path,body.motion-on .draw.in-view ellipse,body.motion-on .draw.in-view circle{stroke-dashoffset:0}.no-motion *, .no-motion *::before,.no-motion *::after{animation:none!important;transition-duration:.01ms!important}.no-motion .draw path,.no-motion .draw ellipse,.no-motion .draw circle{stroke-dashoffset:0}.line-quiet{--line-alpha:.22;--line-quiet:.10}.line-expressive{--line-alpha:.72;--line-quiet:.30}
+section.chapter{position:relative;isolation:isolate;overflow:hidden;min-height:610px;padding:100px 0;display:flex;align-items:center}.chapter .container{position:relative;z-index:2}.chapter:nth-of-type(odd){background:var(--linen)}.chapter:nth-of-type(even){background:var(--alabaster)}.chapter-index{font-size:11px;letter-spacing:.18em;color:#9c8380;text-transform:uppercase;font-weight:700;margin-bottom:18px}.chapter-grid{display:grid;grid-template-columns:1fr 1fr;gap:8%;align-items:center}.chapter-grid.reverse>.chapter-copy{order:2}.chapter-grid.reverse>.chapter-visual{order:1}.chapter-copy p{max-width:540px}.chapter-visual{position:relative;min-height:340px;display:flex;align-items:center;justify-content:center}.line-canvas{width:100%;height:385px;display:grid;place-items:center;position:relative}.line-canvas .sketch{width:100%;height:100%}.line-canvas .foreground{position:relative;z-index:2}.line-canvas::before{content:'';position:absolute;width:68%;height:75%;border:1px solid #ddcfca;border-radius:47% 47% 5% 5%;opacity:.26;transform:rotate(12deg)}.chapter.cream{background:#fffcfa}.chapter.tint{background:#f3eceb}.chapter.rose{background:#f5f0eb}
+.hero-copy{max-width:590px}.hero-photo{position:relative;max-width:610px;aspect-ratio:5/4;box-shadow:0 30px 65px rgba(57,44,38,.085);z-index:1}.hero-photo img{object-position:46% 50%}.hero-art{position:absolute;inset:-135px -75px -100px -95px;z-index:0;opacity:.76}.hero-chip{position:absolute;bottom:-24px;left:-25px;background:#f6f0edee;backdrop-filter:blur(8px);padding:19px 28px;font-family:'Newsreader',Georgia,serif;font-size:28px;font-style:italic;font-weight:300;color:var(--charcoal);z-index:3}
+.philosophy{border-top:1px solid #e9ded9}.philosophy .chapter-copy h2{max-width:530px}.philosophy .line-canvas{height:430px}.philosophy .line-canvas::before{display:none}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;border-top:1px solid #dcd0ca;margin-top:30px;max-width:600px}.steps>div{padding:13px 5px 6px 0;font-size:12px;border-bottom:1px solid #dcd0ca}.steps b{color:var(--rose);margin-right:8px;font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:20px}.steps span{font-weight:600}
+.resource-rows{margin-top:22px;max-width:535px}.resource{display:flex;align-items:center;justify-content:space-between;padding:17px 0;border-top:1px solid #dbcbc6;font-size:12px;letter-spacing:.04em}.resource:last-child{border-bottom:1px solid #dbcbc6}.resource span:last-child{font-size:18px;color:var(--rose)}
+.quizbox{background:#fffcfa;position:relative;width:min(430px,100%);padding:30px;box-shadow:0 20px 70px rgba(56,38,36,.08);z-index:3;border:1px solid #e7dad5}.quizbox small{letter-spacing:.19em;color:var(--rose);font-weight:700;font-size:10px}.quizbox h3{font-size:32px;margin:16px 0}.quiz-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.q-opt{padding:13px;background:#f9f5f2;border:1px solid #dfd1ce;text-align:left;font-size:12px;color:#504947}.q-opt:hover,.q-opt.selected{background:var(--lily);border-color:var(--rose)}
+.founder-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;width:100%;max-width:570px}.founder-photos img{height:275px;object-fit:cover;object-position:50% 22%;filter:saturate(.79) contrast(.96)}.founder-labels{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;width:100%;margin-top:10px;font-size:10px;color:#7a6c68}.founder-visual{display:flex;flex-direction:column;align-items:center;justify-content:center}.founder-backdrop{position:absolute;top:-110px;left:0;width:100%;height:280px;pointer-events:none;z-index:-1}
+.partners-backdrop{position:absolute;right:0;bottom:0;width:55%;height:100%;pointer-events:none}.partners-copy{position:relative;max-width:690px;z-index:3}.partners{min-height:560px!important}.partners:after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,var(--linen) 33%,transparent 92%);z-index:0;pointer-events:none}
+.footer{background:var(--charcoal);color:#f5f0eb;text-align:center;padding:55px 25px}.footer .eyebrow{color:var(--lily)}.footer h2{font-size:clamp(37px,5vw,62px);margin:13px 0 9px}.footer p{color:#cbbfba;font-size:12px}.footer .meta{font-size:10px;color:#c7b9b4;letter-spacing:.14em;margin-top:40px}
+@media(max-width:960px){.intro-header{grid-template-columns:1fr;gap:16px}.gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.topnav{display:none}.chapter-grid{gap:4%}.hero-photo{aspect-ratio:4/5}.founder-photos img{height:205px}}
+@media(max-width:680px){.container{width:min(100% - 36px,520px)}.intro{padding:46px 0}.intro h1{font-size:53px}.controls{padding:16px 12px}.gallery{grid-template-columns:1fr}.gallery-card svg{height:95px}.topbar{padding:13px 18px}.playground-tag{font-size:9px;padding:8px}.logo{font-size:11px}section.chapter{min-height:auto;padding:70px 0}.chapter-grid,.chapter-grid.reverse{display:flex;flex-direction:column;gap:30px}.chapter-grid.reverse>.chapter-copy,.chapter-grid.reverse>.chapter-visual{order:initial}.chapter-copy,.chapter-visual{width:100%}.chapter-visual{min-height:280px}.line-canvas{height:295px}.hero-photo{max-width:450px;aspect-ratio:5/4}.hero-art{inset:-85px -22px -50px -25px}.hero-chip{font-size:22px;left:-9px;bottom:-15px}.steps{grid-template-columns:repeat(2,1fr)}.founder-photos img{height:200px}.founder-labels{font-size:9px}.partners-backdrop{width:100%;opacity:.45}.partners:after{background:linear-gradient(90deg,var(--linen) 14%,rgba(245,240,235,.85) 48%,transparent 100%)}h1{font-size:clamp(50px,11.6vw,75px)}h2{font-size:clamp(45px,9.5vw,66px)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important}.draw path,.draw ellipse,.draw circle{stroke-dashoffset:0!important}}
+
+/* Seven coordinated abstract forms; no pictorial iconography. */
+.gallery{grid-template-columns:repeat(4,minmax(0,1fr))}
+.gallery-card{padding:16px 15px;grid-template-columns:1fr 1fr;gap:0}
+.gallery-card svg{height:100px}
+.line-canvas::before{display:none}
+@media(max-width:1100px){.gallery{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.gallery{grid-template-columns:1fr}.gallery-card{grid-template-columns:1.2fr .8fr}}
+
+/* Image-placeholder composition: identical minimal motifs, now arranged as negative-space accents around photos. */
+.stage-note{font-size:12px;color:#85716d;margin:16px 0 0;padding:0 2px;line-height:1.6}
+.image-layout{min-height:480px;isolation:isolate;overflow:visible}
+.geometry-stage{position:absolute;inset:-11% -15%;z-index:0;pointer-events:none;display:grid;place-items:center}
+.geometry-stage svg{width:100%;height:100%;overflow:visible;opacity:.92}
+.geometry-stage .sketch{opacity:var(--line-alpha);stroke-width:1.65;stroke:var(--rose)}
+.geometry-stage .sketch .accent{stroke:var(--lily)}
+.photo-frame{position:relative;z-index:2;width:78%;height:345px;margin:40px 0 30px 0;box-shadow:0 13px 30px rgba(43,39,39,.065);background:var(--linen)}
+.image-placeholder{height:100%;width:100%;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;border:1px solid rgba(172,146,143,.35);background:linear-gradient(137deg,rgba(255,252,250,.92) 4%,rgba(242,233,228,.88) 52%,rgba(237,227,222,.95) 100%)}
+.image-placeholder::before{content:"";position:absolute;inset:-20% 20% 0 -40%;opacity:.65;transform:rotate(-12deg);background:linear-gradient(112deg,transparent 37%,rgba(255,255,255,.65) 54%,transparent 72%);pointer-events:none}
+.photo-label,.photo-foot{font-size:9px;font-weight:700;letter-spacing:.18em;color:#957b78;z-index:1}
+.photo-label{display:flex;justify-content:space-between;gap:12px;padding:22px 24px}.photo-label span{font-size:16px;font-weight:400;line-height:.65}
+.photo-foot{padding:20px 24px;color:#aa9993;font-weight:500;font-size:8px}
+.placeholder-center{display:flex;z-index:1;flex-direction:column;align-items:center;gap:8px;justify-content:center;text-align:center;padding:20px 24px}
+.placeholder-mark{color:#b5a09a;opacity:.77;line-height:1}.placeholder-title{font:300 italic clamp(22px,2.8vw,31px)/1.1 'Newsreader',Georgia,serif;color:#81706c}.placeholder-hint{font-size:11px;color:#9c8984;line-height:1.4}
+.image-layout-hero .photo-frame{margin-left:15%;width:79%;height:380px}
+.image-layout-philosophy .photo-frame{margin-right:13%;}
+.image-layout-protocol .photo-frame{margin-left:12%;height:350px}
+.image-layout-education .photo-frame{margin-right:13%;height:355px}
+.image-layout-quiz .photo-frame{width:76%;margin-left:7%;height:355px;margin-top:14px;margin-bottom:124px}
+.image-layout-founders .photo-frame{margin-right:14%;height:380px}
+.image-layout-partners .photo-frame{margin-left:14%;height:380px}
+/* Section-specific offsets: linework is not placed on top of the photo; it emerges above and beside it. */
+.motif-hero{inset:-22% -15% -15% -13%;transform-origin:45% 40%}
+.motif-philosophy{inset:-19% -22% -20% -17%}
+.motif-protocol{inset:-5% -15% -10% -18%}
+.motif-education{inset:-23% -15% -10% -25%}
+.motif-quiz{inset:-18% -21% -18% -14%}
+.motif-founders{inset:-15% -21% -17% -15%}
+.motif-partners{inset:-20% -15% -15% -18%}
+/* Small repositioning makes thin line endpoints clearly visible around each photo. */
+.motif-protocol svg{transform:scale(1.3)}.motif-education svg{transform:scale(1.21)}.motif-philosophy svg{transform:scale(1.32)}
+.motif-founders svg{transform:scale(1.23)}.motif-spa svg{transform:scale(1.22)}
+.image-layout-quiz .quiz-overlay{position:absolute;right:-4%;bottom:5px;z-index:4;width:min(305px,72%);padding:18px 20px;box-shadow:0 14px 35px rgba(43,39,39,.09)}
+.quiz-overlay h3{font-size:25px;margin:10px 0 12px}.quiz-overlay .q-opt{padding:10px}.quiz-overlay .small-note{margin-top:10px!important}
+.partners{min-height:660px!important}.partners:after{display:none}.partners-copy{max-width:560px}.partners .container{z-index:2}
+.chapter-visual{overflow:visible}
+/* Wider geometry exposure at the edges without crowding the text. */
+.chapter-grid{gap:6%;grid-template-columns:1fr 1fr}
+@media(max-width:960px){.image-layout{min-height:390px}.photo-frame,.image-layout-hero .photo-frame,.image-layout-founders .photo-frame,.image-layout-partners .photo-frame{height:300px}.image-layout-quiz .photo-frame{margin-bottom:145px}.image-layout-quiz .quiz-overlay{bottom:15px}}
+@media(max-width:680px){.image-layout{min-height:330px;margin:18px 0 28px}.geometry-stage{inset:-12% -10%}.photo-frame,.image-layout-hero .photo-frame,.image-layout-philosophy .photo-frame,.image-layout-protocol .photo-frame,.image-layout-education .photo-frame,.image-layout-quiz .photo-frame,.image-layout-founders .photo-frame,.image-layout-partners .photo-frame{height:270px;width:79%;margin:28px auto 24px}.image-layout-quiz .photo-frame{margin:24px auto 140px}.image-layout-quiz .quiz-overlay{right:0;bottom:4px;width:min(300px,82%)}.geometry-stage .sketch{stroke-width:1.55}.placeholder-title{font-size:26px}.photo-label{padding:17px 18px}.photo-foot{padding:16px 18px}.partners{min-height:unset!important}.chapter-grid{gap:24px}}
+@media(prefers-reduced-motion:reduce){.geometry-stage{animation:none!important}}
+
+/* User refinements: three overlapping pyramid rings, a centered crosshair, and a centered rainbow. */
+.motif-founders{inset:-20% -8% -19% -16%;}
+.motif-founders svg{transform:translateX(-4%) scale(.96);}
+.motif-education{inset:-23% -12% -13% -22%;}
+.motif-education svg{transform:scale(1.21);}
+/* Keep the crosshair lighter at the center of the two concentric rings. */
+.motif-education .sketch .accent{stroke:var(--lily);stroke-width:1.5;}
+.motif-partners{inset:-23% -10% -20% -10%;}
+.motif-partners svg{transform:translateX(3%) translateY(-2%) scale(1.16);}
+/* Keep all decorative geometry behind photographs, and never block links or image content. */
+.image-layout-founders .photo-frame,.image-layout-education .photo-frame,.image-layout-partners .photo-frame{z-index:2;}
+@media(max-width:680px){
+ .motif-founders{inset:-13% -7% -17% -9%;}
+ .motif-founders svg{transform:scale(1.03);}
+ .motif-education{inset:-17% -10% -14% -10%;}
+ .motif-education svg{transform:scale(1.13);}
+ .motif-partners{inset:-20% -8% -19% -8%;}
+ .motif-partners svg{transform:translateY(-1%) scale(1.12);}
+}
+
+/* Quiz geometry: two open U-shaped, upside-down arches visible beyond photo frame.
+   Both lines are behind the image; neither crosses the content or buttons. */
+.motif-quiz{inset:-20% -14% -12% 0%;}
+.motif-quiz svg{transform:none;}
+.motif-quiz .sketch{stroke-width:1.72;}
+.motif-quiz .sketch .accent{stroke:var(--lily);stroke-width:1.72;}
+@media(max-width:680px){
+  .motif-quiz{inset:-18% -11% -14% 0%;}
+  .motif-quiz svg{transform:scale(1.0);}
+}
+</style>
+</head>
+<body>
+<div class="strip"></div>
+<header class="topbar"><a class="logo" href="#start">SKIN PROTOCOL RX<small>THE NATURAL PRESCRIPTION</small></a><nav class="topnav"><a href="#hero">Hero</a><a href="#philosophy">Philosophy</a><a href="#protocol">Protocol</a><a href="#quiz">Quiz</a><a href="#founders">Founders</a></nav><div class="playground-tag"><b></b> Image &amp; geometry study</div></header>
+Seven abstract compositions share one visual family; no figurative objects.
+<svg aria-hidden="true" height="0" style="position:absolute;overflow:hidden" width="0" xmlns="http://www.w3.org/2000/svg"><defs>
+<!-- QUIET GEOMETRY. Each chapter uses only two or three strokes: arcs, circles and straight lines. -->
+<symbol id="sk-hero" viewbox="0 0 420 360">
+<path d="M75 340V181a133 133 0 0 1 266 0v159"></path>
+<path class="accent" d="M117 340V183a91 91 0 0 1 182 0v157"></path>
+</symbol>
+<symbol id="sk-philosophy" viewbox="0 0 420 360">
+<circle cx="173" cy="180" r="105"></circle>
+<circle class="accent" cx="249" cy="180" r="105"></circle>
+</symbol>
+<symbol id="sk-protocol" viewbox="0 0 420 360">
+<path d="M50 117H370"></path>
+<path class="accent" d="M100 182H370"></path>
+<path d="M50 247H320"></path>
+</symbol>
+<symbol id="sk-education" viewbox="0 0 420 360"><circle cx="210" cy="180" r="123"></circle>
+<circle class="accent" cx="210" cy="180" r="74"></circle>
+<path class="hairline" d="M210 57V303"></path>
+<path class="hairline" d="M87 180H333"></path>
+<path class="accent" d="M210 106V254"></path>
+<path class="accent" d="M136 180H284"></path></symbol>
+<symbol id="sk-quiz" viewbox="0 0 420 360"><path d="M4 40 V175 C4 281 96 322 205 322 C311 322 414 282 414 175 V40"></path><path class="accent" d="M28 18 V178 C28 271 103 293 202 293 C306 293 384 263 384 178 V18"></path></symbol>
+<symbol id="sk-founders" viewbox="0 0 420 360"><circle cx="210" cy="112" r="104"></circle>
+<circle class="accent" cx="133" cy="236" r="104"></circle>
+<circle cx="287" cy="236" r="104"></circle></symbol>
+<symbol id="sk-spa" viewbox="0 0 420 360"><path d="M25 323a185 185 0 0 1 370 0"></path>
+<path class="accent" d="M71 323a139 139 0 0 1 278 0"></path>
+<path class="hairline" d="M25 324H395"></path></symbol>
+</defs></svg>
+<main>
+<section class="intro" id="start"><div class="container"><div class="intro-header"><div><div class="eyebrow">DESIGN STUDY / IMAGES + QUIET GEOMETRY</div><h1>A little structure. <em>A little movement.</em></h1></div><div><p>One delicate visual language, seven different compositions. The thin lines draw in once as you scroll, then remain still behind the image frames.</p><div class="small-note">Image placeholders are intentionally blank · Rose-gold strokes sit behind each image · Photo crops are easy to swap</div></div></div>
+<div class="controls"><div class="controls-group"><span class="control-label">Line visibility</span><button aria-pressed="false" class="pill" data-strength="line-quiet">Whisper light</button><button aria-pressed="true" class="pill" data-strength="line-balanced">Balanced</button><button aria-pressed="false" class="pill" data-strength="line-expressive">More visible</button></div><div class="controls-group"><span class="control-label">Animation</span><button aria-pressed="true" class="pill" id="motion">On · draw on scroll</button></div></div><div class="stage-note">The lines draw once as each section comes into view, then stay still. Turn animation off to compare the static design.</div>
+<div class="gallery">
+<a class="gallery-card" href="#hero"><div><div class="word">01 · Introduction</div><div class="sub">Two nested arches</div></div><svg class="sketch" viewbox="0 0 420 360"><use href="#sk-hero"></use></svg></a>
+<a class="gallery-card" href="#philosophy"><div><div class="word">02 · Philosophy</div><div class="sub">Two quiet circles</div></div><svg class="sketch" viewbox="0 0 420 360"><use href="#sk-philosophy"></use></svg></a>
+<a class="gallery-card" href="#protocol"><div><div class="word">03 · The Protocol</div><div class="sub">Three straight lines</div></div><svg class="sketch" viewbox="0 0 420 360"><use href="#sk-protocol"></use></svg></a>
+<a class="gallery-card" href="#education"><div><div class="word">04 · Education</div><div class="sub">Full circle and cross</div></div><svg class="sketch" viewbox="0 0 420 360"><use href="#sk-education"></use></svg></a>
+<a class="gallery-card" href="#quiz"><div><div class="word">05 · Your Protocol</div><div class="sub">Two overlapping inverted arches</div></div><svg class="sketch" viewbox="0 0 420 360"><use href="#sk-quiz"></use></svg></a>
+<a class="gallery-card" href="#founders"><div><div class="word">06 · Our People</div><div class="sub">Three overlapping circles</div></div><svg class="sketch" viewbox="0 0 420 360"><use href="#sk-founders"></use></svg></a>
+<a class="gallery-card" href="#partners"><div><div class="word">07 · Partnerships</div><div class="sub">Centered rainbow arches</div></div><svg class="sketch" viewbox="0 0 420 360"><use href="#sk-spa"></use></svg></a>
+</div></div></section>
+<section class="chapter cream" id="hero"><div class="container chapter-grid"><div class="chapter-copy hero-copy"><div class="chapter-index">01 / THE INTRODUCTION</div><div class="eyebrow">Skincare with intention</div><h2>Your skin doesn't need more. <em>It needs what works.</em></h2><p>Evidence-based skincare, thoughtfully crafted to support healthier skin—without trends or unnecessary extras.</p><a class="cta dark" href="#protocol">Explore the collection <span>↗</span></a></div><div class="chapter-visual image-layout image-layout-hero"><div aria-hidden="true" class="geometry-stage motif-hero artfloat"><svg class="sketch draw" viewbox="0 0 420 360"><path d="M75 340V181a133 133 0 0 1 266 0v159"></path>
+<path class="accent" d="M117 340V183a91 91 0 0 1 182 0v157"></path></svg></div><div class="photo-frame"><div aria-label="Image placeholder for product line" class="image-placeholder" role="img">
+<span class="photo-label">PRODUCT LINE <span aria-hidden="true">↗</span></span>
+<div class="placeholder-center"><span aria-hidden="true" class="placeholder-mark"><svg height="43" viewbox="0 0 62 48" width="55"><rect fill="none" height="40" rx="1" stroke="currentColor" stroke-width="1" width="54" x="4" y="4"></rect><circle cx="43" cy="16" fill="none" r="4" stroke="currentColor" stroke-width="1"></circle><path d="M7 39L22 25l12 9 9-7 12 12" fill="none" stroke="currentColor" stroke-width="1"></path></svg></span><span class="placeholder-title">The collection</span><span class="placeholder-hint">Hero / featured bottles</span></div>
+<span class="photo-foot">REPLACE WITH APPROVED PHOTOGRAPHY</span>
+</div></div></div></div></section>
+<section class="chapter philosophy rose" id="philosophy"><div class="container chapter-grid reverse"><div class="chapter-copy"><div class="chapter-index">02 / THE PHILOSOPHY</div><div class="eyebrow">Carefully considered</div><h2>Every ingredient <em>has a purpose.</em></h2><p>Thoughtfully chosen actives and botanicals. Formulas with a clear role. A simpler approach to daily skin care.</p><a class="cta" href="#education">Learn what guides us <span>↗</span></a></div><div class="chapter-visual image-layout image-layout-philosophy"><div aria-hidden="true" class="geometry-stage motif-philosophy artfloat"><svg class="sketch draw" viewbox="0 0 420 360"><circle cx="173" cy="180" r="105"></circle>
+<circle class="accent" cx="249" cy="180" r="105"></circle></svg></div><div class="photo-frame"><div aria-label="Image placeholder for brand philosophy" class="image-placeholder" role="img">
+<span class="photo-label">BRAND PHILOSOPHY <span aria-hidden="true">↗</span></span>
+<div class="placeholder-center"><span aria-hidden="true" class="placeholder-mark"><svg height="43" viewbox="0 0 62 48" width="55"><rect fill="none" height="40" rx="1" stroke="currentColor" stroke-width="1" width="54" x="4" y="4"></rect><circle cx="43" cy="16" fill="none" r="4" stroke="currentColor" stroke-width="1"></circle><path d="M7 39L22 25l12 9 9-7 12 12" fill="none" stroke="currentColor" stroke-width="1"></path></svg></span><span class="placeholder-title">Purposeful ingredients</span><span class="placeholder-hint">Texture / botanical / skincare</span></div>
+<span class="photo-foot">REPLACE WITH APPROVED PHOTOGRAPHY</span>
+</div></div></div></div></section>
+<section class="chapter tint" id="protocol"><div class="container chapter-grid"><div class="chapter-copy"><div class="chapter-index">03 / THE PROTOCOL</div><div class="eyebrow">Less guesswork. More intention.</div><h2>A routine that <em>makes sense.</em></h2><p>Start with essentials, then layer targeted care where you need it. Each step plays a part.</p><div class="steps"><div><b>01</b><span>Cleanse</span></div><div><b>02</b><span>Tone</span></div><div><b>03</b><span>Treat</span></div><div><b>04</b><span>Eye Care</span></div><div><b>05</b><span>Moisturize</span></div><div><b>06</b><span>Oil</span></div></div><div class="small-note" style="margin-top:18px">Finish your morning routine with SPF.</div></div><div class="chapter-visual image-layout image-layout-protocol"><div aria-hidden="true" class="geometry-stage motif-protocol artfloat"><svg class="sketch draw" viewbox="0 0 420 360"><path d="M50 117H370"></path>
+<path class="accent" d="M100 182H370"></path>
+<path d="M50 247H320"></path></svg></div><div class="photo-frame"><div aria-label="Image placeholder for the protocol" class="image-placeholder" role="img">
+<span class="photo-label">THE PROTOCOL <span aria-hidden="true">↗</span></span>
+<div class="placeholder-center"><span aria-hidden="true" class="placeholder-mark"><svg height="43" viewbox="0 0 62 48" width="55"><rect fill="none" height="40" rx="1" stroke="currentColor" stroke-width="1" width="54" x="4" y="4"></rect><circle cx="43" cy="16" fill="none" r="4" stroke="currentColor" stroke-width="1"></circle><path d="M7 39L22 25l12 9 9-7 12 12" fill="none" stroke="currentColor" stroke-width="1"></path></svg></span><span class="placeholder-title">A simple ritual</span><span class="placeholder-hint">Cleanser / serum / cream details</span></div>
+<span class="photo-foot">REPLACE WITH APPROVED PHOTOGRAPHY</span>
+</div></div></div></div></section>
+<section class="chapter cream" id="education"><div class="container chapter-grid reverse"><div class="chapter-copy"><div class="chapter-index">04 / THE EDUCATION</div><div class="eyebrow">Know your skincare</div><h2>Understand what's <em>inside.</em></h2><p>Explore the ingredients, formulas, and professional thinking behind your routine.</p><div class="resource-rows"><div class="resource">Ingredient glossary <span>↗</span></div><div class="resource">Product education <span>↗</span></div><div class="resource">Our standards <span>↗</span></div></div></div><div class="chapter-visual image-layout image-layout-education"><div aria-hidden="true" class="geometry-stage motif-education artfloat"><svg class="sketch draw" viewbox="0 0 420 360"><circle cx="210" cy="180" r="123"></circle>
+<circle class="accent" cx="210" cy="180" r="74"></circle>
+<path class="hairline" d="M210 57V303"></path>
+<path class="hairline" d="M87 180H333"></path>
+<path class="accent" d="M210 106V254"></path>
+<path class="accent" d="M136 180H284"></path></svg></div><div class="photo-frame"><div aria-label="Image placeholder for learn the line" class="image-placeholder" role="img">
+<span class="photo-label">LEARN THE LINE <span aria-hidden="true">↗</span></span>
+<div class="placeholder-center"><span aria-hidden="true" class="placeholder-mark"><svg height="43" viewbox="0 0 62 48" width="55"><rect fill="none" height="40" rx="1" stroke="currentColor" stroke-width="1" width="54" x="4" y="4"></rect><circle cx="43" cy="16" fill="none" r="4" stroke="currentColor" stroke-width="1"></circle><path d="M7 39L22 25l12 9 9-7 12 12" fill="none" stroke="currentColor" stroke-width="1"></path></svg></span><span class="placeholder-title">Behind the formulas</span><span class="placeholder-hint">Ingredients / product detail</span></div>
+<span class="photo-foot">REPLACE WITH APPROVED PHOTOGRAPHY</span>
+</div></div></div></div></section>
+<section class="chapter tint" id="quiz"><div class="container chapter-grid"><div class="chapter-copy"><div class="chapter-index">05 / THE QUIZ</div><div class="eyebrow">What's your protocol?</div><h2>Your skin is unique. <em>Your routine should be, too.</em></h2><p>A few simple questions to help you find a thoughtful starting point.</p><p class="small-note">This is an illustrative quiz preview, not a product recommendation.</p></div><div class="chapter-visual image-layout image-layout-quiz"><div aria-hidden="true" class="geometry-stage motif-quiz artfloat"><svg class="sketch draw" viewbox="0 0 420 360"><path d="M4 40 V175 C4 281 96 322 205 322 C311 322 414 282 414 175 V40"></path><path class="accent" d="M28 18 V178 C28 271 103 293 202 293 C306 293 384 263 384 178 V18"></path></svg></div><div class="photo-frame"><div aria-label="Image placeholder for personalized care" class="image-placeholder" role="img">
+<span class="photo-label">PERSONALIZED CARE <span aria-hidden="true">↗</span></span>
+<div class="placeholder-center"><span aria-hidden="true" class="placeholder-mark"><svg height="43" viewbox="0 0 62 48" width="55"><rect fill="none" height="40" rx="1" stroke="currentColor" stroke-width="1" width="54" x="4" y="4"></rect><circle cx="43" cy="16" fill="none" r="4" stroke="currentColor" stroke-width="1"></circle><path d="M7 39L22 25l12 9 9-7 12 12" fill="none" stroke="currentColor" stroke-width="1"></path></svg></span><span class="placeholder-title">A moment for your skin</span><span class="placeholder-hint">Skin / hands / treatment imagery</span></div>
+<span class="photo-foot">REPLACE WITH APPROVED PHOTOGRAPHY</span>
+</div></div><div class="quizbox quiz-overlay"><small>GETTING TO KNOW YOUR SKIN · 01 / 03</small><h3>What is your primary skin concern?</h3><div class="quiz-grid"><button class="q-opt" type="button">Dryness</button><button class="q-opt" type="button">Fine lines</button><button class="q-opt" type="button">Redness</button><button class="q-opt" type="button">Uneven tone</button></div><div class="small-note" id="quiz-note" style="margin-top:21px">Select one to preview the interaction.</div></div></div></div></section>
+<section class="chapter rose" id="founders"><div class="container chapter-grid reverse"><div class="chapter-copy"><div class="chapter-index">06 / OUR FOUNDERS</div><div class="eyebrow">Three perspectives. One vision.</div><h2>A family behind <em>the formulas.</em></h2><p>A chemist, nurse practitioner, and licensed medical esthetician—each bringing a different perspective to purposeful skincare.</p><a class="cta" href="#partners">Meet the founders <span>↗</span></a></div><div class="chapter-visual image-layout image-layout-founders"><div aria-hidden="true" class="geometry-stage motif-founders artfloat"><svg class="sketch draw" viewbox="0 0 420 360"><circle cx="210" cy="112" r="104"></circle>
+<circle class="accent" cx="133" cy="236" r="104"></circle>
+<circle cx="287" cy="236" r="104"></circle></svg></div><div class="photo-frame"><div aria-label="Image placeholder for our founders" class="image-placeholder" role="img">
+<span class="photo-label">OUR FOUNDERS <span aria-hidden="true">↗</span></span>
+<div class="placeholder-center"><span aria-hidden="true" class="placeholder-mark"><svg height="43" viewbox="0 0 62 48" width="55"><rect fill="none" height="40" rx="1" stroke="currentColor" stroke-width="1" width="54" x="4" y="4"></rect><circle cx="43" cy="16" fill="none" r="4" stroke="currentColor" stroke-width="1"></circle><path d="M7 39L22 25l12 9 9-7 12 12" fill="none" stroke="currentColor" stroke-width="1"></path></svg></span><span class="placeholder-title">The people behind it</span><span class="placeholder-hint">Linda · Susanna · Christina</span></div>
+<span class="photo-foot">REPLACE WITH APPROVED PHOTOGRAPHY</span>
+</div></div></div></div></section>
+<section class="chapter cream partners" id="partners"><div class="container chapter-grid"><div class="chapter-copy partners-copy"><div class="chapter-index">07 / SPA PARTNERSHIPS</div><div class="eyebrow">For skincare professionals</div><h2>Bring thoughtful skincare <em>into your practice.</em></h2><p>Share a product philosophy that supports your clients' care beyond their treatment.</p><a class="cta dark" href="#start">Explore a partnership <span>↗</span></a></div><div class="chapter-visual image-layout image-layout-partners"><div aria-hidden="true" class="geometry-stage motif-partners artfloat"><svg class="sketch draw" viewbox="0 0 420 360"><path d="M25 323a185 185 0 0 1 370 0"></path>
+<path class="accent" d="M71 323a139 139 0 0 1 278 0"></path>
+<path class="hairline" d="M25 324H395"></path></svg></div><div class="photo-frame"><div aria-label="Image placeholder for spa partnerships" class="image-placeholder" role="img">
+<span class="photo-label">SPA PARTNERSHIPS <span aria-hidden="true">↗</span></span>
+<div class="placeholder-center"><span aria-hidden="true" class="placeholder-mark"><svg height="43" viewbox="0 0 62 48" width="55"><rect fill="none" height="40" rx="1" stroke="currentColor" stroke-width="1" width="54" x="4" y="4"></rect><circle cx="43" cy="16" fill="none" r="4" stroke="currentColor" stroke-width="1"></circle><path d="M7 39L22 25l12 9 9-7 12 12" fill="none" stroke="currentColor" stroke-width="1"></path></svg></span><span class="placeholder-title">Care beyond the treatment</span><span class="placeholder-hint">Spa / treatment room / professional</span></div>
+<span class="photo-foot">REPLACE WITH APPROVED PHOTOGRAPHY</span>
+</div></div></div></div></section>
+</main>
+<footer class="footer"><div class="eyebrow">A quieter visual signature</div><h2>Simple shapes. <em>A consistent feeling.</em></h2><p>Minimal lines · Linen White · Alabaster Rose · Soft Muted Lily · Rose Gold · Espresso Charcoal</p><div class="meta">SKIN PROTOCOL RX · CONCEPT EXPLORATION ONLY</div></footer>
+<script>
+const root=document.body;
+const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(!reducedMotion)root.classList.add('motion-on');
+const buttons=[...document.querySelectorAll('[data-strength]')];
+buttons.forEach(btn=>btn.addEventListener('click',()=>{
+ root.classList.remove('line-quiet','line-expressive'); if(btn.dataset.strength!=='line-balanced')root.classList.add(btn.dataset.strength);
+ buttons.forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));
+}));
+const motion=document.getElementById('motion');
+motion.addEventListener('click',()=>{const enabled=root.classList.toggle('motion-on');root.classList.toggle('no-motion',!enabled);motion.setAttribute('aria-pressed',String(enabled));motion.textContent=enabled?'On · draw on scroll':'Off · static lines';});
+if(reducedMotion){root.classList.add('no-motion');motion.setAttribute('aria-pressed','false');motion.textContent='Off · static lines';}
+document.querySelectorAll('.q-opt').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.q-opt').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');document.getElementById('quiz-note').textContent='Selected: '+btn.textContent+' · Your guided quiz would continue here.';}));
+// Use the real SVG path geometry; do not animate the image or continuously float the linework.
+document.querySelectorAll('.draw path,.draw circle,.draw ellipse').forEach(shape=>{const length=shape.getTotalLength();shape.style.setProperty('--dash-length',String(length+2));});
+if('IntersectionObserver' in window){
+ const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('in-view');observer.unobserve(entry.target)}}),{threshold:.13});
+ document.querySelectorAll('.draw').forEach(el=>observer.observe(el));
+}else{document.querySelectorAll('.draw').forEach(el=>el.classList.add('in-view'));}
+
+</script>
+</body></html>

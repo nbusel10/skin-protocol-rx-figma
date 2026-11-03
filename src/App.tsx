@@ -32,13 +32,16 @@ import DesignSite from './designs/DesignSite'
 import DesignTabs from './designs/DesignTabs'
 import WorkingHomePage from './designs/working/HomePage'
 import WorkingHeader from './designs/working/Header'
+import WorkingFooter from './designs/working/Footer'
 import WorkingHeroBackgroundPreview from './designs/working/HeroBackgroundPreview'
+import WorkingPhilosophyFramePreview from './designs/working/PhilosophyFramePreview'
+import QuietGeometryPreview from './designs/working/QuietGeometryPreview'
 import { isDesignId, type DesignId, type DesignPage, type GalleryTarget } from './designs/shared'
 import { PRODUCTS } from './data'
 
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 type Version = 'v1' | 'v2'
-type Design = '' | 'picker' | 'working' | DesignId
+type Design = '' | 'picker' | 'working' | 'lighter' | DesignId
 
 type RouteState = {
   page: Page
@@ -117,8 +120,11 @@ function toUrl(
 ): string {
   const base = normalizeBase()
   if (design === 'picker') return `${base}/designs`
+  if (design === 'lighter') return `${base}/designs/lighter`
   if (design === 'working') {
     if (preview === 'hero-backgrounds') return `${base}/designs/working/hero-backgrounds`
+    if (preview === 'philosophy-frames') return `${base}/designs/working/philosophy-frames`
+    if (preview === 'quiet-geometry') return `${base}/designs/working/quiet-geometry`
     return `${base}/designs/working`
   }
   if (isDesignId(design)) {
@@ -141,11 +147,20 @@ function parseLocation(pathname: string, search = '', hash = ''): RouteState {
   const storyHash = hash.replace(/^#/, '')
 
   if (path === '/designs' || path === '/designs/') return route('home', { design: 'picker', version: 'v2' })
+  if (path === '/designs/lighter' || path === '/designs/lighter/' || path === '/designs/working/lighter' || path === '/designs/working/lighter/') {
+    return route('home', { design: 'lighter', designPage: 'home', version: 'v2' })
+  }
   if (path === '/designs/working' || path === '/designs/working/') {
     return route('home', { design: 'working', designPage: 'home', version: 'v2' })
   }
   if (path === '/designs/working/hero-backgrounds' || path === '/designs/working/hero-backgrounds/') {
     return route('home', { design: 'working', designPage: 'home', preview: 'hero-backgrounds', version: 'v2' })
+  }
+  if (path === '/designs/working/philosophy-frames' || path === '/designs/working/philosophy-frames/') {
+    return route('home', { design: 'working', designPage: 'home', preview: 'philosophy-frames', version: 'v2' })
+  }
+  if (path === '/designs/working/quiet-geometry' || path === '/designs/working/quiet-geometry/') {
+    return route('home', { design: 'working', designPage: 'home', preview: 'quiet-geometry', version: 'v2' })
   }
   const designMatch = path.match(/^\/designs\/([a-z]+)(\/.*)?$/)
   if (designMatch && isDesignId(designMatch[1])) {
@@ -197,10 +212,19 @@ function applyDocumentTitle(
     document.title = 'Designs | Skin Protocol RX'
     return
   }
+  if (design === 'lighter') {
+    document.title = 'Lighter | Skin Protocol RX'
+    return
+  }
   if (design === 'working') {
-    document.title = preview === 'hero-backgrounds'
-      ? 'Hero Background Explorations | Working | Skin Protocol RX'
-      : 'Working | Skin Protocol RX'
+    document.title =
+      preview === 'hero-backgrounds'
+        ? 'Hero Background Explorations | Working | Skin Protocol RX'
+        : preview === 'philosophy-frames'
+          ? 'Philosophy Frame Explorations | Working | Skin Protocol RX'
+          : preview === 'quiet-geometry'
+            ? 'Quiet Geometry Preview | Working | Skin Protocol RX'
+            : 'Working | Skin Protocol RX'
     return
   }
   if (isDesignId(design)) {
@@ -427,14 +451,40 @@ export default function App() {
     return <PickerPage onOpen={openGalleryTarget} />
   }
 
+  if (design === 'lighter') {
+    return (
+      <div className="theme-clear min-h-screen bg-white">
+        <DesignTabs current="lighter" onOpen={openGalleryTarget} />
+        <WorkingHeader lighter />
+        <main className="overflow-x-hidden">
+          <WorkingHomePage lighter />
+        </main>
+        <WorkingFooter lighter />
+      </div>
+    )
+  }
+
   if (design === 'working') {
     return (
       <div className="theme-clear min-h-screen bg-[#F7F4EF]">
         <DesignTabs current="working" onOpen={openGalleryTarget} />
-        {preview !== 'hero-backgrounds' && <WorkingHeader />}
+        {preview !== 'hero-backgrounds' && preview !== 'philosophy-frames' && preview !== 'quiet-geometry' && (
+          <WorkingHeader />
+        )}
         <main className="overflow-x-hidden">
-          {preview === 'hero-backgrounds' ? <WorkingHeroBackgroundPreview /> : <WorkingHomePage />}
+          {preview === 'hero-backgrounds' ? (
+            <WorkingHeroBackgroundPreview />
+          ) : preview === 'philosophy-frames' ? (
+            <WorkingPhilosophyFramePreview />
+          ) : preview === 'quiet-geometry' ? (
+            <QuietGeometryPreview />
+          ) : (
+            <WorkingHomePage />
+          )}
         </main>
+        {preview !== 'hero-backgrounds' && preview !== 'philosophy-frames' && preview !== 'quiet-geometry' && (
+          <WorkingFooter />
+        )}
       </div>
     )
   }

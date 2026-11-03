@@ -1,0 +1,274 @@
+/* Quiet Geometry — whisper lines, reference layout (geometry on stage, photo inset on top) */
+.qg-preview {
+  --qg-linen: #f5f0eb;
+  --qg-alabaster: #f3eceb;
+  --qg-lily: #d6c3c2;
+  --qg-rose: #ab8584;
+  --qg-charcoal: #2b2727;
+  /* Whisper light (reference .line-quiet) */
+  --qg-line-alpha: 0.22;
+}
+
+.qg-frame,
+.qg-layout {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+}
+
+/* Geometry is sized to the LAYOUT, not the photo — same as reference .geometry-stage */
+.qg-stage {
+  position: absolute;
+  inset: -8% -10%;
+  z-index: 0;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  transform-origin: center center;
+}
+
+.qg-stage svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  opacity: 0.92;
+  transform-origin: center center;
+}
+
+/* Photo sits above geometry, inset so linework shows around it */
+.qg-photo,
+.qg-photo-frame {
+  position: relative;
+  z-index: 2;
+  width: 78%;
+  margin: 10% auto;
+  overflow: hidden;
+}
+
+.qg-sketch {
+  fill: none;
+  stroke: var(--qg-rose);
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: var(--qg-line-alpha);
+  vector-effect: non-scaling-stroke;
+  color: var(--qg-rose);
+}
+
+.qg-sketch .accent {
+  stroke: var(--qg-lily);
+  stroke-width: 1.65;
+}
+
+.qg-sketch .hairline {
+  stroke-width: 0.85;
+}
+
+/* Draw once on scroll — 1.8s, then stationary */
+.qg-draw path,
+.qg-draw circle,
+.qg-draw ellipse {
+  stroke-dasharray: var(--dash-length, 1000);
+  stroke-dashoffset: var(--dash-length, 1000);
+  transition: stroke-dashoffset 1.8s ease;
+}
+
+.qg-draw.qg-in-view path,
+.qg-draw.qg-in-view circle,
+.qg-draw.qg-in-view ellipse {
+  stroke-dashoffset: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qg-draw path,
+  .qg-draw circle,
+  .qg-draw ellipse {
+    stroke-dashoffset: 0 !important;
+    transition: none !important;
+  }
+}
+
+/*
+  Motif offsets from final reference HTML — relative to the layout stage.
+  Kept inside the visual column so the first stroke is not clipped off-section.
+*/
+/*
+  Hero: large photo (Working scale). Clear band ABOVE for both arch crowns
+  and BELOW for feet — geometry stays inside the section (overflow hidden).
+*/
+.qg-layout-hero {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 0;
+  aspect-ratio: auto;
+}
+
+.qg-motif-hero {
+  inset: 0 3%;
+}
+
+.qg-motif-hero svg {
+  transform: none;
+  transform-origin: center center;
+}
+
+/* Inner (accent) arch must read — lily was invisible at whisper on cream */
+.qg-motif-hero .qg-sketch {
+  opacity: 0.38;
+}
+
+.qg-motif-hero .accent {
+  stroke: #b89291;
+  stroke-width: 1.75;
+}
+
+.qg-layout-hero .qg-photo-frame {
+  position: absolute;
+  z-index: 2;
+  /*
+    Inner crown sits lower (~26% of SVG). Photo top must clear it
+    so BOTH crowns show. Bottoms unchanged.
+  */
+  top: 30%;
+  right: 9%;
+  bottom: 10%;
+  left: 9%;
+  width: auto;
+  height: auto;
+  margin: 0;
+}
+
+.qg-motif-philosophy {
+  inset: -16% -12% -14% -12%;
+}
+
+.qg-motif-philosophy svg {
+  transform: scale(1.22);
+}
+
+.qg-layout-philosophy .qg-photo-frame {
+  width: 78%;
+  margin: 12% auto;
+}
+
+.qg-motif-protocol {
+  inset: -6% -10% -8% -10%;
+}
+
+.qg-motif-protocol svg {
+  transform: scale(1.18);
+}
+
+.qg-layout-protocol .qg-photo-frame {
+  width: 80%;
+  margin: 10% auto;
+}
+
+.qg-motif-education {
+  inset: -18% -10% -12% -10%;
+}
+
+.qg-motif-education svg {
+  transform: scale(1.16);
+}
+
+.qg-motif-education .accent {
+  stroke-width: 1.5;
+}
+
+.qg-layout-education .qg-photo-frame {
+  width: 78%;
+  margin: 12% auto;
+}
+
+.qg-motif-quiz {
+  inset: -16% -8% -10% -8%;
+}
+
+.qg-motif-quiz .qg-sketch {
+  stroke-width: 1.72;
+}
+
+.qg-motif-quiz .accent {
+  stroke-width: 1.72;
+}
+
+.qg-layout-quiz .qg-photo-frame {
+  width: 76%;
+  margin: 10% auto 14%;
+}
+
+.qg-motif-founders {
+  inset: -14% -8% -14% -8%;
+}
+
+.qg-motif-founders svg {
+  transform: scale(1.08);
+}
+
+.qg-layout-founders .qg-photo-frame {
+  width: 78%;
+  margin: 12% auto;
+}
+
+.qg-motif-spa {
+  inset: -16% -8% -14% -8%;
+}
+
+.qg-motif-spa svg {
+  transform: scale(1.12);
+}
+
+.qg-layout-spa .qg-photo-frame {
+  width: 78%;
+  margin: 12% auto;
+}
+
+@media (max-width: 680px) {
+  .qg-photo-frame {
+    width: 82%;
+    margin: 10% auto 12%;
+  }
+
+  .qg-motif-hero,
+  .qg-motif-philosophy,
+  .qg-motif-education,
+  .qg-motif-quiz,
+  .qg-motif-founders,
+  .qg-motif-spa {
+    inset: -12% -6% -10% -6%;
+  }
+
+  .qg-motif-protocol {
+    inset: -6% -6% -8% -6%;
+  }
+
+  .qg-motif-philosophy svg {
+    transform: scale(1.12);
+  }
+
+  .qg-motif-protocol svg {
+    transform: scale(1.1);
+  }
+
+  .qg-motif-education svg {
+    transform: scale(1.1);
+  }
+
+  .qg-motif-founders svg {
+    transform: scale(1.04);
+  }
+
+  .qg-motif-spa svg {
+    transform: scale(1.08);
+  }
+
+  .qg-sketch {
+    stroke-width: 1.55;
+  }
+}

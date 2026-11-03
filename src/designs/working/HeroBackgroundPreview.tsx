@@ -120,8 +120,8 @@ function BackgroundMinimalArch() {
   return (
     <div className="pointer-events-none absolute inset-0 bg-[#FFFDFA]">
       <div className="absolute inset-0 bg-gradient-to-br from-[#FFFDFA] via-[#F7F2EB] to-[#F0E9E0]" />
-      <div className="absolute -bottom-[20%] right-[10%] h-[130%] w-[58%] rounded-t-[240px] bg-[#EDE6DC]/55" />
-      <div className="absolute -bottom-[14%] right-[18%] h-[122%] w-[52%] rounded-t-[220px] border border-[#D6CEC3]/70 bg-transparent" />
+      <div className="absolute -bottom-[20%] right-[10%] h-[130%] w-[58%] rounded-t-[240px] bg-[#f3eceb]" />
+      <div className="absolute -bottom-[14%] right-[18%] h-[122%] w-[52%] rounded-t-[220px] border border-[#D6C3C2] bg-transparent" />
       <div className="absolute top-[12%] left-[8%] h-[42%] w-[28%] rounded-full bg-[#F3EDE5]/40 blur-2xl" />
     </div>
   )

@@ -693,3 +693,53 @@ body {
     animation: none;
   }
 }
+
+/* Working sunbeam: soft blurred wash top-right → bottom-left; parks filling that corner. */
+.sp-sunbeam-beam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 140%;
+  height: 70%;
+  border-radius: 50%;
+  background: linear-gradient(
+    115deg,
+    transparent 6%,
+    #f3eceb88 26%,
+    #d6c3c266 46%,
+    #ab858438 60%,
+    transparent 80%
+  );
+  filter: blur(28px);
+  opacity: 0;
+  transform: translate(48%, -44%) rotate(32deg);
+  will-change: transform, opacity;
+}
+
+.sp-sunbeam-beam--run {
+  animation: sp-sunbeam-pass 2.8s ease-out forwards;
+}
+
+@keyframes sp-sunbeam-pass {
+  0% {
+    opacity: 0;
+    transform: translate(48%, -44%) rotate(32deg);
+  }
+  10% {
+    opacity: 1;
+    transform: translate(48%, -44%) rotate(32deg);
+  }
+  100% {
+    opacity: 1;
+    /* Deep into bottom-left so the corner stays filled */
+    transform: translate(-58%, 58%) rotate(32deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sp-sunbeam-beam--run {
+    animation: none;
+    opacity: 1;
+    transform: translate(-58%, 58%) rotate(32deg);
+  }
+}

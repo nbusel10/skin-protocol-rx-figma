@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react'
 
 const NAV = [
   { label: 'Shop', id: 'shop' },
-  { label: 'About', id: 'about' },
+  { label: 'About', id: 'founders' },
   { label: 'Build Your Protocol', id: 'protocol' },
   { label: 'Spa Partners', id: 'spa' },
   { label: 'Contact', id: 'contact' },
 ]
 
-export default function Header() {
+export default function Header({ lighter = false }: { lighter?: boolean }) {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -29,18 +29,30 @@ export default function Header() {
       <header
         className="relative z-50 font-sans transition-all duration-300"
         style={{
-          backgroundColor: scrolled ? 'rgba(255,255,255,0.98)' : '#ffffff',
+          backgroundColor: lighter
+            ? scrolled ? 'rgba(255,255,255,0.96)' : '#ffffff'
+            : scrolled ? 'rgba(255,255,255,0.98)' : '#ffffff',
           backdropFilter: scrolled ? 'blur(12px)' : 'none',
-          borderBottom: '1px solid #E5E5E5',
-          boxShadow: scrolled ? '0 1px 0 rgba(0,0,0,0.04)' : 'none',
+          borderBottom: lighter ? '1px solid #E7E2DC' : '1px solid #E5E5E5',
+          boxShadow: lighter ? 'none' : scrolled ? '0 1px 0 rgba(0,0,0,0.04)' : 'none',
         }}
       >
-        <div className="mx-auto flex h-[5.5rem] max-w-7xl items-center justify-between px-5 sm:h-28 md:h-[7.5rem] md:px-8 lg:h-[8rem]">
+        <div
+          className={
+            lighter
+              ? 'mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:h-[4.5rem] md:px-8'
+              : 'mx-auto flex h-[5.5rem] max-w-7xl items-center justify-between px-5 sm:h-28 md:h-[7.5rem] md:px-8 lg:h-[8rem]'
+          }
+        >
           <button type="button" className="flex shrink-0 cursor-pointer items-center" aria-label="Skin Protocol RX Home">
             <img
               src="/logo-brand.png"
               alt="Skin Protocol RX"
-              className="h-[4.5rem] w-auto sm:h-[5.5rem] md:h-[6rem] lg:h-[6.5rem]"
+              className={
+                lighter
+                  ? 'h-11 w-auto sm:h-12 md:h-14'
+                  : 'h-[4.5rem] w-auto sm:h-[5.5rem] md:h-[6rem] lg:h-[6.5rem]'
+              }
             />
           </button>
 
@@ -59,21 +71,21 @@ export default function Header() {
 
           <div className="flex items-center gap-4">
             <button type="button" className="hidden text-charcoal/60 transition-colors hover:text-charcoal md:flex" aria-label="Search">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={lighter ? 1.25 : 1.8}>
                 <circle cx="11" cy="11" r="7" />
                 <path d="m21 21-4.35-4.35" strokeLinecap="round" />
               </svg>
             </button>
 
             <button type="button" className="hidden text-charcoal/60 transition-colors hover:text-charcoal md:flex" aria-label="Account">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={lighter ? 1.25 : 1.8}>
                 <circle cx="12" cy="8" r="4" />
                 <path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" strokeLinecap="round" />
               </svg>
             </button>
 
             <button type="button" className="relative text-charcoal/60 transition-colors hover:text-charcoal" aria-label="Cart">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={lighter ? 1.25 : 1.8}>
                 <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
                 <line x1="3" y1="6" x2="21" y2="6" />
                 <path d="M16 10a4 4 0 0 1-8 0" />
@@ -104,7 +116,7 @@ export default function Header() {
       {mobileOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
           <div className="absolute inset-0 bg-black/30" onClick={() => setMobileOpen(false)} />
-          <div className="absolute top-0 right-0 flex h-full w-72 flex-col bg-ivory px-8 pt-20 shadow-2xl">
+          <div className={`absolute top-0 right-0 flex h-full w-72 flex-col px-8 pt-20 shadow-2xl ${lighter ? 'bg-white' : 'bg-ivory'}`}>
             <nav className="flex flex-col gap-6" aria-label="Mobile navigation">
               {NAV.map(item => (
                 <button

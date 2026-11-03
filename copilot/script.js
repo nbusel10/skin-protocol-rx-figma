@@ -1,0 +1,1 @@
+document.querySelectorAll(".menu").forEach(b=>b.addEventListener("click",()=>document.querySelector(".links").classList.toggle("open")));document.querySelectorAll(".choice").forEach(c=>c.addEventListener("click",()=>{document.querySelectorAll(".choice").forEach(x=>x.style.background="");c.style.background="var(--cream)"}));

@@ -106,7 +106,7 @@ export default function OurStory({ onNavigate, scrollToId }: OurStoryProps) {
 
   return (
     <div className="bg-ivory font-sans">
-      <section className="bg-ivory">
+      <section id="our-story" className="scroll-mt-[7rem] bg-ivory md:scroll-mt-[8.5rem] lg:scroll-mt-[9rem]">
         <div className="max-w-7xl mx-auto px-5 md:px-8 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center min-h-[60vh] py-16">
           <div>
             <p className="text-[11px] tracking-[0.22em] uppercase text-rose mb-4">Our story</p>

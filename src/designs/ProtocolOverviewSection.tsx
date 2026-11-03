@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { PROTOCOL_SECTION } from './protocolSectionContent'
 import { useProtocolStepReveal } from './useProtocolStepReveal'
 
@@ -115,7 +116,16 @@ interface ProtocolOverviewSectionProps {
   imageRight?: boolean
   /** Match homepage hero column widths / left inset (Working). */
   alignHero?: boolean
+  /** Decorative layer behind the photo (e.g. sunbeam mat glow). */
+  imageBackdrop?: ReactNode
   onStepClick?: (step: number) => void
+  /** Optional overrides so a preview can quiet the eyebrow and button without a new tone. */
+  eyebrowClassName?: string
+  buttonClassName?: string
+  /** Replaces the default photo well. */
+  imageSlot?: ReactNode
+  /** Replaces the section background classes. */
+  sectionClassName?: string
 }
 
 function flipImageWell(classes: string) {
@@ -134,22 +144,34 @@ export default function ProtocolOverviewSection({
   id = 'what-is-the-protocol',
   imageRight = false,
   alignHero = false,
+  imageBackdrop,
   onStepClick,
+  eyebrowClassName,
+  buttonClassName,
+  imageSlot,
+  sectionClassName,
 }: ProtocolOverviewSectionProps) {
   const t = TONE[tone]
   const stepGridRef = useProtocolStepReveal<HTMLOListElement>()
   const imageWellClass = alignHero
-    ? 'relative min-h-[320px] w-[90%] overflow-hidden bg-[#EDE8DF] min-[681px]:h-[90%] min-[681px]:min-h-0 min-[681px]:self-center min-[681px]:justify-self-center'
+    ? `relative min-h-[320px] w-[90%] bg-[#EDE8DF] min-[681px]:h-full min-[681px]:min-h-[320px] min-[681px]:self-center min-[681px]:justify-self-center ${
+        imageBackdrop ? 'overflow-visible' : 'overflow-hidden'
+      }`
     : imageRight
       ? flipImageWell(t.imageWell)
       : t.imageWell
 
   const image = (
     <div className={imageWellClass}>
+      {imageBackdrop}
       <img
         src={imageSrc}
         alt={imageAlt}
-        className="absolute inset-0 h-full w-full object-cover object-[center_top]"
+        className={
+          imageBackdrop
+            ? 'absolute top-[8%] left-[8%] z-[1] h-[84%] w-[84%] object-cover object-[center_top]'
+            : 'absolute inset-0 h-full w-full object-cover object-[center_top]'
+        }
       />
     </div>
   )
@@ -162,14 +184,14 @@ export default function ProtocolOverviewSection({
           : 'flex flex-col lg:py-0'
       }
     >
-      <p className={t.eyebrow}>{PROTOCOL_SECTION.eyebrow}</p>
+      <p className={eyebrowClassName ?? t.eyebrow}>{PROTOCOL_SECTION.eyebrow}</p>
       <div className="mt-3 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
         <h2 className={t.title}>
           {PROTOCOL_SECTION.titleLead}{' '}
           <em>{PROTOCOL_SECTION.titleEm}</em>
         </h2>
         <div className="shrink-0 sm:pt-1 sm:text-right">
-          <button type="button" onClick={onCta} className={t.button}>
+          <button type="button" onClick={onCta} className={buttonClassName ?? t.button}>
             {PROTOCOL_SECTION.cta} <span aria-hidden="true">↗</span>
           </button>
           <p className={t.note}>{PROTOCOL_SECTION.ctaNote}</p>
@@ -234,7 +256,25 @@ export default function ProtocolOverviewSection({
           )
         })}
       </ol>
-      <p className={t.spf}>{PROTOCOL_SECTION.spf}</p>
+      <p className={`flex items-center gap-1 ${t.spf}`}>
+        <svg viewBox="0 0 28 24.5" className="h-[1.15em] w-[1.25em] shrink-0 text-[#ab8584]" aria-hidden="true">
+          <path
+            d="M12 1C12 7.2 7.4 11.4 1 12.2 7.4 13 12 17.2 12 23.4 12 17.2 16.6 13 23 12.2 16.6 11.4 12 7.2 12 1Z"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.15"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M24.4 3.1v3.6M22.6 4.9h3.6"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.25"
+            strokeLinecap="round"
+          />
+        </svg>
+        {PROTOCOL_SECTION.spf}
+      </p>
     </div>
   )
 
@@ -242,9 +282,10 @@ export default function ProtocolOverviewSection({
     <section
       id={id}
       className={
-        alignHero
+        sectionClassName ??
+        (alignHero
           ? 'scroll-mt-28 bg-[#FFFDFA] py-16 text-[#252520] md:py-[75px]'
-          : t.section
+          : t.section)
       }
     >
       <div
@@ -261,11 +302,11 @@ export default function ProtocolOverviewSection({
         {imageRight || alignHero ? (
           <>
             {copy}
-            {image}
+            {imageSlot ?? image}
           </>
         ) : (
           <>
-            {image}
+            {imageSlot ?? image}
             {copy}
           </>
         )}

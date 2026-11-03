@@ -1,0 +1,1 @@
+Open index.html in a browser. Use the selection cards or the concept switcher to navigate among the three responsive prototypes. All files are self-contained and use no external assets. Replace CSS placeholder visuals with approved brand photography/logo files as desired.
