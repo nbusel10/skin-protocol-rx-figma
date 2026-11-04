@@ -265,6 +265,12 @@ export default function HomePage({
           >
             Image background motifs →
           </a>
+          <a
+            href="/designs/working/outcomes"
+            className="text-[12px] font-semibold tracking-[0.08em] uppercase text-[#6D6A63] underline-offset-4 hover:text-[#ab8584] hover:underline"
+          >
+            Outcome sections →
+          </a>
         </div>
       )}
       {lighter ? (

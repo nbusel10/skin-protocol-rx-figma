@@ -36,6 +36,7 @@ import WorkingFooter from './designs/working/Footer'
 import WorkingHeroBackgroundPreview from './designs/working/HeroBackgroundPreview'
 import WorkingPhilosophyFramePreview from './designs/working/PhilosophyFramePreview'
 import QuietGeometryPreview from './designs/working/QuietGeometryPreview'
+import OutcomeSectionPreview from './designs/working/OutcomeSectionPreview'
 import { isDesignId, type DesignId, type DesignPage, type GalleryTarget } from './designs/shared'
 import { PRODUCTS } from './data'
 
@@ -125,6 +126,7 @@ function toUrl(
     if (preview === 'hero-backgrounds') return `${base}/designs/working/hero-backgrounds`
     if (preview === 'philosophy-frames') return `${base}/designs/working/philosophy-frames`
     if (preview === 'quiet-geometry') return `${base}/designs/working/quiet-geometry`
+    if (preview === 'outcomes') return `${base}/designs/working/outcomes`
     return `${base}/designs/working`
   }
   if (isDesignId(design)) {
@@ -161,6 +163,9 @@ function parseLocation(pathname: string, search = '', hash = ''): RouteState {
   }
   if (path === '/designs/working/quiet-geometry' || path === '/designs/working/quiet-geometry/') {
     return route('home', { design: 'working', designPage: 'home', preview: 'quiet-geometry', version: 'v2' })
+  }
+  if (path === '/designs/working/outcomes' || path === '/designs/working/outcomes/') {
+    return route('home', { design: 'working', designPage: 'home', preview: 'outcomes', version: 'v2' })
   }
   const designMatch = path.match(/^\/designs\/([a-z]+)(\/.*)?$/)
   if (designMatch && isDesignId(designMatch[1])) {
@@ -224,7 +229,9 @@ function applyDocumentTitle(
           ? 'Philosophy Frame Explorations | Working | Skin Protocol RX'
           : preview === 'quiet-geometry'
             ? 'Quiet Geometry Preview | Working | Skin Protocol RX'
-            : 'Working | Skin Protocol RX'
+            : preview === 'outcomes'
+              ? 'Outcome Sections | Working | Skin Protocol RX'
+              : 'Working | Skin Protocol RX'
     return
   }
   if (isDesignId(design)) {
@@ -468,7 +475,7 @@ export default function App() {
     return (
       <div className="theme-clear min-h-screen bg-[#F7F4EF]">
         <DesignTabs current="working" onOpen={openGalleryTarget} />
-        {preview !== 'hero-backgrounds' && preview !== 'philosophy-frames' && preview !== 'quiet-geometry' && (
+        {preview !== 'hero-backgrounds' && preview !== 'philosophy-frames' && preview !== 'quiet-geometry' && preview !== 'outcomes' && (
           <WorkingHeader />
         )}
         <main className="overflow-x-hidden">
@@ -478,11 +485,13 @@ export default function App() {
             <WorkingPhilosophyFramePreview />
           ) : preview === 'quiet-geometry' ? (
             <QuietGeometryPreview />
+          ) : preview === 'outcomes' ? (
+            <OutcomeSectionPreview />
           ) : (
             <WorkingHomePage />
           )}
         </main>
-        {preview !== 'hero-backgrounds' && preview !== 'philosophy-frames' && preview !== 'quiet-geometry' && (
+        {preview !== 'hero-backgrounds' && preview !== 'philosophy-frames' && preview !== 'quiet-geometry' && preview !== 'outcomes' && (
           <WorkingFooter />
         )}
       </div>
