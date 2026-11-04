@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import SocialLinks from './SocialLinks'
 
 const EXPLORE = [
   { href: '/shop', label: 'Shop' },
@@ -106,6 +107,11 @@ export default function Footer({ lighter = false }: { lighter?: boolean }) {
       <div className={`border-t ${lighter ? 'border-[#E7E2DC]' : 'border-[#D6CEC3]'}`}>
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-6 py-6 text-[11px] tracking-[0.04em] text-[#6D6A63] sm:flex-row sm:items-center sm:justify-between sm:px-8">
           <p>© {new Date().getFullYear()} Skin Protocol RX</p>
+          <SocialLinks
+            className="flex items-center gap-4"
+            iconClassName="text-[#6D6A63] transition-colors hover:text-[#ab8584]"
+            strokeWidth={1.5}
+          />
           <p>Cruelty-free · Never tested on animals · New York</p>
         </div>
       </div>

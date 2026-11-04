@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import SocialLinks from './SocialLinks'
 
 const NAV = [
   { label: 'Shop', id: 'shop' },
@@ -70,6 +71,11 @@ export default function Header({ lighter = false }: { lighter?: boolean }) {
           </nav>
 
           <div className="flex items-center gap-4">
+            <SocialLinks
+              className="hidden items-center gap-3 md:flex"
+              iconClassName="text-charcoal/60 transition-colors hover:text-rose"
+              strokeWidth={lighter ? 1.25 : 1.8}
+            />
             <button type="button" className="hidden text-charcoal/60 transition-colors hover:text-charcoal md:flex" aria-label="Search">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={lighter ? 1.25 : 1.8}>
                 <circle cx="11" cy="11" r="7" />
@@ -129,7 +135,12 @@ export default function Header({ lighter = false }: { lighter?: boolean }) {
                 </button>
               ))}
             </nav>
-            <div className="mt-10 flex flex-col gap-4 border-t border-gray-soft pt-8">
+            <SocialLinks
+              className="mt-10 flex items-center gap-4 border-t border-gray-soft pt-8"
+              iconClassName="text-charcoal/70 transition-colors hover:text-rose"
+              strokeWidth={lighter ? 1.25 : 1.8}
+            />
+            <div className="mt-6 flex flex-col gap-4">
               <button type="button" className="text-left text-sm text-charcoal/60 hover:text-charcoal">Customer Login</button>
               <button type="button" className="text-left text-sm font-medium text-rose hover:text-rose-dark">Spa Partner Login</button>
             </div>

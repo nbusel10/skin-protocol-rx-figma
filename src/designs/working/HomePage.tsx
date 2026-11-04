@@ -585,6 +585,87 @@ export default function HomePage({
           </div>
         </div>
       </section>
+
+      <section id="social" className={`scroll-mt-28 py-16 text-[#252520] md:py-[75px] ${lighter ? 'bg-[#f3eceb]' : 'bg-[#f5f0eb]'}`}>
+        <div className="mx-auto max-w-7xl px-6 sm:px-8">
+          <p className={eyebrow}>Instagram & Facebook</p>
+          <h2 className="my-3 max-w-[650px] font-serif text-[clamp(40px,8vw,56px)] font-normal leading-[1.08] tracking-[-0.044em] min-[681px]:text-[clamp(44px,4vw,60px)]">
+            From the <em className="italic text-[#ab8584]">studio.</em>
+          </h2>
+          <p className="max-w-[460px] text-[17px] leading-relaxed text-[#595750]">
+            Notes we share with the people who use the formulas.
+          </p>
+          <div className="mt-12 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+            {(lighter
+              ? [
+                  {
+                    platform: 'Instagram',
+                    href: 'https://www.instagram.com/skinprotocolrx/',
+                    caption: 'In black and white, you see the truth. No filter. Just protocol.',
+                    src: '/designs/working/lighter/shop-hero.jpg',
+                    alt: 'Skin Protocol RX formulas arranged on a studio table',
+                  },
+                  {
+                    platform: 'Instagram',
+                    href: 'https://www.instagram.com/skinprotocolrx/',
+                    caption: 'The Holy Grail is here. Not another ten-step trend. This is a protocol.',
+                    src: '/designs/working/lighter/protocol-hero.jpg',
+                    alt: 'A Skin Protocol RX treatment setup',
+                  },
+                  {
+                    platform: 'Facebook',
+                    href: 'https://www.facebook.com/skinprotocolrx/',
+                    caption: 'Your skin does not need another ten-step routine. It needs intention.',
+                    src: '/designs/working/lighter/founders-lab.jpg',
+                    alt: 'The Skin Protocol RX family at work in the lab',
+                  },
+                ]
+              : [
+                  {
+                    platform: 'Instagram',
+                    href: 'https://www.instagram.com/skinprotocolrx/',
+                    caption: 'In black and white, you see the truth. No filter. Just protocol.',
+                    src: '/designs/working/shop-hero.jpg',
+                    alt: 'Skin Protocol RX formulas arranged on a studio table',
+                  },
+                  {
+                    platform: 'Instagram',
+                    href: 'https://www.instagram.com/skinprotocolrx/',
+                    caption: 'The Holy Grail is here. Not another ten-step trend. This is a protocol.',
+                    src: '/designs/working/protocol-hero.jpg',
+                    alt: 'A Skin Protocol RX treatment setup',
+                  },
+                  {
+                    platform: 'Facebook',
+                    href: 'https://www.facebook.com/skinprotocolrx/',
+                    caption: 'Your skin does not need another ten-step routine. It needs intention.',
+                    src: '/designs/working/spa-room-wide.jpg',
+                    alt: 'A quiet spa treatment room',
+                  },
+                ]
+            ).map(post => (
+              <a
+                key={post.src}
+                href={post.href}
+                target="_blank"
+                rel="noreferrer"
+                className="group block"
+              >
+                <img src={post.src} alt={post.alt} className="aspect-[4/5] w-full object-cover" />
+                <div className="mt-4 flex items-center justify-between gap-4">
+                  <p className="text-[11px] font-medium tracking-[0.16em] uppercase text-[#ab8584]">{post.platform}</p>
+                  <span className="text-[#ab8584] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true">
+                    ↗
+                  </span>
+                </div>
+                <p className="mt-3 text-[15px] leading-relaxed text-[#595750] transition-colors duration-200 group-hover:text-[#252520]">
+                  {post.caption}
+                </p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
     </article>
   )
 }
