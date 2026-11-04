@@ -77,7 +77,7 @@ export default function Footer({ lighter = false }: { lighter?: boolean }) {
           {sent ? (
             <p className="mt-5 text-sm text-[#252520]">You are on the list.</p>
           ) : (
-            <div className={`mt-5 flex items-center border-b ${lighter ? 'border-[#252520]/70' : 'border-[#252520]'}`}>
+            <div className="mt-5 flex flex-col gap-3">
               <input
                 type="email"
                 required
@@ -85,13 +85,18 @@ export default function Footer({ lighter = false }: { lighter?: boolean }) {
                 onChange={event => setEmail(event.target.value)}
                 placeholder="Email address"
                 aria-label="Email address"
-                className="min-w-0 flex-1 bg-transparent py-3 text-sm outline-none placeholder:text-[#6D6A63]"
+                className={`w-full appearance-none border px-3 py-3 text-sm text-[#252520] shadow-none outline-none placeholder:text-[#A39E96] focus:border-[#ab8584] ${lighter ? 'border-[#E7E2DC] bg-[#FFFDFA]' : 'border-[#D6CEC3] bg-white'}`}
               />
               <button
                 type="submit"
-                className="text-[11px] font-semibold tracking-[0.1em] uppercase text-[#252520] transition-colors duration-200 hover:text-[#ab8584]"
+                className={
+                  lighter
+                    ? 'inline-flex items-center justify-center gap-1.5 border border-[#252520]/70 bg-transparent px-4 py-3 text-[11px] font-semibold tracking-[0.1em] uppercase text-[#252520] transition-colors duration-200 hover:border-[#ab8584] hover:text-[#ab8584]'
+                    : 'inline-flex items-center justify-center gap-1.5 bg-[#252520] px-4 py-3 text-[11px] font-semibold tracking-[0.1em] uppercase text-white transition-colors duration-200 hover:bg-[#141412]'
+                }
               >
                 Join
+                <span aria-hidden="true">↗</span>
               </button>
             </div>
           )}
