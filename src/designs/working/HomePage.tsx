@@ -271,6 +271,12 @@ export default function HomePage({
           >
             Outcome sections →
           </a>
+          <a
+            href="/designs/working/quiz-coverage"
+            className="text-[12px] font-semibold tracking-[0.08em] uppercase text-[#6D6A63] underline-offset-4 hover:text-[#ab8584] hover:underline"
+          >
+            Quiz coverage →
+          </a>
         </div>
       )}
       {lighter ? (

@@ -37,6 +37,7 @@ import WorkingHeroBackgroundPreview from './designs/working/HeroBackgroundPrevie
 import WorkingPhilosophyFramePreview from './designs/working/PhilosophyFramePreview'
 import QuietGeometryPreview from './designs/working/QuietGeometryPreview'
 import OutcomeSectionPreview from './designs/working/OutcomeSectionPreview'
+import QuizCoveragePreview from './designs/working/QuizCoveragePreview'
 import { isDesignId, type DesignId, type DesignPage, type GalleryTarget } from './designs/shared'
 import { PRODUCTS } from './data'
 
@@ -127,6 +128,7 @@ function toUrl(
     if (preview === 'philosophy-frames') return `${base}/designs/working/philosophy-frames`
     if (preview === 'quiet-geometry') return `${base}/designs/working/quiet-geometry`
     if (preview === 'outcomes') return `${base}/designs/working/outcomes`
+    if (preview === 'quiz-coverage') return `${base}/designs/working/quiz-coverage`
     return `${base}/designs/working`
   }
   if (isDesignId(design)) {
@@ -166,6 +168,9 @@ function parseLocation(pathname: string, search = '', hash = ''): RouteState {
   }
   if (path === '/designs/working/outcomes' || path === '/designs/working/outcomes/') {
     return route('home', { design: 'working', designPage: 'home', preview: 'outcomes', version: 'v2' })
+  }
+  if (path === '/designs/working/quiz-coverage' || path === '/designs/working/quiz-coverage/') {
+    return route('home', { design: 'working', designPage: 'home', preview: 'quiz-coverage', version: 'v2' })
   }
   const designMatch = path.match(/^\/designs\/([a-z]+)(\/.*)?$/)
   if (designMatch && isDesignId(designMatch[1])) {
@@ -231,7 +236,9 @@ function applyDocumentTitle(
             ? 'Quiet Geometry Preview | Working | Skin Protocol RX'
             : preview === 'outcomes'
               ? 'Outcome Sections | Working | Skin Protocol RX'
-              : 'Working | Skin Protocol RX'
+              : preview === 'quiz-coverage'
+                ? 'Quiz Coverage | Working | Skin Protocol RX'
+                : 'Working | Skin Protocol RX'
     return
   }
   if (isDesignId(design)) {
@@ -369,6 +376,10 @@ export default function App() {
       applyRoute(route('home', { design: 'working', designPage: 'home', version: 'v2' }), 'push')
       return
     }
+    if (target === 'quiz-coverage') {
+      applyRoute(route('home', { design: 'working', designPage: 'home', preview: 'quiz-coverage', version: 'v2' }), 'push')
+      return
+    }
     if (target === 'original') {
       applyRoute(route('home', { version: 'v1', design: '', designPage: 'home' }), 'push')
       return
@@ -472,12 +483,16 @@ export default function App() {
   }
 
   if (design === 'working') {
+    const workingPreview =
+      preview === 'hero-backgrounds' ||
+      preview === 'philosophy-frames' ||
+      preview === 'quiet-geometry' ||
+      preview === 'outcomes' ||
+      preview === 'quiz-coverage'
     return (
       <div className="theme-clear min-h-screen bg-[#F7F4EF]">
-        <DesignTabs current="working" onOpen={openGalleryTarget} />
-        {preview !== 'hero-backgrounds' && preview !== 'philosophy-frames' && preview !== 'quiet-geometry' && preview !== 'outcomes' && (
-          <WorkingHeader />
-        )}
+        <DesignTabs current={preview === 'quiz-coverage' ? 'quiz-coverage' : 'working'} onOpen={openGalleryTarget} />
+        {!workingPreview && <WorkingHeader />}
         <main className="overflow-x-hidden">
           {preview === 'hero-backgrounds' ? (
             <WorkingHeroBackgroundPreview />
@@ -487,13 +502,13 @@ export default function App() {
             <QuietGeometryPreview />
           ) : preview === 'outcomes' ? (
             <OutcomeSectionPreview />
+          ) : preview === 'quiz-coverage' ? (
+            <QuizCoveragePreview />
           ) : (
             <WorkingHomePage />
           )}
         </main>
-        {preview !== 'hero-backgrounds' && preview !== 'philosophy-frames' && preview !== 'quiet-geometry' && preview !== 'outcomes' && (
-          <WorkingFooter />
-        )}
+        {!workingPreview && <WorkingFooter />}
       </div>
     )
   }
