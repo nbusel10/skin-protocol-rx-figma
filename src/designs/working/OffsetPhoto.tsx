@@ -31,7 +31,7 @@ export default function OffsetPhoto({
         className={`relative z-[1] w-full object-cover ${imgClassName}`}
       />
       {caption ? (
-        <p className={`absolute z-[2] w-[min(15.5rem,68%)] bg-white/55 px-5 py-5 text-left text-[10px] font-medium italic tracking-[0.16em] text-[#252520] uppercase leading-[1.7] backdrop-blur-sm sm:text-[11px] ${captionClassName}`}>
+        <p className={`absolute z-[2] w-[min(15.5rem,68%)] bg-white/35 px-5 py-5 text-left text-[10px] font-medium italic tracking-[0.16em] text-[#252520] uppercase leading-[1.7] backdrop-blur-sm sm:text-[11px] ${captionClassName}`}>
           {caption}
         </p>
       ) : null}

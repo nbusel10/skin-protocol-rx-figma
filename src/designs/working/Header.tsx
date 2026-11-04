@@ -41,7 +41,7 @@ export default function Header({ lighter = false }: { lighter?: boolean }) {
         <div
           className={
             lighter
-              ? 'mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:h-[4.5rem] md:px-8'
+              ? 'mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:h-[6.5rem] md:h-28 md:px-8 lg:h-[7.5rem]'
               : 'mx-auto flex h-[5.5rem] max-w-7xl items-center justify-between px-5 sm:h-28 md:h-[7.5rem] md:px-8 lg:h-[8rem]'
           }
         >
@@ -51,7 +51,7 @@ export default function Header({ lighter = false }: { lighter?: boolean }) {
               alt="Skin Protocol RX"
               className={
                 lighter
-                  ? 'h-11 w-auto sm:h-12 md:h-14'
+                  ? 'h-16 w-auto sm:h-20 md:h-[5.5rem] lg:h-24'
                   : 'h-[4.5rem] w-auto sm:h-[5.5rem] md:h-[6rem] lg:h-[6.5rem]'
               }
             />
