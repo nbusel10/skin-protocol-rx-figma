@@ -475,7 +475,7 @@ export default function HomePage({
               <em className="italic text-[#ab8584]">One purpose.</em>
             </h2>
             <p className="mb-4 max-w-[540px] text-[17px] leading-relaxed text-[#595750]">
-              A chemist, a nurse practitioner, and a licensed medical esthetician bring three perspectives to one practical idea: skincare should make sense.
+              A chemist, a nurse practitioner, and a licensed medical esthetician combine their expertise around one shared vision: skincare that works with your skin, your needs, and your routine.
             </p>
             <p className="mb-8 max-w-[540px] text-[17px] leading-relaxed text-[#595750]">
               From formulation to treatment room to daily routine, every product has a purpose.
