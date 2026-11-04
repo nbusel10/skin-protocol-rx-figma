@@ -5,7 +5,7 @@ export const PROTOCOL_SECTION = {
   titleLead: 'Less Guesswork.',
   titleEm: 'More intention.',
   paragraph:
-    "The best routine isn't the longest one. It's a few well-chosen steps that work together, starting with the essentials and adding targeted care when your skin needs it.",
+    "The best routine isn't the longest one. It's a personalized protocol of well-chosen products that work together to support your skin's unique needs.",
   cta: 'Build your protocol',
   ctaNote: 'Take a quick 1-minute quiz',
   spf: 'Seal it all in with your favorite SPF.',

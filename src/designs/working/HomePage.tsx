@@ -124,13 +124,6 @@ function LighterPhilosophy({ id, background }: { id: string; background: string 
     </section>
   )
 }
-function LighterCircles() {
-  return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-      <RingPair className="-right-[20%] top-[50%]" size="h-[340px] w-[340px] md:h-[520px] md:w-[520px]" />
-    </div>
-  )
-}
 
 export default function HomePage({
   quietGeometry = false,
@@ -431,7 +424,6 @@ export default function HomePage({
       />
 
       <ProtocolQuizSection quietGeometry={quietGeometry} lighter={lighter} />
-      {lighter ? <LighterCircles /> : null}
 
       <section id="founders" className={`scroll-mt-28 py-16 text-[#252520] md:py-[75px] ${lighter ? 'relative overflow-visible' : 'overflow-x-clip bg-[#FFFDFA]'}`}>
         {lighter ? (
