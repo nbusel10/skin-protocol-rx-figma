@@ -262,40 +262,6 @@ export default function HomePage({
         </div>
       </section>
 
-      {!quietGeometry && !lighter && (
-        <div className="flex flex-wrap gap-x-5 gap-y-2 border-b border-[#D6CEC3] bg-[#f5f0eb] px-6 py-3 md:px-[max(36px,8vw)]">
-          <a
-            href="/designs/working/quiet-geometry"
-            className="text-[12px] font-semibold tracking-[0.08em] uppercase text-[#6D6A63] underline-offset-4 hover:text-[#ab8584] hover:underline"
-          >
-            Quiet Geometry preview →
-          </a>
-          <a
-            href="/designs/working/philosophy-frames"
-            className="text-[12px] font-semibold tracking-[0.08em] uppercase text-[#6D6A63] underline-offset-4 hover:text-[#ab8584] hover:underline"
-          >
-            Image background motifs →
-          </a>
-          <a
-            href="/designs/working/outcomes"
-            className="text-[12px] font-semibold tracking-[0.08em] uppercase text-[#6D6A63] underline-offset-4 hover:text-[#ab8584] hover:underline"
-          >
-            Outcome sections →
-          </a>
-          <a
-            href="/designs/working/quiz-coverage"
-            className="text-[12px] font-semibold tracking-[0.08em] uppercase text-[#6D6A63] underline-offset-4 hover:text-[#ab8584] hover:underline"
-          >
-            Quiz coverage →
-          </a>
-          <a
-            href="/designs/working/heroes"
-            className="text-[12px] font-semibold tracking-[0.08em] uppercase text-[#6D6A63] underline-offset-4 hover:text-[#ab8584] hover:underline"
-          >
-            Hero sections →
-          </a>
-        </div>
-      )}
       {lighter ? (
           <LighterPhilosophy id="philosophy-beaker" background="bg-[#f3eceb]" />
       ) : (

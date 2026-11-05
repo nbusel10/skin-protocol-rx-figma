@@ -607,7 +607,7 @@ export default function App() {
             <WorkingHomePage />
           )}
         </main>
-        {!workingPreview && <WorkingFooter />}
+        {!workingPreview && <WorkingFooter previews={page !== 'product' && !preview} />}
       </div>
     )
   }

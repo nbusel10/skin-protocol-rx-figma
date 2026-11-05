@@ -14,7 +14,15 @@ const LEARN = [
   { href: '/product-education', label: 'Product education' },
 ]
 
-export default function Footer({ lighter = false }: { lighter?: boolean }) {
+const PREVIEWS = [
+  { href: '/designs/working/quiet-geometry', label: 'Quiet Geometry preview' },
+  { href: '/designs/working/philosophy-frames', label: 'Image background motifs' },
+  { href: '/designs/working/outcomes', label: 'Outcome sections' },
+  { href: '/designs/working/quiz-coverage', label: 'Quiz coverage' },
+  { href: '/designs/working/heroes', label: 'Hero sections' },
+]
+
+export default function Footer({ lighter = false, previews = false }: { lighter?: boolean; previews?: boolean }) {
   const [email, setEmail] = useState('')
   const [sent, setSent] = useState(false)
   const explore = EXPLORE.map(item => {
@@ -32,6 +40,7 @@ export default function Footer({ lighter = false }: { lighter?: boolean }) {
     : 'text-[13px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]'
 
   return (
+    <>
     <footer
       id="contact"
       className={`scroll-mt-28 border-t font-sans text-[#252520] ${lighter ? 'border-[#E7E2DC] bg-white' : 'border-[#D6CEC3] bg-[#FFFDFA]'}`}
@@ -126,5 +135,19 @@ export default function Footer({ lighter = false }: { lighter?: boolean }) {
         </div>
       </div>
     </footer>
+    {previews ? (
+      <div className="flex flex-wrap gap-x-5 gap-y-2 border-t border-[#D6CEC3] bg-[#f5f0eb] px-6 py-3 font-sans md:px-[max(36px,8vw)]">
+        {PREVIEWS.map(item => (
+          <a
+            key={item.href}
+            href={item.href}
+            className="text-[12px] font-semibold tracking-[0.08em] uppercase text-[#6D6A63] underline-offset-4 hover:text-[#ab8584] hover:underline"
+          >
+            {item.label} →
+          </a>
+        ))}
+      </div>
+    ) : null}
+    </>
   )
 }
