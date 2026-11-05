@@ -17,6 +17,16 @@ const LEARN = [
 export default function Footer({ lighter = false }: { lighter?: boolean }) {
   const [email, setEmail] = useState('')
   const [sent, setSent] = useState(false)
+  const explore = EXPLORE.map(item => {
+    if (item.href === '#protocol' && !lighter) return { ...item, href: '/designs/working/protocol' }
+    if (item.href === '/our-story#our-story' && !lighter) return { ...item, href: '/about#our-story' }
+    return item
+  })
+  const learn = LEARN.map(item =>
+    item.href === '/our-story#our-standards' && !lighter
+      ? { ...item, href: '/about#our-standards' }
+      : item,
+  )
   const eyebrow = lighter
     ? 'text-[11px] font-medium tracking-[0.16em] uppercase text-[#6D6A63]'
     : 'text-[13px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]'
@@ -40,7 +50,7 @@ export default function Footer({ lighter = false }: { lighter?: boolean }) {
           <p className={eyebrow}>Explore</p>
           <span aria-hidden="true" className="mt-3 block w-8 border-t border-[#ab8584]" />
           <ul className="mt-4 space-y-3">
-            {EXPLORE.map(item => (
+            {explore.map(item => (
               <li key={item.href}>
                 <a href={item.href} className="text-sm text-[#252520] transition-colors duration-200 hover:text-[#ab8584]">
                   {item.label}
@@ -54,7 +64,7 @@ export default function Footer({ lighter = false }: { lighter?: boolean }) {
           <p className={eyebrow}>Learn</p>
           <span aria-hidden="true" className="mt-3 block w-8 border-t border-[#ab8584]" />
           <ul className="mt-4 space-y-3">
-            {LEARN.map(item => (
+            {learn.map(item => (
               <li key={item.href}>
                 <a href={item.href} className="text-sm text-[#252520] transition-colors duration-200 hover:text-[#ab8584]">
                   {item.label}

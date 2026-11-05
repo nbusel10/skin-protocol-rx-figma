@@ -1,5 +1,7 @@
+import { useEffect } from 'react'
 import ProtocolOverviewSection from '../ProtocolOverviewSection'
-import OffsetPhoto from './OffsetPhoto'
+import OffsetPhoto, { OffsetFrame } from './OffsetPhoto'
+import OutcomesSection from './OutcomesSection'
 import ProtocolQuizSection from './ProtocolQuizSection'
 import QuietGeometryMotif, { QuietGeometryFrame } from './quiet-geometry/QuietGeometryMotif'
 import SunbeamMatGlow from './SunbeamMatGlow'
@@ -134,6 +136,15 @@ export default function HomePage({
 }) {
   const eyebrow = lighter ? EYEBROW_QUIET : EYEBROW_ROSE
 
+  useEffect(() => {
+    const id = window.location.hash.replace(/^#/, '')
+    if (!id) return
+    const node = document.getElementById(id)
+    if (!node) return
+    const frame = requestAnimationFrame(() => node.scrollIntoView())
+    return () => cancelAnimationFrame(frame)
+  }, [])
+
   return (
     <article className={`${lighter ? 'relative isolate bg-white' : 'bg-[#F7F4EF]'} font-sans text-[#252520]${quietGeometry ? ' qg-preview line-quiet' : ''}`}>
       <section id="feature" className={`scroll-mt-28 py-10 md:py-14 ${lighter ? 'relative overflow-visible' : 'overflow-x-clip bg-[#FFFDFA]'}`}>
@@ -193,16 +204,15 @@ export default function HomePage({
                       </span>
                     </span>
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => document.getElementById('protocol')?.scrollIntoView({ behavior: 'smooth' })}
+                  <a
+                    href="/designs/working/protocol"
                     className="group inline-flex min-h-12 w-full items-center justify-center gap-4 border border-[#252520] px-5 text-[11px] font-semibold tracking-[0.1em] uppercase transition-colors duration-200 hover:bg-[#252520] hover:text-white min-[480px]:w-auto"
                   >
                     Build your protocol{' '}
                     <span className="inline-block transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true">
                       ↗
                     </span>
-                  </button>
+                  </a>
                 </>
               )}
             </div>
@@ -231,16 +241,17 @@ export default function HomePage({
             ) : (
               <>
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#FFFDFA] via-[#F7F2EB] to-[#F0E9E0]" />
-                <div className="pointer-events-none absolute -bottom-[20%] right-[10%] h-[130%] w-[58%] rounded-t-[240px] bg-[#f3eceb]" />
-                <div className="pointer-events-none absolute -bottom-[14%] right-[18%] h-[122%] w-[52%] rounded-t-[220px] border border-[#D6C3C2] bg-transparent" />
                 <div className="pointer-events-none absolute top-[12%] left-[8%] h-[42%] w-[28%] rounded-full bg-[#F3EDE5]/40 blur-2xl" />
                 <SunbeamMatGlow />
-                <div className="absolute inset-[8%] z-[1] overflow-hidden">
-                  <img
-                    src="/designs/working/shop-hero.jpg"
-                    alt="Skin Protocol RX bottles and jars on cream stone"
-                    className="h-full w-full object-cover object-[center_58%]"
-                  />
+                <div className="absolute inset-[8%] z-[1]">
+                  <OffsetFrame />
+                  <div className="relative z-[1] h-full overflow-hidden">
+                    <img
+                      src="/designs/working/shop-hero.jpg"
+                      alt="Skin Protocol RX bottles and jars on cream stone"
+                      className="h-full w-full object-cover object-[center_58%]"
+                    />
+                  </div>
                 </div>
                 <p className="absolute bottom-8 left-8 z-[2] max-w-[250px] bg-[#EDE6DC]/20 px-5 py-4 font-serif text-xl italic leading-snug text-[#252520] backdrop-blur-sm">
                   Science guided by nature.
@@ -277,6 +288,12 @@ export default function HomePage({
           >
             Quiz coverage →
           </a>
+          <a
+            href="/designs/working/heroes"
+            className="text-[12px] font-semibold tracking-[0.08em] uppercase text-[#6D6A63] underline-offset-4 hover:text-[#ab8584] hover:underline"
+          >
+            Hero sections →
+          </a>
         </div>
       )}
       {lighter ? (
@@ -310,18 +327,19 @@ export default function HomePage({
                 </p>
               </div>
             ) : (
-              <div className="relative aspect-square w-[90%] overflow-hidden bg-white">
-                <div className="pointer-events-none absolute inset-0 bg-white" />
-                <div className="pointer-events-none absolute -bottom-[20%] right-[10%] h-[130%] w-[58%] rounded-t-[240px] bg-[#f3eceb]" />
-                <div className="pointer-events-none absolute -bottom-[14%] right-[18%] h-[122%] w-[52%] rounded-t-[220px] border border-[#D6C3C2] bg-transparent" />
+              <div className="relative aspect-square w-[90%] overflow-hidden bg-gradient-to-br from-[#FFFDFA] via-[#F7F2EB] to-[#F0E9E0]">
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#FFFDFA] via-[#F7F2EB] to-[#F0E9E0]" />
                 <div className="pointer-events-none absolute top-[12%] left-[8%] h-[42%] w-[28%] rounded-full bg-[#F3EDE5]/40 blur-2xl" />
                 <SunbeamMatGlow />
-                <div className="absolute inset-[8%] z-[1] overflow-hidden">
-                  <img
-                    src="/original/founders-lab.jpg"
-                    alt="Skin Protocol RX founders formulating skincare in a New York lab"
-                    className="h-full w-full object-cover object-center"
-                  />
+                <div className="absolute inset-[8%] z-[1]">
+                  <OffsetFrame />
+                  <div className="relative z-[1] h-full overflow-hidden">
+                    <img
+                      src="/original/founders-lab.jpg"
+                      alt="Skin Protocol RX founders formulating skincare in a New York lab"
+                      className="h-full w-full object-cover object-center"
+                    />
+                  </div>
                 </div>
                 <p className="absolute bottom-8 left-8 z-[2] max-w-[250px] bg-[#EDE6DC]/20 px-5 py-4 font-serif text-xl leading-snug text-[#252520] backdrop-blur-sm">
                   What stays in the beaker
@@ -338,7 +356,7 @@ export default function HomePage({
               We approach each formula with professional standards and a simple question: what does skin actually need?
             </p>
             <div className={lighter ? 'grid grid-cols-1 sm:grid-cols-2 sm:divide-x sm:divide-[#D6CEC3]' : 'grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8'}>
-              <div className={lighter ? 'py-1 sm:pr-8' : 'px-5 py-5 sm:px-6 sm:py-6'}>
+              <div className={lighter ? 'py-1 sm:pr-8' : 'rounded-2xl bg-[#fffdfa] px-5 py-5 sm:px-6 sm:py-6'}>
                 <h3 className="mb-4 font-serif text-[22px] text-[#252520]">Kept</h3>
                 <ul className="space-y-3">
                   {[
@@ -355,7 +373,7 @@ export default function HomePage({
                   ))}
                 </ul>
               </div>
-              <div className={lighter ? 'border-t border-[#D6CEC3] py-6 sm:border-t-0 sm:py-1 sm:pl-8' : 'rounded-2xl bg-[#FFFDFA] px-5 py-5 sm:px-6 sm:py-6'}>
+              <div className={lighter ? 'border-t border-[#D6CEC3] py-6 sm:border-t-0 sm:py-1 sm:pl-8' : 'px-5 py-5 sm:px-6 sm:py-6'}>
                 <h3 className="mb-4 font-serif text-[22px] text-[#252520]">Left out</h3>
                 <ul className="space-y-3">
                   {[
@@ -375,7 +393,7 @@ export default function HomePage({
             </div>
             <div className="mt-8 grid max-w-[650px] grid-cols-1 border-t border-[#D6CEC3] min-[701px]:grid-cols-3">
               {[
-                { href: '/our-story#our-standards', label: 'Our Standards', body: 'How we decide what stays and what stays out.' },
+                { href: '/about#our-standards', label: 'Our Standards', body: 'How we decide what stays and what stays out.' },
                 { href: '/ingredient-glossary', label: 'Ingredient Glossary', body: 'See what is in the formulas and why.' },
                 { href: '/product-education', label: 'Product Education', body: 'Learn what each product is good for.' },
               ].map((item, i) => (
@@ -411,12 +429,19 @@ export default function HomePage({
               <QuietGeometryMotif variant="protocol" />
             </div>
           ) : (
-            <SunbeamMatGlow />
+            <>
+              <SunbeamMatGlow />
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute top-[calc(8%-1.25rem)] right-[calc(8%-1.25rem)] bottom-[8%] left-[calc(8%+2rem)] border border-[#C4A8A6] sm:left-[calc(8%+2.5rem)]"
+              />
+            </>
           )
         }
         eyebrowClassName={lighter ? EYEBROW_QUIET : undefined}
         buttonClassName={lighter ? HAIRLINE_BUTTON_INLINE : undefined}
         sectionClassName={lighter ? 'scroll-mt-28 overflow-visible py-16 text-[#252520] md:py-[75px]' : undefined}
+        spf={lighter ? undefined : 'For daytime routines, finish with your favorite SPF.'}
         imageSlot={
           lighter ? (
             <div className="flex items-center px-6 py-4 min-[681px]:px-[8%] min-[681px]:py-8">
@@ -429,13 +454,21 @@ export default function HomePage({
             </div>
           ) : undefined
         }
-        onCta={() => document.getElementById('protocol')?.scrollIntoView({ behavior: 'smooth' })}
+        onCta={() => {
+          if (lighter) {
+            document.getElementById('protocol')?.scrollIntoView({ behavior: 'smooth' })
+            return
+          }
+          window.location.assign('/designs/working/protocol')
+        }}
         onStepClick={step => {
           window.location.assign(`/shop?step=${step}`)
         }}
       />
 
-      <ProtocolQuizSection quietGeometry={quietGeometry} lighter={lighter} />
+      <OutcomesSection decoration={lighter ? 'bullseye' : 'ascent'} composedHeader={!lighter} />
+
+      {lighter ? <ProtocolQuizSection quietGeometry={quietGeometry} lighter /> : null}
 
       <section id="founders" className={`scroll-mt-28 py-16 text-[#252520] md:py-[75px] ${lighter ? 'relative overflow-visible' : 'overflow-x-clip bg-[#FFFDFA]'}`}>
         {lighter ? (
@@ -463,18 +496,19 @@ export default function HomePage({
                 />
               </QuietGeometryFrame>
             ) : (
-              <div className="relative aspect-[3/2] w-[90%] overflow-hidden bg-white">
-                <div className="pointer-events-none absolute inset-0 bg-white" />
-                <div className="pointer-events-none absolute -bottom-[20%] right-[10%] h-[130%] w-[58%] rounded-t-[240px] bg-[#f3eceb]" />
-                <div className="pointer-events-none absolute -bottom-[14%] right-[18%] h-[122%] w-[52%] rounded-t-[220px] border border-[#D6C3C2] bg-transparent" />
+              <div className="relative aspect-[3/2] w-[90%] overflow-hidden bg-gradient-to-br from-[#FFFDFA] via-[#F7F2EB] to-[#F0E9E0]">
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#FFFDFA] via-[#F7F2EB] to-[#F0E9E0]" />
                 <div className="pointer-events-none absolute top-[12%] left-[8%] h-[42%] w-[28%] rounded-full bg-[#F3EDE5]/40 blur-2xl" />
                 <SunbeamMatGlow />
-                <div className="absolute inset-[8%] z-[1] overflow-hidden">
-                  <img
-                    src="/our-story-foundation-lab.jpg"
-                    alt="Linda D. Amend, Susanna Amend, and Christina Corbin formulating together at the lab bench"
-                    className="h-full w-full object-cover object-[center_32%]"
-                  />
+                <div className="absolute inset-[8%] z-[1]">
+                  <OffsetFrame />
+                  <div className="relative z-[1] h-full overflow-hidden">
+                    <img
+                      src="/our-story-foundation-lab.jpg"
+                      alt="Linda D. Amend, Susanna Amend, and Christina Corbin formulating together at the lab bench"
+                      className="h-full w-full object-cover object-[center_32%]"
+                    />
+                  </div>
                 </div>
               </div>
             )}
@@ -501,7 +535,7 @@ export default function HomePage({
               </a>
             ) : (
               <a
-                href="/our-story#our-story"
+                href="/about#our-story"
                 className="group inline-flex min-h-12 w-full self-start items-center justify-center gap-4 bg-[#252520] px-5 text-[11px] font-semibold tracking-[0.1em] uppercase text-white transition-colors duration-200 hover:bg-[#141412] min-[480px]:w-auto"
               >
                 <span className="relative inline-block whitespace-nowrap">

@@ -38,6 +38,12 @@ import WorkingPhilosophyFramePreview from './designs/working/PhilosophyFramePrev
 import QuietGeometryPreview from './designs/working/QuietGeometryPreview'
 import OutcomeSectionPreview from './designs/working/OutcomeSectionPreview'
 import QuizCoveragePreview from './designs/working/QuizCoveragePreview'
+import HeroSectionPreview from './designs/working/HeroSectionPreview'
+import WorkingProtocolPage from './designs/working/ProtocolPage'
+import ProtocolRefinePreview from './designs/working/ProtocolRefinePreview'
+import WorkingAboutPage from './designs/working/AboutPage'
+import OutcomesDecorationPreview from './designs/working/OutcomesDecorationPreview'
+import WorkingProductPage from './designs/working/ProductPage'
 import { isDesignId, type DesignId, type DesignPage, type GalleryTarget } from './designs/shared'
 import { PRODUCTS } from './data'
 
@@ -78,6 +84,12 @@ function route(page: Page, extras: Partial<Omit<RouteState, 'page'>> = {}): Rout
   return { page, productId: '', shopStep: '', hash: '', preview: '', version: 'v2', design: '', designPage: 'home', ...extras }
 }
 
+function anchorHash(next: Pick<RouteState, 'page' | 'preview' | 'design' | 'hash'>) {
+  if (next.design === 'working' && next.preview === 'about') return next.hash || ''
+  if (next.page === 'story' && next.preview !== 'standards') return next.hash || ''
+  return ''
+}
+
 function splitVersion(pathname: string): { version: Version; path: string } {
   const base = normalizeBase()
   let path = pathname
@@ -95,6 +107,7 @@ function pagePath(page: Page, productId = '', shopStep = '', hash = '', preview 
   if (preview === 'philosophy') return '/philosophy-preview'
   if (preview === 'concerns') return '/skin-concern-preview'
   if (preview === 'story-section') return '/our-story-section-preview'
+  if (preview === 'outcomes-decor') return '/outcomes-preview'
   const path =
     page === 'home' ? '/' :
     page === 'shop' ? '/shop' :
@@ -124,11 +137,19 @@ function toUrl(
   if (design === 'picker') return `${base}/designs`
   if (design === 'lighter') return `${base}/designs/lighter`
   if (design === 'working') {
+    if (page === 'product' && productId) return `${base}/designs/working/product/${encodeURIComponent(productId)}`
     if (preview === 'hero-backgrounds') return `${base}/designs/working/hero-backgrounds`
     if (preview === 'philosophy-frames') return `${base}/designs/working/philosophy-frames`
     if (preview === 'quiet-geometry') return `${base}/designs/working/quiet-geometry`
     if (preview === 'outcomes') return `${base}/designs/working/outcomes`
     if (preview === 'quiz-coverage') return `${base}/designs/working/quiz-coverage`
+    if (preview === 'heroes') return `${base}/designs/working/heroes`
+    if (preview === 'protocol') return `${base}/designs/working/protocol`
+    if (preview === 'protocol-refine') return `${base}/designs/working/protocol-refine`
+    if (preview === 'about') {
+      const fragment = hash ? `#${hash.replace(/^#/, '')}` : ''
+      return `${base}/about${fragment}`
+    }
     return `${base}/designs/working`
   }
   if (isDesignId(design)) {
@@ -172,6 +193,27 @@ function parseLocation(pathname: string, search = '', hash = ''): RouteState {
   if (path === '/designs/working/quiz-coverage' || path === '/designs/working/quiz-coverage/') {
     return route('home', { design: 'working', designPage: 'home', preview: 'quiz-coverage', version: 'v2' })
   }
+  if (path === '/designs/working/heroes' || path === '/designs/working/heroes/') {
+    return route('home', { design: 'working', designPage: 'home', preview: 'heroes', version: 'v2' })
+  }
+  if (path === '/designs/working/protocol' || path === '/designs/working/protocol/') {
+    return route('home', { design: 'working', designPage: 'home', preview: 'protocol', version: 'v2' })
+  }
+  if (path === '/designs/working/protocol-refine' || path === '/designs/working/protocol-refine/') {
+    return route('home', { design: 'working', designPage: 'home', preview: 'protocol-refine', version: 'v2' })
+  }
+  if (path === '/about' || path === '/about/' || path === '/designs/working/about' || path === '/designs/working/about/') {
+    return route('home', { design: 'working', designPage: 'home', preview: 'about', hash: storyHash, version: 'v2' })
+  }
+  const workingProduct = path.match(/^\/designs\/working\/product\/([^/]+)\/?$/)
+  if (workingProduct) {
+    return route('product', {
+      design: 'working',
+      designPage: 'product',
+      productId: decodeURIComponent(workingProduct[1]),
+      version: 'v2',
+    })
+  }
   const designMatch = path.match(/^\/designs\/([a-z]+)(\/.*)?$/)
   if (designMatch && isDesignId(designMatch[1])) {
     const id = designMatch[1]
@@ -198,6 +240,7 @@ function parseLocation(pathname: string, search = '', hash = ''): RouteState {
   if (path === '/philosophy-preview') return route('home', { preview: 'philosophy', version: 'v2' })
   if (path === '/skin-concern-preview') return route('home', { preview: 'concerns', version: 'v2' })
   if (path === '/our-story-section-preview') return route('home', { preview: 'story-section', version: 'v2' })
+  if (path === '/outcomes-preview' || path === '/outcomes-preview/') return route('home', { preview: 'outcomes-decor', version: 'v2' })
   if (path === '/spa-partners') return route('spa', { version })
   if (path === '/ingredient-glossary') return route('glossary', { version })
   if (path === '/product-education') return route('education', { version })
@@ -227,6 +270,11 @@ function applyDocumentTitle(
     return
   }
   if (design === 'working') {
+    if (page === 'product' && productId) {
+      const product = PRODUCTS.find(item => item.id === productId)
+      document.title = `${product?.name || 'Product'} | Skin Protocol RX`
+      return
+    }
     document.title =
       preview === 'hero-backgrounds'
         ? 'Hero Background Explorations | Working | Skin Protocol RX'
@@ -238,7 +286,15 @@ function applyDocumentTitle(
               ? 'Outcome Sections | Working | Skin Protocol RX'
               : preview === 'quiz-coverage'
                 ? 'Quiz Coverage | Working | Skin Protocol RX'
-                : 'Working | Skin Protocol RX'
+                : preview === 'heroes'
+                  ? 'Hero Sections | Working | Skin Protocol RX'
+                  : preview === 'protocol'
+                    ? 'Build Your Protocol | Working | Skin Protocol RX'
+                    : preview === 'protocol-refine'
+                      ? 'Build Your Protocol Refine | Working | Skin Protocol RX'
+                    : preview === 'about'
+                      ? 'About Us | Working | Skin Protocol RX'
+                      : 'Working | Skin Protocol RX'
     return
   }
   if (isDesignId(design)) {
@@ -269,6 +325,10 @@ function applyDocumentTitle(
   }
   if (preview === 'story-section') {
     document.title = 'Our Story Layouts | Skin Protocol RX'
+    return
+  }
+  if (preview === 'outcomes-decor') {
+    document.title = 'Outcomes Section — Design Explorations | Skin Protocol RX'
     return
   }
   if (page === 'product' && productId) {
@@ -308,12 +368,16 @@ export default function App() {
   const [design, setDesign] = useState<Design>(initial.design)
   const [designPage, setDesignPage] = useState<DesignPage>(initial.designPage)
   const [cartCount, setCartCount] = useState(0)
+  // Quiz answers live in the protocol page. Keep that page mounted after the first visit
+  // so opening a product and coming back returns to the same results.
+  const [protocolSeen, setProtocolSeen] = useState(initial.page === 'protocol')
+  const protocolLive = protocolSeen || page === 'protocol'
 
   const applyRoute = useCallback((next: RouteState, mode: 'push' | 'replace' | 'none') => {
     setPage(next.page)
     setProductId(next.page === 'product' ? next.productId : '')
     setShopStep(next.page === 'shop' ? (next.shopStep || '') : '')
-    setStoryHash(next.page === 'story' && next.preview !== 'standards' ? (next.hash || '') : '')
+    setStoryHash(anchorHash(next))
     setPreview(next.preview || '')
     setVersion(next.version || 'v2')
     setDesign(next.design || '')
@@ -380,6 +444,10 @@ export default function App() {
       applyRoute(route('home', { design: 'working', designPage: 'home', preview: 'quiz-coverage', version: 'v2' }), 'push')
       return
     }
+    if (target === 'protocol-refine') {
+      applyRoute(route('home', { design: 'working', designPage: 'home', preview: 'protocol-refine', version: 'v2' }), 'push')
+      return
+    }
     if (target === 'original') {
       applyRoute(route('home', { version: 'v1', design: '', designPage: 'home' }), 'push')
       return
@@ -395,6 +463,21 @@ export default function App() {
     applyRoute(route('home', { design: target, designPage: 'home', version: 'v2' }), 'push')
   }, [applyRoute])
 
+  const openWorkingProduct = useCallback((id: string) => {
+    scrollToTop()
+    applyRoute(route('product', {
+      design: 'working',
+      designPage: 'product',
+      productId: id,
+      version: 'v2',
+    }), 'push')
+  }, [applyRoute])
+
+  const openWorkingProtocol = useCallback(() => {
+    scrollToTop()
+    applyRoute(route('home', { design: 'working', designPage: 'home', preview: 'protocol', version: 'v2' }), 'push')
+  }, [applyRoute])
+
   const navigateDesign = useCallback((nextPage: DesignPage, id?: string) => {
     if (!isDesignId(design)) return
     scrollToTop()
@@ -406,9 +489,13 @@ export default function App() {
     }), 'push')
   }, [applyRoute, design])
 
+  useEffect(() => {
+    if (page === 'protocol') setProtocolSeen(true)
+  }, [page])
+
   // After the new page commits, pin scroll at the top before paint (skip in-page story hashes).
   useLayoutEffect(() => {
-    if (storyHash && !design) return
+    if (storyHash && (!design || (design === 'working' && preview === 'about'))) return
     scrollToTop()
     const frame = requestAnimationFrame(() => scrollToTop())
     return () => cancelAnimationFrame(frame)
@@ -439,13 +526,14 @@ export default function App() {
       setPage(next.page)
       setProductId(next.page === 'product' ? next.productId : '')
       setShopStep(next.page === 'shop' ? next.shopStep : '')
-      setStoryHash(next.page === 'story' && next.preview !== 'standards' ? next.hash : '')
+      setStoryHash(anchorHash(next))
       setPreview(next.preview || '')
       setVersion(next.version || 'v2')
       setDesign(next.design || '')
       setDesignPage(next.designPage || 'home')
       applyDocumentTitle(next.page, next.productId, next.preview, next.version, next.design, next.designPage)
-      if (!next.hash || next.design) scrollToTop()
+      const aboutAnchor = next.design === 'working' && next.preview === 'about' && Boolean(next.hash)
+      if (!aboutAnchor && (!next.hash || next.design)) scrollToTop()
     }
 
     window.addEventListener('popstate', onPopState)
@@ -488,13 +576,16 @@ export default function App() {
       preview === 'philosophy-frames' ||
       preview === 'quiet-geometry' ||
       preview === 'outcomes' ||
-      preview === 'quiz-coverage'
+      preview === 'quiz-coverage' ||
+      preview === 'heroes'
     return (
       <div className="theme-clear min-h-screen bg-[#F7F4EF]">
-        <DesignTabs current={preview === 'quiz-coverage' ? 'quiz-coverage' : 'working'} onOpen={openGalleryTarget} />
+        <DesignTabs current={preview === 'quiz-coverage' ? 'quiz-coverage' : preview === 'protocol-refine' ? 'protocol-refine' : 'working'} onOpen={openGalleryTarget} />
         {!workingPreview && <WorkingHeader />}
         <main className="overflow-x-hidden">
-          {preview === 'hero-backgrounds' ? (
+          {page === 'product' ? (
+            <WorkingProductPage productId={productId} onBack={openWorkingProtocol} />
+          ) : preview === 'hero-backgrounds' ? (
             <WorkingHeroBackgroundPreview />
           ) : preview === 'philosophy-frames' ? (
             <WorkingPhilosophyFramePreview />
@@ -504,6 +595,14 @@ export default function App() {
             <OutcomeSectionPreview />
           ) : preview === 'quiz-coverage' ? (
             <QuizCoveragePreview />
+          ) : preview === 'heroes' ? (
+            <HeroSectionPreview />
+          ) : preview === 'protocol' ? (
+            <WorkingProtocolPage onViewProduct={openWorkingProduct} />
+          ) : preview === 'protocol-refine' ? (
+            <ProtocolRefinePreview onViewProduct={openWorkingProduct} />
+          ) : preview === 'about' ? (
+            <WorkingAboutPage hash={storyHash} />
           ) : (
             <WorkingHomePage />
           )}
@@ -511,6 +610,10 @@ export default function App() {
         {!workingPreview && <WorkingFooter />}
       </div>
     )
+  }
+
+  if (preview === 'outcomes-decor') {
+    return <OutcomesDecorationPreview />
   }
 
   if (isDesignId(design)) {
@@ -543,7 +646,11 @@ export default function App() {
         {page === 'shop' && isV2 && <ShopPageV2 onNavigate={navigate} initialStep={shopStep} />}
         {page === 'shop' && !isV2 && <ShopPage onNavigate={navigate} />}
         {page === 'product' && <Detail productId={productId} onNavigate={navigate} />}
-        {page === 'protocol' && <Protocol onNavigate={navigate} onAddToCart={(count) => setCartCount(c => c + count)} />}
+        {protocolLive && (
+          <div hidden={page !== 'protocol'}>
+            <Protocol onNavigate={navigate} onAddToCart={(count) => setCartCount(c => c + count)} />
+          </div>
+        )}
         {preview === 'standards' && <Standards onNavigate={navigate} />}
         {page === 'story' && preview !== 'standards' && <Story onNavigate={navigate} scrollToId={storyHash || undefined} />}
         {page === 'spa' && <Spa onNavigate={navigate} />}

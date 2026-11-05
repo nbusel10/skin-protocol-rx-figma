@@ -126,6 +126,8 @@ interface ProtocolOverviewSectionProps {
   imageSlot?: ReactNode
   /** Replaces the section background classes. */
   sectionClassName?: string
+  /** Replaces the SPF line under the steps. */
+  spf?: string
 }
 
 function flipImageWell(classes: string) {
@@ -150,11 +152,12 @@ export default function ProtocolOverviewSection({
   buttonClassName,
   imageSlot,
   sectionClassName,
+  spf,
 }: ProtocolOverviewSectionProps) {
   const t = TONE[tone]
   const stepGridRef = useProtocolStepReveal<HTMLOListElement>()
   const imageWellClass = alignHero
-    ? `relative min-h-[320px] w-[90%] bg-[#EDE8DF] min-[681px]:h-full min-[681px]:min-h-[320px] min-[681px]:self-center min-[681px]:justify-self-center ${
+    ? `relative min-h-[320px] w-[90%] bg-gradient-to-br from-[#FFFDFA] via-[#F7F2EB] to-[#F0E9E0] min-[681px]:h-full min-[681px]:min-h-[320px] min-[681px]:self-center min-[681px]:justify-self-center ${
         imageBackdrop ? 'overflow-visible' : 'overflow-hidden'
       }`
     : imageRight
@@ -273,7 +276,7 @@ export default function ProtocolOverviewSection({
             strokeLinecap="round"
           />
         </svg>
-        {PROTOCOL_SECTION.spf}
+        {spf ?? PROTOCOL_SECTION.spf}
       </p>
     </div>
   )

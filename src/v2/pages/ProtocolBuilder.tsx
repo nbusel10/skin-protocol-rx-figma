@@ -12,19 +12,15 @@ import {
   routineEntries,
   routinePeriodLabel,
   funOption,
-  funQuestionById,
-  FUN_QUESTIONS,
-  DEFAULT_FUN_QUESTION,
   QUIZ_CONCERNS,
   QUIZ_SKIN_TYPES,
   REACTIVITY_OPTIONS,
-  type FunQuestion,
   type QuizConcern,
-  type QuizSkinType,
   type Reactivity,
   type StepsPreference,
   type RoutinePeriod,
 } from '../../lib/buildProtocol'
+import { useQuizSessionState } from '../../lib/quizSession'
 import EmailProtocolModal from '../../components/EmailProtocolModal'
 import ProductImage from '../components/ProductImage'
 
@@ -45,12 +41,6 @@ const STEPS_PREFERENCE: { value: StepsPreference; label: string; desc: string }[
 ]
 
 const NO_CONCERNS_LABEL = 'No specific concerns'
-
-/** `?fun=1..4` previews each candidate fun question. */
-function activeFunQuestion(): FunQuestion {
-  const n = Number(new URLSearchParams(window.location.search).get('fun'))
-  return FUN_QUESTIONS[n - 1] ?? funQuestionById(DEFAULT_FUN_QUESTION)
-}
 
 function reactivityLabel(value: Reactivity | ''): string | undefined {
   const option = REACTIVITY_OPTIONS.find(o => o.value === value)
@@ -361,14 +351,51 @@ function OptionalTreatSliver({
 }
 
 export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBuilderProps) {
-  const [step, setStep] = useState(0)
-  const [funQuestion] = useState(activeFunQuestion)
-  const [skinType, setSkinType] = useState<QuizSkinType | ''>('')
-  const [reactivity, setReactivity] = useState<Reactivity | ''>('')
-  const [concerns, setConcerns] = useState<QuizConcern[]>([])
-  const [noConcerns, setNoConcerns] = useState(false)
-  const [stepsPreference, setStepsPreference] = useState<StepsPreference>('moderate')
-  const [funAnswer, setFunAnswer] = useState('')
+  const {
+    step,
+    setStep,
+    funQuestion,
+    skinType,
+    setSkinType,
+    reactivity,
+    setReactivity,
+    concerns,
+    setConcerns,
+    noConcerns,
+    setNoConcerns,
+    stepsPreference,
+    setStepsPreference,
+    funAnswer,
+    setFunAnswer,
+    recommendations,
+    setRecommendations,
+    weekly,
+    setWeekly,
+    alternative,
+    setAlternative,
+    bonus,
+    setBonus,
+    tonerSwap,
+    setTonerSwap,
+    tonerOmitted,
+    setTonerOmitted,
+    cRecommendedId,
+    setCRecommendedId,
+    cReason,
+    setCReason,
+    cChoiceId,
+    setCChoiceId,
+    done,
+    setDone,
+    addedIds,
+    setAddedIds,
+    treatOffer,
+    setTreatOffer,
+    treatOpen,
+    setTreatOpen,
+    setTreatAdded,
+    reset,
+  } = useQuizSessionState()
 
   const toggleConcern = (c: QuizConcern) => {
     setNoConcerns(false)
@@ -387,20 +414,7 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
     funAnswer !== '',
   ]
 
-  const [recommendations, setRecommendations] = useState<Product[]>([])
-  const [weekly, setWeekly] = useState<Product | null>(null)
-  const [alternative, setAlternative] = useState<Product | null>(null)
-  const [bonus, setBonus] = useState<Product | null>(null)
-  const [tonerSwap, setTonerSwap] = useState<Product | null>(null)
-  const [tonerOmitted, setTonerOmitted] = useState(false)
-  const [cRecommendedId, setCRecommendedId] = useState('')
-  const [cReason, setCReason] = useState('')
-  const [cChoiceId, setCChoiceId] = useState('')
-  const [done, setDone] = useState(false)
   const [emailModalOpen, setEmailModalOpen] = useState(false)
-  const [addedIds, setAddedIds] = useState<string[]>([])
-  const [treatOffer, setTreatOffer] = useState<Product | null>(null)
-  const [treatOpen, setTreatOpen] = useState(false)
 
   const withCChoice = (p: Product): Product => (isVitaminC(p) && cChoiceId && p.id !== cChoiceId ? otherVitaminC(p) : p)
   const cPicker = (p: Product) =>
@@ -437,6 +451,7 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
     setCChoiceId(cId)
     setTreatOffer(optionalTreat(answers))
     setTreatOpen(false)
+    setTreatAdded(false)
     setDone(true)
   }
 
@@ -561,6 +576,7 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
                           )
                           setTreatOffer(null)
                           setTreatOpen(false)
+                          setTreatAdded(true)
                         }}
                         onNavigate={onNavigate}
                       />
@@ -691,27 +707,7 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
 
           <div className="text-center mt-8">
             <button
-              onClick={() => {
-                setDone(false)
-                setStep(0)
-                setWeekly(null)
-                setRecommendations([])
-                setAlternative(null)
-                setBonus(null)
-                setTonerSwap(null)
-                setTonerOmitted(false)
-                setCRecommendedId('')
-                setCReason('')
-                setCChoiceId('')
-                setSkinType('')
-                setReactivity('')
-                setConcerns([])
-                setNoConcerns(false)
-                setStepsPreference('moderate')
-                setFunAnswer('')
-                setTreatOffer(null)
-                setTreatOpen(false)
-              }}
+              onClick={reset}
               className="text-sm text-charcoal/40 underline underline-offset-2 hover:text-charcoal transition-colors"
             >
               Start Over

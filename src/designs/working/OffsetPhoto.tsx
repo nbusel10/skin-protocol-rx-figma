@@ -1,6 +1,19 @@
 /**
+ * Thin rose line set up and to the right of a photo.
+ * The parent should be the photo's box, and must not clip the offset.
+ */
+export function OffsetFrame() {
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute -top-5 -right-5 bottom-0 left-8 z-0 border border-[#C4A8A6] sm:left-10"
+    />
+  )
+}
+
+/**
  * Photo with a thin rose line set up and to the right, and an optional white corner label.
- * Used only by the lighter preview.
+ * Used by the lighter preview.
  */
 export default function OffsetPhoto({
   src,

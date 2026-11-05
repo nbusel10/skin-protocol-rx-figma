@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Cormorant+Garamond:wght@300;400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,600;1,6..96,500&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Manrope:wght@400;500;600&family=Outfit:wght@300;400;500;600&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
 
@@ -694,6 +694,292 @@ body {
   }
 }
 
+/* Consultation hero: the protocol line draws through the six steps. */
+.protocol-timeline {
+  position: relative;
+}
+
+.protocol-timeline-line {
+  position: absolute;
+  top: 21px;
+  left: calc(100% / 12);
+  right: calc(100% / 12);
+  height: 1px;
+  background: rgba(247, 244, 239, 0.22);
+}
+
+.protocol-timeline-line-draw {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: #ab8584;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.protocol-timeline-steps {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.protocol-timeline-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  text-align: center;
+}
+
+.protocol-timeline-mark {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid rgba(247, 244, 239, 0.35);
+  border-radius: 999px;
+  background: #2b2727;
+  color: rgba(247, 244, 239, 0.55);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 14px;
+  font-style: italic;
+  line-height: 1;
+}
+
+.protocol-timeline-name {
+  max-width: 7.5rem;
+  color: rgba(247, 244, 239, 0.55);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.protocol-timeline.is-playing .protocol-timeline-line-draw {
+  animation: protocol-line-draw 4.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.protocol-timeline.is-playing .protocol-timeline-mark,
+.protocol-timeline.is-playing .protocol-timeline-name {
+  animation: protocol-mark-in 0.45s ease forwards;
+}
+
+.protocol-timeline.is-playing .protocol-timeline-step:nth-child(1) .protocol-timeline-mark,
+.protocol-timeline.is-playing .protocol-timeline-step:nth-child(1) .protocol-timeline-name { animation-delay: 0.05s; }
+.protocol-timeline.is-playing .protocol-timeline-step:nth-child(2) .protocol-timeline-mark,
+.protocol-timeline.is-playing .protocol-timeline-step:nth-child(2) .protocol-timeline-name { animation-delay: 0.95s; }
+.protocol-timeline.is-playing .protocol-timeline-step:nth-child(3) .protocol-timeline-mark,
+.protocol-timeline.is-playing .protocol-timeline-step:nth-child(3) .protocol-timeline-name { animation-delay: 1.9s; }
+.protocol-timeline.is-playing .protocol-timeline-step:nth-child(4) .protocol-timeline-mark,
+.protocol-timeline.is-playing .protocol-timeline-step:nth-child(4) .protocol-timeline-name { animation-delay: 2.85s; }
+.protocol-timeline.is-playing .protocol-timeline-step:nth-child(5) .protocol-timeline-mark,
+.protocol-timeline.is-playing .protocol-timeline-step:nth-child(5) .protocol-timeline-name { animation-delay: 3.8s; }
+.protocol-timeline.is-playing .protocol-timeline-step:nth-child(6) .protocol-timeline-mark,
+.protocol-timeline.is-playing .protocol-timeline-step:nth-child(6) .protocol-timeline-name { animation-delay: 4.7s; }
+
+@keyframes protocol-line-draw {
+  to { transform: scaleX(1); }
+}
+
+@keyframes protocol-mark-in {
+  to {
+    border-color: #ab8584;
+    color: #f7f4ef;
+  }
+}
+
+.protocol-timeline-numbers .protocol-timeline-mark {
+  width: 36px;
+  height: 36px;
+  font-size: 13px;
+}
+
+.protocol-timeline-numbers .protocol-timeline-line {
+  top: 17px;
+}
+
+.protocol-timeline-numbers .protocol-timeline-name {
+  display: none;
+}
+
+.protocol-timeline-numbers .protocol-timeline-step {
+  gap: 0;
+}
+
+@media (min-width: 768px) {
+  .protocol-timeline-numbers .protocol-timeline-mark {
+    width: 44px;
+    height: 44px;
+    font-size: 14px;
+  }
+
+  .protocol-timeline-numbers .protocol-timeline-line {
+    top: 21px;
+  }
+
+  .protocol-timeline-numbers .protocol-timeline-name {
+    display: block;
+  }
+
+  .protocol-timeline-numbers .protocol-timeline-step {
+    gap: 0.7rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .protocol-timeline-line-draw,
+  .protocol-timeline.is-playing .protocol-timeline-line-draw {
+    transform: none;
+    animation: none;
+  }
+
+  .protocol-timeline-mark,
+  .protocol-timeline.is-playing .protocol-timeline-mark {
+    border-color: #ab8584;
+    color: #f7f4ef;
+    animation: none;
+  }
+
+  .protocol-timeline-name,
+  .protocol-timeline.is-playing .protocol-timeline-name {
+    color: #f7f4ef;
+    animation: none;
+  }
+}
+
+/* About hero: three links on the same timeline. The line meets each circle, then the label follows. */
+.about-timeline .protocol-timeline-steps {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.about-timeline .protocol-timeline-line {
+  left: calc(100% / 6);
+  right: calc(100% / 6);
+}
+
+.about-timeline.protocol-timeline-numbers .protocol-timeline-mark {
+  width: 44px;
+  height: 44px;
+  font-size: 14px;
+}
+
+.about-timeline.protocol-timeline-numbers .protocol-timeline-line {
+  top: 21px;
+}
+
+.about-timeline.protocol-timeline-numbers .protocol-timeline-name {
+  display: block;
+  max-width: 5.75rem;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.about-timeline .protocol-timeline-step {
+  gap: 0;
+}
+
+.about-timeline-link {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  border-radius: 12px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.about-timeline-link:focus-visible {
+  outline: 2px solid #f7f4ef;
+  outline-offset: 6px;
+}
+
+.about-timeline-link:hover .protocol-timeline-mark,
+.about-timeline-link:focus-visible .protocol-timeline-mark {
+  box-shadow: 0 0 0 5px rgba(171, 133, 132, 0.4);
+}
+
+.about-timeline.protocol-timeline.is-playing .protocol-timeline-line-draw {
+  animation-duration: 1.9s;
+}
+
+.about-timeline.protocol-timeline.is-playing .protocol-timeline-name {
+  animation-name: about-label-in;
+  animation-duration: 0.45s;
+  animation-fill-mode: both;
+}
+
+.about-timeline.protocol-timeline.is-playing .protocol-timeline-step:nth-child(1) .protocol-timeline-name { animation-delay: 0.45s; }
+.about-timeline.protocol-timeline.is-playing .protocol-timeline-step:nth-child(2) .protocol-timeline-name { animation-delay: 1.35s; }
+.about-timeline.protocol-timeline.is-playing .protocol-timeline-step:nth-child(3) .protocol-timeline-name { animation-delay: 2.3s; }
+
+@keyframes about-label-in {
+  from {
+    opacity: 0;
+    color: rgba(247, 244, 239, 0);
+  }
+  to {
+    opacity: 1;
+    color: #f7f4ef;
+  }
+}
+
+.about-timeline.protocol-timeline.is-settled .protocol-timeline-line-draw {
+  transform: none;
+  animation: none;
+}
+
+.about-timeline.protocol-timeline.is-settled .protocol-timeline-mark {
+  border-color: #ab8584;
+  color: #f7f4ef;
+  animation: none;
+}
+
+.about-timeline.protocol-timeline.is-settled .protocol-timeline-name {
+  opacity: 1;
+  color: #f7f4ef;
+  animation: none;
+}
+
+.about-timeline.is-settled .about-timeline-link:hover .protocol-timeline-mark,
+.about-timeline.is-settled .about-timeline-link:focus-visible .protocol-timeline-mark {
+  border-color: #f7f4ef;
+  color: #f7f4ef;
+}
+
+.about-timeline.is-settled .about-timeline-link:hover .protocol-timeline-name,
+.about-timeline.is-settled .about-timeline-link:focus-visible .protocol-timeline-name {
+  color: #ffffff;
+}
+
+@media (min-width: 768px) {
+  .about-timeline.protocol-timeline-numbers .protocol-timeline-name {
+    max-width: 8.5rem;
+    font-size: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-timeline .protocol-timeline-name,
+  .about-timeline.protocol-timeline.is-playing .protocol-timeline-name,
+  .about-timeline.is-settled .protocol-timeline-name {
+    opacity: 1;
+    color: #f7f4ef;
+    animation: none;
+  }
+
+  .about-timeline .about-timeline-link:hover .protocol-timeline-mark,
+  .about-timeline .about-timeline-link:focus-visible .protocol-timeline-mark {
+    border-color: #f7f4ef;
+    color: #f7f4ef;
+  }
+
+  .about-timeline .about-timeline-link:hover .protocol-timeline-name,
+  .about-timeline .about-timeline-link:focus-visible .protocol-timeline-name {
+    color: #ffffff;
+  }
+}
+
 /* Working sunbeam: soft blurred wash top-right → bottom-left; parks filling that corner. */
 .sp-sunbeam-beam {
   position: absolute;
@@ -741,5 +1027,120 @@ body {
     animation: none;
     opacity: 1;
     transform: translate(-58%, 58%) rotate(32deg);
+  }
+}
+
+@keyframes outcome-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.outcome-swap {
+  animation: outcome-in 460ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .outcome-swap {
+    animation: none;
+  }
+}
+
+/* Comparison preview only. Does not change the live protocol timeline. */
+.protocol-refine-timeline.protocol-timeline-numbers .protocol-timeline-mark {
+  width: 42px;
+  height: 42px;
+  border-color: rgba(196, 168, 166, 0.9);
+  color: #c4a8a6;
+  font-size: 15px;
+}
+
+.protocol-refine-timeline.protocol-timeline-numbers .protocol-timeline-line {
+  top: 20px;
+  height: 1px;
+  background: rgba(196, 168, 166, 0.55);
+}
+
+.protocol-refine-timeline.protocol-timeline.is-playing .protocol-timeline-mark,
+.protocol-refine-timeline .protocol-timeline-mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  animation: none;
+  border-color: #c4a8a6;
+  color: #c4a8a6;
+}
+
+.protocol-refine-step-word {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 7px;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.protocol-refine-timeline.protocol-timeline.is-playing .protocol-timeline-name {
+  animation: none;
+  color: rgba(247, 244, 239, 0.88);
+}
+
+@media (min-width: 640px) {
+  .protocol-refine-timeline.protocol-timeline-numbers .protocol-timeline-name {
+    display: block;
+    max-width: 6.5rem;
+    color: rgba(247, 244, 239, 0.82);
+    font-size: 12px;
+  }
+
+  .protocol-refine-timeline.protocol-timeline-numbers .protocol-timeline-step {
+    gap: 0.85rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .protocol-refine-timeline.protocol-timeline-numbers .protocol-timeline-mark {
+    width: 52px;
+    height: 52px;
+    font-size: 16px;
+  }
+
+  .protocol-refine-step-word {
+    font-size: 8px;
+  }
+
+  .protocol-refine-timeline.protocol-timeline-numbers .protocol-timeline-line {
+    top: 25px;
+  }
+
+  .protocol-refine-timeline.protocol-timeline-numbers .protocol-timeline-name {
+    font-size: 13px;
+  }
+}
+
+.protocol-refine-question {
+  animation: protocol-refine-question-in 280ms ease-out;
+}
+
+@keyframes protocol-refine-question-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .protocol-refine-question {
+    animation: none;
   }
 }

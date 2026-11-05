@@ -3,7 +3,7 @@ import SocialLinks from './SocialLinks'
 
 const NAV = [
   { label: 'Shop', id: 'shop' },
-  { label: 'About', id: 'founders' },
+  { label: 'About', id: 'about' },
   { label: 'Build Your Protocol', id: 'protocol' },
   { label: 'Spa Partners', id: 'spa' },
   { label: 'Contact', id: 'contact' },
@@ -21,8 +21,30 @@ export default function Header({ lighter = false }: { lighter?: boolean }) {
 
   function jump(id: string) {
     setMobileOpen(false)
-    const node = document.getElementById(id)
-    if (node) node.scrollIntoView({ behavior: 'smooth' })
+    if (!lighter && id === 'protocol') {
+      const here = window.location.pathname.replace(/\/$/, '')
+      if (here !== '/designs/working/protocol') {
+        window.location.assign('/designs/working/protocol')
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+      return
+    }
+    if (!lighter && id === 'about') {
+      const here = window.location.pathname.replace(/\/$/, '')
+      if (here !== '/about') {
+        window.location.assign('/about')
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+      return
+    }
+    const node = document.getElementById(id === 'about' ? 'founders' : id)
+    if (node) {
+      node.scrollIntoView({ behavior: 'smooth' })
+      return
+    }
+    if (!lighter) window.location.assign(`/designs/working#${id}`)
   }
 
   return (
@@ -45,7 +67,11 @@ export default function Header({ lighter = false }: { lighter?: boolean }) {
               : 'mx-auto flex h-[5.5rem] max-w-7xl items-center justify-between px-5 sm:h-28 md:h-[7.5rem] md:px-8 lg:h-[8rem]'
           }
         >
-          <button type="button" className="flex shrink-0 cursor-pointer items-center" aria-label="Skin Protocol RX Home">
+          <a
+            href={lighter ? '/designs/lighter' : '/designs/working'}
+            className="flex shrink-0 cursor-pointer items-center"
+            aria-label="Skin Protocol RX Home"
+          >
             <img
               src="/logo-brand.png"
               alt="Skin Protocol RX"
@@ -55,7 +81,7 @@ export default function Header({ lighter = false }: { lighter?: boolean }) {
                   : 'h-[4.5rem] w-auto sm:h-[5.5rem] md:h-[6rem] lg:h-[6.5rem]'
               }
             />
-          </button>
+          </a>
 
           <nav className="hidden items-center gap-8 lg:flex" aria-label="Main navigation">
             {NAV.map(item => (
