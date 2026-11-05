@@ -343,11 +343,12 @@ export default function HomePage({
                 <h3 className="mb-4 font-serif text-[22px] text-[#252520]">Left out</h3>
                 <ul className="space-y-3">
                   {[
-                    'Overloaded ingredient lists',
-                    'Redundant actives',
-                    'Trend-driven formulation',
+                    'Parabens, Phthalates, Sulfates (SLS & SLES)',
+                    'Formaldehyde-releasing preservatives',
+                    'Artificial dyes & colorants',
+                    'Synthetic fragrance',
+                    'Drying alcohols',
                     'Unnecessary fillers',
-                    'Fragrance added without purpose',
                   ].map(item => (
                     <li key={item} className="flex gap-3 text-sm leading-relaxed text-[#6D6A63]">
                       <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[#C9BFB3]" aria-hidden="true" />
