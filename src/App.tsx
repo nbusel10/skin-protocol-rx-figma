@@ -464,6 +464,11 @@ export default function App() {
     applyRoute(route('home', { design: target, designPage: 'home', version: 'v2' }), 'push')
   }, [applyRoute])
 
+  const openWorkingHome = useCallback(() => {
+    scrollToTop()
+    applyRoute(route('home', { design: 'working', designPage: 'home', version: 'v2' }), 'push')
+  }, [applyRoute])
+
   const openWorkingProduct = useCallback((id: string) => {
     scrollToTop()
     applyRoute(route('product', {
@@ -590,7 +595,13 @@ export default function App() {
         {!workingPreview && <WorkingHeader />}
         <main className="overflow-x-hidden">
           {page === 'product' ? (
-            <WorkingProductPage productId={productId} onBack={openWorkingProtocol} />
+            <WorkingProductPage
+              key={productId}
+              productId={productId}
+              onHome={openWorkingHome}
+              onCollection={openWorkingProtocol}
+              onViewProduct={openWorkingProduct}
+            />
           ) : preview === 'hero-backgrounds' ? (
             <WorkingHeroBackgroundPreview />
           ) : preview === 'philosophy-frames' ? (
