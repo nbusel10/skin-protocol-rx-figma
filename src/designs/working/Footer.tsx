@@ -26,6 +26,7 @@ export default function Footer({ lighter = false, previews = false }: { lighter?
   const [email, setEmail] = useState('')
   const [sent, setSent] = useState(false)
   const explore = EXPLORE.map(item => {
+    if (item.href === '/shop' && !lighter) return { ...item, href: '/designs/working/shop' }
     if (item.href === '#protocol' && !lighter) return { ...item, href: '/designs/working/protocol' }
     if (item.href === '/our-story#our-story' && !lighter) return { ...item, href: '/about#our-story' }
     return item

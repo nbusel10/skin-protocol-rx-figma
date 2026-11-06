@@ -182,7 +182,7 @@ export default function HomePage({
                 </>
               ) : (
                 <>
-                  <button type="button" className="group inline-flex min-h-12 w-full items-center justify-center gap-4 bg-[#252520] px-5 text-[11px] font-semibold tracking-[0.1em] uppercase text-white transition-colors duration-200 hover:bg-[#141412] min-[480px]:w-auto">
+                  <button type="button" onClick={() => window.location.assign('/designs/working/shop')} className="group inline-flex min-h-12 w-full items-center justify-center gap-4 bg-[#252520] px-5 text-[11px] font-semibold tracking-[0.1em] uppercase text-white transition-colors duration-200 hover:bg-[#141412] min-[480px]:w-auto">
                     <span className="relative inline-block whitespace-nowrap">
                       <span>Explore the collection</span>
                       <span
@@ -429,7 +429,7 @@ export default function HomePage({
           window.location.assign('/designs/working/protocol')
         }}
         onStepClick={step => {
-          window.location.assign(`/shop?step=${step}`)
+          window.location.assign(lighter ? `/shop?step=${step}` : `/designs/working/shop?step=${step}`)
         }}
       />
 

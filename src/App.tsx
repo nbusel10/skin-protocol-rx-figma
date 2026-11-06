@@ -44,6 +44,7 @@ import ProtocolRefinePreview from './designs/working/ProtocolRefinePreview'
 import WorkingAboutPage from './designs/working/AboutPage'
 import OutcomesDecorationPreview from './designs/working/OutcomesDecorationPreview'
 import WorkingProductPage from './designs/working/ProductPage'
+import WorkingShopPage from './designs/working/ShopPage'
 import { isDesignId, type DesignId, type DesignPage, type GalleryTarget } from './designs/shared'
 import { PRODUCTS } from './data'
 import { loadQuizSession, protocolFromSession } from './lib/quizSession'
@@ -139,6 +140,10 @@ function toUrl(
   if (design === 'lighter') return `${base}/designs/lighter`
   if (design === 'working') {
     if (page === 'product' && productId) return `${base}/designs/working/product/${encodeURIComponent(productId)}`
+    if (page === 'shop') {
+      const query = shopStep ? `?step=${encodeURIComponent(shopStep)}` : ''
+      return `${base}/designs/working/shop${query}`
+    }
     if (preview === 'hero-backgrounds') return `${base}/designs/working/hero-backgrounds`
     if (preview === 'philosophy-frames') return `${base}/designs/working/philosophy-frames`
     if (preview === 'quiet-geometry') return `${base}/designs/working/quiet-geometry`
@@ -205,6 +210,9 @@ function parseLocation(pathname: string, search = '', hash = ''): RouteState {
   }
   if (path === '/about' || path === '/about/' || path === '/designs/working/about' || path === '/designs/working/about/') {
     return route('home', { design: 'working', designPage: 'home', preview: 'about', hash: storyHash, version: 'v2' })
+  }
+  if (path === '/designs/working/shop' || path === '/designs/working/shop/') {
+    return route('shop', { design: 'working', designPage: 'shop', shopStep, version: 'v2' })
   }
   const workingProduct = path.match(/^\/designs\/working\/product\/([^/]+)\/?$/)
   if (workingProduct) {
@@ -274,6 +282,10 @@ function applyDocumentTitle(
     if (page === 'product' && productId) {
       const product = PRODUCTS.find(item => item.id === productId)
       document.title = `${product?.name || 'Product'} | Skin Protocol RX`
+      return
+    }
+    if (page === 'shop') {
+      document.title = 'Explore the Collection | Skin Protocol RX'
       return
     }
     document.title =
@@ -479,6 +491,16 @@ export default function App() {
     }), 'push')
   }, [applyRoute])
 
+  const openWorkingShop = useCallback((step?: string) => {
+    scrollToTop()
+    applyRoute(route('shop', {
+      design: 'working',
+      designPage: 'shop',
+      shopStep: step || '',
+      version: 'v2',
+    }), 'push')
+  }, [applyRoute])
+
   const openWorkingProtocol = useCallback(() => {
     scrollToTop()
     applyRoute(route('home', { design: 'working', designPage: 'home', preview: 'protocol', version: 'v2' }), 'replace')
@@ -599,7 +621,13 @@ export default function App() {
               key={productId}
               productId={productId}
               onHome={openWorkingHome}
-              onCollection={openWorkingProtocol}
+              onCollection={() => openWorkingShop()}
+              onViewProduct={openWorkingProduct}
+            />
+          ) : page === 'shop' ? (
+            <WorkingShopPage
+              key={shopStep || 'all'}
+              initialStep={shopStep}
               onViewProduct={openWorkingProduct}
             />
           ) : preview === 'hero-backgrounds' ? (

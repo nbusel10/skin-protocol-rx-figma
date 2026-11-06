@@ -260,7 +260,7 @@ function ProtocolExplore({ onViewProduct }: { onViewProduct: (productId: string)
                             </ul>
                           ) : null}
                           <a
-                            href={`/shop?step=${step.step}`}
+                            href={`/designs/working/shop?step=${step.step}`}
                             className="mt-4 inline-flex items-center gap-2 text-[13px] text-[#6D6A63] transition-colors duration-200 hover:text-[#ab8584] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ab8584]"
                           >
                             Shop this step <span aria-hidden="true">↗</span>

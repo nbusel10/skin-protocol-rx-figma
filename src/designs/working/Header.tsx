@@ -29,6 +29,10 @@ export default function Header({ lighter = false }: { lighter?: boolean }) {
 
   function jump(id: string) {
     setMobileOpen(false)
+    if (!lighter && id === 'shop') {
+      window.location.assign('/designs/working/shop')
+      return
+    }
     if (!lighter && id === 'protocol') {
       const here = window.location.pathname.replace(/\/$/, '')
       if (here !== '/designs/working/protocol') {
