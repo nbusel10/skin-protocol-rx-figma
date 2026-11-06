@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, type AnimationEvent, type MouseEvent } from 'react'
 import { OffsetFrame } from './OffsetPhoto'
+import { useSiteRoot } from './siteRoot'
 import SunbeamMatGlow from './SunbeamMatGlow'
 
 const HEADING =
@@ -71,6 +72,7 @@ function scrollToChapter(id: string, behavior: ScrollBehavior) {
 }
 
 function AboutHero({ onOpen }: { onOpen: (id: string) => void }) {
+  const site = useSiteRoot()
   const [settled, setSettled] = useState(() => prefersReducedMotion())
 
   function onAnimationEnd(event: AnimationEvent<HTMLDivElement>) {
@@ -84,7 +86,7 @@ function AboutHero({ onOpen }: { onOpen: (id: string) => void }) {
     event.preventDefault()
     const current = window.history.state
     const nextState = current && typeof current === 'object' ? { ...current, hash: id } : { hash: id }
-    const nextUrl = `/about#${id}`
+    const nextUrl = `${site.about}#${id}`
     if (`${window.location.pathname}${window.location.hash}` !== nextUrl) {
       window.history.pushState(nextState, '', nextUrl)
     }
@@ -106,7 +108,7 @@ function AboutHero({ onOpen }: { onOpen: (id: string) => void }) {
             {CHAPTERS.map((chapter, index) => (
               <li key={chapter.id} className="protocol-timeline-step">
                 <a
-                  href={`/about#${chapter.id}`}
+                  href={`${site.about}#${chapter.id}`}
                   className="about-timeline-link"
                   onClick={event => openChapter(event, chapter.id)}
                 >
@@ -151,6 +153,7 @@ function PhotoWell({
 }
 
 export default function AboutPage({ hash = '' }: { hash?: string }) {
+  const site = useSiteRoot()
   const [chapter, setChapter] = useState(() => chapterId((hash || window.location.hash).replace(/^#/, '')))
   const [scrollNonce, setScrollNonce] = useState(0)
   const landed = useRef(false)
@@ -264,7 +267,7 @@ export default function AboutPage({ hash = '' }: { hash?: string }) {
               We believe skincare should fit your skin, not the other way around. Our six-step protocol provides a thoughtful framework, but every step is yours to choose. Build a complete routine or simply add the products that complement what you already use.
             </p>
             <a
-              href="/designs/working/protocol"
+              href={site.protocol}
               className="mt-8 inline-flex min-h-12 items-center justify-center gap-3 bg-[#252520] px-5 text-[11px] font-semibold tracking-[0.1em] uppercase text-white transition-colors duration-200 hover:bg-[#141412] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ab8584]"
             >
               Build Your Protocol

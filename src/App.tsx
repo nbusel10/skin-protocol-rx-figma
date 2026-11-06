@@ -45,13 +45,15 @@ import WorkingAboutPage from './designs/working/AboutPage'
 import OutcomesDecorationPreview from './designs/working/OutcomesDecorationPreview'
 import WorkingProductPage from './designs/working/ProductPage'
 import WorkingShopPage from './designs/working/ShopPage'
+import { SiteRootProvider } from './designs/working/siteRoot'
+import './designs/palette/palette.css'
 import { isDesignId, type DesignId, type DesignPage, type GalleryTarget } from './designs/shared'
 import { PRODUCTS } from './data'
 import { loadQuizSession, protocolFromSession } from './lib/quizSession'
 
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 type Version = 'v1' | 'v2'
-type Design = '' | 'picker' | 'working' | 'lighter' | DesignId
+type Design = '' | 'picker' | 'working' | 'palette' | 'lighter' | DesignId
 
 type RouteState = {
   page: Page
@@ -87,7 +89,7 @@ function route(page: Page, extras: Partial<Omit<RouteState, 'page'>> = {}): Rout
 }
 
 function anchorHash(next: Pick<RouteState, 'page' | 'preview' | 'design' | 'hash'>) {
-  if (next.design === 'working' && next.preview === 'about') return next.hash || ''
+  if ((next.design === 'working' || next.design === 'palette') && next.preview === 'about') return next.hash || ''
   if (next.page === 'story' && next.preview !== 'standards') return next.hash || ''
   return ''
 }
@@ -138,6 +140,19 @@ function toUrl(
   const base = normalizeBase()
   if (design === 'picker') return `${base}/designs`
   if (design === 'lighter') return `${base}/designs/lighter`
+  if (design === 'palette') {
+    if (page === 'product' && productId) return `${base}/designs/palette/product/${encodeURIComponent(productId)}`
+    if (page === 'shop') {
+      const query = shopStep ? `?step=${encodeURIComponent(shopStep)}` : ''
+      return `${base}/designs/palette/shop${query}`
+    }
+    if (preview === 'protocol') return `${base}/designs/palette/protocol`
+    if (preview === 'about') {
+      const fragment = hash ? `#${hash.replace(/^#/, '')}` : ''
+      return `${base}/designs/palette/about${fragment}`
+    }
+    return `${base}/designs/palette`
+  }
   if (design === 'working') {
     if (page === 'product' && productId) return `${base}/designs/working/product/${encodeURIComponent(productId)}`
     if (page === 'shop') {
@@ -180,6 +195,27 @@ function parseLocation(pathname: string, search = '', hash = ''): RouteState {
   if (path === '/designs' || path === '/designs/') return route('home', { design: 'picker', version: 'v2' })
   if (path === '/designs/lighter' || path === '/designs/lighter/' || path === '/designs/working/lighter' || path === '/designs/working/lighter/') {
     return route('home', { design: 'lighter', designPage: 'home', version: 'v2' })
+  }
+  if (path === '/designs/palette' || path === '/designs/palette/') {
+    return route('home', { design: 'palette', designPage: 'home', version: 'v2' })
+  }
+  if (path === '/designs/palette/protocol' || path === '/designs/palette/protocol/') {
+    return route('home', { design: 'palette', designPage: 'home', preview: 'protocol', version: 'v2' })
+  }
+  if (path === '/designs/palette/about' || path === '/designs/palette/about/') {
+    return route('home', { design: 'palette', designPage: 'home', preview: 'about', hash: storyHash, version: 'v2' })
+  }
+  if (path === '/designs/palette/shop' || path === '/designs/palette/shop/') {
+    return route('shop', { design: 'palette', designPage: 'shop', shopStep, version: 'v2' })
+  }
+  const paletteProduct = path.match(/^\/designs\/palette\/product\/([^/]+)\/?$/)
+  if (paletteProduct) {
+    return route('product', {
+      design: 'palette',
+      designPage: 'product',
+      productId: decodeURIComponent(paletteProduct[1]),
+      version: 'v2',
+    })
   }
   if (path === '/designs/working' || path === '/designs/working/') {
     return route('home', { design: 'working', designPage: 'home', version: 'v2' })
@@ -278,7 +314,7 @@ function applyDocumentTitle(
     document.title = 'Lighter | Skin Protocol RX'
     return
   }
-  if (design === 'working') {
+  if (design === 'working' || design === 'palette') {
     if (page === 'product' && productId) {
       const product = PRODUCTS.find(item => item.id === productId)
       document.title = `${product?.name || 'Product'} | Skin Protocol RX`
@@ -288,6 +324,7 @@ function applyDocumentTitle(
       document.title = 'Explore the Collection | Skin Protocol RX'
       return
     }
+    const siteName = design === 'palette' ? 'Palette' : 'Working'
     document.title =
       preview === 'hero-backgrounds'
         ? 'Hero Background Explorations | Working | Skin Protocol RX'
@@ -302,12 +339,12 @@ function applyDocumentTitle(
                 : preview === 'heroes'
                   ? 'Hero Sections | Working | Skin Protocol RX'
                   : preview === 'protocol'
-                    ? 'Build Your Protocol | Working | Skin Protocol RX'
+                    ? `Build Your Protocol | ${siteName} | Skin Protocol RX`
                     : preview === 'protocol-refine'
                       ? 'Build Your Protocol Refine | Working | Skin Protocol RX'
                     : preview === 'about'
-                      ? 'About Us | Working | Skin Protocol RX'
-                      : 'Working | Skin Protocol RX'
+                      ? `About Us | ${siteName} | Skin Protocol RX`
+                      : `${siteName} | Skin Protocol RX`
     return
   }
   if (isDesignId(design)) {
@@ -476,40 +513,42 @@ export default function App() {
     applyRoute(route('home', { design: target, designPage: 'home', version: 'v2' }), 'push')
   }, [applyRoute])
 
+  const siteDesign: 'working' | 'palette' = design === 'palette' ? 'palette' : 'working'
+
   const openWorkingHome = useCallback(() => {
     scrollToTop()
-    applyRoute(route('home', { design: 'working', designPage: 'home', version: 'v2' }), 'push')
-  }, [applyRoute])
+    applyRoute(route('home', { design: siteDesign, designPage: 'home', version: 'v2' }), 'push')
+  }, [applyRoute, siteDesign])
 
   const openWorkingProduct = useCallback((id: string) => {
     scrollToTop()
     applyRoute(route('product', {
-      design: 'working',
+      design: siteDesign,
       designPage: 'product',
       productId: id,
       version: 'v2',
     }), 'push')
-  }, [applyRoute])
+  }, [applyRoute, siteDesign])
 
   const openWorkingShop = useCallback((step?: string) => {
     scrollToTop()
     applyRoute(route('shop', {
-      design: 'working',
+      design: siteDesign,
       designPage: 'shop',
       shopStep: step || '',
       version: 'v2',
     }), 'push')
-  }, [applyRoute])
+  }, [applyRoute, siteDesign])
 
   const openWorkingProtocol = useCallback(() => {
     scrollToTop()
-    applyRoute(route('home', { design: 'working', designPage: 'home', preview: 'protocol', version: 'v2' }), 'replace')
+    applyRoute(route('home', { design: siteDesign, designPage: 'home', preview: 'protocol', version: 'v2' }), 'replace')
     const saved = loadQuizSession()
     if (!saved?.done || !protocolFromSession(saved)) return
     const current = window.history.state as unknown
     const base = current && typeof current === 'object' ? current as Record<string, unknown> : {}
     window.history.replaceState({ ...base, sprxProtocolResults: true }, '')
-  }, [applyRoute])
+  }, [applyRoute, siteDesign])
 
   const navigateDesign = useCallback((nextPage: DesignPage, id?: string) => {
     if (!isDesignId(design)) return
@@ -528,7 +567,7 @@ export default function App() {
 
   // After the new page commits, pin scroll at the top before paint (skip in-page story hashes).
   useLayoutEffect(() => {
-    if (storyHash && (!design || (design === 'working' && preview === 'about'))) return
+    if (storyHash && (!design || ((design === 'working' || design === 'palette') && preview === 'about'))) return
     scrollToTop()
     const frame = requestAnimationFrame(() => scrollToTop())
     return () => cancelAnimationFrame(frame)
@@ -565,7 +604,7 @@ export default function App() {
       setDesign(next.design || '')
       setDesignPage(next.designPage || 'home')
       applyDocumentTitle(next.page, next.productId, next.preview, next.version, next.design, next.designPage)
-      const aboutAnchor = next.design === 'working' && next.preview === 'about' && Boolean(next.hash)
+      const aboutAnchor = (next.design === 'working' || next.design === 'palette') && next.preview === 'about' && Boolean(next.hash)
       if (!aboutAnchor && (!next.hash || next.design)) scrollToTop()
     }
 
@@ -603,17 +642,20 @@ export default function App() {
     )
   }
 
-  if (design === 'working') {
-    const workingPreview =
+  if (design === 'working' || design === 'palette') {
+    const palette = design === 'palette'
+    const workingPreview = !palette && (
       preview === 'hero-backgrounds' ||
       preview === 'philosophy-frames' ||
       preview === 'quiet-geometry' ||
       preview === 'outcomes' ||
       preview === 'quiz-coverage' ||
       preview === 'heroes'
+    )
     return (
-      <div className="theme-clear min-h-screen bg-[#F7F4EF]">
-        <DesignTabs current={preview === 'quiz-coverage' ? 'quiz-coverage' : preview === 'protocol-refine' ? 'protocol-refine' : 'working'} onOpen={openGalleryTarget} />
+      <SiteRootProvider root={palette ? '/designs/palette' : '/designs/working'}>
+      <div className={`theme-clear min-h-screen ${palette ? 'palette-site' : 'bg-[#F7F4EF]'}`}>
+        <DesignTabs current={palette ? 'palette' : preview === 'quiz-coverage' ? 'quiz-coverage' : preview === 'protocol-refine' ? 'protocol-refine' : 'working'} onOpen={openGalleryTarget} />
         {!workingPreview && <WorkingHeader />}
         <main className="overflow-x-hidden">
           {page === 'product' ? (
@@ -652,8 +694,9 @@ export default function App() {
             <WorkingHomePage />
           )}
         </main>
-        {!workingPreview && <WorkingFooter previews={page !== 'product' && !preview} />}
+        {!workingPreview && <WorkingFooter previews={!palette && page !== 'product' && !preview} />}
       </div>
+      </SiteRootProvider>
     )
   }
 

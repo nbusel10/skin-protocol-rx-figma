@@ -6,7 +6,7 @@ export const DESIGN_IDS: DesignId[] = ['clear', 'grove', 'boutique', 'luxe', 'ri
 export function isDesignId(value: string): value is DesignId {
   return (DESIGN_IDS as string[]).includes(value)
 }
-export type GalleryTarget = 'working' | 'lighter' | 'original' | 'rose' | 'protocol' | 'quiz-coverage' | 'protocol-refine' | DesignId
+export type GalleryTarget = 'working' | 'palette' | 'lighter' | 'original' | 'rose' | 'protocol' | 'quiz-coverage' | 'protocol-refine' | DesignId
 export type DesignPage = 'home' | 'shop' | 'product'
 export type DesignNavigate = (page: DesignPage, id?: string) => void
 

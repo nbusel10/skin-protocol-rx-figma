@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import SocialLinks from './SocialLinks'
+import { useSiteRoot } from './siteRoot'
 
 const EXPLORE = [
   { href: '/shop', label: 'Shop' },
@@ -23,17 +24,18 @@ const PREVIEWS = [
 ]
 
 export default function Footer({ lighter = false, previews = false }: { lighter?: boolean; previews?: boolean }) {
+  const site = useSiteRoot()
   const [email, setEmail] = useState('')
   const [sent, setSent] = useState(false)
   const explore = EXPLORE.map(item => {
-    if (item.href === '/shop' && !lighter) return { ...item, href: '/designs/working/shop' }
-    if (item.href === '#protocol' && !lighter) return { ...item, href: '/designs/working/protocol' }
-    if (item.href === '/our-story#our-story' && !lighter) return { ...item, href: '/about#our-story' }
+    if (item.href === '/shop' && !lighter) return { ...item, href: site.shop }
+    if (item.href === '#protocol' && !lighter) return { ...item, href: site.protocol }
+    if (item.href === '/our-story#our-story' && !lighter) return { ...item, href: `${site.about}#our-story` }
     return item
   })
   const learn = LEARN.map(item =>
     item.href === '/our-story#our-standards' && !lighter
-      ? { ...item, href: '/about#our-standards' }
+      ? { ...item, href: `${site.about}#our-standards` }
       : item,
   )
   const eyebrow = lighter

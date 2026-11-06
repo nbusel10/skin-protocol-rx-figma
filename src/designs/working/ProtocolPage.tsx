@@ -4,6 +4,7 @@ import { PROTOCOL_SECTION } from '../protocolSectionContent'
 import ProtocolHero from './ProtocolHero'
 import ProtocolQuizSection from './ProtocolQuizSection'
 import ProtocolResults from './ProtocolResults'
+import { useSiteRoot } from './siteRoot'
 import { useProtocolQuizResults } from './useProtocolQuizResults'
 
 const HOW_IT_WORKS = [
@@ -60,6 +61,7 @@ function ToggleMark({ open }: { open: boolean }) {
 }
 
 function ProtocolPayoff({ onViewProduct }: { onViewProduct: (productId: string) => void }) {
+  const site = useSiteRoot()
   const [openSteps, setOpenSteps] = useState<number[]>([])
 
   function toggle(step: number) {
@@ -148,7 +150,7 @@ function ProtocolPayoff({ onViewProduct }: { onViewProduct: (productId: string) 
                       {products.map(product => (
                         <li key={product.id} className="border-t border-[#D6C3C2]">
                           <a
-                            href={`/designs/working/product/${product.id}`}
+                            href={site.product(product.id)}
                             onClick={event => {
                               if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return
                               event.preventDefault()
@@ -168,7 +170,7 @@ function ProtocolPayoff({ onViewProduct }: { onViewProduct: (productId: string) 
                       ))}
                       <li className="border-t border-[#D6C3C2]">
                         <a
-                          href={`/designs/working/shop?step=${step.step}`}
+                          href={site.shopStep(step.step)}
                           className="inline-flex items-center gap-2 py-3 text-[13px] text-[#2B2727]/60 transition-colors duration-200 hover:text-[#ab8584] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ab8584]"
                         >
                           Shop this step <span aria-hidden="true">↗</span>

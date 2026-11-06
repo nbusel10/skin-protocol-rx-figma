@@ -1,0 +1,172 @@
+/* Palette tab: remap off-palette hexes to the six brand colors.
+   Glossy White #FFFDFA, Linen White #F5F0EB, Alabaster Rose #F3ECEB,
+   Soft Muted Lily #D6C3C2, Rose Gold #AB8584, Espresso Charcoal #2B2727. */
+
+.theme-clear.palette-site,
+.palette-site {
+  --color-rose: #AB8584;
+  --color-rose-dark: #AB8584;
+  --color-rose-light: #F3ECEB;
+  --color-rose-muted: #D6C3C2;
+  --color-charcoal: #2B2727;
+  --color-black: #2B2727;
+  --color-white: #FFFDFA;
+  --color-ivory: #FFFDFA;
+  --color-ivory-dark: #F5F0EB;
+  --color-gray-soft: #D6C3C2;
+  --color-gray-muted: #2B2727;
+  --color-stone: #F5F0EB;
+  --palette-header: #FFFDFA;
+  --palette-header-scrolled: rgba(255, 253, 250, 0.96);
+  --palette-line: #D6C3C2;
+  background-color: #F5F0EB;
+  color: #2B2727;
+}
+
+.palette-site :is(
+  .text-\[\#252520\],
+  .text-\[\#595750\],
+  .text-\[\#5B574F\],
+  .text-\[\#6D6A63\],
+  .text-\[\#4c4943\],
+  .text-\[\#3f3c37\],
+  .hover\:text-\[\#252520\]:hover
+) {
+  color: #2B2727;
+}
+
+.palette-site .group:hover .group-hover\:text-\[\#252520\] {
+  color: #2B2727;
+}
+
+.palette-site :is(
+  .bg-\[\#252520\],
+  .hover\:bg-\[\#141412\]:hover,
+  .hover\:bg-\[\#252520\]:hover,
+  .hover\:bg-\[\#9a7675\]:hover
+) {
+  background-color: #2B2727;
+}
+
+.palette-site :is(
+  .border-\[\#252520\],
+  .hover\:border-\[\#252520\]:hover
+) {
+  border-color: #2B2727;
+}
+
+.palette-site .border-\[\#252520\]\/70 {
+  border-color: color-mix(in srgb, #2B2727 70%, transparent);
+}
+
+.palette-site .text-\[\#F7F4EF\],
+.palette-site .text-\[\#E7E2DC\] {
+  color: #FFFDFA;
+}
+
+.palette-site .bg-\[\#F7F4EF\] {
+  background-color: #F5F0EB;
+}
+
+.palette-site :is(.bg-\[\#F7F4EF\], .hover\:bg-\[\#F7F4EF\]:hover) {
+  background-color: #F5F0EB;
+}
+
+.palette-site .border-\[\#F7F4EF\]\/70 {
+  border-color: color-mix(in srgb, #FFFDFA 70%, transparent);
+}
+
+.palette-site :is(
+  .border-\[\#D6CEC3\],
+  .border-\[\#C4A8A6\],
+  .border-\[\#E7E2DC\],
+  .border-\[\#E4DCD3\],
+  .border-\[\#E4D6D2\],
+  .divide-\[\#D6CEC3\]
+) {
+  border-color: #D6C3C2;
+}
+
+.palette-site :is(.divide-\[\#D6CEC3\], .sm\:divide-\[\#D6CEC3\]) > :not([hidden]) ~ :not([hidden]),
+.palette-site :is(.divide-\[\#D6CEC3\], .sm\:divide-\[\#D6CEC3\]) > :not(:last-child) {
+  border-color: #D6C3C2;
+}
+
+.palette-site .bg-\[\#C9BFB3\] {
+  background-color: #D6C3C2;
+}
+
+.palette-site :is(.bg-\[\#E8E0D6\], .bg-\[\#EDE8DF\], .bg-\[\#f8f1ef\]) {
+  background-color: #F3ECEB;
+}
+
+.palette-site .via-\[\#F7F2EB\] {
+  --tw-gradient-via: #F5F0EB;
+}
+
+.palette-site .to-\[\#F0E9E0\] {
+  --tw-gradient-to: #F3ECEB;
+}
+
+.palette-site .bg-\[\#F3EDE5\]\/40 {
+  background-color: color-mix(in srgb, #F3ECEB 40%, transparent);
+}
+
+.palette-site .bg-\[\#EDE6DC\]\/20 {
+  background-color: color-mix(in srgb, #F3ECEB 20%, transparent);
+}
+
+.palette-site .placeholder\:text-\[\#A39E96\]::placeholder {
+  color: #D6C3C2;
+}
+
+.palette-site .bg-\[\#C4A8A6\] {
+  background-color: #D6C3C2;
+}
+
+.palette-site [stroke="#D6CEC3"] {
+  stroke: #D6C3C2;
+}
+
+.palette-site .protocol-timeline-line {
+  background: color-mix(in srgb, #FFFDFA 22%, transparent);
+}
+
+.palette-site .protocol-timeline-line-draw {
+  background: #AB8584;
+}
+
+.palette-site .protocol-timeline-mark {
+  border-color: color-mix(in srgb, #FFFDFA 35%, transparent);
+  background: #2B2727;
+  color: color-mix(in srgb, #FFFDFA 55%, transparent);
+}
+
+.palette-site .protocol-timeline-name {
+  color: color-mix(in srgb, #FFFDFA 55%, transparent);
+}
+
+@keyframes palette-mark-in {
+  to {
+    border-color: #AB8584;
+    color: #FFFDFA;
+  }
+}
+
+.palette-site .protocol-timeline.is-playing .protocol-timeline-mark,
+.palette-site .protocol-timeline.is-playing .protocol-timeline-name {
+  animation-name: palette-mark-in;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .palette-site .protocol-timeline-mark,
+  .palette-site .protocol-timeline.is-playing .protocol-timeline-mark {
+    border-color: #AB8584;
+    color: #FFFDFA;
+  }
+
+  .palette-site .protocol-timeline-name,
+  .palette-site .protocol-timeline.is-playing .protocol-timeline-name {
+    color: #FFFDFA;
+  }
+}

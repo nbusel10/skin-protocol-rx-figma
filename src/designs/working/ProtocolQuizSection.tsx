@@ -17,6 +17,7 @@ import { saveQuizSession, type QuizSession } from '../../lib/quizSession'
 import OffsetPhoto, { OffsetFrame } from './OffsetPhoto'
 import { QuietGeometryFrame } from './quiet-geometry/QuietGeometryMotif'
 import SunbeamMatGlow from './SunbeamMatGlow'
+import { useSiteRoot } from './siteRoot'
 
 /** Same questions as the original protocol quiz, plus Not Sure on skin type. */
 const NOT_SURE = 'Not Sure'
@@ -78,6 +79,7 @@ export default function ProtocolQuizSection({
   /** Called after answers are saved. When omitted, the working protocol page opens. */
   onComplete?: () => void
 }) {
+  const site = useSiteRoot()
   const [step, setStep] = useState(0)
   const [funQuestion] = useState(activeFunQuestion)
   const [skinType, setSkinType] = useState<SkinChoice | ''>('')
@@ -136,7 +138,7 @@ export default function ProtocolQuizSection({
     }
     saveQuizSession(session)
     if (onComplete) onComplete()
-    else window.location.assign('/designs/working/protocol')
+    else window.location.assign(site.protocol)
   }
 
   const questionHeading = refined

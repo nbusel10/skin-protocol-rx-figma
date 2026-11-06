@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { loadQuizSession } from '../../lib/quizSession'
+import { useSiteRoot } from './siteRoot'
 import SocialLinks from './SocialLinks'
 
 const NAV = [
@@ -11,6 +12,7 @@ const NAV = [
 ]
 
 export default function Header({ lighter = false }: { lighter?: boolean }) {
+  const site = useSiteRoot()
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [cartCount, setCartCount] = useState(() => loadQuizSession()?.addedIds.length ?? 0)
@@ -30,13 +32,13 @@ export default function Header({ lighter = false }: { lighter?: boolean }) {
   function jump(id: string) {
     setMobileOpen(false)
     if (!lighter && id === 'shop') {
-      window.location.assign('/designs/working/shop')
+      window.location.assign(site.shop)
       return
     }
     if (!lighter && id === 'protocol') {
       const here = window.location.pathname.replace(/\/$/, '')
-      if (here !== '/designs/working/protocol') {
-        window.location.assign('/designs/working/protocol')
+      if (here !== site.protocol) {
+        window.location.assign(site.protocol)
       } else {
         window.dispatchEvent(new Event('sprx-open-protocol-page'))
       }
@@ -44,8 +46,8 @@ export default function Header({ lighter = false }: { lighter?: boolean }) {
     }
     if (!lighter && id === 'about') {
       const here = window.location.pathname.replace(/\/$/, '')
-      if (here !== '/about') {
-        window.location.assign('/about')
+      if (here !== site.about) {
+        window.location.assign(site.about)
       } else {
         window.scrollTo({ top: 0, behavior: 'smooth' })
       }
@@ -56,7 +58,7 @@ export default function Header({ lighter = false }: { lighter?: boolean }) {
       node.scrollIntoView({ behavior: 'smooth' })
       return
     }
-    if (!lighter) window.location.assign(`/designs/working#${id}`)
+    if (!lighter) window.location.assign(`${site.root}#${id}`)
   }
 
   return (
@@ -65,10 +67,10 @@ export default function Header({ lighter = false }: { lighter?: boolean }) {
         className="relative z-50 font-sans transition-all duration-300"
         style={{
           backgroundColor: lighter
-            ? scrolled ? 'rgba(255,255,255,0.96)' : '#ffffff'
-            : scrolled ? 'rgba(255,255,255,0.98)' : '#ffffff',
+            ? scrolled ? 'rgba(255,255,255,0.96)' : 'var(--palette-header, #ffffff)'
+            : scrolled ? 'var(--palette-header-scrolled, rgba(255,255,255,0.98))' : 'var(--palette-header, #ffffff)',
           backdropFilter: scrolled ? 'blur(12px)' : 'none',
-          borderBottom: lighter ? '1px solid #E7E2DC' : '1px solid #E5E5E5',
+          borderBottom: lighter ? '1px solid var(--palette-line, #E7E2DC)' : '1px solid var(--palette-line, #E5E5E5)',
           boxShadow: lighter ? 'none' : scrolled ? '0 1px 0 rgba(0,0,0,0.04)' : 'none',
         }}
       >
@@ -80,7 +82,7 @@ export default function Header({ lighter = false }: { lighter?: boolean }) {
           }
         >
           <a
-            href={lighter ? '/designs/lighter' : '/designs/working'}
+            href={lighter ? '/designs/lighter' : site.root}
             className="flex shrink-0 cursor-pointer items-center"
             aria-label="Skin Protocol RX Home"
           >
