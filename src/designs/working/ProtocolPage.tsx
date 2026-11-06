@@ -166,6 +166,14 @@ function ProtocolPayoff({ onViewProduct }: { onViewProduct: (productId: string) 
                           </a>
                         </li>
                       ))}
+                      <li className="border-t border-[#E4DDD4]">
+                        <a
+                          href={`/shop?step=${step.step}`}
+                          className="inline-flex items-center gap-2 py-3 text-[13px] text-[#6D6A63] transition-colors duration-200 hover:text-[#ab8584] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ab8584]"
+                        >
+                          Shop this step <span aria-hidden="true">↗</span>
+                        </a>
+                      </li>
                     </ul>
                   </div>
                 </div>
