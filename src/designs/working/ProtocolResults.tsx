@@ -36,7 +36,7 @@ function QuietLink({
       event.stopPropagation()
       onClick()
     }}
-    className={`inline-flex items-center gap-2 text-[13px] text-[#6D6A63] transition-colors duration-200 hover:text-[#ab8584] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ab8584] ${className}`}
+    className={`inline-flex items-center gap-2 text-[13px] text-[#2B2727]/60 transition-colors duration-200 hover:text-[#ab8584] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ab8584] ${className}`}
   >
       {children}
       <span aria-hidden="true">↗</span>
@@ -48,7 +48,7 @@ function StepMark({ mark }: { mark: string }) {
   return (
     <div className="relative h-12 w-12 shrink-0 self-start" aria-hidden="true">
       <svg viewBox="0 0 44 44" className="h-full w-full">
-        <circle cx="22" cy="22" r="19" fill="none" stroke="#D6CEC3" strokeWidth="1.15" />
+        <circle cx="22" cy="22" r="19" fill="none" stroke="#D6C3C2" strokeWidth="1.15" />
         <circle
           cx="22"
           cy="22"
@@ -62,7 +62,7 @@ function StepMark({ mark }: { mark: string }) {
           className="opacity-0 transition-[stroke-dashoffset,opacity] duration-700 ease-out [stroke-dasharray:1] [stroke-dashoffset:1.02] group-hover:opacity-100 group-hover:[stroke-dashoffset:0] group-focus-within:opacity-100 group-focus-within:[stroke-dashoffset:0] motion-reduce:transition-none motion-reduce:opacity-100 motion-reduce:[stroke-dashoffset:0]"
         />
       </svg>
-      <span className="absolute inset-0 flex items-center justify-center font-serif text-sm text-[#6D6A63] transition-colors duration-500 group-hover:text-[#ab8584] group-focus-within:text-[#ab8584]">
+      <span className="absolute inset-0 flex items-center justify-center font-serif text-sm text-[#2B2727]/60 transition-colors duration-500 group-hover:text-[#ab8584] group-focus-within:text-[#ab8584]">
         {mark}
       </span>
     </div>
@@ -78,7 +78,7 @@ function AddCartButton({ added, onAdd }: { added: boolean; onAdd: () => void }) 
         onAdd()
       }}
       aria-live="polite"
-      className={`whitespace-nowrap px-3 py-2 text-[11px] tracking-wide ${added ? 'border border-[#ab8584] bg-[#ab8584]/10 text-[#ab8584]' : 'bg-[#252520] text-[#F7F4EF]'}`}
+      className={`whitespace-nowrap px-3 py-2 text-[11px] tracking-wide ${added ? 'border border-[#ab8584] bg-[#f3eceb] text-[#ab8584]' : 'bg-[#2B2727] text-[#fffdfa]'}`}
     >
       {added ? 'Added ✓' : 'Add to Cart'}
     </button>
@@ -134,7 +134,7 @@ function StrengthPills({
               event.stopPropagation()
               onSelect(option.id)
             }}
-            className={`rounded-full border px-3 py-1 text-[12px] leading-none ${selected ? 'border-[#252520] bg-[#252520] text-[#F7F4EF]' : 'border-[#D6CEC3] text-[#252520] hover:border-[#ab8584]'}`}
+            className={`rounded-full border px-3 py-1 text-[12px] leading-none ${selected ? 'border-[#2B2727] bg-[#2B2727] text-[#fffdfa]' : 'border-[#D6C3C2] text-[#2B2727] hover:border-[#ab8584]'}`}
           >
             {option.name.replace('Brighten & Glow C Serum ', '')}
           </button>
@@ -193,18 +193,18 @@ function ChoiceCard({
   return (
     <div
       onClick={onSelect}
-      className={`flex cursor-pointer gap-5 border p-5 text-left ${selected ? 'border-[#ab8584] bg-[#ab8584]/10' : 'border-[#D6CEC3] bg-transparent'}`}
+      className={`flex cursor-pointer gap-5 border p-5 text-left ${selected ? 'border-[#ab8584] bg-[#f3eceb]' : 'border-[#D6C3C2] bg-transparent'}`}
     >
       <img src={product.image} alt="" className="h-24 w-20 shrink-0 object-contain" />
       <div className="min-w-0 flex-1">
         <span className="block text-[10px] font-semibold tracking-[0.14em] uppercase text-[#ab8584]">{stamp}</span>
         {title}
-        <p className="mt-1 text-sm text-[#595750]">{product.tagline}</p>
+        <p className="mt-1 text-sm text-[#2B2727]/75">{product.tagline}</p>
         <p className="mt-2 text-sm font-semibold">${product.price}</p>
-        {note ? <p className="mt-3 text-xs italic leading-relaxed text-[#6D6A63]">{note}</p> : null}
+        {note ? <p className="mt-3 text-xs italic leading-relaxed text-[#2B2727]/60">{note}</p> : null}
       </div>
       <div className="flex shrink-0 flex-col items-end gap-3">
-        <span className="border border-[#D6CEC3] px-2.5 py-1 text-[11px] tracking-wide text-[#6D6A63]">
+        <span className="border border-[#D6C3C2] px-2.5 py-1 text-[11px] tracking-wide text-[#2B2727]/60">
           {routinePeriodLabel(serumPeriod(product))}
         </span>
         <AddCartButton added={added} onAdd={onAdd} />
@@ -290,7 +290,7 @@ function VitaminCStep({
         {recommendedIsC ? otherCard : vitaminCard}
       </div>
       {vitaminCSelected ? null : (
-        <p className="mt-3 text-xs leading-relaxed text-[#6D6A63]">
+        <p className="mt-3 text-xs leading-relaxed text-[#2B2727]/60">
           These two treatments ranked 1st based on your answers. Choose either one for this step.
         </p>
       )}
@@ -313,10 +313,12 @@ function SerumOptions({
   options,
   selectedId,
   onSelect,
+  cue = false,
 }: {
   options: { id: string; product: Product; stamp: string }[]
   selectedId: string
   onSelect: (id: string) => void
+  cue?: boolean
 }) {
   return (
     <div className="mt-4">
@@ -330,16 +332,28 @@ function SerumOptions({
               role="radio"
               aria-checked={selected}
               onClick={() => onSelect(option.id)}
-              className={`border px-3 py-3 text-left ${selected ? 'border-[#ab8584] bg-[#ab8584]/10' : 'border-[#D6CEC3] bg-transparent'}`}
+              className={`border px-3 py-3 text-left ${selected ? 'border-[#ab8584] bg-[#f3eceb]' : 'border-[#D6C3C2] bg-transparent'}`}
             >
-              <span className="block text-[10px] font-semibold tracking-[0.14em] uppercase text-[#ab8584]">{option.stamp}</span>
-              <span className="mt-1 block text-[13px] leading-snug text-[#252520]">{option.product.name}</span>
-              <span className="mt-1 block text-[12px] font-semibold">${option.product.price}</span>
+              <span className="flex items-start justify-between gap-3">
+                <span className="min-w-0">
+                  <span className="block text-[10px] font-semibold tracking-[0.14em] uppercase text-[#ab8584]">{option.stamp}</span>
+                  <span className="mt-1 block text-[13px] leading-snug text-[#2B2727]">{option.product.name}</span>
+                  <span className="mt-1 block text-[12px] font-semibold">${option.product.price}</span>
+                </span>
+                {cue && !selected && (
+                  <span
+                    className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[#D6C3C2] text-[14px] leading-none text-[#2B2727]/60"
+                    aria-hidden="true"
+                  >
+                    +
+                  </span>
+                )}
+              </span>
             </button>
           )
         })}
       </div>
-      <p className="mt-2 text-xs leading-relaxed text-[#6D6A63]">
+      <p className="mt-2 text-xs leading-relaxed text-[#2B2727]/60">
         These two treatments ranked 1st based on your answers. Choose either one for this step.
       </p>
     </div>
@@ -451,16 +465,16 @@ export default function ProtocolResults({
   const protocolInCart = protocolProducts.every(product => current.addedIds.includes(product.id))
 
   return (
-    <article className="bg-[#F7F4EF] px-6 py-16 text-[#252520] md:px-[max(36px,8vw)] md:py-[75px]">
+    <article className="bg-[#f5f0eb] px-6 py-16 text-[#2B2727] md:px-[max(36px,8vw)] md:py-[75px]">
       <div className="mx-auto max-w-3xl">
         <p className="text-[13px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">Your protocol</p>
         <h1 className="mt-3 font-serif text-[clamp(40px,6vw,56px)] font-normal leading-[1.08] tracking-[-0.044em]">
           Your recommended protocol
         </h1>
-        <p className="mt-5 max-w-[40rem] text-[17px] leading-relaxed text-[#595750]">{summary(current)}</p>
+        <p className="mt-5 max-w-[40rem] text-[17px] leading-relaxed text-[#2B2727]/75">{summary(current)}</p>
 
         {built.tonerOmitted && (
-          <p className="mt-8 border border-[#ab8584]/40 bg-[#FFFDFA] px-6 py-5 text-[15px] leading-relaxed text-[#595750]">
+          <p className="mt-8 border border-[#D6C3C2] bg-[#f3eceb] px-6 py-5 text-[15px] leading-relaxed text-[#2B2727]/75">
             {built.tonerSwap
               ? `Because your skin often stings or turns red, we swapped the toner for ${built.tonerSwap.name}, a calming serum, and left out exfoliating products.`
               : 'Because your skin often stings or turns red, we left out the toner and exfoliating products to keep your routine gentle.'}
@@ -473,7 +487,7 @@ export default function ProtocolResults({
         <ul className="mt-4 space-y-4">
           {entries.map(({ product, period }) => (
             <Fragment key={product.id}>
-            <li className="group border border-[#D6CEC3] bg-[#FFFDFA] p-5">
+            <li className="group border border-[#D6C3C2] bg-[#fffdfa] p-5">
               {product.protocolStep === 3 && activePair && pairIncludesC && !current.treatAdded ? (
                 <VitaminCStep
                   recommended={activePair.recommended}
@@ -509,16 +523,16 @@ export default function ProtocolResults({
                       ) : (
                         <h2 className="mt-1 font-serif text-[1.35rem] leading-snug">{product.name}</h2>
                       )}
-                      <p className="mt-1 text-sm text-[#595750]">{product.tagline}</p>
+                      <p className="mt-1 text-sm text-[#2B2727]/75">{product.tagline}</p>
                       <p className="mt-2 text-sm font-semibold">${product.price}</p>
                       {isVitaminC(product) && (
-                        <p className="mt-3 text-xs italic leading-relaxed text-[#6D6A63]">
+                        <p className="mt-3 text-xs italic leading-relaxed text-[#2B2727]/60">
                           {vitaminCChoiceNote(built.cReason)}
                         </p>
                       )}
                     </div>
                     <div className={`flex shrink-0 flex-col items-end gap-3 ${isVitaminC(product) ? '' : 'justify-between'}`}>
-                      <span className="border border-[#D6CEC3] px-2.5 py-1 text-[11px] tracking-wide text-[#6D6A63]">
+                      <span className="border border-[#D6C3C2] px-2.5 py-1 text-[11px] tracking-wide text-[#2B2727]/60">
                         {routinePeriodLabel(period)}
                       </span>
                       <AddCartButton added={current.addedIds.includes(product.id)} onAdd={() => addToCart([product.id])} />
@@ -526,7 +540,7 @@ export default function ProtocolResults({
                     </div>
                   </div>
                   {serumOptions && product.protocolStep === 3 && (
-                    <SerumOptions options={serumOptions} selectedId={selectedSerumId} onSelect={chooseSerum} />
+                    <SerumOptions options={serumOptions} selectedId={selectedSerumId} onSelect={chooseSerum} cue={current.treatAdded} />
                   )}
                 </>
               )}
@@ -535,15 +549,16 @@ export default function ProtocolResults({
                   <button
                     type="button"
                     onClick={removeTreat}
-                    className="text-[13px] text-[#6D6A63] transition-colors duration-200 hover:text-[#ab8584]"
+                    className="inline-flex items-center gap-2 text-[13px] text-[#2B2727]/60 transition-colors duration-200 hover:text-[#ab8584]"
                   >
+                    <span aria-hidden="true">×</span>
                     Remove from my protocol
                   </button>
                 </div>
               )}
             </li>
             {treatOffer && product.protocolStep === 2 && (
-              <li className="group border border-dashed border-[#D6CEC3] bg-[#FFFDFA] transition-colors hover:border-[#ab8584]">
+              <li className="group border border-dashed border-[#D6C3C2] bg-[#fffdfa] transition-colors hover:border-[#ab8584]">
                 <button
                   type="button"
                   onClick={toggleTreat}
@@ -555,9 +570,14 @@ export default function ProtocolResults({
                     <span className="block text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">
                       {getProtocolStepLabel(treatOffer.protocolStep)}
                     </span>
-                    <span className="mt-0.5 block text-sm text-[#6D6A63]">Add a personalized serum</span>
+                    <span className="mt-0.5 block text-sm text-[#2B2727]/60">Add a personalized serum</span>
                   </span>
-                  <span className="shrink-0 text-xl leading-none text-[#6D6A63]" aria-hidden="true">{current.treatOpen ? '−' : '+'}</span>
+                  <span
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#D6C3C2] text-[18px] leading-none text-[#2B2727]/60 transition-colors group-hover:border-[#ab8584] group-hover:text-[#ab8584]"
+                    aria-hidden="true"
+                  >
+                    {current.treatOpen ? '×' : '+'}
+                  </span>
                   <span className="sr-only">{current.treatOpen ? 'Hide optional serum' : 'Show optional serum'}</span>
                 </button>
                 {current.treatOpen && (
@@ -566,7 +586,7 @@ export default function ProtocolResults({
                       <div className="w-12 shrink-0" aria-hidden="true" />
                       <img src={treatOffer.image} alt="" className="h-24 w-20 shrink-0 object-contain" />
                       <div className="min-w-0 flex-1">
-                        <p className="text-[10px] font-semibold tracking-[0.16em] uppercase text-[#6D6A63]">
+                        <p className="text-[10px] font-semibold tracking-[0.16em] uppercase text-[#2B2727]/60">
                           {treatOffer.categories[0]}
                         </p>
                         {isVitaminC(treatOffer) ? (
@@ -580,22 +600,22 @@ export default function ProtocolResults({
                         ) : (
                           <h2 className="mt-1 font-serif text-[1.35rem] leading-snug">{treatOffer.name}</h2>
                         )}
-                        <p className="mt-1 text-sm text-[#595750]">{treatOffer.tagline}</p>
+                        <p className="mt-1 text-sm text-[#2B2727]/75">{treatOffer.tagline}</p>
                         <p className="mt-2 text-sm font-semibold">${treatOffer.price}</p>
                         {isVitaminC(treatOffer) && (
-                          <p className="mt-3 text-xs italic leading-relaxed text-[#6D6A63]">
+                          <p className="mt-3 text-xs italic leading-relaxed text-[#2B2727]/60">
                             {vitaminCChoiceNote(built.cReason)}
                           </p>
                         )}
                       </div>
                       <div className="flex shrink-0 flex-col items-end justify-center gap-2">
-                        <span className="border border-[#D6CEC3] px-2.5 py-1 text-[11px] tracking-wide text-[#6D6A63]">
+                        <span className="border border-[#D6C3C2] px-2.5 py-1 text-[11px] tracking-wide text-[#2B2727]/60">
                           {routinePeriodLabel(serumPeriod(treatOffer))}
                         </span>
                         <button
                           type="button"
                           onClick={addTreat}
-                          className="whitespace-nowrap bg-[#ab8584] px-3 py-2 text-[11px] tracking-wide text-[#F7F4EF] transition-colors hover:bg-[#9a7675]"
+                          className="whitespace-nowrap bg-[#ab8584] px-3 py-2 text-[11px] tracking-wide text-[#fffdfa] transition-colors hover:bg-[#2B2727]"
                         >
                           Add to my protocol
                         </button>
@@ -604,7 +624,7 @@ export default function ProtocolResults({
                     </div>
                     {serumOptions && (
                       <div className="ml-[4.25rem]">
-                        <SerumOptions options={serumOptions} selectedId={selectedSerumId} onSelect={chooseSerum} />
+                        <SerumOptions options={serumOptions} selectedId={selectedSerumId} onSelect={chooseSerum} cue />
                       </div>
                     )}
                   </div>
@@ -613,13 +633,13 @@ export default function ProtocolResults({
             )}
             </Fragment>
           ))}
-          <li className="flex gap-5 border border-[#D6CEC3] bg-[#EFE8DE] p-5">
+          <li className="flex gap-5 border border-[#D6C3C2] bg-[#f3eceb] p-5">
             <StepMark mark={String(PROTECT_GUIDANCE.step).padStart(2, '0')} />
             <div className="min-w-0">
               <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">{PROTECT_GUIDANCE.label}</p>
               <h2 className="mt-1 font-serif text-[1.35rem] leading-snug">Broad-spectrum SPF 30+</h2>
-              <p className="mt-1 text-sm text-[#595750]">{PROTECT_GUIDANCE.description}</p>
-              <p className="mt-1 text-sm text-[#6D6A63]">{PROTECT_GUIDANCE.note}</p>
+              <p className="mt-1 text-sm text-[#2B2727]/75">{PROTECT_GUIDANCE.description}</p>
+              <p className="mt-1 text-sm text-[#2B2727]/60">{PROTECT_GUIDANCE.note}</p>
             </div>
           </li>
         </ul>
@@ -627,13 +647,13 @@ export default function ProtocolResults({
         {weekly && (
           <div className="mt-10">
             <p className="text-[13px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">Weekly · Polish</p>
-            <div className="group mt-4 flex gap-5 border border-[#D6CEC3] bg-[#FFFDFA] p-5">
+            <div className="group mt-4 flex gap-5 border border-[#D6C3C2] bg-[#fffdfa] p-5">
               <StepMark mark="W" />
               <img src={weekly.image} alt="" className="h-24 w-20 shrink-0 object-contain" />
               <div className="min-w-0 flex-1">
                 <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">Occasional alternative cleanser</p>
                 <h2 className="mt-1 font-serif text-[1.35rem] leading-snug">{weekly.name}</h2>
-                <p className="mt-1 text-sm text-[#595750]">Use 1 to 3 times per week in place of your daily cleanser, as tolerated.</p>
+                <p className="mt-1 text-sm text-[#2B2727]/75">Use 1 to 3 times per week in place of your daily cleanser, as tolerated.</p>
                 <p className="mt-2 text-sm font-semibold">${weekly.price}</p>
               </div>
               <div className="flex shrink-0 flex-col items-end justify-center gap-2">
@@ -647,12 +667,12 @@ export default function ProtocolResults({
         {bonus && (
           <div className="mt-10">
             <p className="text-[13px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">A little extra</p>
-            <div className="mt-4 flex gap-5 border border-[#D6CEC3] bg-[#FFFDFA] p-5">
+            <div className="mt-4 flex gap-5 border border-[#D6C3C2] bg-[#fffdfa] p-5">
               <img src={bonus.image} alt="" className="h-24 w-20 shrink-0 object-contain" />
               <div className="min-w-0 flex-1">
                 <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">Bonus pick</p>
                 <h2 className="mt-1 font-serif text-[1.35rem] leading-snug">{bonus.name}</h2>
-                <p className="mt-1 text-sm text-[#595750]">
+                <p className="mt-1 text-sm text-[#2B2727]/75">
                   Because you chose “{funOption(current.funAnswer)?.label ?? ''}”.
                 </p>
                 <p className="mt-2 text-sm font-semibold">${bonus.price}</p>
@@ -668,12 +688,12 @@ export default function ProtocolResults({
         {alternative && (
           <div className="mt-10">
             <p className="text-[13px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">Also consider</p>
-            <div className="mt-4 flex gap-5 border border-[#D6CEC3] bg-[#FFFDFA] p-5">
+            <div className="mt-4 flex gap-5 border border-[#D6C3C2] bg-[#fffdfa] p-5">
               <img src={alternative.image} alt="" className="h-24 w-20 shrink-0 object-contain" />
               <div className="min-w-0 flex-1">
                 <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">Alternative serum</p>
                 <h2 className="mt-1 font-serif text-[1.35rem] leading-snug">{alternative.name}</h2>
-                <p className="mt-1 text-sm text-[#595750]">Ranked next for your answers. Use it in place of your serum, not alongside it.</p>
+                <p className="mt-1 text-sm text-[#2B2727]/75">Ranked next for your answers. Use it in place of your serum, not alongside it.</p>
                 <p className="mt-2 text-sm font-semibold">${alternative.price}</p>
               </div>
               <div className="flex shrink-0 flex-col items-end justify-center gap-2">
@@ -684,13 +704,13 @@ export default function ProtocolResults({
           </div>
         )}
 
-        <div className="mt-10 bg-[#252520] px-6 py-7 text-[#F7F4EF] md:px-8 md:py-8">
+        <div className="mt-10 bg-[#2B2727] px-6 py-7 text-[#fffdfa] md:px-8 md:py-8">
           <div className="flex items-end justify-between gap-6">
             <div>
               <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">Protocol total</p>
               <p className="mt-1 font-serif text-4xl">${total}</p>
             </div>
-            <div className="text-right text-sm text-[#F7F4EF]/50">
+            <div className="text-right text-sm text-[#fffdfa]/50">
               <p>{protocolProducts.length} products</p>
               <p>AM &amp; PM + morning SPF</p>
             </div>
@@ -699,14 +719,14 @@ export default function ProtocolResults({
             <button
               type="button"
               onClick={() => addToCart(protocolProducts.map(product => product.id))}
-              className="flex-1 bg-[#ab8584] py-3.5 text-sm text-[#F7F4EF] transition-colors hover:bg-[#9a7675]"
+              className="flex-1 bg-[#ab8584] py-3.5 text-sm text-[#fffdfa] transition-colors hover:bg-[#2B2727]"
             >
               {protocolInCart ? 'Added ✓' : 'Add Entire Protocol to Cart'}
             </button>
             <button
               type="button"
               onClick={() => setEmailOpen(true)}
-              className="flex-1 border border-[#F7F4EF]/25 py-3.5 text-sm text-[#F7F4EF] transition-colors hover:border-[#ab8584] hover:text-[#ab8584]"
+              className="flex-1 border border-[#fffdfa]/25 py-3.5 text-sm text-[#fffdfa] transition-colors hover:border-[#ab8584] hover:text-[#ab8584]"
             >
               Email My Protocol
             </button>
