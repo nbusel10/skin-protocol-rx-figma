@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { loadQuizSession } from '../../lib/quizSession'
 import SocialLinks from './SocialLinks'
 
 const NAV = [
@@ -12,11 +13,18 @@ const NAV = [
 export default function Header({ lighter = false }: { lighter?: boolean }) {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [cartCount, setCartCount] = useState(() => loadQuizSession()?.addedIds.length ?? 0)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  useEffect(() => {
+    const syncCart = () => setCartCount(loadQuizSession()?.addedIds.length ?? 0)
+    window.addEventListener('sprx-cart-updated', syncCart)
+    return () => window.removeEventListener('sprx-cart-updated', syncCart)
   }, [])
 
   function jump(id: string) {
@@ -116,12 +124,17 @@ export default function Header({ lighter = false }: { lighter?: boolean }) {
               </svg>
             </button>
 
-            <button type="button" className="relative text-charcoal/60 transition-colors hover:text-charcoal" aria-label="Cart">
+            <button type="button" className="relative text-charcoal/60 transition-colors hover:text-charcoal" aria-label={cartCount > 0 ? `Cart, ${cartCount} items` : 'Cart'}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={lighter ? 1.25 : 1.8}>
                 <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
                 <line x1="3" y1="6" x2="21" y2="6" />
                 <path d="M16 10a4 4 0 0 1-8 0" />
               </svg>
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#ab8584] px-1 text-[10px] leading-none text-white">
+                  {cartCount}
+                </span>
+              )}
             </button>
 
             <button

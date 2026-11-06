@@ -1,10 +1,12 @@
 import { Fragment, useState, type ReactNode } from 'react'
+import EmailProtocolModal from '../../components/EmailProtocolModal'
 import { getProtocolStepLabel, PROTECT_GUIDANCE, type Product } from '../../data'
 import {
   funOption,
   isEveningOnlySerum,
   isVitaminC,
   otherVitaminC,
+  REACTIVITY_OPTIONS,
   routineEntries,
   routinePeriodLabel,
   type RoutinePeriod,
@@ -40,6 +42,52 @@ function QuietLink({
       <span aria-hidden="true">↗</span>
     </button>
   )
+}
+
+function StepMark({ mark }: { mark: string }) {
+  return (
+    <div className="relative h-12 w-12 shrink-0 self-start" aria-hidden="true">
+      <svg viewBox="0 0 44 44" className="h-full w-full">
+        <circle cx="22" cy="22" r="19" fill="none" stroke="#D6CEC3" strokeWidth="1.15" />
+        <circle
+          cx="22"
+          cy="22"
+          r="19"
+          fill="none"
+          stroke="#ab8584"
+          strokeWidth="1.35"
+          strokeLinecap="round"
+          pathLength={1}
+          transform="rotate(-90 22 22)"
+          className="opacity-0 transition-[stroke-dashoffset,opacity] duration-700 ease-out [stroke-dasharray:1] [stroke-dashoffset:1.02] group-hover:opacity-100 group-hover:[stroke-dashoffset:0] group-focus-within:opacity-100 group-focus-within:[stroke-dashoffset:0] motion-reduce:transition-none motion-reduce:opacity-100 motion-reduce:[stroke-dashoffset:0]"
+        />
+      </svg>
+      <span className="absolute inset-0 flex items-center justify-center font-serif text-sm text-[#6D6A63] transition-colors duration-500 group-hover:text-[#ab8584] group-focus-within:text-[#ab8584]">
+        {mark}
+      </span>
+    </div>
+  )
+}
+
+function AddCartButton({ added, onAdd }: { added: boolean; onAdd: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={event => {
+        event.stopPropagation()
+        onAdd()
+      }}
+      aria-live="polite"
+      className={`whitespace-nowrap px-3 py-2 text-[11px] tracking-wide ${added ? 'border border-[#ab8584] bg-[#ab8584]/10 text-[#ab8584]' : 'bg-[#252520] text-[#F7F4EF]'}`}
+    >
+      {added ? 'Added ✓' : 'Add to Cart'}
+    </button>
+  )
+}
+
+function reactivityLine(value: QuizSession['reactivity']): string | undefined {
+  const option = REACTIVITY_OPTIONS.find(item => item.value === value)
+  return option ? `Stings, burns, or turns red: ${option.label.toLowerCase()}` : undefined
 }
 
 function summary(session: QuizSession): string {
@@ -127,37 +175,39 @@ function ChoiceCard({
   product,
   onSelect,
   onView,
+  onAdd,
+  added,
   title,
+  note,
 }: {
   stamp: string
   selected: boolean
   product: Product
   onSelect: () => void
   onView: (id: string) => void
+  onAdd: () => void
+  added: boolean
   title: ReactNode
+  note?: string
 }) {
   return (
     <div
       onClick={onSelect}
-      className={`flex h-full cursor-pointer flex-col border p-3 text-left ${selected ? 'border-[#ab8584] bg-[#ab8584]/10' : 'border-[#D6CEC3] bg-transparent'}`}
+      className={`flex cursor-pointer gap-5 border p-5 text-left ${selected ? 'border-[#ab8584] bg-[#ab8584]/10' : 'border-[#D6CEC3] bg-transparent'}`}
     >
-      <div className="flex gap-3">
-        <img src={product.image} alt="" className="h-20 w-16 shrink-0 object-contain" />
-        <div className="min-w-0 flex-1">
-          <span className="block text-[10px] font-semibold tracking-[0.14em] uppercase text-[#ab8584]">{stamp}</span>
-          {title}
-          <p className="mt-1 text-sm text-[#595750]">{product.tagline}</p>
-          <p className="mt-2 text-sm font-semibold">${product.price}</p>
-        </div>
+      <img src={product.image} alt="" className="h-24 w-20 shrink-0 object-contain" />
+      <div className="min-w-0 flex-1">
+        <span className="block text-[10px] font-semibold tracking-[0.14em] uppercase text-[#ab8584]">{stamp}</span>
+        {title}
+        <p className="mt-1 text-sm text-[#595750]">{product.tagline}</p>
+        <p className="mt-2 text-sm font-semibold">${product.price}</p>
+        {note ? <p className="mt-3 text-xs italic leading-relaxed text-[#6D6A63]">{note}</p> : null}
       </div>
-      <div className="mt-auto flex items-end justify-between gap-2 pt-3">
-        {selected ? (
-          <span className="border border-[#D6CEC3] px-2.5 py-1 text-[11px] tracking-wide text-[#6D6A63]">
-            {routinePeriodLabel(serumPeriod(product))}
-          </span>
-        ) : (
-          <span />
-        )}
+      <div className="flex shrink-0 flex-col items-end gap-3">
+        <span className="border border-[#D6CEC3] px-2.5 py-1 text-[11px] tracking-wide text-[#6D6A63]">
+          {routinePeriodLabel(serumPeriod(product))}
+        </span>
+        <AddCartButton added={added} onAdd={onAdd} />
         <QuietLink onClick={() => onView(product.id)}>View</QuietLink>
       </div>
     </div>
@@ -175,6 +225,8 @@ function VitaminCStep({
   onSelectAlternative,
   onSelectRecommended,
   onView,
+  onAdd,
+  addedIds,
 }: {
   recommended: Product
   alternative: Product
@@ -186,6 +238,8 @@ function VitaminCStep({
   onSelectAlternative: () => void
   onSelectRecommended: () => void
   onView: (id: string) => void
+  onAdd: (id: string) => void
+  addedIds: string[]
 }) {
   const recommendedIsC = isVitaminC(recommended)
   const vitaminC = shownProduct(recommendedIsC ? recommended : alternative, strengthId)
@@ -210,7 +264,10 @@ function VitaminCStep({
       product={vitaminC}
       onSelect={recommendedIsC ? onSelectRecommended : onSelectAlternative}
       onView={onView}
+      onAdd={() => onAdd(vitaminC.id)}
+      added={addedIds.includes(vitaminC.id)}
       title={title}
+      note={vitaminCChoiceNote(reason)}
     />
   )
   const otherCard = (
@@ -220,25 +277,35 @@ function VitaminCStep({
       product={other}
       onSelect={recommendedIsC ? onSelectAlternative : onSelectRecommended}
       onView={onView}
+      onAdd={() => onAdd(other.id)}
+      added={addedIds.includes(other.id)}
       title={<h2 className="mt-1 font-serif text-[1.15rem] leading-snug">{other.name}</h2>}
     />
   )
 
-  return (
+  const choices = (
     <>
-      <p className="mb-3 text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">
-        {getProtocolStepLabel(recommended.protocolStep)}
-      </p>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3">
         {recommendedIsC ? vitaminCard : otherCard}
         {recommendedIsC ? otherCard : vitaminCard}
       </div>
-      <p className="mt-3 text-xs leading-relaxed text-[#6D6A63]">
-        {vitaminCSelected
-          ? vitaminCChoiceNote(reason)
-          : 'These two rank first for your answers. Choose the one you want in this step.'}
-      </p>
+      {vitaminCSelected ? null : (
+        <p className="mt-3 text-xs leading-relaxed text-[#6D6A63]">
+          These two treatments ranked 1st based on your answers. Choose either one for this step.
+        </p>
+      )}
     </>
+  )
+  return (
+    <div className="flex gap-5">
+      <StepMark mark={String(recommended.protocolStep).padStart(2, '0')} />
+      <div className="min-w-0 flex-1">
+        <p className="mb-3 text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">
+          {getProtocolStepLabel(recommended.protocolStep)}
+        </p>
+        {choices}
+      </div>
+    </div>
   )
 }
 
@@ -273,7 +340,7 @@ function SerumOptions({
         })}
       </div>
       <p className="mt-2 text-xs leading-relaxed text-[#6D6A63]">
-        These two rank first for your answers. Choose the one you want in this step.
+        These two treatments ranked 1st based on your answers. Choose either one for this step.
       </p>
     </div>
   )
@@ -287,6 +354,7 @@ export default function ProtocolResults({
   onStartOver: () => void
 }) {
   const [session, setSession] = useState(loadQuizSession)
+  const [emailOpen, setEmailOpen] = useState(false)
   const built = session?.done ? protocolFromSession(session) : null
   if (!session || !built) return null
 
@@ -344,11 +412,43 @@ export default function ProtocolResults({
     setSession(next)
   }
 
+  function toggleTreat() {
+    const next = { ...current, treatOpen: !current.treatOpen }
+    saveQuizSession(next)
+    setSession(next)
+  }
+
   function addTreat() {
     const next = { ...current, treatAdded: true, treatOpen: false }
     saveQuizSession(next)
     setSession(next)
   }
+
+  function removeTreat() {
+    const drop = new Set<string>()
+    for (const product of [step3, runnerUp]) {
+      if (!product) continue
+      drop.add(product.id)
+      if (isVitaminC(product)) drop.add(otherVitaminC(product).id)
+    }
+    const addedIds = current.addedIds.filter(id => !drop.has(id))
+    const next = { ...current, treatAdded: false, treatOpen: true, addedIds }
+    saveQuizSession(next)
+    setSession(next)
+    if (addedIds.length !== current.addedIds.length) window.dispatchEvent(new Event('sprx-cart-updated'))
+  }
+
+  function addToCart(ids: string[]) {
+    const fresh = ids.filter(id => !current.addedIds.includes(id))
+    if (!fresh.length) return
+    const next = { ...current, addedIds: [...current.addedIds, ...fresh] }
+    saveQuizSession(next)
+    setSession(next)
+    window.dispatchEvent(new Event('sprx-cart-updated'))
+  }
+
+  const protocolProducts = [...entries.map(entry => entry.product), ...(weekly ? [weekly] : [])]
+  const protocolInCart = protocolProducts.every(product => current.addedIds.includes(product.id))
 
   return (
     <article className="bg-[#F7F4EF] px-6 py-16 text-[#252520] md:px-[max(36px,8vw)] md:py-[75px]">
@@ -373,8 +473,8 @@ export default function ProtocolResults({
         <ul className="mt-4 space-y-4">
           {entries.map(({ product, period }) => (
             <Fragment key={product.id}>
-            <li className="border border-[#D6CEC3] bg-[#FFFDFA] p-5">
-              {product.protocolStep === 3 && activePair && pairIncludesC ? (
+            <li className="group border border-[#D6CEC3] bg-[#FFFDFA] p-5">
+              {product.protocolStep === 3 && activePair && pairIncludesC && !current.treatAdded ? (
                 <VitaminCStep
                   recommended={activePair.recommended}
                   alternative={shownProduct(activePair.alternative, choiceId)}
@@ -386,10 +486,13 @@ export default function ProtocolResults({
                   onSelectAlternative={() => chooseSerum(activePair.alternative.id)}
                   onSelectRecommended={() => chooseSerum(activePair.recommended.id)}
                   onView={onViewProduct}
+                  onAdd={id => addToCart([id])}
+                  addedIds={current.addedIds}
                 />
               ) : (
                 <>
                   <div className="flex gap-5">
+                    <StepMark mark={String(product.protocolStep).padStart(2, '0')} />
                     <img src={product.image} alt="" className="h-24 w-20 shrink-0 object-contain" />
                     <div className="min-w-0 flex-1">
                       <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">
@@ -400,6 +503,7 @@ export default function ProtocolResults({
                           strengthId={product.id}
                           recommendedId={built.cRecommendedId}
                           active
+                          compact={Boolean(serumOptions)}
                           onSelect={chooseVitaminC}
                         />
                       ) : (
@@ -407,82 +511,124 @@ export default function ProtocolResults({
                       )}
                       <p className="mt-1 text-sm text-[#595750]">{product.tagline}</p>
                       <p className="mt-2 text-sm font-semibold">${product.price}</p>
+                      {isVitaminC(product) && (
+                        <p className="mt-3 text-xs italic leading-relaxed text-[#6D6A63]">
+                          {vitaminCChoiceNote(built.cReason)}
+                        </p>
+                      )}
                     </div>
-                    <div className="flex shrink-0 flex-col items-end justify-between gap-3">
+                    <div className={`flex shrink-0 flex-col items-end gap-3 ${isVitaminC(product) ? '' : 'justify-between'}`}>
                       <span className="border border-[#D6CEC3] px-2.5 py-1 text-[11px] tracking-wide text-[#6D6A63]">
                         {routinePeriodLabel(period)}
                       </span>
+                      <AddCartButton added={current.addedIds.includes(product.id)} onAdd={() => addToCart([product.id])} />
                       <QuietLink onClick={() => onViewProduct(product.id)}>View</QuietLink>
                     </div>
                   </div>
-                  {isVitaminC(product) && (
-                    <p className="mt-3 text-xs leading-relaxed text-[#6D6A63]">
-                      {vitaminCChoiceNote(built.cReason)}
-                    </p>
-                  )}
                   {serumOptions && product.protocolStep === 3 && (
                     <SerumOptions options={serumOptions} selectedId={selectedSerumId} onSelect={chooseSerum} />
                   )}
                 </>
               )}
+              {product.protocolStep === 3 && current.treatAdded && (
+                <div className="mt-4 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={removeTreat}
+                    className="text-[13px] text-[#6D6A63] transition-colors duration-200 hover:text-[#ab8584]"
+                  >
+                    Remove from my protocol
+                  </button>
+                </div>
+              )}
             </li>
-            {treatOffer && product.protocolStep === 2 && activePair && (
-              <li className="border border-dashed border-[#ab8584]/50 bg-[#FFFDFA] p-5">
-                {pairIncludesC ? (
-                  <VitaminCStep
-                    recommended={activePair.recommended}
-                    alternative={shownProduct(activePair.alternative, choiceId)}
-                    strengthId={choiceId || built.cRecommendedId}
-                    recommendedStrengthId={built.cRecommendedId}
-                    usingAlternative={usingAlternative}
-                    reason={built.cReason}
-                    onStrength={chooseVitaminC}
-                    onSelectAlternative={() => chooseSerum(activePair.alternative.id)}
-                    onSelectRecommended={() => chooseSerum(activePair.recommended.id)}
-                    onView={onViewProduct}
-                  />
-                ) : (
-                  <>
-                    <div className="flex gap-5">
-                      <img src={treatOffer.image} alt="" className="h-24 w-20 shrink-0 object-contain" />
-                      <div className="min-w-0 flex-1">
-                        <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">
-                          {getProtocolStepLabel(treatOffer.protocolStep)}
-                        </p>
-                        <h2 className="mt-1 font-serif text-[1.35rem] leading-snug">{treatOffer.name}</h2>
-                        <p className="mt-1 text-sm text-[#595750]">Add a personalized serum</p>
-                        <p className="mt-2 text-sm font-semibold">${treatOffer.price}</p>
-                      </div>
-                      <QuietLink onClick={() => onViewProduct(treatOffer.id)} className="self-center">View</QuietLink>
-                    </div>
-                    {serumOptions && (
-                      <SerumOptions options={serumOptions} selectedId={selectedSerumId} onSelect={chooseSerum} />
-                    )}
-                  </>
-                )}
+            {treatOffer && product.protocolStep === 2 && (
+              <li className="group border border-dashed border-[#D6CEC3] bg-[#FFFDFA] transition-colors hover:border-[#ab8584]">
                 <button
                   type="button"
-                  onClick={addTreat}
-                  className="mt-4 bg-[#252520] px-3 py-2 text-[12px] text-[#F7F4EF]"
+                  onClick={toggleTreat}
+                  aria-expanded={current.treatOpen}
+                  className="flex w-full items-center gap-5 px-5 py-3 text-left"
                 >
-                  Add to my protocol
+                  <StepMark mark={String(treatOffer.protocolStep).padStart(2, '0')} />
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">
+                      {getProtocolStepLabel(treatOffer.protocolStep)}
+                    </span>
+                    <span className="mt-0.5 block text-sm text-[#6D6A63]">Add a personalized serum</span>
+                  </span>
+                  <span className="shrink-0 text-xl leading-none text-[#6D6A63]" aria-hidden="true">{current.treatOpen ? '−' : '+'}</span>
+                  <span className="sr-only">{current.treatOpen ? 'Hide optional serum' : 'Show optional serum'}</span>
                 </button>
+                {current.treatOpen && (
+                  <div className="px-5 pb-5">
+                    <div className="flex gap-5">
+                      <div className="w-12 shrink-0" aria-hidden="true" />
+                      <img src={treatOffer.image} alt="" className="h-24 w-20 shrink-0 object-contain" />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[10px] font-semibold tracking-[0.16em] uppercase text-[#6D6A63]">
+                          {treatOffer.categories[0]}
+                        </p>
+                        {isVitaminC(treatOffer) ? (
+                          <VitaminCTitle
+                            strengthId={treatOffer.id}
+                            recommendedId={built.cRecommendedId}
+                            active={!usingAlternative}
+                            compact
+                            onSelect={chooseVitaminC}
+                          />
+                        ) : (
+                          <h2 className="mt-1 font-serif text-[1.35rem] leading-snug">{treatOffer.name}</h2>
+                        )}
+                        <p className="mt-1 text-sm text-[#595750]">{treatOffer.tagline}</p>
+                        <p className="mt-2 text-sm font-semibold">${treatOffer.price}</p>
+                        {isVitaminC(treatOffer) && (
+                          <p className="mt-3 text-xs italic leading-relaxed text-[#6D6A63]">
+                            {vitaminCChoiceNote(built.cReason)}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex shrink-0 flex-col items-end justify-center gap-2">
+                        <span className="border border-[#D6CEC3] px-2.5 py-1 text-[11px] tracking-wide text-[#6D6A63]">
+                          {routinePeriodLabel(serumPeriod(treatOffer))}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={addTreat}
+                          className="whitespace-nowrap bg-[#ab8584] px-3 py-2 text-[11px] tracking-wide text-[#F7F4EF] transition-colors hover:bg-[#9a7675]"
+                        >
+                          Add to my protocol
+                        </button>
+                        <QuietLink onClick={() => onViewProduct(treatOffer.id)}>View</QuietLink>
+                      </div>
+                    </div>
+                    {serumOptions && (
+                      <div className="ml-[4.25rem]">
+                        <SerumOptions options={serumOptions} selectedId={selectedSerumId} onSelect={chooseSerum} />
+                      </div>
+                    )}
+                  </div>
+                )}
               </li>
             )}
             </Fragment>
           ))}
-          <li className="border border-[#D6CEC3] bg-[#FFFDFA] p-5">
-            <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">{PROTECT_GUIDANCE.label}</p>
-            <h2 className="mt-1 font-serif text-[1.35rem] leading-snug">Broad-spectrum SPF 30+</h2>
-            <p className="mt-1 text-sm text-[#595750]">{PROTECT_GUIDANCE.description}</p>
-            <p className="mt-1 text-sm text-[#6D6A63]">{PROTECT_GUIDANCE.note}</p>
+          <li className="flex gap-5 border border-[#D6CEC3] bg-[#EFE8DE] p-5">
+            <StepMark mark={String(PROTECT_GUIDANCE.step).padStart(2, '0')} />
+            <div className="min-w-0">
+              <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">{PROTECT_GUIDANCE.label}</p>
+              <h2 className="mt-1 font-serif text-[1.35rem] leading-snug">Broad-spectrum SPF 30+</h2>
+              <p className="mt-1 text-sm text-[#595750]">{PROTECT_GUIDANCE.description}</p>
+              <p className="mt-1 text-sm text-[#6D6A63]">{PROTECT_GUIDANCE.note}</p>
+            </div>
           </li>
         </ul>
 
         {weekly && (
           <div className="mt-10">
             <p className="text-[13px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">Weekly · Polish</p>
-            <div className="mt-4 flex gap-5 border border-[#D6CEC3] bg-[#FFFDFA] p-5">
+            <div className="group mt-4 flex gap-5 border border-[#D6CEC3] bg-[#FFFDFA] p-5">
+              <StepMark mark="W" />
               <img src={weekly.image} alt="" className="h-24 w-20 shrink-0 object-contain" />
               <div className="min-w-0 flex-1">
                 <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">Occasional alternative cleanser</p>
@@ -490,7 +636,10 @@ export default function ProtocolResults({
                 <p className="mt-1 text-sm text-[#595750]">Use 1 to 3 times per week in place of your daily cleanser, as tolerated.</p>
                 <p className="mt-2 text-sm font-semibold">${weekly.price}</p>
               </div>
-              <QuietLink onClick={() => onViewProduct(weekly.id)} className="self-center">View</QuietLink>
+              <div className="flex shrink-0 flex-col items-end justify-center gap-2">
+                <AddCartButton added={current.addedIds.includes(weekly.id)} onAdd={() => addToCart([weekly.id])} />
+                <QuietLink onClick={() => onViewProduct(weekly.id)}>View</QuietLink>
+              </div>
             </div>
           </div>
         )}
@@ -508,7 +657,10 @@ export default function ProtocolResults({
                 </p>
                 <p className="mt-2 text-sm font-semibold">${bonus.price}</p>
               </div>
-              <QuietLink onClick={() => onViewProduct(bonus.id)} className="self-center">View</QuietLink>
+              <div className="flex shrink-0 flex-col items-end justify-center gap-2">
+                <AddCartButton added={current.addedIds.includes(bonus.id)} onAdd={() => addToCart([bonus.id])} />
+                <QuietLink onClick={() => onViewProduct(bonus.id)}>View</QuietLink>
+              </div>
             </div>
           </div>
         )}
@@ -524,18 +676,74 @@ export default function ProtocolResults({
                 <p className="mt-1 text-sm text-[#595750]">Ranked next for your answers. Use it in place of your serum, not alongside it.</p>
                 <p className="mt-2 text-sm font-semibold">${alternative.price}</p>
               </div>
-              <QuietLink onClick={() => onViewProduct(alternative.id)} className="self-center">View</QuietLink>
+              <div className="flex shrink-0 flex-col items-end justify-center gap-2">
+                <AddCartButton added={current.addedIds.includes(alternative.id)} onAdd={() => addToCart([alternative.id])} />
+                <QuietLink onClick={() => onViewProduct(alternative.id)}>View</QuietLink>
+              </div>
             </div>
           </div>
         )}
 
-        <div className="mt-10 flex items-end justify-between bg-[#252520] px-6 py-7 text-[#F7F4EF]">
-          <div>
-            <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">Protocol total</p>
-            <p className="mt-1 font-serif text-4xl">${total}</p>
+        <div className="mt-10 bg-[#252520] px-6 py-7 text-[#F7F4EF] md:px-8 md:py-8">
+          <div className="flex items-end justify-between gap-6">
+            <div>
+              <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">Protocol total</p>
+              <p className="mt-1 font-serif text-4xl">${total}</p>
+            </div>
+            <div className="text-right text-sm text-[#F7F4EF]/50">
+              <p>{protocolProducts.length} products</p>
+              <p>AM &amp; PM + morning SPF</p>
+            </div>
           </div>
-          <p className="text-sm text-[#F7F4EF]/70">{entries.length} products · AM & PM</p>
+          <div className="mt-6 flex flex-col gap-4 sm:flex-row">
+            <button
+              type="button"
+              onClick={() => addToCart(protocolProducts.map(product => product.id))}
+              className="flex-1 bg-[#ab8584] py-3.5 text-sm text-[#F7F4EF] transition-colors hover:bg-[#9a7675]"
+            >
+              {protocolInCart ? 'Added ✓' : 'Add Entire Protocol to Cart'}
+            </button>
+            <button
+              type="button"
+              onClick={() => setEmailOpen(true)}
+              className="flex-1 border border-[#F7F4EF]/25 py-3.5 text-sm text-[#F7F4EF] transition-colors hover:border-[#ab8584] hover:text-[#ab8584]"
+            >
+              Email My Protocol
+            </button>
+          </div>
         </div>
+        <EmailProtocolModal
+          isOpen={emailOpen}
+          onClose={() => setEmailOpen(false)}
+          protocol={{
+            skinType: current.skinType,
+            concerns: current.concerns.length ? current.concerns : ['No specific concerns'],
+            skinRightNow: reactivityLine(current.reactivity),
+            note: built.tonerOmitted
+              ? built.tonerSwap
+                ? `Because your skin often stings or turns red, we swapped the toner for ${built.tonerSwap.name}, a calming serum, and left out exfoliating products.`
+                : 'Because your skin often stings or turns red, we left out the toner and exfoliating products to keep your routine gentle.'
+              : undefined,
+            products: [
+              ...entries.map(({ product, period }) => ({
+                name: product.name,
+                price: `$${product.price}`,
+                step: product.protocolStep,
+                period,
+              })),
+              {
+                name: 'Broad-spectrum SPF 30+',
+                price: 'Purchased separately',
+                step: PROTECT_GUIDANCE.step,
+                period: 'am' as const,
+              },
+              ...(weekly
+                ? [{ name: weekly.name, price: `$${weekly.price}`, step: 'W', period: 'weekly' as const }]
+                : []),
+            ],
+            totalPrice: `$${total}`,
+          }}
+        />
 
         <div className="mt-8 text-center">
           <QuietLink onClick={onStartOver}>Start over</QuietLink>

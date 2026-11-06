@@ -98,6 +98,7 @@ export function useProtocolQuizResults(quizId: string) {
 
   function startOver() {
     clearQuizSession()
+    window.dispatchEvent(new Event('sprx-cart-updated'))
     scrollQuiz.current = true
     if (historyRecord()[RESULTS_FLAG]) {
       window.history.back()
