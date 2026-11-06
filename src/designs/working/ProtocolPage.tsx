@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { PRODUCTS } from '../../data'
 import { PROTOCOL_SECTION } from '../protocolSectionContent'
-import { loadQuizSession, clearQuizSession, protocolFromSession } from '../../lib/quizSession'
 import ProtocolHero from './ProtocolHero'
 import ProtocolQuizSection from './ProtocolQuizSection'
 import ProtocolResults from './ProtocolResults'
+import { useProtocolQuizResults } from './useProtocolQuizResults'
 
 const HOW_IT_WORKS = [
   {
@@ -208,19 +208,13 @@ function ProtocolPayoff({ onViewProduct }: { onViewProduct: (productId: string) 
 }
 
 export default function ProtocolPage({ onViewProduct }: { onViewProduct: (productId: string) => void }) {
-  const [showResults, setShowResults] = useState(() => {
-    const saved = loadQuizSession()
-    return Boolean(saved?.done && protocolFromSession(saved))
-  })
+  const { showResults, revealResults, startOver } = useProtocolQuizResults('protocol')
 
   if (showResults) {
     return (
       <ProtocolResults
         onViewProduct={onViewProduct}
-        onStartOver={() => {
-          clearQuizSession()
-          setShowResults(false)
-        }}
+        onStartOver={startOver}
       />
     )
   }
@@ -229,7 +223,7 @@ export default function ProtocolPage({ onViewProduct }: { onViewProduct: (produc
     <article className="bg-[#F7F4EF] font-sans text-[#252520]">
       <ProtocolHero />
       <ProtocolFacts />
-      <ProtocolQuizSection refined onComplete={() => setShowResults(true)} />
+      <ProtocolQuizSection refined onComplete={revealResults} />
       <ProtocolPayoff onViewProduct={onViewProduct} />
     </article>
   )

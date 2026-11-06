@@ -26,7 +26,7 @@ export default function Header({ lighter = false }: { lighter?: boolean }) {
       if (here !== '/designs/working/protocol') {
         window.location.assign('/designs/working/protocol')
       } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' })
+        window.dispatchEvent(new Event('sprx-open-protocol-page'))
       }
       return
     }

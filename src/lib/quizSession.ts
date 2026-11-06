@@ -38,6 +38,8 @@ export type QuizSession = {
   funQuestionId: FunQuestionId
   done: boolean
   cChoiceId: string
+  /** Working-design results: serum the visitor picked when a runner-up was offered. */
+  serumChoiceId?: string
   addedIds: string[]
   treatAdded: boolean
   treatOpen: boolean
@@ -76,6 +78,7 @@ function isQuizSession(value: unknown): value is QuizSession {
   if (!isFunQuestionId(session.funQuestionId)) return false
   if (typeof session.done !== 'boolean') return false
   if (typeof session.cChoiceId !== 'string') return false
+  if (session.serumChoiceId != null && typeof session.serumChoiceId !== 'string') return false
   if (!Array.isArray(session.addedIds) || session.addedIds.some(id => typeof id !== 'string')) return false
   if (typeof session.treatAdded !== 'boolean' || typeof session.treatOpen !== 'boolean') return false
   if (session.skinUnsure != null && typeof session.skinUnsure !== 'boolean') return false

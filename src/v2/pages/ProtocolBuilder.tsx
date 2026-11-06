@@ -6,6 +6,7 @@ import {
   isEveningOnlySerum,
   isVitaminC,
   otherVitaminC,
+  vitaminCChoiceNote,
   vitaminCPair,
   vitaminCReason,
   recommendedVitaminCId,
@@ -159,7 +160,7 @@ function VitaminCChoice({
           )
         })}
       </div>
-      <p className="mt-2 text-xs text-charcoal/50">{reason} You can choose the other strength if you prefer.</p>
+      <p className="mt-2 text-xs text-charcoal/50">{vitaminCChoiceNote(reason)}</p>
     </div>
   )
 }

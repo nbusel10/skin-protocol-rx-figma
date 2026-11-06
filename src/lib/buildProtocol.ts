@@ -258,11 +258,19 @@ export function recommendedVitaminCId(answers: Pick<ProtocolAnswers, 'concerns' 
   return answers.concerns.includes('Acne') || isReactive(answers) ? IDS.c5 : IDS.c20
 }
 
+const ACNE_STRENGTH_NOTE = 'Gentler strength is recommended for acne-prone skin, but you may choose stronger if preferred.'
+
 /** One line explaining why the recommended vitamin C strength was chosen. */
 export function vitaminCReason(answers: Pick<ProtocolAnswers, 'concerns' | 'reactivity'>): string {
   if (isReactive(answers)) return 'Gentler for skin that reacts sometimes or often.'
-  if (answers.concerns.includes('Acne')) return 'Gentler strength for acne-prone skin.'
+  if (answers.concerns.includes('Acne')) return ACNE_STRENGTH_NOTE
   return 'Full strength for visible brightening, since your skin rarely reacts.'
+}
+
+/** Reason plus the strength-choice line, without repeating it for the acne note. */
+export function vitaminCChoiceNote(reason: string): string {
+  if (reason === ACNE_STRENGTH_NOTE) return reason
+  return `${reason} You can choose the other strength if you prefer.`
 }
 
 export function isVitaminC(product: Product): boolean {

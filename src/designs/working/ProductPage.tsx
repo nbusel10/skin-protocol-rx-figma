@@ -10,10 +10,6 @@ export default function ProductPage({
   const product = PRODUCTS.find(item => item.id === productId)
 
   function goBack() {
-    if (window.history.length > 1) {
-      window.history.back()
-      return
-    }
     onBack()
   }
 

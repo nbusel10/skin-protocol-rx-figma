@@ -46,6 +46,7 @@ import OutcomesDecorationPreview from './designs/working/OutcomesDecorationPrevi
 import WorkingProductPage from './designs/working/ProductPage'
 import { isDesignId, type DesignId, type DesignPage, type GalleryTarget } from './designs/shared'
 import { PRODUCTS } from './data'
+import { loadQuizSession, protocolFromSession } from './lib/quizSession'
 
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 type Version = 'v1' | 'v2'
@@ -475,7 +476,12 @@ export default function App() {
 
   const openWorkingProtocol = useCallback(() => {
     scrollToTop()
-    applyRoute(route('home', { design: 'working', designPage: 'home', preview: 'protocol', version: 'v2' }), 'push')
+    applyRoute(route('home', { design: 'working', designPage: 'home', preview: 'protocol', version: 'v2' }), 'replace')
+    const saved = loadQuizSession()
+    if (!saved?.done || !protocolFromSession(saved)) return
+    const current = window.history.state as unknown
+    const base = current && typeof current === 'object' ? current as Record<string, unknown> : {}
+    window.history.replaceState({ ...base, sprxProtocolResults: true }, '')
   }, [applyRoute])
 
   const navigateDesign = useCallback((nextPage: DesignPage, id?: string) => {
