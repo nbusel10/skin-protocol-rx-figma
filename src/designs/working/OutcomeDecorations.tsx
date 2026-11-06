@@ -119,14 +119,57 @@ const ASCENT = [
   { height: 100, opacity: 0.56 },
 ]
 
+const ASCENT_DRAW_MS = 700
+const ASCENT_STAGGER_MS = 180
+
 function AscentDecoration() {
+  const rootRef = useRef<HTMLDivElement>(null)
+  const [playing, setPlaying] = useState(false)
+
+  useEffect(() => {
+    const node = rootRef.current
+    if (!node) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setPlaying(true)
+      return
+    }
+
+    let waiting = true
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && waiting) {
+          waiting = false
+          setPlaying(true)
+          return
+        }
+        if (!entry.isIntersecting && entry.intersectionRatio === 0) {
+          waiting = true
+          setPlaying(false)
+        }
+      },
+      { threshold: [0, 0.45] },
+    )
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [])
+
   return (
-    <div aria-hidden="true" className="pointer-events-none flex h-[128px] w-full items-end justify-between px-[2%] min-[900px]:h-[200px]">
-      {ASCENT.map(stroke => (
+    <div
+      ref={rootRef}
+      aria-hidden="true"
+      className="pointer-events-none flex h-[128px] w-full items-end justify-between px-[2%] min-[900px]:h-[200px]"
+    >
+      {ASCENT.map((stroke, index) => (
         <span
           key={stroke.height}
           className="w-px bg-[#ab8584]"
-          style={{ height: `${stroke.height}%`, opacity: stroke.opacity }}
+          style={{
+            height: playing ? `${stroke.height}%` : '0%',
+            opacity: stroke.opacity,
+            transition: playing
+              ? `height ${ASCENT_DRAW_MS}ms linear ${index * ASCENT_STAGGER_MS}ms`
+              : 'none',
+          }}
         />
       ))}
     </div>
