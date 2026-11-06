@@ -50,8 +50,8 @@ const optionBtn = (selected: boolean, lighter = false, refined = false) =>
       ? [
           'border px-4 py-4 text-left text-[14px] leading-snug transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ab8584]',
           selected
-            ? 'border-[#ab8584] bg-[#F6F1EB] text-[#252520]'
-            : 'border-[#E4DDD4] bg-transparent text-[#252520] hover:border-[#C4A8A6]',
+            ? 'border-[#ab8584] bg-[#f3eceb] text-[#2B2727]'
+            : 'border-[#D6C3C2] bg-transparent text-[#2B2727] hover:border-[#ab8584]',
         ].join(' ')
       : [
           'border px-3 py-3.5 text-[13px] transition-colors',
@@ -144,7 +144,7 @@ export default function ProtocolQuizSection({
     : 'mb-7 font-serif text-[clamp(1.45rem,2.6vw,1.85rem)] font-normal leading-snug tracking-[-0.01em]'
 
   return (
-    <section id={id} className={`scroll-mt-28 py-16 text-[#252520] md:py-[75px] ${lighter ? 'overflow-visible' : 'overflow-hidden bg-[#f5f0eb]'}`}>
+    <section id={id} className={`scroll-mt-28 py-16 md:py-[75px] ${lighter ? 'overflow-visible text-[#252520]' : 'overflow-hidden bg-[#f5f0eb] text-[#2B2727]'}`}>
       <div className={`grid grid-cols-1 items-stretch min-[681px]:gap-0 ${refined ? 'gap-10 min-[681px]:grid-cols-[42%_58%]' : 'gap-12 min-[681px]:grid-cols-[48%_52%]'}`}>
         {/* Left — copy + product image (same inset / title scale as philosophy) */}
         <div className="flex flex-col px-6 min-[681px]:pl-[max(36px,8vw)] min-[681px]:pr-[8%]">
@@ -156,7 +156,7 @@ export default function ProtocolQuizSection({
             <br />
             <em className="italic text-[#ab8584]">Let&apos;s get to know it.</em>
           </h2>
-          <p className={`max-w-[540px] text-[17px] leading-relaxed text-[#595750] ${refined ? 'mb-8 md:mb-10' : 'mb-10'}`}>
+          <p className={`max-w-[540px] text-[17px] leading-relaxed ${refined ? 'mb-8 text-[#2B2727]/75 md:mb-10' : 'mb-10 text-[#595750]'}`}>
             {refined
               ? "Tell us a little about your skin, your concerns, and your goals. We'll help you discover a thoughtful routine built around what matters to you."
               : 'A few thoughtful questions help you begin with the essentials and find the right place for extra care. Think of it as a conversation about your skin — not another complicated beauty routine.'}
@@ -188,7 +188,7 @@ export default function ProtocolQuizSection({
               <>
                 <SunbeamMatGlow intensity="soft" />
                 <div className="relative z-[1] aspect-[4/3]">
-                  <OffsetFrame />
+                  <OffsetFrame borderClassName={refined ? 'border-[#D6C3C2]' : undefined} />
                   <div className="relative z-[1] h-full overflow-hidden">
                     <img
                       src="/find-your-routine.jpg"
@@ -211,24 +211,24 @@ export default function ProtocolQuizSection({
                 <div className="absolute inset-[9%] origin-center animate-[spin_18s_linear_infinite] rounded-full border border-dashed border-[#C4A8A6] motion-reduce:animate-none" />
               </div>
             ) : null}
-            <div className={`relative z-[1] ${refined ? 'border border-[#E6DFD6] bg-[#FFFDFA] px-7 py-9 md:px-11 md:py-12' : lighter ? 'bg-[#2B2727] p-7 text-[#F7F4EF] md:p-10' : 'border border-[#D6CEC3] bg-[#FFFDFA] p-7 md:p-10'}`}>
+            <div className={`relative z-[1] ${refined ? 'border border-[#D6C3C2] bg-[#fffdfa] px-7 py-9 md:px-11 md:py-12' : lighter ? 'bg-[#2B2727] p-7 text-[#F7F4EF] md:p-10' : 'border border-[#D6CEC3] bg-[#FFFDFA] p-7 md:p-10'}`}>
             {lighter ? (
               <h3 className="mb-6 font-serif text-[1.35rem] font-normal leading-snug tracking-[-0.01em]">
                 Discover your protocol
               </h3>
             ) : null}
             <div className="mb-3 flex items-center justify-between gap-4">
-              <p className={`text-[10px] font-semibold uppercase tracking-[0.2em] ${lighter ? 'text-[#F7F4EF]/70' : 'text-[#6D6A63]'}`}>
+              <p className={`text-[10px] font-semibold uppercase tracking-[0.2em] ${lighter ? 'text-[#F7F4EF]/70' : refined ? 'text-[#2B2727]/60' : 'text-[#6D6A63]'}`}>
                 {refined
                   ? `Question ${String(step + 1).padStart(2, '0')} of ${String(TOTAL_STEPS).padStart(2, '0')}`
                   : `Question ${step + 1} of ${TOTAL_STEPS}`}
               </p>
-              <p className={`text-[10px] font-semibold uppercase tracking-[0.2em] ${lighter ? 'text-[#F7F4EF]/70' : 'text-[#6D6A63]'}`}>
+              <p className={`text-[10px] font-semibold uppercase tracking-[0.2em] ${lighter ? 'text-[#F7F4EF]/70' : refined ? 'text-[#2B2727]/60' : 'text-[#6D6A63]'}`}>
                 About 1 minute
               </p>
             </div>
 
-            <div className={`${refined ? 'mb-10' : 'mb-8'} h-[2px] w-full overflow-hidden ${lighter ? 'bg-white/15' : refined ? 'bg-[#C4A8A6]/70' : 'bg-[#E8E0D6]'}`}>
+            <div className={`${refined ? 'mb-10' : 'mb-8'} h-[2px] w-full overflow-hidden ${lighter ? 'bg-white/15' : refined ? 'bg-[#D6C3C2]' : 'bg-[#E8E0D6]'}`}>
               <div
                 className="h-full bg-[#ab8584] transition-all duration-500 ease-out"
                 style={{ width: `${progress * 100}%` }}
@@ -282,7 +282,7 @@ export default function ProtocolQuizSection({
                 <h3 className={refined ? 'mb-3 font-serif text-[clamp(1.7rem,2.8vw,2.15rem)] font-normal leading-snug tracking-[-0.02em]' : 'mb-3 font-serif text-[clamp(1.45rem,2.6vw,1.85rem)] font-normal leading-snug tracking-[-0.01em]'}>
                   What are your top skin concerns?
                 </h3>
-                <p className={`mb-7 text-[13px] leading-relaxed ${lighter ? 'text-[#F7F4EF]/70' : 'text-[#6D6A63]'}`}>Select all that apply</p>
+                <p className={`mb-7 text-[13px] leading-relaxed ${lighter ? 'text-[#F7F4EF]/70' : refined ? 'text-[#2B2727]/60' : 'text-[#6D6A63]'}`}>Select all that apply</p>
                 <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                   {QUIZ_CONCERNS.map(c => (
                     <button
@@ -319,7 +319,7 @@ export default function ProtocolQuizSection({
                       className={`${optionBtn(stepsPreference === option.value, lighter, refined)} text-left`}
                     >
                       <span className="block">{option.label}</span>
-                      <span className={`mt-1 block text-[12px] leading-snug ${lighter ? 'text-[#F7F4EF]/70' : 'text-[#6D6A63]'}`}>
+                      <span className={`mt-1 block text-[12px] leading-snug ${lighter ? 'text-[#F7F4EF]/70' : refined ? 'text-[#2B2727]/60' : 'text-[#6D6A63]'}`}>
                         {option.desc}
                       </span>
                     </button>
@@ -355,7 +355,7 @@ export default function ProtocolQuizSection({
                 type="button"
                 onClick={() => setStep(s => Math.max(0, s - 1))}
                 disabled={step === 0}
-                className={`text-[13px] transition-opacity disabled:opacity-30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ab8584] ${lighter ? 'text-[#F7F4EF]/70 hover:text-[#F7F4EF]' : 'text-[#6D6A63] hover:text-[#252520]'}`}
+                className={`text-[13px] transition-opacity disabled:opacity-30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ab8584] ${lighter ? 'text-[#F7F4EF]/70 hover:text-[#F7F4EF]' : refined ? 'text-[#2B2727]/60 hover:text-[#2B2727]' : 'text-[#6D6A63] hover:text-[#252520]'}`}
               >
                 ← Back
               </button>
@@ -363,7 +363,7 @@ export default function ProtocolQuizSection({
                 type="button"
                 onClick={handleContinue}
                 disabled={!canContinue}
-                className={`px-6 py-3 text-[13px] tracking-wide transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ab8584] disabled:opacity-40 ${lighter ? 'bg-[#F7F4EF] text-[#252520] hover:bg-white' : 'bg-[#252520] text-[#F7F4EF] hover:bg-[#141412]'}`}
+                className={`px-6 py-3 text-[13px] tracking-wide transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ab8584] disabled:opacity-40 ${lighter ? 'bg-[#F7F4EF] text-[#252520] hover:bg-white' : refined ? 'bg-[#2B2727] text-[#fffdfa] hover:bg-[#ab8584]' : 'bg-[#252520] text-[#F7F4EF] hover:bg-[#141412]'}`}
               >
                 {step < TOTAL_STEPS - 1 ? 'Continue →' : 'Build My Protocol'}
               </button>

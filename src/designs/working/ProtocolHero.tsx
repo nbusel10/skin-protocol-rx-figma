@@ -34,10 +34,10 @@ export default function ProtocolHero() {
   const { rootRef, playing } = useTimelinePlaying()
 
   return (
-    <section className="bg-[#2B2727] px-6 py-14 text-[#F7F4EF] md:py-16">
+    <section className="bg-[#2B2727] px-6 py-14 text-[#fffdfa] md:py-16">
       <div className="mx-auto flex flex-col items-center">
-        <h1 className={`text-center text-[#F7F4EF] ${HEADING}`}>Build your protocol</h1>
-        <p className="mt-4 text-center text-[15px] leading-relaxed text-[#F7F4EF]/80">
+        <h1 className={`text-center text-[#fffdfa] ${HEADING}`}>Build your protocol</h1>
+        <p className="mt-4 text-center text-[15px] leading-relaxed text-[#fffdfa]/80">
           A few questions. Six thoughtful steps.
         </p>
         <div ref={rootRef} className={`protocol-timeline protocol-timeline-numbers protocol-refine-timeline mt-12 w-full md:mt-14 md:max-w-5xl ${playing ? 'is-playing' : ''}`}>

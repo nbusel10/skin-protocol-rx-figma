@@ -23,7 +23,7 @@ const HOW_IT_WORKS = [
 
 function ProtocolFacts() {
   return (
-    <section className="bg-[#FFFDFA] px-6 py-16 text-[#252520] min-[681px]:px-[max(36px,8vw)] md:py-[75px]">
+    <section className="bg-[#fffdfa] px-6 py-16 text-[#2B2727] min-[681px]:px-[max(36px,8vw)] md:py-[75px]">
       <ol className="grid grid-cols-1 md:grid-cols-3">
         {HOW_IT_WORKS.map((item, index) => (
           <li
@@ -32,17 +32,17 @@ function ProtocolFacts() {
               index === 0
                 ? 'md:pr-12'
                 : index === HOW_IT_WORKS.length - 1
-                  ? 'border-t border-[#E4DDD4] md:border-t-0 md:border-l md:pl-12'
-                  : 'border-t border-[#E4DDD4] md:border-t-0 md:border-l md:px-12'
+                  ? 'border-t border-[#D6C3C2] md:border-t-0 md:border-l md:pl-12'
+                  : 'border-t border-[#D6C3C2] md:border-t-0 md:border-l md:px-12'
             }`}
           >
-            <span className="font-serif text-[2.75rem] italic leading-none text-[#ab8584] transition-colors duration-200 group-hover:text-[#C4A8A6] md:text-[3.25rem]">
+            <span className="font-serif text-[2.75rem] italic leading-none text-[#ab8584] transition-colors duration-200 group-hover:text-[#D6C3C2] md:text-[3.25rem]">
               {String(index + 1).padStart(2, '0')}
             </span>
             <h2 className="mt-5 font-serif text-[1.65rem] font-normal leading-snug tracking-[-0.03em]">
               {item.title}
             </h2>
-            <p className="mt-3 max-w-[18rem] text-[15px] leading-relaxed text-[#595750]">{item.body}</p>
+            <p className="mt-3 max-w-[18rem] text-[15px] leading-relaxed text-[#2B2727]/75">{item.body}</p>
           </li>
         ))}
       </ol>
@@ -52,7 +52,7 @@ function ProtocolFacts() {
 
 function ToggleMark({ open }: { open: boolean }) {
   return (
-    <svg viewBox="0 0 16 16" className="h-3.5 w-3.5 text-[#6D6A63]" aria-hidden="true">
+    <svg viewBox="0 0 16 16" className="h-3.5 w-3.5 text-[#2B2727]/60" aria-hidden="true">
       <path d="M2.5 8h11" fill="none" stroke="currentColor" strokeWidth="1" />
       {open ? null : <path d="M8 2.5v11" fill="none" stroke="currentColor" strokeWidth="1" />}
     </svg>
@@ -76,13 +76,13 @@ function ProtocolPayoff({ onViewProduct }: { onViewProduct: (productId: string) 
   }
 
   return (
-    <section className="bg-[#FFFDFA] py-16 text-[#252520] md:py-[75px]">
+    <section className="bg-[#fffdfa] py-16 text-[#2B2727] md:py-[75px]">
       <div className="px-6 min-[681px]:w-[48%] min-[681px]:pl-[max(36px,8vw)] min-[681px]:pr-[3.84%]">
         <p className="text-[13px] font-semibold tracking-[0.21em] text-[#ab8584] uppercase">What you leave with</p>
         <h2 className="my-3 max-w-[650px] font-serif text-[clamp(40px,8vw,56px)] font-normal leading-[1.08] tracking-[-0.044em] min-[681px]:text-[clamp(44px,4vw,60px)]">
           Explore the protocol
         </h2>
-        <p className="max-w-[540px] text-[17px] leading-relaxed text-[#595750]">
+        <p className="max-w-[540px] text-[17px] leading-relaxed text-[#2B2727]/75">
           Your answers help shape a personalized protocol, with recommended essentials and optional additions you can explore and shop. Choose what works for your skin and your routine.
         </p>
       </div>
@@ -98,7 +98,7 @@ function ProtocolPayoff({ onViewProduct }: { onViewProduct: (productId: string) 
             const order =
               step.step === 1 ? 'order-1' : step.step === 2 ? 'order-2' : step.step === 3 ? 'order-3' : step.step === 4 ? 'order-4' : step.step === 5 ? 'order-5' : 'order-6'
             return (
-              <li key={step.step} className={`border-t border-[#E4DDD4] ${order} md:order-none`}>
+              <li key={step.step} className={`border-t border-[#D6C3C2] ${order} md:order-none`}>
                 <h3>
                   <button
                     id={buttonId}
@@ -118,7 +118,7 @@ function ProtocolPayoff({ onViewProduct }: { onViewProduct: (productId: string) 
                         {String(step.step).padStart(2, '0')}
                       </span>
                       <svg viewBox="0 0 64 64" className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true">
-                        <circle cx="32" cy="32" r="28" fill="none" stroke="#D6CEC3" strokeWidth="1.15" />
+                        <circle cx="32" cy="32" r="28" fill="none" stroke="#D6C3C2" strokeWidth="1.15" />
                         <circle
                           cx="32"
                           cy="32"
@@ -134,8 +134,8 @@ function ProtocolPayoff({ onViewProduct }: { onViewProduct: (productId: string) 
                       </svg>
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block text-[17px] font-semibold leading-snug text-[#252520]">{step.name}</span>
-                      <span className="mt-1 block text-[13px] leading-snug text-[#6D6A63]">{step.tag}</span>
+                      <span className="block text-[17px] font-semibold leading-snug text-[#2B2727]">{step.name}</span>
+                      <span className="mt-1 block text-[13px] leading-snug text-[#2B2727]/60">{step.tag}</span>
                     </span>
                     <ToggleMark open={open} />
                   </button>
@@ -146,7 +146,7 @@ function ProtocolPayoff({ onViewProduct }: { onViewProduct: (productId: string) 
                   <div id={panelId} role="region" aria-labelledby={buttonId} aria-hidden={!open} inert={!open} className="min-h-0 overflow-hidden">
                     <ul className="pb-6 pl-[calc(4rem+1.25rem)]">
                       {products.map(product => (
-                        <li key={product.id} className="border-t border-[#E4DDD4]">
+                        <li key={product.id} className="border-t border-[#D6C3C2]">
                           <a
                             href={`/designs/working/product/${product.id}`}
                             onClick={event => {
@@ -157,19 +157,19 @@ function ProtocolPayoff({ onViewProduct }: { onViewProduct: (productId: string) 
                             className="group flex items-center gap-4 py-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ab8584]"
                           >
                             <img src={product.image} alt="" className="h-12 w-12 shrink-0 object-contain" />
-                            <span className="min-w-0 flex-1 text-[15px] leading-snug text-[#252520] transition-colors duration-200 group-hover:text-[#ab8584]">
+                            <span className="min-w-0 flex-1 text-[15px] leading-snug text-[#2B2727] transition-colors duration-200 group-hover:text-[#ab8584]">
                               {product.name}
                             </span>
-                            <span className="shrink-0 text-[12px] tracking-[0.04em] text-[#6D6A63] transition-colors duration-200 group-hover:text-[#ab8584]">
+                            <span className="shrink-0 text-[12px] tracking-[0.04em] text-[#2B2727]/60 transition-colors duration-200 group-hover:text-[#ab8584]">
                               View product <span aria-hidden="true">↗</span>
                             </span>
                           </a>
                         </li>
                       ))}
-                      <li className="border-t border-[#E4DDD4]">
+                      <li className="border-t border-[#D6C3C2]">
                         <a
                           href={`/shop?step=${step.step}`}
-                          className="inline-flex items-center gap-2 py-3 text-[13px] text-[#6D6A63] transition-colors duration-200 hover:text-[#ab8584] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ab8584]"
+                          className="inline-flex items-center gap-2 py-3 text-[13px] text-[#2B2727]/60 transition-colors duration-200 hover:text-[#ab8584] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ab8584]"
                         >
                           Shop this step <span aria-hidden="true">↗</span>
                         </a>
@@ -183,7 +183,7 @@ function ProtocolPayoff({ onViewProduct }: { onViewProduct: (productId: string) 
             </ol>
           ))}
         </div>
-        <p className="mt-10 flex items-center gap-1 text-[15px] italic text-[#6D6A63]">
+        <p className="mt-10 flex items-center gap-1 text-[15px] italic text-[#2B2727]/60">
           <svg viewBox="0 0 28 24.5" className="h-[1.15em] w-[1.25em] shrink-0 text-[#ab8584]" aria-hidden="true">
             <path
               d="M12 1C12 7.2 7.4 11.4 1 12.2 7.4 13 12 17.2 12 23.4 12 17.2 16.6 13 23 12.2 16.6 11.4 12 7.2 12 1Z"
@@ -220,7 +220,7 @@ export default function ProtocolPage({ onViewProduct }: { onViewProduct: (produc
   }
 
   return (
-    <article className="bg-[#F7F4EF] font-sans text-[#252520]">
+    <article className="bg-[#f5f0eb] font-sans text-[#2B2727]">
       <ProtocolHero />
       <ProtocolFacts />
       <ProtocolQuizSection refined onComplete={revealResults} />

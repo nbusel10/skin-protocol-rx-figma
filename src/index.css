@@ -1053,15 +1053,15 @@ body {
 .protocol-refine-timeline.protocol-timeline-numbers .protocol-timeline-mark {
   width: 42px;
   height: 42px;
-  border-color: rgba(196, 168, 166, 0.9);
-  color: #c4a8a6;
+  border-color: rgba(214, 195, 194, 0.9);
+  color: #D6C3C2;
   font-size: 15px;
 }
 
 .protocol-refine-timeline.protocol-timeline-numbers .protocol-timeline-line {
   top: 20px;
   height: 1px;
-  background: rgba(196, 168, 166, 0.55);
+  background: rgba(214, 195, 194, 0.55);
 }
 
 .protocol-refine-timeline.protocol-timeline.is-playing .protocol-timeline-mark,
@@ -1072,8 +1072,8 @@ body {
   justify-content: center;
   gap: 1px;
   animation: none;
-  border-color: #c4a8a6;
-  color: #c4a8a6;
+  border-color: #D6C3C2;
+  color: #D6C3C2;
 }
 
 .protocol-refine-step-word {
@@ -1088,14 +1088,14 @@ body {
 
 .protocol-refine-timeline.protocol-timeline.is-playing .protocol-timeline-name {
   animation: none;
-  color: rgba(247, 244, 239, 0.88);
+  color: rgba(255, 253, 250, 0.88);
 }
 
 @media (min-width: 640px) {
   .protocol-refine-timeline.protocol-timeline-numbers .protocol-timeline-name {
     display: block;
     max-width: 6.5rem;
-    color: rgba(247, 244, 239, 0.82);
+    color: rgba(255, 253, 250, 0.82);
     font-size: 12px;
   }
 

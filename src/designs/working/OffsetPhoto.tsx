@@ -2,11 +2,11 @@
  * Thin rose line set up and to the right of a photo.
  * The parent should be the photo's box, and must not clip the offset.
  */
-export function OffsetFrame() {
+export function OffsetFrame({ borderClassName = 'border-[#C4A8A6]' }: { borderClassName?: string }) {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute -top-5 -right-5 bottom-0 left-8 z-0 border border-[#C4A8A6] sm:left-10"
+      className={`pointer-events-none absolute -top-5 -right-5 bottom-0 left-8 z-0 border sm:left-10 ${borderClassName}`}
     />
   )
 }
