@@ -393,6 +393,7 @@ export default function ProtocolResults({
   }))
   const weekly = built.weekly ? shownProduct(built.weekly, choiceId) : null
   const alternative = !activePair && runnerUp ? shownProduct(runnerUp, choiceId) : null
+  const cleanserAlternative = built.cleanserAlternative
   const treatOffer = built.treatOffer
     ? shownProduct(treatPair && usingAlternative ? treatPair.alternative : built.treatOffer, choiceId)
     : null
@@ -685,21 +686,45 @@ export default function ProtocolResults({
           </div>
         )}
 
-        {alternative && (
+        {(alternative || cleanserAlternative) && (
           <div className="mt-10">
             <p className="text-[13px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">Also consider</p>
-            <div className="mt-4 flex gap-5 border border-[#D6C3C2] bg-[#fffdfa] p-5">
-              <img src={alternative.image} alt="" className="h-24 w-20 shrink-0 object-contain" />
-              <div className="min-w-0 flex-1">
-                <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">Alternative serum</p>
-                <h2 className="mt-1 font-serif text-[1.35rem] leading-snug">{alternative.name}</h2>
-                <p className="mt-1 text-sm text-[#2B2727]/75">Ranked next for your answers. Use it in place of your serum, not alongside it.</p>
-                <p className="mt-2 text-sm font-semibold">${alternative.price}</p>
-              </div>
-              <div className="flex shrink-0 flex-col items-end justify-center gap-2">
-                <AddCartButton added={current.addedIds.includes(alternative.id)} onAdd={() => addToCart([alternative.id])} />
-                <QuietLink onClick={() => onViewProduct(alternative.id)}>View</QuietLink>
-              </div>
+            <div className="mt-4 space-y-4">
+              {alternative && (
+                <div className="flex gap-5 border border-[#D6C3C2] bg-[#fffdfa] p-5">
+                  <img src={alternative.image} alt="" className="h-24 w-20 shrink-0 object-contain" />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">Alternative serum</p>
+                    <h2 className="mt-1 font-serif text-[1.35rem] leading-snug">{alternative.name}</h2>
+                    <p className="mt-1 text-sm text-[#2B2727]/75">Ranked next for your answers. Use it in place of your serum, not alongside it.</p>
+                    <p className="mt-2 text-sm font-semibold">${alternative.price}</p>
+                  </div>
+                  <div className="flex shrink-0 flex-col items-end justify-center gap-2">
+                    <AddCartButton added={current.addedIds.includes(alternative.id)} onAdd={() => addToCart([alternative.id])} />
+                    <QuietLink onClick={() => onViewProduct(alternative.id)}>View</QuietLink>
+                  </div>
+                </div>
+              )}
+              {cleanserAlternative && (
+                <div className="flex gap-5 border border-[#D6C3C2] bg-[#fffdfa] p-5">
+                  <img src={cleanserAlternative.image} alt="" className="h-24 w-20 shrink-0 object-contain" />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">Alternative cleanser</p>
+                    <h2 className="mt-1 font-serif text-[1.35rem] leading-snug">{cleanserAlternative.name}</h2>
+                    <p className="mt-1 text-sm text-[#2B2727]/75">
+                      Ranked next for your answers. Use it in place of your daily cleanser, not alongside it.
+                    </p>
+                    <p className="mt-2 text-sm font-semibold">${cleanserAlternative.price}</p>
+                  </div>
+                  <div className="flex shrink-0 flex-col items-end justify-center gap-2">
+                    <AddCartButton
+                      added={current.addedIds.includes(cleanserAlternative.id)}
+                      onAdd={() => addToCart([cleanserAlternative.id])}
+                    />
+                    <QuietLink onClick={() => onViewProduct(cleanserAlternative.id)}>View</QuietLink>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}

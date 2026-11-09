@@ -375,6 +375,8 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
     setWeekly,
     alternative,
     setAlternative,
+    cleanserAlternative,
+    setCleanserAlternative,
     bonus,
     setBonus,
     tonerSwap,
@@ -445,6 +447,7 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
     setRecommendations(result.products)
     setWeekly(result.weekly)
     setAlternative(result.alternative)
+    setCleanserAlternative(result.cleanserAlternative)
     setBonus(result.bonus)
     setTonerSwap(result.tonerSwap)
     setTonerOmitted(result.tonerOmitted)
@@ -619,18 +622,30 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
             </div>
           )}
 
-          {shownAlternative && (
-            <div className="mb-10">
+          {(shownAlternative || cleanserAlternative) && (
+            <div className="mb-10 space-y-4">
               <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-4">Also Consider</p>
-              <SuggestionRow
-                eyebrow="Alternative serum"
-                note="Ranked next for your answers. Use it in place of your serum, not alongside it."
-                product={shownAlternative}
-                added={addedIds.includes(shownAlternative.id)}
-                onAdd={() => addToCart([shownAlternative.id])}
-                onNavigate={onNavigate}
-                extra={cPicker(shownAlternative)}
-              />
+              {shownAlternative && (
+                <SuggestionRow
+                  eyebrow="Alternative serum"
+                  note="Ranked next for your answers. Use it in place of your serum, not alongside it."
+                  product={shownAlternative}
+                  added={addedIds.includes(shownAlternative.id)}
+                  onAdd={() => addToCart([shownAlternative.id])}
+                  onNavigate={onNavigate}
+                  extra={cPicker(shownAlternative)}
+                />
+              )}
+              {cleanserAlternative && (
+                <SuggestionRow
+                  eyebrow="Alternative cleanser"
+                  note="Ranked next for your answers. Use it in place of your daily cleanser, not alongside it."
+                  product={cleanserAlternative}
+                  added={addedIds.includes(cleanserAlternative.id)}
+                  onAdd={() => addToCart([cleanserAlternative.id])}
+                  onNavigate={onNavigate}
+                />
+              )}
             </div>
           )}
 

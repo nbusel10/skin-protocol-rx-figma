@@ -1,7 +1,6 @@
 /** Client-facing quiz coverage: how often each product is recommended by routine-size choice. */
 
 const PER_CHOICE = 4096
-const ALL_COMBINATIONS = PER_CHOICE * 3
 
 const PRODUCTS = [
   'Chamomile cleanser',
@@ -21,17 +20,45 @@ const PRODUCTS = [
   'TripleGlow (weekly)',
 ] as const
 
-const COUNTS = {
-  three: [2688, 1408, 3072, 0, 0, 0, 0, 728, 296, 0, 0, 2816, 1280, 0, 0],
-  four: [2688, 1408, 3072, 2934, 420, 465, 84, 142, 20, 31, 0, 2816, 1280, 0, 0],
-  six: [2688, 1408, 3072, 2934, 420, 465, 84, 142, 20, 31, 4096, 2816, 1280, 1024, 1524],
+/** Times each product is in the recommended routine. */
+const IN_ROUTINE = {
+  three: [2996, 1100, 3072, 0, 0, 0, 0, 608, 416, 0, 0, 2816, 1280, 0, 0],
+  four: [2996, 1100, 3072, 2958, 435, 467, 84, 24, 24, 104, 0, 2816, 1280, 0, 0],
+  six: [2996, 1100, 3072, 2958, 435, 467, 84, 24, 24, 104, 4096, 2816, 1280, 1024, 1524],
 } as const
 
-const SERIES = [
-  { key: 'three' as const, label: '3 products', color: '#9A958C' },
-  { key: 'four' as const, label: '4 products', color: '#6B8FAD' },
-  { key: 'six' as const, label: 'Full (up to 6)', color: '#7A9B7E' },
-]
+/**
+ * Times each product is an "Also consider" runner-up (serum or daily cleanser).
+ * Index order matches PRODUCTS. Toner, creams, eye cream, oil, and TripleGlow stay 0.
+ */
+const ALSO_CONSIDER = {
+  three: [1008, 2888, 0, 1373, 950, 1106, 296, 61, 125, 179, 0, 0, 0, 0, 0],
+  four: [1008, 2888, 0, 840, 1100, 1354, 296, 115, 189, 196, 0, 0, 0, 0, 0],
+  six: [1008, 2888, 0, 840, 1100, 1354, 296, 115, 189, 196, 0, 0, 0, 0, 0],
+} as const
+
+const GROUPS = [
+  {
+    sizeKey: 'three' as const,
+    sizeLabel: '3 products',
+    sizeColor: '#9A958C',
+    alsoLabel: 'Also · 3',
+  },
+  {
+    sizeKey: 'four' as const,
+    sizeLabel: '4 products',
+    sizeColor: '#6B8FAD',
+    alsoLabel: 'Also · 4',
+  },
+  {
+    sizeKey: 'six' as const,
+    sizeLabel: 'Full (up to 6)',
+    sizeColor: '#7A9B7E',
+    alsoLabel: 'Also · Full',
+  },
+] as const
+
+const ALSO_COLOR = '#ab8584'
 
 function pct(count: number): number {
   return Math.round((count / PER_CHOICE) * 1000) / 10
@@ -41,21 +68,6 @@ function pctLabel(count: number): string {
   const value = pct(count)
   return value === 0 ? '0%' : `${value}%`
 }
-
-function shareOfAll(count: number): number {
-  return Math.round((count / ALL_COMBINATIONS) * 1000) / 10
-}
-
-/** Runner-up serum shown as "Also consider". Summed across all 12,288 combinations. */
-const ALSO_CONSIDER = [
-  { name: 'Vitamin C 5%', three: 1051, four: 1269, six: 1269, total: 3589 },
-  { name: 'Bakuchiol', three: 1387, four: 859, six: 859, total: 3105 },
-  { name: 'Tri-peptide', three: 915, four: 1046, six: 1046, total: 3007 },
-  { name: 'Hyaluronic Acid', three: 280, four: 409, six: 409, total: 1098 },
-  { name: 'Vitamin C 20%', three: 296, four: 296, six: 296, total: 888 },
-  { name: 'Matrix', three: 106, four: 156, six: 156, total: 418 },
-  { name: 'Beauty Elixir', three: 55, four: 55, six: 55, total: 165 },
-] as const
 
 export default function QuizCoveragePreview() {
   return (
@@ -80,7 +92,8 @@ export default function QuizCoveragePreview() {
       <div className="mx-auto max-w-6xl space-y-10 px-6 py-10 md:px-10 md:py-14">
         <p className="max-w-3xl text-[16px] leading-relaxed text-[#595750]">
           For each routine-size choice in the quiz (3 products, 4 products, or full up to 6), every other answer
-          combination was run — 4,096 per choice. Bars show how many of those answers include each product.
+          combination was run — 4,096 per choice. Bars show how many of those answers include each product in the
+          routine, or as an “Also consider” alternative serum or daily cleanser.
         </p>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -99,8 +112,9 @@ export default function QuizCoveragePreview() {
         <div className="border border-[#D6CEC3] bg-[#EDE8E0] px-5 py-4 text-[14px] leading-relaxed text-[#45403F]">
           <p className="font-semibold text-[#252520]">How to read the chart</p>
           <p className="mt-1">
-            Compare the three colored bars for one product. Example: Bakuchiol is 0% on the 3-product choice (no serum
-            step), and about 72% on both the 4-product and full choices. Eye cream is only on the full choice (100%).
+            For each product, the gray / blue / green bars are times it lands in the recommended routine. The rose bars
+            are times it is an “Also consider” runner-up serum or daily cleanser. Example: Bakuchiol is never in the
+            3-product routine (0%), but it is Also consider for about a third of those answers.
           </p>
         </div>
 
@@ -109,16 +123,20 @@ export default function QuizCoveragePreview() {
             <div>
               <h2 className="font-serif text-2xl tracking-[-0.02em]">Share of combinations by product</h2>
               <p className="mt-1 text-[13px] text-[#6D6A63]">
-                % of the 4,096 answer combinations for that routine choice that include the product.
+                % of the 4,096 answer combinations for that routine choice.
               </p>
             </div>
             <div className="flex flex-wrap gap-4 text-[12px] font-medium">
-              {SERIES.map(s => (
-                <span key={s.key} className="inline-flex items-center gap-2">
-                  <span className="inline-block h-2.5 w-2.5" style={{ backgroundColor: s.color }} />
-                  {s.label}
+              {GROUPS.map(g => (
+                <span key={g.sizeKey} className="inline-flex items-center gap-2">
+                  <span className="inline-block h-2.5 w-2.5" style={{ backgroundColor: g.sizeColor }} />
+                  {g.sizeLabel}
                 </span>
               ))}
+              <span className="inline-flex items-center gap-2">
+                <span className="inline-block h-2.5 w-2.5" style={{ backgroundColor: ALSO_COLOR }} />
+                Also consider
+              </span>
             </div>
           </div>
 
@@ -127,19 +145,39 @@ export default function QuizCoveragePreview() {
               <div key={name}>
                 <p className="mb-2 text-[13px] font-medium text-[#252520]">{name}</p>
                 <div className="space-y-1.5">
-                  {SERIES.map(s => {
-                    const count = COUNTS[s.key][i]
-                    const width = pct(count)
+                  {GROUPS.map(g => {
+                    const inCount = IN_ROUTINE[g.sizeKey][i]
+                    const alsoCount = ALSO_CONSIDER[g.sizeKey][i]
+                    const inWidth = pct(inCount)
+                    const alsoWidth = pct(alsoCount)
                     return (
-                      <div key={s.key} className="grid grid-cols-[7.5rem_1fr_3.25rem] items-center gap-3">
-                        <span className="text-[11px] tracking-wide text-[#6D6A63]">{s.label}</span>
-                        <div className="h-3 bg-[#EDE8E0]">
-                          <div
-                            className="h-full transition-[width] duration-500"
-                            style={{ width: `${Math.max(width, width > 0 ? 0.4 : 0)}%`, backgroundColor: s.color }}
-                          />
+                      <div key={g.sizeKey} className="space-y-1">
+                        <div className="grid grid-cols-[7.5rem_1fr_3.25rem] items-center gap-3">
+                          <span className="text-[11px] tracking-wide text-[#6D6A63]">{g.sizeLabel}</span>
+                          <div className="h-3 bg-[#EDE8E0]">
+                            <div
+                              className="h-full"
+                              style={{
+                                width: `${Math.max(inWidth, inWidth > 0 ? 0.4 : 0)}%`,
+                                backgroundColor: g.sizeColor,
+                              }}
+                            />
+                          </div>
+                          <span className="text-right text-[12px] tabular-nums text-[#45403F]">{pctLabel(inCount)}</span>
                         </div>
-                        <span className="text-right text-[12px] tabular-nums text-[#45403F]">{pctLabel(count)}</span>
+                        <div className="grid grid-cols-[7.5rem_1fr_3.25rem] items-center gap-3">
+                          <span className="text-[11px] tracking-wide text-[#6D6A63]">{g.alsoLabel}</span>
+                          <div className="h-3 bg-[#EDE8E0]">
+                            <div
+                              className="h-full"
+                              style={{
+                                width: `${Math.max(alsoWidth, alsoWidth > 0 ? 0.4 : 0)}%`,
+                                backgroundColor: ALSO_COLOR,
+                              }}
+                            />
+                          </div>
+                          <span className="text-right text-[12px] tabular-nums text-[#45403F]">{pctLabel(alsoCount)}</span>
+                        </div>
                       </div>
                     )
                   })}
@@ -149,96 +187,41 @@ export default function QuizCoveragePreview() {
           </div>
           <p className="mt-3 text-[12px] text-[#6D6A63]">
             Source: buildProtocol over 4 skin types × 256 concern sets × 4 reactivity answers, for each of the 3
-            routine-size choices. TripleGlow is weekly only, never the daily cleanser.
-          </p>
-        </section>
-
-        <section>
-          <div className="mb-4">
-            <h2 className="font-serif text-2xl tracking-[-0.02em]">Times each product is “Also consider”</h2>
-            <p className="mt-1 text-[13px] text-[#6D6A63]">
-              Total across all {ALL_COMBINATIONS.toLocaleString()} quiz combinations. “Also consider” is the next-ranked
-              serum, shown as an alternative, not added to the routine. Cleansers, toner, creams, eye cream, oil, and
-              TripleGlow are never the alternative.
-            </p>
-          </div>
-          <div className="space-y-4 border border-[#D6CEC3] bg-[#FFFDFA] p-5 md:p-6">
-            {ALSO_CONSIDER.map(item => {
-              const width = shareOfAll(item.total)
-              return (
-                <div key={item.name}>
-                  <div className="mb-1.5 flex items-baseline justify-between gap-3">
-                    <p className="text-[13px] font-medium text-[#252520]">{item.name}</p>
-                    <p className="text-[12px] tabular-nums text-[#45403F]">
-                      {item.total.toLocaleString()} · {width}%
-                    </p>
-                  </div>
-                  <div className="h-3 bg-[#EDE8E0]">
-                    <div className="h-full bg-[#ab8584]" style={{ width: `${Math.max(width, 0.4)}%` }} />
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-          <div className="mt-4 overflow-x-auto border border-[#D6CEC3] bg-[#FFFDFA]">
-            <table className="min-w-full text-left text-[13px]">
-              <thead className="border-b border-[#D6CEC3] bg-[#EDE8E0] text-[11px] tracking-[0.08em] text-[#6D6A63] uppercase">
-                <tr>
-                  <th className="px-4 py-3 font-semibold">Also consider</th>
-                  <th className="px-4 py-3 font-semibold text-right">3 products</th>
-                  <th className="px-4 py-3 font-semibold text-right">4 products</th>
-                  <th className="px-4 py-3 font-semibold text-right">Full</th>
-                  <th className="px-4 py-3 font-semibold text-right">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                {ALSO_CONSIDER.map(item => (
-                  <tr key={item.name} className="border-b border-[#E8E2D8] last:border-0">
-                    <td className="px-4 py-2.5 font-medium">{item.name}</td>
-                    <td className="px-4 py-2.5 text-right tabular-nums">{item.three.toLocaleString()}</td>
-                    <td className="px-4 py-2.5 text-right tabular-nums">{item.four.toLocaleString()}</td>
-                    <td className="px-4 py-2.5 text-right tabular-nums">{item.six.toLocaleString()}</td>
-                    <td className="px-4 py-2.5 text-right tabular-nums">{item.total.toLocaleString()}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="mt-3 text-[12px] text-[#6D6A63]">
-            18 combinations have no alternative (6 per routine size), when only one serum scores. The 4-product and full
-            choices match, because the runner-up serum does not depend on eye cream or oil.
+            routine-size choices. “Also consider” covers the next-ranked serum and the losing daily cleanser when it
+            scored. Toner, creams, eye cream, oil, and TripleGlow are never the alternative. The 4-product and full
+            Also-consider bars match, because runner-ups do not depend on eye cream or oil.
           </p>
         </section>
 
         <section>
           <h2 className="font-serif text-2xl tracking-[-0.02em]">Exact counts</h2>
           <p className="mt-1 mb-4 text-[13px] text-[#6D6A63]">
-            Out of 4,096 combinations per column. Toner is 75% (not 100%) because answering “Often” on reactivity drops
-            the toner. On the 3-product choice, Hyaluronic Acid or Matrix can replace the toner when that happens.
+            Out of 4,096 combinations per routine-size column. In routine = placed in the protocol. Also = shown as
+            “Also consider.”
           </p>
           <div className="overflow-x-auto border border-[#D6CEC3] bg-[#FFFDFA]">
             <table className="min-w-full text-left text-[13px]">
               <thead className="border-b border-[#D6CEC3] bg-[#EDE8E0] text-[11px] tracking-[0.08em] text-[#6D6A63] uppercase">
                 <tr>
                   <th className="px-4 py-3 font-semibold">Product</th>
-                  <th className="px-4 py-3 font-semibold text-right">3 count</th>
-                  <th className="px-4 py-3 font-semibold text-right">3 %</th>
-                  <th className="px-4 py-3 font-semibold text-right">4 count</th>
-                  <th className="px-4 py-3 font-semibold text-right">4 %</th>
-                  <th className="px-4 py-3 font-semibold text-right">Full count</th>
-                  <th className="px-4 py-3 font-semibold text-right">Full %</th>
+                  <th className="px-4 py-3 font-semibold text-right">3 in</th>
+                  <th className="px-4 py-3 font-semibold text-right">3 also</th>
+                  <th className="px-4 py-3 font-semibold text-right">4 in</th>
+                  <th className="px-4 py-3 font-semibold text-right">4 also</th>
+                  <th className="px-4 py-3 font-semibold text-right">Full in</th>
+                  <th className="px-4 py-3 font-semibold text-right">Full also</th>
                 </tr>
               </thead>
               <tbody>
                 {PRODUCTS.map((name, i) => (
                   <tr key={name} className="border-b border-[#E8E2D8] last:border-0">
                     <td className="px-4 py-2.5 font-medium">{name}</td>
-                    <td className="px-4 py-2.5 text-right tabular-nums">{COUNTS.three[i].toLocaleString()}</td>
-                    <td className="px-4 py-2.5 text-right tabular-nums">{pctLabel(COUNTS.three[i])}</td>
-                    <td className="px-4 py-2.5 text-right tabular-nums">{COUNTS.four[i].toLocaleString()}</td>
-                    <td className="px-4 py-2.5 text-right tabular-nums">{pctLabel(COUNTS.four[i])}</td>
-                    <td className="px-4 py-2.5 text-right tabular-nums">{COUNTS.six[i].toLocaleString()}</td>
-                    <td className="px-4 py-2.5 text-right tabular-nums">{pctLabel(COUNTS.six[i])}</td>
+                    <td className="px-4 py-2.5 text-right tabular-nums">{IN_ROUTINE.three[i].toLocaleString()}</td>
+                    <td className="px-4 py-2.5 text-right tabular-nums">{ALSO_CONSIDER.three[i].toLocaleString()}</td>
+                    <td className="px-4 py-2.5 text-right tabular-nums">{IN_ROUTINE.four[i].toLocaleString()}</td>
+                    <td className="px-4 py-2.5 text-right tabular-nums">{ALSO_CONSIDER.four[i].toLocaleString()}</td>
+                    <td className="px-4 py-2.5 text-right tabular-nums">{IN_ROUTINE.six[i].toLocaleString()}</td>
+                    <td className="px-4 py-2.5 text-right tabular-nums">{ALSO_CONSIDER.six[i].toLocaleString()}</td>
                   </tr>
                 ))}
               </tbody>

@@ -129,6 +129,8 @@ export interface ProtocolRecommendation {
   serum: Product
   /** Best-scoring serum other than the one in the routine or offered. */
   alternative: Product | null
+  /** Other daily cleanser when it scored but lost; never part of the routine total. */
+  cleanserAlternative: Product | null
   /** Extra suggestion driven by the fun question; never part of the routine total. */
   bonus: Product | null
   /** Calming serum that took the toner's place on an "often" Essentials routine. */
@@ -172,15 +174,37 @@ const IDS = {
 
 /** Client serum guide: per concern, serums in priority order. */
 export const SERUM_RANKINGS: Record<QuizConcern, SerumKey[]> = {
-  'Fine Lines & Firmness': ['peptide', 'bakuchiol', 'ha', 'elixir'],
+  'Fine Lines & Firmness': ['peptide', 'bakuchiol', 'elixir', 'ha'],
   Aging: ['peptide', 'bakuchiol', 'c', 'matrix'],
   'Dark Spots & Uneven Skin Tone': ['c', 'bakuchiol', 'matrix'],
   Dullness: ['c', 'bakuchiol', 'elixir'],
   'Large Pores': ['bakuchiol', 'peptide', 'c', 'ha', 'matrix'],
-  Dryness: ['ha', 'elixir', 'peptide', 'matrix'],
+  Dryness: ['elixir', 'ha', 'peptide', 'matrix'],
   Acne: ['c', 'bakuchiol', 'ha', 'peptide'],
   'Oily Skin': ['bakuchiol', 'matrix', 'ha'],
 }
+
+export type CleanserKey = 'chamomile' | 'gel'
+
+/**
+ * Client cleanser guide: daily picks only (Chamomile / Purifying gel).
+ * Dullness and Dark Spots score daily by skin type instead of a fixed list.
+ */
+export const CLEANSER_RANKINGS: Record<QuizConcern, CleanserKey[]> = {
+  Acne: ['gel', 'chamomile'],
+  'Oily Skin': ['gel'],
+  'Large Pores': ['gel'],
+  Dryness: ['chamomile', 'gel'],
+  Dullness: [],
+  'Dark Spots & Uneven Skin Tone': [],
+  'Fine Lines & Firmness': ['chamomile'],
+  Aging: ['chamomile'],
+}
+
+const CLEANSER_RANK_POINTS = [3, 1]
+const DULL_DAILY_POINTS = 3
+const CLEANSER_ORDER: CleanserKey[] = ['chamomile', 'gel']
+const SKIN_TYPE_DAILY_CONCERNS: QuizConcern[] = ['Dullness', 'Dark Spots & Uneven Skin Tone']
 
 const RANK_POINTS = [4, 3, 2, 1, 1]
 const SKIN_TYPE_NUDGES: Partial<Record<QuizSkinType, Partial<Record<SerumKey, number>>>> = {
@@ -204,8 +228,15 @@ const SERUM_IDS: Record<Exclude<SerumKey, 'c'>, string> = {
   matrix: IDS.matrix,
 }
 
+/** Concerns that unlock TripleGlow as a weekly polish (never daily). Dryness alone does not. */
 const WEEKLY_CONCERNS: QuizConcern[] = [
-  'Fine Lines & Firmness', 'Aging', 'Dark Spots & Uneven Skin Tone', 'Dullness', 'Large Pores', 'Acne', 'Oily Skin',
+  'Fine Lines & Firmness',
+  'Aging',
+  'Dark Spots & Uneven Skin Tone',
+  'Dullness',
+  'Large Pores',
+  'Acne',
+  'Oily Skin',
 ]
 
 function byId(id: string): Product {
@@ -318,12 +349,49 @@ function tripleGlowExcluded(answers: ProtocolAnswers): boolean {
   return answers.skinType === 'Dry' || isReactive(answers)
 }
 
-function pickCleanser(answers: ProtocolAnswers): Product {
-  if (answers.skinType === 'Dry' || isReactive(answers)) return byId(IDS.chamomile)
-  if (answers.skinType === 'Oily' || hasConcern(answers.concerns, ['Acne', 'Large Pores', 'Oily Skin'])) {
-    return byId(IDS.gel)
+function cleanserProduct(key: CleanserKey): Product {
+  return byId(key === 'gel' ? IDS.gel : IDS.chamomile)
+}
+
+/** Daily cleanser for Dullness / Dark Spots: gel for normal/oily/combination, Chamomile for dry. */
+function dullnessDailyKey(skinType: QuizSkinType): CleanserKey {
+  return skinType === 'Dry' ? 'chamomile' : 'gel'
+}
+
+export interface CleanserPick {
+  cleanser: Product
+  alternative: Product | null
+}
+
+/** Equal multi-concern scoring for daily Chamomile vs Purifying gel; TripleGlow stays weekly-only. */
+export function pickCleanser(answers: ProtocolAnswers): CleanserPick {
+  const points = Object.fromEntries(CLEANSER_ORDER.map(k => [k, 0])) as Record<CleanserKey, number>
+
+  for (const concern of answers.concerns) {
+    if (SKIN_TYPE_DAILY_CONCERNS.includes(concern)) {
+      points[dullnessDailyKey(answers.skinType)] += DULL_DAILY_POINTS
+      continue
+    }
+    CLEANSER_RANKINGS[concern].forEach((key, rank) => {
+      points[key] += CLEANSER_RANK_POINTS[rank] ?? 0
+    })
   }
-  return byId(IDS.chamomile)
+
+  if (!answers.concerns.length) {
+    points[answers.skinType === 'Oily' ? 'gel' : 'chamomile'] += 1
+  }
+
+  let winner: CleanserKey =
+    points.gel > points.chamomile ? 'gel' : points.chamomile > points.gel ? 'chamomile' : 'chamomile'
+
+  // PDF team rule: dry or sensitive skin stays on Chamomile daily.
+  if (answers.skinType === 'Dry' || isReactive(answers)) winner = 'chamomile'
+
+  const other: CleanserKey = winner === 'chamomile' ? 'gel' : 'chamomile'
+  return {
+    cleanser: cleanserProduct(winner),
+    alternative: points[other] > 0 ? cleanserProduct(other) : null,
+  }
 }
 
 function pickMoisturizer(answers: ProtocolAnswers): Product {
@@ -363,8 +431,9 @@ export function buildProtocol(answers: ProtocolAnswers): ProtocolRecommendation 
   const scores = scoreSerums(answers)
   const serum = serumProduct(scores[0].key, answers)
   const often = answers.reactivity === 'often'
+  const cleanserPick = pickCleanser(answers)
 
-  const picked: Product[] = [pickCleanser(answers)]
+  const picked: Product[] = [cleanserPick.cleanser]
   let tonerSwap: Product | null = null
   let shownKey = scores[0].key
 
@@ -391,6 +460,7 @@ export function buildProtocol(answers: ProtocolAnswers): ProtocolRecommendation 
     weekly,
     serum,
     alternative: runnerUp ? serumProduct(runnerUp.key, answers) : null,
+    cleanserAlternative: cleanserPick.alternative,
     bonus: pickBonus(answers, weekly ? [...products, weekly] : products),
     tonerSwap,
     tonerOmitted: often,

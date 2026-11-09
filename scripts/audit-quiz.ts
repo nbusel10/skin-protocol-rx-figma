@@ -4,6 +4,7 @@ import {
   optionalTreat,
   protocolSize,
   isReactive,
+  pickCleanser,
   splitRoutine,
   routineEntries,
   scoreSerums,
@@ -141,14 +142,27 @@ for (const skinType of QUIZ_SKIN_TYPES) {
           }
           if (reactive && daily.includes(CORE.c20)) failures.push(`${label}: 20% C on reactive skin`)
 
-          // Cleanser and moisturizer
-          const expectedCleanser =
-            skinType === 'Dry' || reactive
-              ? CORE.chamomile
-              : skinType === 'Oily' || has('Acne') || has('Large Pores') || has('Oily Skin')
-                ? CORE.gel
-                : CORE.chamomile
-          if (daily[0] !== expectedCleanser) failures.push(`${label}: cleanser ${daily[0]} != ${expectedCleanser}`)
+          // Cleanser and moisturizer (cleanser guide: equal concern scoring; dry/reactive → Chamomile)
+          const cleanserPick = pickCleanser(answers)
+          if (daily[0] !== cleanserPick.cleanser.id) {
+            failures.push(`${label}: cleanser ${daily[0]} != ${cleanserPick.cleanser.id}`)
+          }
+          if ((result.cleanserAlternative?.id ?? null) !== (cleanserPick.alternative?.id ?? null)) {
+            failures.push(`${label}: cleanserAlternative mismatch`)
+          }
+          if (result.cleanserAlternative && daily.includes(result.cleanserAlternative.id)) {
+            failures.push(`${label}: cleanser alternative already in routine`)
+          }
+          if (result.cleanserAlternative && !CLEANSERS.has(result.cleanserAlternative.id)) {
+            failures.push(`${label}: cleanser alternative is not a daily cleanser`)
+          }
+          // Dry/reactive override keeps Chamomile daily even when gel concerns score.
+          if ((skinType === 'Dry' || reactive) && daily[0] !== CORE.chamomile) {
+            failures.push(`${label}: dry/reactive should force Chamomile cleanser`)
+          }
+          if ((skinType === 'Dry' || reactive) && has('Acne') && result.cleanserAlternative?.id !== CORE.gel) {
+            failures.push(`${label}: expected gel cleanser as Also consider`)
+          }
           const expectedMoisturizer =
             skinType === 'Dry' || has('Dryness') || (often && skinType !== 'Oily') ? CORE.rich : CORE.cloud
           if (!daily.includes(expectedMoisturizer)) failures.push(`${label}: moisturizer ${expectedMoisturizer} missing`)
@@ -159,8 +173,17 @@ for (const skinType of QUIZ_SKIN_TYPES) {
           const expectsOil = complete && !has('Acne') && !has('Oily Skin')
           if (expectsOil !== daily.includes(CORE.oil)) failures.push(`${label}: oil should be ${expectsOil ? 'in' : 'out'}`)
           if (daily.includes(CORE.tripleglow)) failures.push(`${label}: TripleGlow in daily routine`)
-          if (result.weekly && (!complete || skinType === 'Dry' || reactive)) {
-            failures.push(`${label}: weekly exfoliant where it is excluded`)
+          const weeklyConcern =
+            has('Fine Lines & Firmness') ||
+            has('Aging') ||
+            has('Dark Spots & Uneven Skin Tone') ||
+            has('Dullness') ||
+            has('Large Pores') ||
+            has('Acne') ||
+            has('Oily Skin')
+          const expectsWeekly = complete && skinType !== 'Dry' && !reactive && weeklyConcern
+          if (Boolean(result.weekly) !== expectsWeekly) {
+            failures.push(`${label}: weekly TripleGlow should be ${expectsWeekly ? 'in' : 'out'}`)
           }
           if (result.bonus && (daily.includes(result.bonus.id) || result.bonus.id === result.weekly?.id)) {
             failures.push(`${label}: bonus pick already in the routine`)

@@ -53,6 +53,7 @@ export type RestoredProtocol = {
   products: Product[]
   weekly: Product | null
   alternative: Product | null
+  cleanserAlternative: Product | null
   bonus: Product | null
   tonerSwap: Product | null
   tonerOmitted: boolean
@@ -137,6 +138,7 @@ export function protocolFromSession(session: QuizSession): RestoredProtocol | nu
       products,
       weekly: result.weekly,
       alternative: result.alternative,
+      cleanserAlternative: result.cleanserAlternative,
       bonus: result.bonus,
       tonerSwap: result.tonerSwap,
       tonerOmitted: result.tonerOmitted,
@@ -176,6 +178,9 @@ export function useQuizSessionState() {
   const [recommendations, setRecommendations] = useState<Product[]>(restored?.products ?? [])
   const [weekly, setWeekly] = useState<Product | null>(restored?.weekly ?? null)
   const [alternative, setAlternative] = useState<Product | null>(restored?.alternative ?? null)
+  const [cleanserAlternative, setCleanserAlternative] = useState<Product | null>(
+    restored?.cleanserAlternative ?? null,
+  )
   const [bonus, setBonus] = useState<Product | null>(restored?.bonus ?? null)
   const [tonerSwap, setTonerSwap] = useState<Product | null>(restored?.tonerSwap ?? null)
   const [tonerOmitted, setTonerOmitted] = useState(restored?.tonerOmitted ?? false)
@@ -215,6 +220,7 @@ export function useQuizSessionState() {
     setWeekly(null)
     setRecommendations([])
     setAlternative(null)
+    setCleanserAlternative(null)
     setBonus(null)
     setTonerSwap(null)
     setTonerOmitted(false)
@@ -254,6 +260,8 @@ export function useQuizSessionState() {
     setWeekly,
     alternative,
     setAlternative,
+    cleanserAlternative,
+    setCleanserAlternative,
     bonus,
     setBonus,
     tonerSwap,
