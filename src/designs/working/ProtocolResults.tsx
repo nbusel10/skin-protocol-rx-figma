@@ -737,7 +737,7 @@ export default function ProtocolResults({
             </div>
             <div className="text-right text-sm text-[#fffdfa]/50">
               <p>{protocolProducts.length} products</p>
-              <p>AM &amp; PM + morning SPF</p>
+              <p>AM &amp; PM</p>
             </div>
           </div>
           <div className="mt-6 flex flex-col gap-4 sm:flex-row">
