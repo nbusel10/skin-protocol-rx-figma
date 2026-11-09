@@ -80,10 +80,6 @@ function StudyPhotographs({ photographs }: { photographs: OutcomePhotograph[] })
   )
 }
 
-function easeInOut(amount: number) {
-  return amount < 0.5 ? 2 * amount * amount : 1 - ((-2 * amount + 2) ** 2) / 2
-}
-
 function pointAlong(progress: number, centers: number[]) {
   if (centers.length === 0) return 0
   const end = centers.length - 1
@@ -93,20 +89,48 @@ function pointAlong(progress: number, centers: number[]) {
   return centers[index] + (centers[next] - centers[index]) * (clamped - index)
 }
 
-function ResultsTimeline({ assessments, animate = false }: { assessments: OutcomeAssessment[]; animate?: boolean }) {
+const TIMELINE_CIRCLE = 2 * Math.PI * 6
+const TIMELINE_LEAD = 0.32
+
+function clamp01(amount: number) {
+  return Math.min(1, Math.max(0, amount))
+}
+
+function circleDraw(progress: number, index: number) {
+  const begin = index - TIMELINE_LEAD
+  const finish = index + 0.06
+  return clamp01((progress - begin) / (finish - begin))
+}
+
+function ResultsTimeline({
+  assessments,
+  animate = false,
+  replay = 0,
+}: {
+  assessments: OutcomeAssessment[]
+  animate?: boolean
+  replay?: number
+}) {
   const listRef = useRef<HTMLOListElement>(null)
   const centersRef = useRef<number[]>([])
   const recorded = assessments.filter(
     assessment => assessment.timePoint.trim() && assessment.heading.trim() && assessment.findings.trim(),
   )
-  const [progress, setProgress] = useState(animate ? 0 : Math.max(0, recorded.length - 1))
+  const drawing = animate && recorded.length >= 2
+  const resting = Math.max(0, recorded.length - 1)
+  const [progress, setProgress] = useState(drawing ? -TIMELINE_LEAD : resting)
+  const [seenReplay, setSeenReplay] = useState(replay)
+  if (seenReplay !== replay) {
+    setSeenReplay(replay)
+    setProgress(drawing ? -TIMELINE_LEAD : resting)
+  }
 
   useEffect(() => {
-    if (!animate || recorded.length < 2) return
+    if (!drawing) return
     const node = listRef.current
     if (!node) return
     let frame = 0
-    let played = false
+    let cancel = false
 
     const measure = () => {
       const top = node.getBoundingClientRect().top
@@ -117,55 +141,54 @@ function ResultsTimeline({ assessments, animate = false }: { assessments: Outcom
     }
 
     const play = () => {
-      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
       const points = measure()
       centersRef.current = points
-      if (reduced || points.length < 2) {
-        setProgress(recorded.length - 1)
+      if (cancel) return
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || points.length < 2) {
+        setProgress(recorded.length - 1 + 0.08)
         return
       }
-      const hold = 320
-      const perStage = 920
       const span = recorded.length - 1
-      const total = hold + perStage * span
+      const end = span + 0.08
+      const total = 700 * (end + TIMELINE_LEAD)
       const start = performance.now()
       const tick = (now: number) => {
+        if (cancel) return
         const elapsed = now - start
         const nextPoints = measure()
         if (nextPoints.length >= 2) centersRef.current = nextPoints
         if (elapsed >= total) {
-          setProgress(span)
+          setProgress(end)
           return
         }
-        if (elapsed <= hold) setProgress(0)
-        else setProgress(easeInOut((elapsed - hold) / (perStage * span)) * span)
+        setProgress(-TIMELINE_LEAD + (end + TIMELINE_LEAD) * (elapsed / total))
         frame = requestAnimationFrame(tick)
       }
-      setProgress(0)
+      setProgress(-TIMELINE_LEAD)
       frame = requestAnimationFrame(tick)
     }
 
     const observer = new IntersectionObserver(entries => {
-      if (played || !entries.some(entry => entry.isIntersecting)) return
-      played = true
+      if (cancel || !entries.some(entry => entry.isIntersecting)) return
+      observer.disconnect()
       play()
-    }, { threshold: 0.15 })
+    }, { threshold: 0.2 })
     observer.observe(node)
     return () => {
+      cancel = true
       observer.disconnect()
       cancelAnimationFrame(frame)
     }
-  }, [animate, recorded.length])
+  }, [drawing, recorded.length, replay])
 
   if (recorded.length === 0) return null
 
   const centers = centersRef.current
-  const drawComplete = !animate || progress >= recorded.length - 1
   const drawnHeight = centers.length >= 2 ? Math.max(0, pointAlong(progress, centers) - centers[0]) : 0
 
   return (
     <ol ref={listRef} className="relative m-0 list-none p-0">
-      {animate && centers.length >= 2 ? (
+      {drawing && centers.length >= 2 ? (
         <span
           aria-hidden="true"
           data-timeline-line
@@ -176,10 +199,11 @@ function ResultsTimeline({ assessments, animate = false }: { assessments: Outcom
       {recorded.map((assessment, index) => {
         const last = index === recorded.length - 1
         const when = [assessment.timePoint, assessment.date].filter(Boolean).join(' · ')
-        const filled = last && drawComplete
+        const stroke = drawing ? circleDraw(progress, index) : 1
+        const fill = last ? (drawing ? clamp01((stroke - 0.62) / 0.38) : 1) : 0
         return (
           <li key={assessment.id} className={`relative pl-12 ${last ? '' : 'pb-[18px]'}`}>
-            {animate ? null : (
+            {drawing ? null : (
               <span
                 aria-hidden="true"
                 className={`absolute left-[6px] w-px bg-[#C4A8A6] ${last ? 'top-0 h-4' : 'top-[7px] bottom-0'}`}
@@ -188,10 +212,27 @@ function ResultsTimeline({ assessments, animate = false }: { assessments: Outcom
             <span
               aria-hidden="true"
               data-timeline-mark
-              className={`absolute left-0 z-[1] h-3.5 w-3.5 rounded-full border border-[#ab8584] ${
-                last ? 'top-4' : 'top-0'
-              } ${filled ? 'bg-[#ab8584]' : 'bg-[#f5f0eb]'}`}
-            />
+              className={`absolute left-0 z-[1] h-3.5 w-3.5 ${last ? 'top-4' : 'top-0'}`}
+            >
+              <svg viewBox="0 0 14 14" className="h-full w-full overflow-visible">
+                {stroke > 0 ? (
+                  <circle cx="7" cy="7" r="5.2" fill={last ? '#fffdfa' : '#f5f0eb'} />
+                ) : null}
+                <circle
+                  cx="7"
+                  cy="7"
+                  r="6"
+                  fill="none"
+                  stroke="#ab8584"
+                  strokeWidth="1"
+                  strokeLinecap="round"
+                  strokeDasharray={TIMELINE_CIRCLE}
+                  strokeDashoffset={TIMELINE_CIRCLE * (1 - stroke)}
+                  transform="rotate(-90 7 7)"
+                />
+                {fill > 0 ? <circle cx="7" cy="7" r={5.15 * fill} fill="#ab8584" /> : null}
+              </svg>
+            </span>
             <div className={last ? 'rounded-2xl bg-[#fffdfa] p-4' : ''}>
               <p className={LABEL}>{when}</p>
               <h3 className="mt-1.5 font-serif text-[28px] leading-tight font-normal tracking-[-0.03em] text-[#252520] md:text-[32px]">
@@ -220,7 +261,15 @@ function ResultsTimeline({ assessments, animate = false }: { assessments: Outcom
   )
 }
 
-function StudyPanel({ study, animateTimeline = false }: { study: OutcomeStudy; animateTimeline?: boolean }) {
+function StudyPanel({
+  study,
+  animateTimeline = false,
+  replay = 0,
+}: {
+  study: OutcomeStudy
+  animateTimeline?: boolean
+  replay?: number
+}) {
   const products = study.products.filter(product => product.name.trim())
   return (
     <div className="grid grid-cols-1 items-start gap-10 min-[900px]:grid-cols-2 min-[900px]:gap-0">
@@ -262,7 +311,7 @@ function StudyPanel({ study, animateTimeline = false }: { study: OutcomeStudy; a
       </div>
       <div className="min-[900px]:border-l min-[900px]:border-[#E4D6D2] min-[900px]:pl-16">
         <StudyPhotographs photographs={study.photographs ?? []} />
-        <ResultsTimeline assessments={study.assessments} animate={animateTimeline} />
+        <ResultsTimeline assessments={study.assessments} animate={animateTimeline} replay={replay} />
       </div>
     </div>
   )
@@ -293,6 +342,7 @@ export default function OutcomesSection({
   const preferred = concerns.find(item => item === 'Uneven Tone') ?? concerns[0] ?? ''
   const [concern, setConcern] = useState(preferred)
   const [studyId, setStudyId] = useState('')
+  const [timelineRun, setTimelineRun] = useState(0)
   const activeConcern = concerns.includes(concern) ? concern : preferred
   const inConcern = studiesForConcern(records, activeConcern)
   const activeStudy = inConcern.find(study => study.id === studyId) ?? inConcern[0]
@@ -305,6 +355,7 @@ export default function OutcomesSection({
     setConcern(next)
     const first = studiesForConcern(records, next)[0]
     setStudyId(first?.id ?? '')
+    setTimelineRun(run => run + 1)
   }
 
   function onConcernKeyDown(event: ReactKeyboardEvent<HTMLDivElement>) {
@@ -415,7 +466,7 @@ export default function OutcomesSection({
 
         <div id={panelId} role="tabpanel" aria-labelledby={concernTabId(activeConcern)} aria-live="polite" className="mt-7">
           <div key={activeStudy.id} className="outcome-swap">
-            <StudyPanel study={activeStudy} animateTimeline={animateTimeline} />
+            <StudyPanel study={activeStudy} animateTimeline={animateTimeline} replay={timelineRun} />
           </div>
         </div>
       </div>

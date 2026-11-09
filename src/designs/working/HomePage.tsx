@@ -435,7 +435,7 @@ export default function HomePage({
         }}
       />
 
-      <OutcomesSection decoration={lighter ? 'bullseye' : 'ascent'} composedHeader={!lighter} />
+      <OutcomesSection decoration={lighter ? 'bullseye' : 'ascent'} composedHeader={!lighter} animateTimeline />
 
       {lighter ? <ProtocolQuizSection quietGeometry={quietGeometry} lighter /> : null}
 
