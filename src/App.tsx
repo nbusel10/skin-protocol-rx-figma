@@ -53,12 +53,7 @@ import { loadQuizSession, protocolFromSession } from './lib/quizSession'
 
 type Page = 'home' | 'shop' | 'protocol' | 'story' | 'spa' | 'product' | 'glossary' | 'education'
 type Version = 'v1' | 'v2'
-type Design = '' | 'picker' | 'working' | 'palette' | 'white' | 'lighter' | DesignId
-type BrandedDesign = 'palette' | 'white'
-
-function isBranded(design: string): design is BrandedDesign {
-  return design === 'palette' || design === 'white'
-}
+type Design = '' | 'picker' | 'working' | 'lighter' | DesignId
 
 type RouteState = {
   page: Page
@@ -157,8 +152,8 @@ function placeSignature(place: Place): string {
   return `other:${place.page}:${place.preview}`
 }
 
-function projectBranded(design: 'working' | BrandedDesign, place: Place): RouteState {
-  const shared = { design, version: 'v2' as const }
+function projectWorking(place: Place): RouteState {
+  const shared = { design: 'working' as const, version: 'v2' as const }
   if (place.page === 'shop' || place.designPage === 'shop') {
     return route('shop', { ...shared, designPage: 'shop', shopStep: place.shopStep })
   }
@@ -212,7 +207,7 @@ function projectGallery(target: GalleryTarget, place: Place): RouteState | 'leav
   if (target === 'lighter') return route('home', { design: 'lighter', designPage: 'home', version: 'v2' })
   if (target === 'original') return projectVersion('v1', place)
   if (target === 'rose') return projectVersion('v2', place)
-  if (target === 'working' || target === 'palette' || target === 'white') return projectBranded(target, place)
+  if (target === 'working') return projectWorking(place)
   if (isDesignId(target)) return projectDesign(target, place)
   return route('home', { design: 'working', designPage: 'home', version: 'v2' })
 }
@@ -234,7 +229,7 @@ function urlsMatch(next: RouteState): boolean {
 }
 
 function anchorHash(next: Pick<RouteState, 'page' | 'preview' | 'design' | 'hash'>) {
-  if ((next.design === 'working' || isBranded(next.design)) && next.preview === 'about') return next.hash || ''
+  if (next.design === 'working' && next.preview === 'about') return next.hash || ''
   if (next.page === 'story' && next.preview !== 'standards') return next.hash || ''
   return ''
 }
@@ -285,20 +280,6 @@ function toUrl(
   const base = normalizeBase()
   if (design === 'picker') return `${base}/designs`
   if (design === 'lighter') return `${base}/designs/lighter`
-  if (isBranded(design)) {
-    const root = `${base}/designs/${design}`
-    if (page === 'product' && productId) return `${root}/product/${encodeURIComponent(productId)}`
-    if (page === 'shop') {
-      const query = shopStep ? `?step=${encodeURIComponent(shopStep)}` : ''
-      return `${root}/shop${query}`
-    }
-    if (preview === 'protocol') return `${root}/protocol`
-    if (preview === 'about') {
-      const fragment = hash ? `#${hash.replace(/^#/, '')}` : ''
-      return `${root}/about${fragment}`
-    }
-    return root
-  }
   if (design === 'working') {
     if (page === 'product' && productId) return `${base}/designs/working/product/${encodeURIComponent(productId)}`
     if (page === 'shop') {
@@ -334,7 +315,8 @@ function toUrl(
 }
 
 function parseLocation(pathname: string, search = '', hash = ''): RouteState {
-  const { version, path } = splitVersion(pathname)
+  const { version, path: rawPath } = splitVersion(pathname)
+  let path = rawPath
   const shopStep = new URLSearchParams(search).get('step') || ''
   const storyHash = hash.replace(/^#/, '')
 
@@ -342,30 +324,7 @@ function parseLocation(pathname: string, search = '', hash = ''): RouteState {
   if (path === '/designs/lighter' || path === '/designs/lighter/' || path === '/designs/working/lighter' || path === '/designs/working/lighter/') {
     return route('home', { design: 'lighter', designPage: 'home', version: 'v2' })
   }
-  for (const id of ['palette', 'white'] as const) {
-    const prefix = `/designs/${id}`
-    if (path === prefix || path === `${prefix}/`) {
-      return route('home', { design: id, designPage: 'home', version: 'v2' })
-    }
-    if (path === `${prefix}/protocol` || path === `${prefix}/protocol/`) {
-      return route('home', { design: id, designPage: 'home', preview: 'protocol', version: 'v2' })
-    }
-    if (path === `${prefix}/about` || path === `${prefix}/about/`) {
-      return route('home', { design: id, designPage: 'home', preview: 'about', hash: storyHash, version: 'v2' })
-    }
-    if (path === `${prefix}/shop` || path === `${prefix}/shop/`) {
-      return route('shop', { design: id, designPage: 'shop', shopStep, version: 'v2' })
-    }
-    const brandedProduct = path.match(new RegExp(`^/designs/${id}/product/([^/]+)/?$`))
-    if (brandedProduct) {
-      return route('product', {
-        design: id,
-        designPage: 'product',
-        productId: decodeURIComponent(brandedProduct[1]),
-        version: 'v2',
-      })
-    }
-  }
+  path = path.replace(/^\/designs\/(?:palette|white)(?=\/|$)/, '/designs/working')
   if (path === '/designs/working' || path === '/designs/working/') {
     return route('home', { design: 'working', designPage: 'home', version: 'v2' })
   }
@@ -463,7 +422,7 @@ function applyDocumentTitle(
     document.title = 'Lighter | Skin Protocol RX'
     return
   }
-  if (design === 'working' || isBranded(design)) {
+  if (design === 'working') {
     if (page === 'product' && productId) {
       const product = PRODUCTS.find(item => item.id === productId)
       document.title = `${product?.name || 'Product'} | Skin Protocol RX`
@@ -473,7 +432,6 @@ function applyDocumentTitle(
       document.title = 'Explore the Collection | Skin Protocol RX'
       return
     }
-    const siteName = design === 'white' ? 'White' : design === 'palette' ? 'Palette' : 'Working'
     document.title =
       preview === 'hero-backgrounds'
         ? 'Hero Background Explorations | Working | Skin Protocol RX'
@@ -488,12 +446,12 @@ function applyDocumentTitle(
                 : preview === 'heroes'
                   ? 'Hero Sections | Working | Skin Protocol RX'
                   : preview === 'protocol'
-                    ? `Build Your Protocol | ${siteName} | Skin Protocol RX`
+                    ? 'Build Your Protocol | Working | Skin Protocol RX'
                     : preview === 'protocol-refine'
                       ? 'Build Your Protocol Refine | Working | Skin Protocol RX'
                     : preview === 'about'
-                      ? `About Us | ${siteName} | Skin Protocol RX`
-                      : `${siteName} | Skin Protocol RX`
+                      ? 'About Us | Working | Skin Protocol RX'
+                      : 'Working | Skin Protocol RX'
     return
   }
   if (isDesignId(design)) {
@@ -695,42 +653,40 @@ export default function App() {
     return toUrl(next.page, next.productId, next.shopStep, next.hash, next.preview, next.version, next.design, next.designPage)
   }, [carriedPlace])
 
-  const siteDesign: 'working' | BrandedDesign = isBranded(design) ? design : 'working'
-
   const openWorkingHome = useCallback(() => {
     scrollToTop()
-    applyRoute(route('home', { design: siteDesign, designPage: 'home', version: 'v2' }), 'push')
-  }, [applyRoute, siteDesign])
+    applyRoute(route('home', { design: 'working', designPage: 'home', version: 'v2' }), 'push')
+  }, [applyRoute])
 
   const openWorkingProduct = useCallback((id: string) => {
     scrollToTop()
     applyRoute(route('product', {
-      design: siteDesign,
+      design: 'working',
       designPage: 'product',
       productId: id,
       version: 'v2',
     }), 'push')
-  }, [applyRoute, siteDesign])
+  }, [applyRoute])
 
   const openWorkingShop = useCallback((step?: string) => {
     scrollToTop()
     applyRoute(route('shop', {
-      design: siteDesign,
+      design: 'working',
       designPage: 'shop',
       shopStep: step || '',
       version: 'v2',
     }), 'push')
-  }, [applyRoute, siteDesign])
+  }, [applyRoute])
 
   const openWorkingProtocol = useCallback(() => {
     scrollToTop()
-    applyRoute(route('home', { design: siteDesign, designPage: 'home', preview: 'protocol', version: 'v2' }), 'replace')
+    applyRoute(route('home', { design: 'working', designPage: 'home', preview: 'protocol', version: 'v2' }), 'replace')
     const saved = loadQuizSession()
     if (!saved?.done || !protocolFromSession(saved)) return
     const current = window.history.state as unknown
     const base = current && typeof current === 'object' ? current as Record<string, unknown> : {}
     window.history.replaceState({ ...base, sprxProtocolResults: true }, '')
-  }, [applyRoute, siteDesign])
+  }, [applyRoute])
 
   const navigateDesign = useCallback((nextPage: DesignPage, id?: string) => {
     if (!isDesignId(design)) return
@@ -764,7 +720,7 @@ export default function App() {
         cancelAnimationFrame(second)
       }
     }
-    if (storyHash && (!design || ((design === 'working' || isBranded(design)) && preview === 'about'))) return
+    if (storyHash && (!design || (design === 'working' && preview === 'about'))) return
     scrollToTop()
     const frame = requestAnimationFrame(() => scrollToTop())
     return () => cancelAnimationFrame(frame)
@@ -835,7 +791,7 @@ export default function App() {
       setDesign(next.design || '')
       setDesignPage(next.designPage || 'home')
       applyDocumentTitle(next.page, next.productId, next.preview, next.version, next.design, next.designPage)
-      const aboutAnchor = (next.design === 'working' || isBranded(next.design)) && next.preview === 'about' && Boolean(next.hash)
+      const aboutAnchor = next.design === 'working' && next.preview === 'about' && Boolean(next.hash)
       if (!aboutAnchor && (!next.hash || next.design)) scrollToTop()
     }
 
@@ -873,9 +829,8 @@ export default function App() {
     )
   }
 
-  if (design === 'working' || isBranded(design)) {
-    const branded = isBranded(design)
-    const workingPreview = !branded && (
+  if (design === 'working') {
+    const workingPreview = (
       preview === 'hero-backgrounds' ||
       preview === 'philosophy-frames' ||
       preview === 'quiet-geometry' ||
@@ -883,15 +838,10 @@ export default function App() {
       preview === 'quiz-coverage' ||
       preview === 'heroes'
     )
-    const siteClass = design === 'white' || design === 'working'
-      ? 'palette-site white-site'
-      : design === 'palette'
-        ? 'palette-site'
-        : 'bg-[#F7F4EF]'
     return (
-      <SiteRootProvider root={branded ? `/designs/${design}` : '/designs/working'}>
-      <div className={`theme-clear min-h-screen ${siteClass}`}>
-        <DesignTabs current={branded ? design : preview === 'quiz-coverage' ? 'quiz-coverage' : preview === 'protocol-refine' ? 'protocol-refine' : 'working'} onOpen={openGalleryTarget} hrefFor={galleryHref} />
+      <SiteRootProvider root="/designs/working">
+      <div className="theme-clear min-h-screen palette-site white-site">
+        <DesignTabs current={preview === 'quiz-coverage' ? 'quiz-coverage' : preview === 'protocol-refine' ? 'protocol-refine' : 'working'} onOpen={openGalleryTarget} hrefFor={galleryHref} />
         {!workingPreview && <WorkingHeader />}
         <main className="overflow-x-hidden">
           {page === 'product' ? (
@@ -930,7 +880,7 @@ export default function App() {
             <WorkingHomePage />
           )}
         </main>
-        {!workingPreview && <WorkingFooter previews={!branded && page !== 'product' && !preview} />}
+        {!workingPreview && <WorkingFooter previews={page !== 'product' && !preview} />}
       </div>
       </SiteRootProvider>
     )

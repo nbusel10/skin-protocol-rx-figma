@@ -1,4 +1,4 @@
-/* Palette tab: remap off-palette hexes to the six brand colors.
+/* Working site: remap off-palette hexes to the six brand colors.
    Glossy White #FFFDFA, Linen White #F5F0EB, Alabaster Rose #F3ECEB,
    Soft Muted Lily #D6C3C2, Rose Gold #AB8584, Espresso Charcoal #2B2727. */
 
@@ -171,7 +171,7 @@
 }
 }
 
-/* White tab: same palette, with Glossy White behind the shop and quiz results. */
+/* Glossy White behind the shop and quiz results. */
 .white-site .shop-ground,
 .white-site .results-ground {
   background-color: #FFFDFA;
