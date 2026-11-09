@@ -465,7 +465,7 @@ export default function ProtocolResults({
   const protocolInCart = protocolProducts.every(product => current.addedIds.includes(product.id))
 
   return (
-    <article className="bg-[#f5f0eb] px-6 py-16 text-[#2B2727] md:px-[max(36px,8vw)] md:py-[75px]">
+    <article className="results-ground bg-[#f5f0eb] px-6 py-16 text-[#2B2727] md:px-[max(36px,8vw)] md:py-[75px]">
       <div className="mx-auto max-w-3xl">
         <p className="text-[13px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">Your protocol</p>
         <h1 className="mt-3 font-serif text-[clamp(40px,6vw,56px)] font-normal leading-[1.08] tracking-[-0.044em]">

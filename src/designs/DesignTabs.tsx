@@ -3,6 +3,7 @@ import type { GalleryTarget } from './shared'
 const CHOICES: { id: GalleryTarget; label: string; href: string }[] = [
   { id: 'working', label: 'Working', href: '/designs/working' },
   { id: 'palette', label: 'Palette', href: '/designs/palette' },
+  { id: 'white', label: 'White', href: '/designs/white' },
   { id: 'protocol-refine', label: 'Protocol refine', href: '/designs/working/protocol-refine' },
   { id: 'lighter', label: 'Lighter', href: '/designs/lighter' },
   { id: 'quiz-coverage', label: 'Quiz coverage', href: '/designs/working/quiz-coverage' },

@@ -165,8 +165,18 @@
     color: #FFFDFA;
   }
 
-  .palette-site .protocol-timeline-name,
-  .palette-site .protocol-timeline.is-playing .protocol-timeline-name {
-    color: #FFFDFA;
-  }
+.palette-site .protocol-timeline-name,
+.palette-site .protocol-timeline.is-playing .protocol-timeline-name {
+  color: #FFFDFA;
+}
+}
+
+/* White tab: same palette, with Glossy White behind the shop and quiz results. */
+.white-site .shop-ground,
+.white-site .results-ground {
+  background-color: #FFFDFA;
+}
+
+.white-site .results-ground {
+  min-height: 100vh;
 }
