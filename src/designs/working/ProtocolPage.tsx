@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { PRODUCTS } from '../../data'
 import { PROTOCOL_SECTION } from '../protocolSectionContent'
 import ProtocolHero from './ProtocolHero'
@@ -211,14 +211,6 @@ function ProtocolPayoff({ onViewProduct }: { onViewProduct: (productId: string) 
 
 export default function ProtocolPage({ onViewProduct }: { onViewProduct: (productId: string) => void }) {
   const { showResults, revealResults, startOver } = useProtocolQuizResults('protocol')
-
-  useEffect(() => {
-    if (!showResults) return
-    const root = document.querySelector('.theme-clear')
-    if (!root || root.classList.contains('palette-site')) return
-    root.classList.add('palette-site', 'white-site')
-    return () => root.classList.remove('palette-site', 'white-site')
-  }, [showResults])
 
   if (showResults) {
     return (

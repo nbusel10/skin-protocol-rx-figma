@@ -253,11 +253,13 @@ function ChoiceCard({
     >
       <img src={product.image} alt="" className="h-24 w-20 shrink-0 object-contain" />
       <div className="min-w-0 flex-1">
-        <span className="block text-[10px] font-semibold tracking-[0.14em] uppercase text-[#ab8584]">{stamp}</span>
+        <div className="flex items-baseline justify-between gap-3">
+          <span className="text-[10px] font-semibold tracking-[0.14em] uppercase text-[#ab8584]">{stamp}</span>
+          <span className="shrink-0 text-[11px] tracking-wide text-[#2B2727]/60">{routinePeriodLabel(serumPeriod(product))}</span>
+        </div>
         {title}
         <p className="mt-1 text-sm text-[#2B2727]/75">{product.tagline}</p>
         <p className="mt-2 text-sm font-semibold">${product.price}</p>
-        <p className="mt-2 text-[11px] tracking-wide text-[#2B2727]/60">{routinePeriodLabel(serumPeriod(product))}</p>
         {note ? <p className="mt-3 text-xs italic leading-relaxed text-[#2B2727]/60">{note}</p> : null}
       </div>
       <div className="flex shrink-0 flex-col items-end gap-3">
@@ -601,9 +603,12 @@ export default function ProtocolResults({
                     <StepMark mark={String(product.protocolStep).padStart(2, '0')} />
                     <img src={product.image} alt="" className="h-24 w-20 shrink-0 object-contain" />
                     <div className="min-w-0 flex-1">
-                      <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">
-                        {getProtocolStepLabel(product.protocolStep)}
-                      </p>
+                      <div className="flex items-baseline justify-between gap-3">
+                        <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">
+                          {getProtocolStepLabel(product.protocolStep)}
+                        </p>
+                        <p className="shrink-0 text-[11px] tracking-wide text-[#2B2727]/60">{routinePeriodLabel(period)}</p>
+                      </div>
                       {isVitaminC(product) ? (
                         <VitaminCTitle
                           strengthId={product.id}
@@ -617,7 +622,6 @@ export default function ProtocolResults({
                       )}
                       <p className="mt-1 text-sm text-[#2B2727]/75">{product.tagline}</p>
                       <p className="mt-2 text-sm font-semibold">${product.price}</p>
-                      <p className="mt-2 text-[11px] tracking-wide text-[#2B2727]/60">{routinePeriodLabel(period)}</p>
                       {isVitaminC(product) && (
                         <p className="mt-3 text-xs italic leading-relaxed text-[#2B2727]/60">
                           {vitaminCChoiceNote(built.cReason)}
@@ -676,9 +680,12 @@ export default function ProtocolResults({
                       <div className="w-12 shrink-0" aria-hidden="true" />
                       <img src={treatOffer.image} alt="" className="h-24 w-20 shrink-0 object-contain" />
                       <div className="min-w-0 flex-1">
-                        <p className="text-[10px] font-semibold tracking-[0.16em] uppercase text-[#2B2727]/60">
-                          {treatOffer.categories[0]}
-                        </p>
+                        <div className="flex items-baseline justify-between gap-3">
+                          <p className="text-[10px] font-semibold tracking-[0.16em] uppercase text-[#2B2727]/60">
+                            {treatOffer.categories[0]}
+                          </p>
+                          <p className="shrink-0 text-[11px] tracking-wide text-[#2B2727]/60">{routinePeriodLabel(serumPeriod(treatOffer))}</p>
+                        </div>
                         {isVitaminC(treatOffer) ? (
                           <VitaminCTitle
                             strengthId={treatOffer.id}
@@ -692,7 +699,6 @@ export default function ProtocolResults({
                         )}
                         <p className="mt-1 text-sm text-[#2B2727]/75">{treatOffer.tagline}</p>
                         <p className="mt-2 text-sm font-semibold">${treatOffer.price}</p>
-                        <p className="mt-2 text-[11px] tracking-wide text-[#2B2727]/60">{routinePeriodLabel(serumPeriod(treatOffer))}</p>
                         {isVitaminC(treatOffer) && (
                           <p className="mt-3 text-xs italic leading-relaxed text-[#2B2727]/60">
                             {vitaminCChoiceNote(built.cReason)}

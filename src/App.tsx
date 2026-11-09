@@ -883,7 +883,7 @@ export default function App() {
       preview === 'quiz-coverage' ||
       preview === 'heroes'
     )
-    const siteClass = design === 'white' || (design === 'working' && page === 'shop')
+    const siteClass = design === 'white' || design === 'working'
       ? 'palette-site white-site'
       : design === 'palette'
         ? 'palette-site'
