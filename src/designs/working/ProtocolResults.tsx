@@ -833,7 +833,7 @@ export default function ProtocolResults({
             <button
               type="button"
               onClick={() => addToCart(protocolProducts.map(product => product.id))}
-              className="flex-1 border border-[#ab8584] bg-[#ab8584] py-3.5 text-sm text-[#fffdfa] transition-colors hover:border-[#fffdfa] hover:bg-[#9a7675]"
+              className="flex-1 border border-[#ab8584] bg-[#ab8584] py-3.5 text-sm text-[#fffdfa] transition-colors hover:border-[#F3ECEB] hover:bg-[#F3ECEB] hover:text-[#2B2727]"
             >
               {protocolInCart ? 'Added ✓' : 'Add Entire Protocol to Cart'}
             </button>

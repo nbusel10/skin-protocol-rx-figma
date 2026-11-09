@@ -883,7 +883,11 @@ export default function App() {
       preview === 'quiz-coverage' ||
       preview === 'heroes'
     )
-    const siteClass = design === 'white' ? 'palette-site white-site' : design === 'palette' ? 'palette-site' : 'bg-[#F7F4EF]'
+    const siteClass = design === 'white' || (design === 'working' && page === 'shop')
+      ? 'palette-site white-site'
+      : design === 'palette'
+        ? 'palette-site'
+        : 'bg-[#F7F4EF]'
     return (
       <SiteRootProvider root={branded ? `/designs/${design}` : '/designs/working'}>
       <div className={`theme-clear min-h-screen ${siteClass}`}>
