@@ -87,7 +87,7 @@ export default function ProtocolQuizSection({
   const [concerns, setConcerns] = useState<QuizConcern[]>([])
   const [noConcerns, setNoConcerns] = useState(false)
   const [stepsPreference, setStepsPreference] = useState<StepsPreference>('moderate')
-  const [funAnswer, setFunAnswer] = useState('')
+  const [funAnswers, setFunAnswers] = useState<string[]>([])
 
   const progress = (step + 1) / TOTAL_STEPS
   const canContinue = [
@@ -95,8 +95,12 @@ export default function ProtocolQuizSection({
     reactivity !== '',
     concerns.length > 0 || noConcerns,
     true,
-    funAnswer !== '',
+    funAnswers.length > 0,
   ][step]
+
+  function toggleFunAnswer(value: string) {
+    setFunAnswers(prev => (prev.includes(value) ? prev.filter(x => x !== value) : [...prev, value]))
+  }
 
   function toggleConcern(c: QuizConcern) {
     setNoConcerns(false)
@@ -122,7 +126,7 @@ export default function ProtocolQuizSection({
       concerns: noConcerns ? [] : concerns,
       reactivity,
       stepsPreference,
-      funAnswer,
+      funAnswers,
     }
     const session: QuizSession = {
       step: 4,
@@ -335,13 +339,16 @@ export default function ProtocolQuizSection({
                 <h3 className={questionHeading}>
                   {funQuestion.title}
                 </h3>
+                <p className={`mb-4 text-[13px] ${lighter ? 'text-[#F7F4EF]/70' : refined ? 'text-[#2B2727]/60' : 'text-[#6D6A63]'}`}>
+                  Select all that apply.
+                </p>
                 <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
                   {funQuestion.options.map(option => (
                     <button
                       key={option.value}
                       type="button"
-                      onClick={() => setFunAnswer(option.value)}
-                      className={`${optionBtn(funAnswer === option.value, lighter, refined)} text-left`}
+                      onClick={() => toggleFunAnswer(option.value)}
+                      className={`${optionBtn(funAnswers.includes(option.value), lighter, refined)} text-left`}
                     >
                       {option.label}
                     </button>

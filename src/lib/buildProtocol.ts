@@ -60,7 +60,8 @@ export const FUN_QUESTIONS: FunQuestion[] = [
     title: 'If your skin could ask for one little upgrade, what would it choose?',
     options: [
       { value: 'upgrade-glow', label: 'A little more glow', serum: 'elixir' },
-      { value: 'upgrade-smooth', label: 'A smoother feel', serum: 'peptide' },
+      { value: 'upgrade-smooth', label: 'Softer-looking fine lines and wrinkles', serum: 'peptide' },
+      { value: 'upgrade-firm', label: 'A firmer, more lifted look', serum: 'peptide' },
       { value: 'upgrade-hydration', label: 'Extra hydration', serum: 'ha' },
       { value: 'upgrade-calm', label: 'A calmer complexion', serum: 'matrix' },
       { value: 'upgrade-pores', label: 'Clearer-looking pores', serum: 'bakuchiol' },
@@ -113,13 +114,31 @@ export function funOption(value: string | undefined): FunOption | undefined {
   return undefined
 }
 
+/** Resolve selected Q5 values to options (unknown values skipped). */
+export function funOptions(values: string[] | undefined): FunOption[] {
+  if (!values?.length) return []
+  return values.flatMap(value => {
+    const option = funOption(value)
+    return option ? [option] : []
+  })
+}
+
+/** Spoken list for results copy, e.g. "A, B, and C". */
+export function formatFunAnswerLabels(values: string[] | undefined): string {
+  const labels = funOptions(values).map(option => option.label)
+  if (labels.length <= 1) return labels[0] ?? ''
+  if (labels.length === 2) return `${labels[0]} and ${labels[1]}`
+  return `${labels.slice(0, -1).join(', ')}, and ${labels[labels.length - 1]}`
+}
+
 export interface ProtocolAnswers {
   skinType: QuizSkinType
   /** Empty when the user answered "No specific concerns". */
   concerns: QuizConcern[]
   reactivity: Reactivity
   stepsPreference: StepsPreference
-  funAnswer?: string
+  /** One or more Q5 upgrade / fun picks. */
+  funAnswers?: string[]
 }
 
 export interface ProtocolRecommendation {
@@ -277,8 +296,9 @@ export function scoreSerums(answers: ProtocolAnswers): SerumScore[] {
   for (const nudge of nudges) {
     for (const [key, value] of Object.entries(nudge ?? {})) points[key as SerumKey] += value ?? 0
   }
-  const fun = funOption(answers.funAnswer)
-  if (fun?.serum) points[fun.serum] += FUN_NUDGE
+  for (const fun of funOptions(answers.funAnswers)) {
+    if (fun.serum) points[fun.serum] += FUN_NUDGE
+  }
 
   return SERUM_ORDER.map(key => ({ key, points: points[key], firsts: firsts[key] })).sort(
     (a, b) => b.points - a.points || b.firsts - a.firsts || SERUM_ORDER.indexOf(a.key) - SERUM_ORDER.indexOf(b.key),
@@ -406,9 +426,7 @@ function pickWeekly(answers: ProtocolAnswers): Product | null {
   return byId(IDS.tripleglow)
 }
 
-function pickBonus(answers: ProtocolAnswers, taken: Product[]): Product | null {
-  const kind = funOption(answers.funAnswer)?.bonus
-  if (!kind) return null
+function bonusForKind(kind: BonusKind, answers: ProtocolAnswers, taken: Product[]): Product | null {
   const free = (id: string) => !taken.some(p => p.id === id)
   const oilOk = !oilExcluded(answers) && free(IDS.oil)
   if (kind === 'eye') return free(IDS.eye) ? byId(IDS.eye) : null
@@ -416,6 +434,15 @@ function pickBonus(answers: ProtocolAnswers, taken: Product[]): Product | null {
   if (kind === 'tripleglow') return !tripleGlowExcluded(answers) && free(IDS.tripleglow) ? byId(IDS.tripleglow) : null
   if (free(IDS.eye)) return byId(IDS.eye)
   return oilOk ? byId(IDS.oil) : null
+}
+
+function pickBonus(answers: ProtocolAnswers, taken: Product[]): Product | null {
+  for (const fun of funOptions(answers.funAnswers)) {
+    if (!fun.bonus) continue
+    const product = bonusForKind(fun.bonus, answers, taken)
+    if (product) return product
+  }
+  return null
 }
 
 /** Application order: Cleanse → Tone → Treat → Eye Care → Moisturize → Nourish */

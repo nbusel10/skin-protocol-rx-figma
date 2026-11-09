@@ -34,7 +34,8 @@ export type QuizSession = {
   concerns: QuizConcern[]
   noConcerns: boolean
   stepsPreference: StepsPreference
-  funAnswer: string
+  /** Selected Q5 option values (multi-select). */
+  funAnswers: string[]
   funQuestionId: FunQuestionId
   done: boolean
   cChoiceId: string
@@ -77,7 +78,7 @@ function isQuizSession(value: unknown): value is QuizSession {
   if (!Array.isArray(session.concerns) || session.concerns.some(concern => !CONCERNS.has(concern))) return false
   if (typeof session.noConcerns !== 'boolean') return false
   if (!STEP_CHOICES.has(session.stepsPreference)) return false
-  if (typeof session.funAnswer !== 'string') return false
+  if (!Array.isArray(session.funAnswers) || session.funAnswers.some(value => typeof value !== 'string')) return false
   if (!isFunQuestionId(session.funQuestionId)) return false
   if (typeof session.done !== 'boolean') return false
   if (typeof session.cChoiceId !== 'string') return false
@@ -92,14 +93,25 @@ function isQuizSession(value: unknown): value is QuizSession {
   if (session.skinSensitive != null && typeof session.skinSensitive !== 'boolean') return false
   if (session.done && (!session.skinType || !session.reactivity)) return false
   if (session.done && session.concerns.length === 0 && !session.noConcerns) return false
+  if (session.done && session.funAnswers.length === 0) return false
   return true
+}
+
+/** Normalize legacy single `funAnswer` sessions into `funAnswers`. */
+function normalizeSession(raw: unknown): QuizSession | null {
+  if (!raw || typeof raw !== 'object') return null
+  const value = raw as QuizSession & { funAnswer?: string }
+  if (!Array.isArray(value.funAnswers)) {
+    value.funAnswers = typeof value.funAnswer === 'string' && value.funAnswer ? [value.funAnswer] : []
+  }
+  return isQuizSession(value) ? value : null
 }
 
 export function loadQuizSession(): QuizSession | null {
   if (typeof sessionStorage === 'undefined') return null
   try {
     const parsed: unknown = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || 'null')
-    return isQuizSession(parsed) ? parsed : null
+    return normalizeSession(parsed)
   } catch {
     return null
   }
@@ -136,7 +148,7 @@ export function protocolFromSession(session: QuizSession): RestoredProtocol | nu
       concerns: session.concerns,
       reactivity: session.reactivity,
       stepsPreference: session.stepsPreference,
-      funAnswer: session.funAnswer,
+      funAnswers: session.funAnswers,
     }
     const result = buildProtocol(answers)
     const offer = optionalTreat(answers)
@@ -185,7 +197,7 @@ export function useQuizSessionState() {
   const [concerns, setConcerns] = useState<QuizConcern[]>(saved?.concerns ?? [])
   const [noConcerns, setNoConcerns] = useState(saved?.noConcerns ?? false)
   const [stepsPreference, setStepsPreference] = useState<StepsPreference>(saved?.stepsPreference ?? 'moderate')
-  const [funAnswer, setFunAnswer] = useState(saved?.funAnswer ?? '')
+  const [funAnswers, setFunAnswers] = useState<string[]>(saved?.funAnswers ?? [])
   const [recommendations, setRecommendations] = useState<Product[]>(restored?.products ?? [])
   const [weekly, setWeekly] = useState<Product | null>(restored?.weekly ?? null)
   const [alternative, setAlternative] = useState<Product | null>(restored?.alternative ?? null)
@@ -211,7 +223,7 @@ export function useQuizSessionState() {
     concerns,
     noConcerns,
     stepsPreference,
-    funAnswer,
+    funAnswers,
     funQuestionId: funQuestion.id,
     done,
     cChoiceId,
@@ -243,7 +255,7 @@ export function useQuizSessionState() {
     setConcerns([])
     setNoConcerns(false)
     setStepsPreference('moderate')
-    setFunAnswer('')
+    setFunAnswers([])
     setTreatOffer(null)
     setTreatOpen(false)
     setTreatAdded(false)
@@ -263,8 +275,8 @@ export function useQuizSessionState() {
     setNoConcerns,
     stepsPreference,
     setStepsPreference,
-    funAnswer,
-    setFunAnswer,
+    funAnswers,
+    setFunAnswers,
     recommendations,
     setRecommendations,
     weekly,

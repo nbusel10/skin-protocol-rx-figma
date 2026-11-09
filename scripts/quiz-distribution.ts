@@ -89,11 +89,11 @@ function scenarios(maxConcerns: number) {
     baseline: asPercents(tally(base.map(answers => ({ answers, baseTop: lookup(answers) })))),
   }
   for (const q of FUN_QUESTIONS) {
-    const runs = base.flatMap(a => q.options.map(o => ({ answers: { ...a, funAnswer: o.value }, baseTop: lookup(a) })))
+    const runs = base.flatMap(a => q.options.map(o => ({ answers: { ...a, funAnswers: [o.value] }, baseTop: lookup(a) })))
     const byAnswer = Object.fromEntries(
       q.options.map(o => [
         o.label,
-        asPercents(tally(base.map(a => ({ answers: { ...a, funAnswer: o.value }, baseTop: lookup(a) })))),
+        asPercents(tally(base.map(a => ({ answers: { ...a, funAnswers: [o.value] }, baseTop: lookup(a) })))),
       ]),
     )
     out[q.id] = { ...asPercents(tally(runs)), byAnswer }

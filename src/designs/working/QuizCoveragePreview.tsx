@@ -1,6 +1,7 @@
 /** Client-facing quiz coverage: how often each product is recommended by routine-size choice. */
 
-const PER_CHOICE = 4096
+/** 4 skin × 256 concerns × 4 reactivity × 63 non-empty Q5 multi-select combos. */
+const PER_CHOICE = 258048
 
 const PRODUCTS = [
   'Chamomile cleanser',
@@ -22,9 +23,9 @@ const PRODUCTS = [
 
 /** Times each product is in the recommended routine. */
 const IN_ROUTINE = {
-  three: [2996, 1100, 3072, 0, 0, 0, 0, 608, 416, 0, 0, 2816, 1280, 0, 0],
-  four: [2996, 1100, 3072, 2958, 435, 467, 84, 24, 24, 104, 0, 2816, 1280, 0, 0],
-  six: [2996, 1100, 3072, 2958, 435, 467, 84, 24, 24, 104, 4096, 2816, 1280, 1024, 1524],
+  three: [188748, 69300, 193536, 0, 0, 0, 0, 38048, 26464, 0, 0, 177408, 80640, 0, 0],
+  four: [188748, 69300, 193536, 185254, 35284, 22801, 3820, 1644, 1576, 7669, 0, 177408, 80640, 0, 0],
+  six: [188748, 69300, 193536, 185254, 35284, 22801, 3820, 1644, 1576, 7669, 258048, 177408, 80640, 64512, 96012],
 } as const
 
 /**
@@ -32,9 +33,9 @@ const IN_ROUTINE = {
  * Index order matches PRODUCTS. Toner, creams, eye cream, oil, and TripleGlow stay 0.
  */
 const ALSO_CONSIDER = {
-  three: [1008, 2888, 0, 1373, 950, 1106, 296, 61, 125, 179, 0, 0, 0, 0, 0],
-  four: [1008, 2888, 0, 840, 1100, 1354, 296, 115, 189, 196, 0, 0, 0, 0, 0],
-  six: [1008, 2888, 0, 840, 1100, 1354, 296, 115, 189, 196, 0, 0, 0, 0, 0],
+  three: [63504, 181944, 0, 87535, 70115, 60050, 14552, 4523, 7619, 13636, 0, 0, 0, 0, 0],
+  four: [63504, 181944, 0, 54510, 80078, 74230, 14552, 7963, 11713, 14984, 0, 0, 0, 0, 0],
+  six: [63504, 181944, 0, 54510, 80078, 74230, 14552, 7963, 11713, 14984, 0, 0, 0, 0, 0],
 } as const
 
 const GROUPS = [
@@ -92,15 +93,16 @@ export default function QuizCoveragePreview() {
       <div className="mx-auto max-w-6xl space-y-10 px-6 py-10 md:px-10 md:py-14">
         <p className="max-w-3xl text-[16px] leading-relaxed text-[#595750]">
           For each routine-size choice in the quiz (3 products, 4 products, or full up to 6), every other answer
-          combination was run — 4,096 per choice. Bars show how many of those answers include each product in the
-          routine, or as an “Also consider” alternative serum or daily cleanser.
+          combination was run — 258,048 per choice, including every non-empty multi-select combo for question 5.
+          Bars show how many of those answers include each product in the routine, or as an “Also consider”
+          alternative serum or daily cleanser.
         </p>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           {[
-            ['4,096', 'Combinations for 3-product choice'],
-            ['4,096', 'Combinations for 4-product choice'],
-            ['4,096', 'Combinations for full (up to 6)'],
+            ['258,048', 'Combinations for 3-product choice'],
+            ['258,048', 'Combinations for 4-product choice'],
+            ['258,048', 'Combinations for full (up to 6)'],
           ].map(([value, label]) => (
             <div key={label} className="border border-[#D6CEC3] bg-[#FFFDFA] px-5 py-4">
               <p className="font-serif text-3xl tracking-[-0.03em]">{value}</p>
@@ -123,7 +125,7 @@ export default function QuizCoveragePreview() {
             <div>
               <h2 className="font-serif text-2xl tracking-[-0.02em]">Share of combinations by product</h2>
               <p className="mt-1 text-[13px] text-[#6D6A63]">
-                % of the 4,096 answer combinations for that routine choice.
+                % of the 258,048 answer combinations for that routine choice.
               </p>
             </div>
             <div className="flex flex-wrap gap-4 text-[12px] font-medium">
@@ -186,17 +188,18 @@ export default function QuizCoveragePreview() {
             ))}
           </div>
           <p className="mt-3 text-[12px] text-[#6D6A63]">
-            Source: buildProtocol over 4 skin types × 256 concern sets × 4 reactivity answers, for each of the 3
-            routine-size choices. “Also consider” covers the next-ranked serum and the losing daily cleanser when it
-            scored. Toner, creams, eye cream, oil, and TripleGlow are never the alternative. The 4-product and full
-            Also-consider bars match, because runner-ups do not depend on eye cream or oil.
+            Source: buildProtocol over 4 skin types × 256 concern sets × 4 reactivity answers × 63 question-5
+            multi-select combos, for each of the 3 routine-size choices. “Also consider” covers the next-ranked serum
+            and the losing daily cleanser when it scored. Toner, creams, eye cream, oil, and TripleGlow are never the
+            alternative. The 4-product and full Also-consider bars match, because runner-ups do not depend on eye cream
+            or oil.
           </p>
         </section>
 
         <section>
           <h2 className="font-serif text-2xl tracking-[-0.02em]">Exact counts</h2>
           <p className="mt-1 mb-4 text-[13px] text-[#6D6A63]">
-            Out of 4,096 combinations per routine-size column. In routine = placed in the protocol. Also = shown as
+            Out of 258,048 combinations per routine-size column. In routine = placed in the protocol. Also = shown as
             “Also consider.”
           </p>
           <div className="overflow-x-auto border border-[#D6CEC3] bg-[#FFFDFA]">
@@ -233,7 +236,7 @@ export default function QuizCoveragePreview() {
           <p className="font-semibold text-[#252520]">Why the 4-product choice is not always 4 products</p>
           <p className="mt-1">
             If someone picks “4 products” but also answers “Often” on reactivity, the toner is left out, so the routine
-            has 3 products (cleanser + serum + moisturizer). That happens in 1,024 of the 4,096 four-product
+            has 3 products (cleanser + serum + moisturizer). That happens in 64,512 of the 258,048 four-product
             combinations (25%). The full choice always includes eye cream; oil is only added when Acne and Oily Skin
             are not selected (25% of full combinations).
           </p>

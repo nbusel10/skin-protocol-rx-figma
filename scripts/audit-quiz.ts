@@ -11,6 +11,8 @@ import {
   recommendedVitaminCId,
   SERUM_RANKINGS,
   FUN_QUESTIONS,
+  DEFAULT_FUN_QUESTION,
+  funQuestionById,
   QUIZ_CONCERNS,
   QUIZ_SKIN_TYPES,
   REACTIVITY_OPTIONS,
@@ -21,7 +23,23 @@ import {
 
 const STEPS: StepsPreference[] = ['minimal', 'moderate', 'complete']
 const REACTIVITY = REACTIVITY_OPTIONS.map(r => r.value)
-const FUN_ANSWERS: (string | undefined)[] = [undefined, ...FUN_QUESTIONS.flatMap(q => q.options.map(o => o.value))]
+
+function optionSubsets(values: string[]): string[][] {
+  const out: string[][] = [[]]
+  for (const value of values) {
+    for (let i = 0, n = out.length; i < n; i++) out.push([...out[i], value])
+  }
+  return out
+}
+
+const UPGRADE_VALUES = funQuestionById(DEFAULT_FUN_QUESTION).options.map(o => o.value)
+/** Empty, every upgrade multi-select combo, plus other fun-question singles for bonus paths. */
+const FUN_ANSWERS: string[][] = [
+  ...optionSubsets(UPGRADE_VALUES),
+  ...FUN_QUESTIONS.filter(q => q.id !== DEFAULT_FUN_QUESTION).flatMap(q =>
+    q.options.map(o => [o.value]),
+  ),
+]
 
 const CORE = {
   chamomile: 'clarifying-cleanser',
@@ -76,11 +94,11 @@ for (const skinType of QUIZ_SKIN_TYPES) {
   for (const concerns of concernSubsets()) {
     for (const reactivity of REACTIVITY) {
       for (const stepsPreference of STEPS) {
-        for (const funAnswer of FUN_ANSWERS) {
-          const answers: ProtocolAnswers = { skinType, concerns, reactivity, stepsPreference, funAnswer }
+        for (const funAnswers of FUN_ANSWERS) {
+          const answers: ProtocolAnswers = { skinType, concerns, reactivity, stepsPreference, funAnswers }
           const result = buildProtocol(answers)
           const daily = result.products.map(p => p.id)
-          const label = `${skinType} | ${concerns.join('+') || 'none'} | ${reactivity} | ${stepsPreference} | ${funAnswer ?? '-'}`
+          const label = `${skinType} | ${concerns.join('+') || 'none'} | ${reactivity} | ${stepsPreference} | ${funAnswers.join('+') || '-'}`
           const often = reactivity === 'often'
           const reactive = isReactive(answers)
           const has = (c: QuizConcern) => concerns.includes(c)
@@ -193,6 +211,10 @@ for (const skinType of QUIZ_SKIN_TYPES) {
           const reordered = { ...answers, concerns: shuffled(concerns, checked) }
           if (JSON.stringify(scoreSerums(answers)) !== JSON.stringify(scoreSerums(reordered))) {
             failures.push(`${label}: concern order changed the scores`)
+          }
+          const reorderedFun = { ...answers, funAnswers: shuffled(funAnswers, checked + 17) }
+          if (JSON.stringify(scoreSerums(answers)) !== JSON.stringify(scoreSerums(reorderedFun))) {
+            failures.push(`${label}: fun-answer order changed the scores`)
           }
 
           // AM/PM split

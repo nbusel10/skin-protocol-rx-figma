@@ -2,7 +2,7 @@ import { Fragment, useState, type ReactNode } from 'react'
 import EmailProtocolModal from '../../components/EmailProtocolModal'
 import { getProtocolStepLabel, PROTECT_GUIDANCE, type Product } from '../../data'
 import {
-  funOption,
+  formatFunAnswerLabels,
   isEveningOnlySerum,
   isVitaminC,
   otherVitaminC,
@@ -767,7 +767,7 @@ export default function ProtocolResults({
                 <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">Bonus pick</p>
                 <h2 className="mt-1 font-serif text-[1.35rem] leading-snug">{bonus.name}</h2>
                 <p className="mt-1 text-sm text-[#2B2727]/75">
-                  Because you chose “{funOption(current.funAnswer)?.label ?? ''}”.
+                  Because you chose “{formatFunAnswerLabels(current.funAnswers)}”.
                 </p>
                 <p className="mt-2 text-sm font-semibold">${bonus.price}</p>
               </div>

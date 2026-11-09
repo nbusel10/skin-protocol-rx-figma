@@ -1,5 +1,7 @@
 import {
   buildProtocol,
+  DEFAULT_FUN_QUESTION,
+  funQuestionById,
   QUIZ_CONCERNS,
   QUIZ_SKIN_TYPES,
   REACTIVITY_OPTIONS,
@@ -37,8 +39,21 @@ function concernSubsets(): (typeof QUIZ_CONCERNS)[number][][] {
   return out
 }
 
+/** Non-empty Q5 multi-select combos for the default upgrade question. */
+function funAnswerSubsets(): string[][] {
+  const values = funQuestionById(DEFAULT_FUN_QUESTION).options.map(o => o.value)
+  const out: string[][] = [[]]
+  for (const value of values) {
+    for (let i = 0, n = out.length; i < n; i++) out.push([...out[i], value])
+  }
+  return out.filter(set => set.length > 0)
+}
+
 const concernsList = concernSubsets()
+const funList = funAnswerSubsets()
 const keys = { minimal: 'three', moderate: 'four', complete: 'six' } as const
+
+console.log(`funAnswer combos=${funList.length}; per choice=${QUIZ_SKIN_TYPES.length * concernsList.length * REACTIVITY.length * funList.length}`)
 
 for (const steps of STEPS) {
   const inRoutine = Object.fromEntries(IDS.map(id => [id, 0])) as Record<string, number>
@@ -47,13 +62,15 @@ for (const steps of STEPS) {
   for (const skinType of QUIZ_SKIN_TYPES) {
     for (const concerns of concernsList) {
       for (const reactivity of REACTIVITY) {
-        const answers: ProtocolAnswers = { skinType, concerns, reactivity, stepsPreference: steps }
-        const result = buildProtocol(answers)
-        n++
-        for (const p of result.products) inRoutine[p.id]++
-        if (result.weekly) inRoutine[result.weekly.id]++
-        if (result.alternative) also[result.alternative.id]++
-        if (result.cleanserAlternative) also[result.cleanserAlternative.id]++
+        for (const funAnswers of funList) {
+          const answers: ProtocolAnswers = { skinType, concerns, reactivity, stepsPreference: steps, funAnswers }
+          const result = buildProtocol(answers)
+          n++
+          for (const p of result.products) inRoutine[p.id]++
+          if (result.weekly) inRoutine[result.weekly.id]++
+          if (result.alternative) also[result.alternative.id]++
+          if (result.cleanserAlternative) also[result.cleanserAlternative.id]++
+        }
       }
     }
   }

@@ -13,7 +13,7 @@ import {
   recommendedVitaminCId,
   routineEntries,
   routinePeriodLabel,
-  funOption,
+  formatFunAnswerLabels,
   QUIZ_CONCERNS,
   QUIZ_SKIN_TYPES,
   REACTIVITY_OPTIONS,
@@ -367,8 +367,8 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
     setNoConcerns,
     stepsPreference,
     setStepsPreference,
-    funAnswer,
-    setFunAnswer,
+    funAnswers,
+    setFunAnswers,
     recommendations,
     setRecommendations,
     weekly,
@@ -409,13 +409,16 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
     setConcerns([])
     setNoConcerns(prev => !prev)
   }
+  const toggleFunAnswer = (value: string) => {
+    setFunAnswers(prev => (prev.includes(value) ? prev.filter(x => x !== value) : [...prev, value]))
+  }
 
   const canAdvance = [
     skinType !== '',
     reactivity !== '',
     concerns.length > 0 || noConcerns,
     true,
-    funAnswer !== '',
+    funAnswers.length > 0,
   ]
 
   const [emailModalOpen, setEmailModalOpen] = useState(false)
@@ -434,13 +437,13 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
   }
 
   const finish = () => {
-    if (!skinType || !reactivity || (!concerns.length && !noConcerns) || !funAnswer) return
+    if (!skinType || !reactivity || (!concerns.length && !noConcerns) || !funAnswers.length) return
     const answers = {
       skinType,
       concerns,
       reactivity,
       stepsPreference,
-      funAnswer,
+      funAnswers,
     }
     const result = buildProtocol(answers)
     const cId = recommendedVitaminCId(answers)
@@ -516,10 +519,18 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
     {
       title: funQuestion.title,
       content: (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {funQuestion.options.map(o => (
-            <OptionButton key={o.value} selected={funAnswer === o.value} onClick={() => setFunAnswer(o.value)} label={o.label} />
-          ))}
+        <div className="space-y-3">
+          <p className="text-sm text-charcoal/50">Select all that apply.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {funQuestion.options.map(o => (
+              <OptionButton
+                key={o.value}
+                selected={funAnswers.includes(o.value)}
+                onClick={() => toggleFunAnswer(o.value)}
+                label={o.label}
+              />
+            ))}
+          </div>
         </div>
       ),
     },
@@ -654,7 +665,7 @@ export default function ProtocolBuilder({ onNavigate, onAddToCart }: ProtocolBui
               <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-4">A Little Extra</p>
               <SuggestionRow
                 eyebrow="Bonus pick"
-                note={`Because you chose “${funOption(funAnswer)?.label ?? ''}”.`}
+                note={`Because you chose “${formatFunAnswerLabels(funAnswers)}”.`}
                 product={bonus}
                 added={addedIds.includes(bonus.id)}
                 onAdd={() => addToCart([bonus.id])}
