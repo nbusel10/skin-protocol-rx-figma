@@ -41,6 +41,8 @@ export type QuizSession = {
   /** Working-design results: serum the visitor picked when a runner-up was offered. */
   serumChoiceId?: string
   addedIds: string[]
+  /** Units of each product in the working-design cart. Missing ids count as 1. */
+  cartQty?: Record<string, number>
   treatAdded: boolean
   treatOpen: boolean
   /** Working-design quiz: visitor chose "Not sure yet". */
@@ -81,6 +83,10 @@ function isQuizSession(value: unknown): value is QuizSession {
   if (typeof session.cChoiceId !== 'string') return false
   if (session.serumChoiceId != null && typeof session.serumChoiceId !== 'string') return false
   if (!Array.isArray(session.addedIds) || session.addedIds.some(id => typeof id !== 'string')) return false
+  if (session.cartQty != null) {
+    if (typeof session.cartQty !== 'object' || Array.isArray(session.cartQty)) return false
+    if (Object.entries(session.cartQty).some(([, qty]) => typeof qty !== 'number' || !Number.isInteger(qty) || qty < 1)) return false
+  }
   if (typeof session.treatAdded !== 'boolean' || typeof session.treatOpen !== 'boolean') return false
   if (session.skinUnsure != null && typeof session.skinUnsure !== 'boolean') return false
   if (session.skinSensitive != null && typeof session.skinSensitive !== 'boolean') return false
@@ -97,6 +103,11 @@ export function loadQuizSession(): QuizSession | null {
   } catch {
     return null
   }
+}
+
+export function cartItemCount(session: QuizSession | null | undefined): number {
+  if (!session) return 0
+  return session.addedIds.reduce((sum, id) => sum + (session.cartQty?.[id] ?? 1), 0)
 }
 
 export function saveQuizSession(session: QuizSession) {

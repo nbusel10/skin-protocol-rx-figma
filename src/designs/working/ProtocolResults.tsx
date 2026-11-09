@@ -69,19 +69,71 @@ function StepMark({ mark }: { mark: string }) {
   )
 }
 
-function AddCartButton({ added, onAdd }: { added: boolean; onAdd: () => void }) {
+function AddCartButton({
+  qty,
+  onAdd,
+  onQty,
+  onRemove,
+}: {
+  qty: number
+  onAdd: () => void
+  onQty: (qty: number) => void
+  onRemove: () => void
+}) {
+  if (qty < 1) {
+    return (
+      <button
+        type="button"
+        onClick={event => {
+          event.stopPropagation()
+          onAdd()
+        }}
+        className="whitespace-nowrap bg-[#2B2727] px-3 py-2 text-[11px] tracking-wide text-[#fffdfa]"
+      >
+        Add to Cart
+      </button>
+    )
+  }
   return (
-    <button
-      type="button"
-      onClick={event => {
-        event.stopPropagation()
-        onAdd()
-      }}
-      aria-live="polite"
-      className={`whitespace-nowrap px-3 py-2 text-[11px] tracking-wide ${added ? 'border border-[#ab8584] bg-[#f3eceb] text-[#ab8584]' : 'bg-[#2B2727] text-[#fffdfa]'}`}
-    >
-      {added ? 'Added ✓' : 'Add to Cart'}
-    </button>
+    <div className="flex flex-col items-end gap-1.5">
+      <div className="flex items-center border border-[#2B2727]" role="group" aria-label="Quantity">
+        <button
+          type="button"
+          aria-label="Decrease quantity"
+          disabled={qty <= 1}
+          onClick={event => {
+            event.stopPropagation()
+            onQty(qty - 1)
+          }}
+          className="px-2 py-1.5 text-[13px] leading-none text-[#2B2727] disabled:text-[#2B2727]/30"
+        >
+          −
+        </button>
+        <span className="min-w-5 text-center text-[12px] tabular-nums" aria-live="polite">{qty}</span>
+        <button
+          type="button"
+          aria-label="Increase quantity"
+          disabled={qty >= 10}
+          onClick={event => {
+            event.stopPropagation()
+            onQty(qty + 1)
+          }}
+          className="px-2 py-1.5 text-[13px] leading-none text-[#2B2727] disabled:text-[#2B2727]/30"
+        >
+          +
+        </button>
+      </div>
+      <button
+        type="button"
+        onClick={event => {
+          event.stopPropagation()
+          onRemove()
+        }}
+        className="text-[12px] text-[#2B2727]/60 transition-colors hover:text-[#ab8584]"
+      >
+        Remove
+      </button>
+    </div>
   )
 }
 
@@ -176,7 +228,9 @@ function ChoiceCard({
   onSelect,
   onView,
   onAdd,
-  added,
+  qty,
+  onQty,
+  onRemove,
   title,
   note,
 }: {
@@ -186,7 +240,9 @@ function ChoiceCard({
   onSelect: () => void
   onView: (id: string) => void
   onAdd: () => void
-  added: boolean
+  qty: number
+  onQty: (qty: number) => void
+  onRemove: () => void
   title: ReactNode
   note?: string
 }) {
@@ -207,7 +263,7 @@ function ChoiceCard({
         <span className="border border-[#D6C3C2] px-2.5 py-1 text-[11px] tracking-wide text-[#2B2727]/60">
           {routinePeriodLabel(serumPeriod(product))}
         </span>
-        <AddCartButton added={added} onAdd={onAdd} />
+        <AddCartButton qty={qty} onAdd={onAdd} onQty={onQty} onRemove={onRemove} />
         <QuietLink onClick={() => onView(product.id)}>View</QuietLink>
       </div>
     </div>
@@ -226,7 +282,9 @@ function VitaminCStep({
   onSelectRecommended,
   onView,
   onAdd,
-  addedIds,
+  qtyOf,
+  onQty,
+  onRemove,
 }: {
   recommended: Product
   alternative: Product
@@ -239,7 +297,9 @@ function VitaminCStep({
   onSelectRecommended: () => void
   onView: (id: string) => void
   onAdd: (id: string) => void
-  addedIds: string[]
+  qtyOf: (id: string) => number
+  onQty: (id: string, qty: number) => void
+  onRemove: (id: string) => void
 }) {
   const recommendedIsC = isVitaminC(recommended)
   const vitaminC = shownProduct(recommendedIsC ? recommended : alternative, strengthId)
@@ -265,7 +325,9 @@ function VitaminCStep({
       onSelect={recommendedIsC ? onSelectRecommended : onSelectAlternative}
       onView={onView}
       onAdd={() => onAdd(vitaminC.id)}
-      added={addedIds.includes(vitaminC.id)}
+      qty={qtyOf(vitaminC.id)}
+      onQty={qty => onQty(vitaminC.id, qty)}
+      onRemove={() => onRemove(vitaminC.id)}
       title={title}
       note={vitaminCChoiceNote(reason)}
     />
@@ -278,7 +340,9 @@ function VitaminCStep({
       onSelect={recommendedIsC ? onSelectAlternative : onSelectRecommended}
       onView={onView}
       onAdd={() => onAdd(other.id)}
-      added={addedIds.includes(other.id)}
+      qty={qtyOf(other.id)}
+      onQty={qty => onQty(other.id, qty)}
+      onRemove={() => onRemove(other.id)}
       title={<h2 className="mt-1 font-serif text-[1.15rem] leading-snug">{other.name}</h2>}
     />
   )
@@ -447,19 +511,46 @@ export default function ProtocolResults({
       if (isVitaminC(product)) drop.add(otherVitaminC(product).id)
     }
     const addedIds = current.addedIds.filter(id => !drop.has(id))
-    const next = { ...current, treatAdded: false, treatOpen: true, addedIds }
+    const cartQty = { ...current.cartQty }
+    for (const id of drop) delete cartQty[id]
+    const next = { ...current, treatAdded: false, treatOpen: true, addedIds, cartQty }
     saveQuizSession(next)
     setSession(next)
     if (addedIds.length !== current.addedIds.length) window.dispatchEvent(new Event('sprx-cart-updated'))
   }
 
-  function addToCart(ids: string[]) {
-    const fresh = ids.filter(id => !current.addedIds.includes(id))
-    if (!fresh.length) return
-    const next = { ...current, addedIds: [...current.addedIds, ...fresh] }
+  function saveCart(next: QuizSession) {
     saveQuizSession(next)
     setSession(next)
     window.dispatchEvent(new Event('sprx-cart-updated'))
+  }
+
+  function addToCart(ids: string[]) {
+    const fresh = ids.filter(id => !current.addedIds.includes(id))
+    if (!fresh.length) return
+    const cartQty = { ...current.cartQty }
+    for (const id of fresh) cartQty[id] = 1
+    saveCart({ ...current, addedIds: [...current.addedIds, ...fresh], cartQty })
+  }
+
+  function setCartQty(id: string, qty: number) {
+    if (qty < 1) {
+      removeFromCart(id)
+      return
+    }
+    const cartQty = { ...current.cartQty, [id]: Math.min(10, qty) }
+    const addedIds = current.addedIds.includes(id) ? current.addedIds : [...current.addedIds, id]
+    saveCart({ ...current, addedIds, cartQty })
+  }
+
+  function removeFromCart(id: string) {
+    const cartQty = { ...current.cartQty }
+    delete cartQty[id]
+    saveCart({ ...current, addedIds: current.addedIds.filter(item => item !== id), cartQty })
+  }
+
+  function qtyOf(id: string) {
+    return current.addedIds.includes(id) ? current.cartQty?.[id] ?? 1 : 0
   }
 
   const protocolProducts = [...entries.map(entry => entry.product), ...(weekly ? [weekly] : [])]
@@ -502,7 +593,9 @@ export default function ProtocolResults({
                   onSelectRecommended={() => chooseSerum(activePair.recommended.id)}
                   onView={onViewProduct}
                   onAdd={id => addToCart([id])}
-                  addedIds={current.addedIds}
+                  qtyOf={qtyOf}
+                  onQty={setCartQty}
+                  onRemove={removeFromCart}
                 />
               ) : (
                 <>
@@ -536,7 +629,7 @@ export default function ProtocolResults({
                       <span className="border border-[#D6C3C2] px-2.5 py-1 text-[11px] tracking-wide text-[#2B2727]/60">
                         {routinePeriodLabel(period)}
                       </span>
-                      <AddCartButton added={current.addedIds.includes(product.id)} onAdd={() => addToCart([product.id])} />
+                      <AddCartButton qty={qtyOf(product.id)} onAdd={() => addToCart([product.id])} onQty={qty => setCartQty(product.id, qty)} onRemove={() => removeFromCart(product.id)} />
                       <QuietLink onClick={() => onViewProduct(product.id)}>View</QuietLink>
                     </div>
                   </div>
@@ -640,7 +733,7 @@ export default function ProtocolResults({
               <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#ab8584]">{PROTECT_GUIDANCE.label}</p>
               <h2 className="mt-1 font-serif text-[1.35rem] leading-snug">Broad-spectrum SPF 30+</h2>
               <p className="mt-1 text-sm text-[#2B2727]/75">{PROTECT_GUIDANCE.description}</p>
-              <p className="mt-1 text-sm text-[#2B2727]/60">{PROTECT_GUIDANCE.note}</p>
+              {PROTECT_GUIDANCE.note ? <p className="mt-1 text-sm text-[#2B2727]/60">{PROTECT_GUIDANCE.note}</p> : null}
             </div>
           </li>
         </ul>
@@ -658,7 +751,7 @@ export default function ProtocolResults({
                 <p className="mt-2 text-sm font-semibold">${weekly.price}</p>
               </div>
               <div className="flex shrink-0 flex-col items-end justify-center gap-2">
-                <AddCartButton added={current.addedIds.includes(weekly.id)} onAdd={() => addToCart([weekly.id])} />
+                <AddCartButton qty={qtyOf(weekly.id)} onAdd={() => addToCart([weekly.id])} onQty={qty => setCartQty(weekly.id, qty)} onRemove={() => removeFromCart(weekly.id)} />
                 <QuietLink onClick={() => onViewProduct(weekly.id)}>View</QuietLink>
               </div>
             </div>
@@ -679,7 +772,7 @@ export default function ProtocolResults({
                 <p className="mt-2 text-sm font-semibold">${bonus.price}</p>
               </div>
               <div className="flex shrink-0 flex-col items-end justify-center gap-2">
-                <AddCartButton added={current.addedIds.includes(bonus.id)} onAdd={() => addToCart([bonus.id])} />
+                <AddCartButton qty={qtyOf(bonus.id)} onAdd={() => addToCart([bonus.id])} onQty={qty => setCartQty(bonus.id, qty)} onRemove={() => removeFromCart(bonus.id)} />
                 <QuietLink onClick={() => onViewProduct(bonus.id)}>View</QuietLink>
               </div>
             </div>
@@ -700,7 +793,7 @@ export default function ProtocolResults({
                     <p className="mt-2 text-sm font-semibold">${alternative.price}</p>
                   </div>
                   <div className="flex shrink-0 flex-col items-end justify-center gap-2">
-                    <AddCartButton added={current.addedIds.includes(alternative.id)} onAdd={() => addToCart([alternative.id])} />
+                    <AddCartButton qty={qtyOf(alternative.id)} onAdd={() => addToCart([alternative.id])} onQty={qty => setCartQty(alternative.id, qty)} onRemove={() => removeFromCart(alternative.id)} />
                     <QuietLink onClick={() => onViewProduct(alternative.id)}>View</QuietLink>
                   </div>
                 </div>
@@ -718,8 +811,10 @@ export default function ProtocolResults({
                   </div>
                   <div className="flex shrink-0 flex-col items-end justify-center gap-2">
                     <AddCartButton
-                      added={current.addedIds.includes(cleanserAlternative.id)}
+                      qty={qtyOf(cleanserAlternative.id)}
                       onAdd={() => addToCart([cleanserAlternative.id])}
+                      onQty={qty => setCartQty(cleanserAlternative.id, qty)}
+                      onRemove={() => removeFromCart(cleanserAlternative.id)}
                     />
                     <QuietLink onClick={() => onViewProduct(cleanserAlternative.id)}>View</QuietLink>
                   </div>

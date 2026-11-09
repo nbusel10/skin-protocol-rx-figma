@@ -224,7 +224,7 @@ export default function ProductEducation({ onNavigate }: ProductEducationProps) 
             <div className="mt-14 md:mt-20 border border-gray-soft bg-ivory-dark p-6 md:p-8">
               <p className="text-[11px] tracking-[0.3em] uppercase text-rose mb-2">{PROTECT_GUIDANCE.label}</p>
               <p className="text-sm text-charcoal/60 leading-relaxed mb-1">{PROTECT_GUIDANCE.description}</p>
-              <p className="text-sm text-charcoal/45 leading-relaxed">{PROTECT_GUIDANCE.note}</p>
+              {PROTECT_GUIDANCE.note ? <p className="text-sm text-charcoal/45 leading-relaxed">{PROTECT_GUIDANCE.note}</p> : null}
             </div>
           )}
 

@@ -258,7 +258,7 @@ function ProtectRow() {
         <p className="text-[10px] tracking-widest uppercase text-rose mb-1">{PROTECT_GUIDANCE.label}</p>
         <h3 className="font-medium text-charcoal mb-1">Broad-spectrum SPF 30+</h3>
         <p className="text-xs text-charcoal/50 mb-1">{PROTECT_GUIDANCE.description}</p>
-        <p className="text-xs text-charcoal/40">{PROTECT_GUIDANCE.note}</p>
+        {PROTECT_GUIDANCE.note ? <p className="text-xs text-charcoal/40">{PROTECT_GUIDANCE.note}</p> : null}
       </div>
       <div className="flex flex-col items-end justify-center shrink-0">
         <PeriodBadge label="AM only" />

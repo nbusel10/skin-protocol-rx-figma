@@ -79,8 +79,8 @@ export const PROTECT_GUIDANCE = {
   step: 7 as const,
   name: 'Protect' as const,
   label: 'Step 7 · Protect',
-  description: 'Finish the morning routine with broad-spectrum SPF 30+ sunscreen.',
-  note: 'Use your preferred SPF, even if purchased separately.',
+  description: 'Finish the morning routine with your favorite broad-spectrum SPF 30+ sunscreen.',
+  note: '',
 }
 
 export function getProtocolStepLabel(step: ProductProtocolStep | 7): string {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { loadQuizSession } from '../../lib/quizSession'
+import { cartItemCount, loadQuizSession } from '../../lib/quizSession'
 import { useSiteRoot } from './siteRoot'
 import SocialLinks from './SocialLinks'
 
@@ -15,7 +15,7 @@ export default function Header({ lighter = false }: { lighter?: boolean }) {
   const site = useSiteRoot()
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [cartCount, setCartCount] = useState(() => loadQuizSession()?.addedIds.length ?? 0)
+  const [cartCount, setCartCount] = useState(() => cartItemCount(loadQuizSession()))
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -24,7 +24,7 @@ export default function Header({ lighter = false }: { lighter?: boolean }) {
   }, [])
 
   useEffect(() => {
-    const syncCart = () => setCartCount(loadQuizSession()?.addedIds.length ?? 0)
+    const syncCart = () => setCartCount(cartItemCount(loadQuizSession()))
     window.addEventListener('sprx-cart-updated', syncCart)
     return () => window.removeEventListener('sprx-cart-updated', syncCart)
   }, [])
@@ -130,7 +130,7 @@ export default function Header({ lighter = false }: { lighter?: boolean }) {
               </svg>
             </button>
 
-            <button type="button" className="relative text-charcoal/60 transition-colors hover:text-charcoal" aria-label={cartCount > 0 ? `Cart, ${cartCount} items` : 'Cart'}>
+            <button type="button" className="relative text-charcoal/60 transition-colors hover:text-charcoal" aria-label={cartCount > 0 ? `Cart, ${cartCount} ${cartCount === 1 ? 'item' : 'items'}` : 'Cart'}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={lighter ? 1.25 : 1.8}>
                 <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
                 <line x1="3" y1="6" x2="21" y2="6" />
