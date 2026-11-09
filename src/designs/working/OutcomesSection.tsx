@@ -235,14 +235,14 @@ function ResultsTimeline({
             </span>
             <div className={last ? 'rounded-2xl bg-[#fffdfa] p-4' : ''}>
               <p className={LABEL}>{when}</p>
-              <h3 className="mt-1.5 font-serif text-[28px] leading-tight font-normal tracking-[-0.03em] text-[#252520] md:text-[32px]">
+              <h3 className="mt-1.5 text-[15px] leading-snug font-normal text-[#252520]">
                 {assessment.heading}
               </h3>
-              <p className="mt-2 max-w-[36rem] font-serif text-[17px] leading-[1.5] text-[#4c4943] italic">
+              <p className="mt-2 max-w-[36rem] text-[15px] leading-snug text-[#252520]">
                 “{assessment.findings}”
               </p>
               {assessment.metric?.trim() ? (
-                <p className="mt-4 font-serif text-[28px] leading-none text-[#ab8584] italic">{assessment.metric}</p>
+                <p className="mt-4 text-[15px] leading-snug text-[#252520]">{assessment.metric}</p>
               ) : null}
               {assessment.photograph ? (
                 <OffsetPhoto
@@ -273,7 +273,7 @@ function StudyPanel({
   const products = study.products.filter(product => product.name.trim())
   return (
     <div className="grid grid-cols-1 items-start gap-10 min-[900px]:grid-cols-2 min-[900px]:gap-0">
-      <div className="min-[900px]:pr-16">
+      <div className="mt-6 min-[900px]:mt-8 min-[900px]:pr-16">
         <dl>
           <Field label="Study focus">
             <p className="font-serif text-[28px] leading-none tracking-[-0.03em] text-[#252520] md:text-[32px]">{study.concern}</p>
