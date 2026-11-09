@@ -290,7 +290,7 @@ export default function HomePage({
                     className="aspect-square h-auto w-full object-cover object-center"
                   />
                 </QuietGeometryFrame>
-                <p className="absolute bottom-[12%] left-[12%] z-[3] max-w-[250px] bg-[#EDE6DC]/20 px-5 py-4 font-serif text-xl leading-snug text-[#252520] backdrop-blur-sm">
+                <p className="absolute bottom-[12%] left-[12%] z-[3] max-w-[250px] bg-[#f3eceb]/53 px-5 py-4 font-serif text-xl leading-snug text-[#252520] backdrop-blur-sm">
                   What stays in the beaker
                 </p>
               </div>
@@ -309,7 +309,7 @@ export default function HomePage({
                     />
                   </div>
                 </div>
-                <p className="absolute bottom-8 left-8 z-[2] max-w-[250px] bg-[#EDE6DC]/20 px-5 py-4 font-serif text-xl leading-snug text-[#252520] backdrop-blur-sm">
+                <p className="absolute bottom-8 left-8 z-[2] max-w-[250px] bg-[#f3eceb]/53 px-5 py-4 font-serif text-xl leading-snug text-[#252520] backdrop-blur-sm">
                   What stays in the beaker
                 </p>
               </div>

@@ -275,7 +275,7 @@ function StudyPanel({
     <div className="grid grid-cols-1 items-start gap-10 min-[900px]:grid-cols-2 min-[900px]:gap-0">
       <div className="min-[900px]:pr-16">
         <dl>
-          <Field label="Concern">
+          <Field label="Study focus">
             <p className="font-serif text-[28px] leading-none tracking-[-0.03em] text-[#252520] md:text-[32px]">{study.concern}</p>
           </Field>
           <Field label="Protocol used">
@@ -289,12 +289,6 @@ function StudyPanel({
           </Field>
           <Field label="Study duration">
             <p className="font-serif text-[22px] leading-snug text-[#252520]">{study.duration}</p>
-          </Field>
-          <Field label="Study focus">
-            <p className="max-w-[34rem] text-[15px] leading-relaxed text-[#3f3c37]">{study.focus}</p>
-            {study.statistic?.trim() ? (
-              <p className="mt-3 font-serif text-[28px] leading-none text-[#ab8584] italic">{study.statistic}</p>
-            ) : null}
           </Field>
         </dl>
         {study.documentUrl?.trim() ? (

@@ -257,12 +257,10 @@ function ChoiceCard({
         {title}
         <p className="mt-1 text-sm text-[#2B2727]/75">{product.tagline}</p>
         <p className="mt-2 text-sm font-semibold">${product.price}</p>
+        <p className="mt-2 text-[11px] tracking-wide text-[#2B2727]/60">{routinePeriodLabel(serumPeriod(product))}</p>
         {note ? <p className="mt-3 text-xs italic leading-relaxed text-[#2B2727]/60">{note}</p> : null}
       </div>
       <div className="flex shrink-0 flex-col items-end gap-3">
-        <span className="border border-[#D6C3C2] px-2.5 py-1 text-[11px] tracking-wide text-[#2B2727]/60">
-          {routinePeriodLabel(serumPeriod(product))}
-        </span>
         <AddCartButton qty={qty} onAdd={onAdd} onQty={onQty} onRemove={onRemove} />
         <QuietLink onClick={() => onView(product.id)}>View</QuietLink>
       </div>
@@ -557,7 +555,7 @@ export default function ProtocolResults({
   const protocolInCart = protocolProducts.every(product => current.addedIds.includes(product.id))
 
   return (
-    <article className="results-ground bg-[#f5f0eb] px-6 py-16 text-[#2B2727] md:px-[max(36px,8vw)] md:py-[75px]">
+    <article className="results-ground min-h-screen bg-[#FFFDFA] px-6 py-16 text-[#2B2727] md:px-[max(36px,8vw)] md:py-[75px]">
       <div className="mx-auto max-w-3xl">
         <p className="text-[13px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]">Your protocol</p>
         <h1 className="mt-3 font-serif text-[clamp(40px,6vw,56px)] font-normal leading-[1.08] tracking-[-0.044em]">
@@ -619,16 +617,14 @@ export default function ProtocolResults({
                       )}
                       <p className="mt-1 text-sm text-[#2B2727]/75">{product.tagline}</p>
                       <p className="mt-2 text-sm font-semibold">${product.price}</p>
+                      <p className="mt-2 text-[11px] tracking-wide text-[#2B2727]/60">{routinePeriodLabel(period)}</p>
                       {isVitaminC(product) && (
                         <p className="mt-3 text-xs italic leading-relaxed text-[#2B2727]/60">
                           {vitaminCChoiceNote(built.cReason)}
                         </p>
                       )}
                     </div>
-                    <div className={`flex shrink-0 flex-col items-end gap-3 ${isVitaminC(product) ? '' : 'justify-between'}`}>
-                      <span className="border border-[#D6C3C2] px-2.5 py-1 text-[11px] tracking-wide text-[#2B2727]/60">
-                        {routinePeriodLabel(period)}
-                      </span>
+                    <div className="flex shrink-0 flex-col items-end gap-3">
                       <AddCartButton qty={qtyOf(product.id)} onAdd={() => addToCart([product.id])} onQty={qty => setCartQty(product.id, qty)} onRemove={() => removeFromCart(product.id)} />
                       <QuietLink onClick={() => onViewProduct(product.id)}>View</QuietLink>
                     </div>
@@ -696,16 +692,14 @@ export default function ProtocolResults({
                         )}
                         <p className="mt-1 text-sm text-[#2B2727]/75">{treatOffer.tagline}</p>
                         <p className="mt-2 text-sm font-semibold">${treatOffer.price}</p>
+                        <p className="mt-2 text-[11px] tracking-wide text-[#2B2727]/60">{routinePeriodLabel(serumPeriod(treatOffer))}</p>
                         {isVitaminC(treatOffer) && (
                           <p className="mt-3 text-xs italic leading-relaxed text-[#2B2727]/60">
                             {vitaminCChoiceNote(built.cReason)}
                           </p>
                         )}
                       </div>
-                      <div className="flex shrink-0 flex-col items-end justify-center gap-2">
-                        <span className="border border-[#D6C3C2] px-2.5 py-1 text-[11px] tracking-wide text-[#2B2727]/60">
-                          {routinePeriodLabel(serumPeriod(treatOffer))}
-                        </span>
+                      <div className="flex shrink-0 flex-col items-end gap-2">
                         <button
                           type="button"
                           onClick={addTreat}

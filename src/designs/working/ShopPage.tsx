@@ -198,8 +198,8 @@ export default function ShopPage({
   )
 
   return (
-    <div className="shop-ground min-h-screen bg-[#f5f0eb] font-sans text-[#2B2727]">
-      <div className="shop-ground border-b border-[#D6C3C2] bg-[#f5f0eb] px-5 pt-14 pb-8 md:px-8">
+    <div className="shop-ground min-h-screen bg-[#FFFDFA] font-sans text-[#2B2727]">
+      <div className="shop-ground border-b border-[#D6C3C2] bg-[#FFFDFA] px-5 pt-14 pb-8 md:px-8">
         <div className="mx-auto max-w-7xl">
           <p className="mb-3 text-[11px] tracking-[0.22em] uppercase text-[#ab8584]">The Natural Prescription</p>
           <h1 className="mb-4 font-serif text-4xl text-[#2B2727] md:text-5xl">Explore the Collection</h1>
