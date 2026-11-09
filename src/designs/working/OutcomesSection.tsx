@@ -235,7 +235,7 @@ function ResultsTimeline({
             </span>
             <div className={last ? 'rounded-2xl bg-[#fffdfa] p-4' : ''}>
               <p className={LABEL}>{when}</p>
-              <h3 className="mt-1.5 text-[15px] leading-snug font-normal text-[#252520]">
+              <h3 className="mt-1.5 font-serif text-[22px] leading-none tracking-[-0.03em] text-[#252520]">
                 {assessment.heading}
               </h3>
               <p className="mt-2 max-w-[36rem] text-[15px] leading-snug text-[#252520]">
@@ -276,7 +276,7 @@ function StudyPanel({
       <div className="mt-6 min-[900px]:mt-8 min-[900px]:pr-16">
         <dl>
           <Field label="Study focus">
-            <p className="font-serif text-[28px] leading-none tracking-[-0.03em] text-[#252520] md:text-[32px]">{study.concern}</p>
+            <p className="font-serif text-[26px] leading-none tracking-[-0.03em] text-[#252520]">{study.concern}</p>
           </Field>
           <Field label="Protocol used">
             <ul className="space-y-3">
