@@ -1,4 +1,4 @@
-import { useState, useEffect, useLayoutEffect, useCallback } from 'react'
+import { useState, useEffect, useLayoutEffect, useCallback, useRef } from 'react'
 import AnnouncementBar from './components/AnnouncementBar'
 import Header from './components/Header'
 import Footer from './components/Footer'
@@ -91,6 +91,146 @@ function normalizeBase(): string {
 
 function route(page: Page, extras: Partial<Omit<RouteState, 'page'>> = {}): RouteState {
   return { page, productId: '', shopStep: '', hash: '', preview: '', version: 'v2', design: '', designPage: 'home', ...extras }
+}
+
+/** Previews that are their own screen, not a page shared across design tabs. */
+const SOLO_PREVIEWS = new Set([
+  'hero-backgrounds',
+  'philosophy-frames',
+  'quiet-geometry',
+  'outcomes',
+  'quiz-coverage',
+  'heroes',
+  'protocol-refine',
+  'outcomes-decor',
+])
+
+type Place = {
+  page: Page
+  productId: string
+  shopStep: string
+  hash: string
+  preview: string
+  designPage: DesignPage
+  scrollY: number
+}
+
+const BLANK_PLACE: Place = {
+  page: 'home',
+  productId: '',
+  shopStep: '',
+  hash: '',
+  preview: '',
+  designPage: 'home',
+  scrollY: 0,
+}
+
+function isPortable(design: Design, preview: string): boolean {
+  if (design === 'lighter' || design === 'picker') return false
+  return !SOLO_PREVIEWS.has(preview)
+}
+
+function placeFromRoute(state: RouteState, scrollY = 0): Place {
+  return {
+    page: state.page,
+    productId: state.productId,
+    shopStep: state.shopStep,
+    hash: state.hash,
+    preview: state.preview,
+    designPage: state.designPage,
+    scrollY,
+  }
+}
+
+/** Identity of the screen, ignoring which design tab is showing it. */
+function placeSignature(place: Place): string {
+  if (place.preview === 'protocol' || place.page === 'protocol') return 'protocol'
+  if (place.preview === 'about' || (place.page === 'story' && place.preview !== 'standards')) return `story:${place.hash}`
+  if (place.page === 'shop' || place.designPage === 'shop') return `shop:${place.shopStep}`
+  if ((place.page === 'product' || place.designPage === 'product') && place.productId) return `product:${place.productId}`
+  if (place.page === 'spa') return 'spa'
+  if (place.page === 'glossary') return 'glossary'
+  if (place.page === 'education') return 'education'
+  if (place.preview === 'standards') return 'standards'
+  if (place.preview === 'philosophy' || place.preview === 'concerns' || place.preview === 'story-section') return place.preview
+  if (!place.preview && place.page === 'home') return 'home'
+  return `other:${place.page}:${place.preview}`
+}
+
+function projectBranded(design: 'working' | BrandedDesign, place: Place): RouteState {
+  const shared = { design, version: 'v2' as const }
+  if (place.page === 'shop' || place.designPage === 'shop') {
+    return route('shop', { ...shared, designPage: 'shop', shopStep: place.shopStep })
+  }
+  if ((place.page === 'product' || place.designPage === 'product') && place.productId) {
+    return route('product', { ...shared, designPage: 'product', productId: place.productId })
+  }
+  if (place.preview === 'protocol' || place.page === 'protocol') {
+    return route('home', { ...shared, designPage: 'home', preview: 'protocol' })
+  }
+  if (place.preview === 'about' || (place.page === 'story' && place.preview !== 'standards')) {
+    return route('home', { ...shared, designPage: 'home', preview: 'about', hash: place.hash })
+  }
+  return route('home', { ...shared, designPage: 'home' })
+}
+
+function projectDesign(design: DesignId, place: Place): RouteState {
+  if (place.page === 'shop' || place.designPage === 'shop') {
+    return route('shop', { design, designPage: 'shop', shopStep: place.shopStep, version: 'v2' })
+  }
+  if ((place.page === 'product' || place.designPage === 'product') && place.productId) {
+    return route('product', { design, designPage: 'product', productId: place.productId, version: 'v2' })
+  }
+  return route('home', { design, designPage: 'home', version: 'v2' })
+}
+
+function projectVersion(version: Version, place: Place): RouteState {
+  if (place.preview === 'protocol' || place.page === 'protocol') return route('protocol', { version })
+  if (place.preview === 'about' || (place.page === 'story' && place.preview !== 'standards')) {
+    return route('story', { hash: place.hash, version })
+  }
+  if (place.preview === 'standards') return route('story', { preview: 'standards', version })
+  if (place.page === 'shop' || place.designPage === 'shop') return route('shop', { shopStep: place.shopStep, version })
+  if ((place.page === 'product' || place.designPage === 'product') && place.productId) {
+    return route('product', { productId: place.productId, version })
+  }
+  if (place.page === 'spa' || place.page === 'glossary' || place.page === 'education') return route(place.page, { version })
+  if (version === 'v2' && (place.preview === 'philosophy' || place.preview === 'concerns' || place.preview === 'story-section')) {
+    return route('home', { preview: place.preview, version })
+  }
+  return route('home', { version })
+}
+
+function projectGallery(target: GalleryTarget, place: Place): RouteState | 'leave' {
+  if (target === 'quiz-coverage') {
+    return route('home', { design: 'working', designPage: 'home', preview: 'quiz-coverage', version: 'v2' })
+  }
+  if (target === 'protocol-refine') {
+    return route('home', { design: 'working', designPage: 'home', preview: 'protocol-refine', version: 'v2' })
+  }
+  if (target === 'protocol') return 'leave'
+  if (target === 'lighter') return route('home', { design: 'lighter', designPage: 'home', version: 'v2' })
+  if (target === 'original') return projectVersion('v1', place)
+  if (target === 'rose') return projectVersion('v2', place)
+  if (target === 'working' || target === 'palette' || target === 'white') return projectBranded(target, place)
+  if (isDesignId(target)) return projectDesign(target, place)
+  return route('home', { design: 'working', designPage: 'home', version: 'v2' })
+}
+
+function comparableUrl(url: string): string {
+  const hashAt = url.indexOf('#')
+  const hash = hashAt >= 0 ? url.slice(hashAt) : ''
+  const beforeHash = hashAt >= 0 ? url.slice(0, hashAt) : url
+  const queryAt = beforeHash.indexOf('?')
+  const query = queryAt >= 0 ? beforeHash.slice(queryAt) : ''
+  const path = (queryAt >= 0 ? beforeHash.slice(0, queryAt) : beforeHash).replace(/\/$/, '') || '/'
+  return `${path}${query}${hash}`
+}
+
+function urlsMatch(next: RouteState): boolean {
+  const nextUrl = comparableUrl(toUrl(next.page, next.productId, next.shopStep, next.hash, next.preview, next.version, next.design, next.designPage))
+  const here = comparableUrl(`${window.location.pathname}${window.location.search}${window.location.hash}`)
+  return nextUrl === here
 }
 
 function anchorHash(next: Pick<RouteState, 'page' | 'preview' | 'design' | 'hash'>) {
@@ -407,13 +547,18 @@ function getInitialRoute(): RouteState {
   return parseLocation(window.location.pathname, window.location.search, window.location.hash)
 }
 
+/** Set while jumping to the top so the remembered scroll position is not overwritten with 0. */
+let suppressPlaceScroll = false
+
 /** Instant jump to top. Smooth scroll fights layout swaps and focused footer buttons. */
 function scrollToTop() {
+  suppressPlaceScroll = true
   const active = document.activeElement
   if (active instanceof HTMLElement && active !== document.body) active.blur()
   window.scrollTo(0, 0)
   document.documentElement.scrollTop = 0
   document.body.scrollTop = 0
+  suppressPlaceScroll = false
 }
 
 export default function App() {
@@ -427,12 +572,22 @@ export default function App() {
   const [design, setDesign] = useState<Design>(initial.design)
   const [designPage, setDesignPage] = useState<DesignPage>(initial.designPage)
   const [cartCount, setCartCount] = useState(0)
+  const scrollPlan = useRef<'top' | 'keep'>('top')
+  const pendingScroll = useRef(0)
+  // True after a design-tab switch until the visitor opens a page themselves.
+  // A tab that has no equivalent screen must not replace the page being carried.
+  const tabShadow = useRef(false)
+  const stickyRef = useRef<Place>(
+    isPortable(initial.design, initial.preview) ? placeFromRoute(initial) : BLANK_PLACE,
+  )
   // Quiz answers live in the protocol page. Keep that page mounted after the first visit
   // so opening a product and coming back returns to the same results.
   const [protocolSeen, setProtocolSeen] = useState(initial.page === 'protocol')
   const protocolLive = protocolSeen || page === 'protocol'
 
   const applyRoute = useCallback((next: RouteState, mode: 'push' | 'replace' | 'none') => {
+    scrollPlan.current = 'top'
+    tabShadow.current = false
     setPage(next.page)
     setProductId(next.page === 'product' ? next.productId : '')
     setShopStep(next.page === 'shop' ? (next.shopStep || '') : '')
@@ -493,34 +648,52 @@ export default function App() {
     applyRoute(route('home', { design: 'picker', designPage: 'home', version: 'v2' }), 'push')
   }, [applyRoute])
 
-  const openGalleryTarget = useCallback((target: GalleryTarget) => {
-    scrollToTop()
-    if (target === 'working') {
-      applyRoute(route('home', { design: 'working', designPage: 'home', version: 'v2' }), 'push')
-      return
+  const carriedPlace = useCallback((): Place => {
+    const live: Place = {
+      page,
+      productId,
+      shopStep,
+      hash: storyHash,
+      preview,
+      designPage,
+      scrollY: typeof window === 'undefined' ? 0 : window.scrollY,
     }
-    if (target === 'quiz-coverage') {
-      applyRoute(route('home', { design: 'working', designPage: 'home', preview: 'quiz-coverage', version: 'v2' }), 'push')
-      return
+    if (isPortable(design, preview)) {
+      if (tabShadow.current && placeSignature(live) !== placeSignature(stickyRef.current)) return stickyRef.current
+      return live
     }
-    if (target === 'protocol-refine') {
-      applyRoute(route('home', { design: 'working', designPage: 'home', preview: 'protocol-refine', version: 'v2' }), 'push')
-      return
+    if (design === 'lighter' && placeSignature(stickyRef.current) === 'home') {
+      return { ...stickyRef.current, scrollY: live.scrollY }
     }
-    if (target === 'original') {
-      applyRoute(route('home', { version: 'v1', design: '', designPage: 'home' }), 'push')
-      return
-    }
-    if (target === 'rose') {
-      applyRoute(route('home', { version: 'v2', design: '', designPage: 'home' }), 'push')
-      return
-    }
-    if (target === 'protocol') {
+    return stickyRef.current
+  }, [page, productId, shopStep, storyHash, preview, design, designPage])
+
+  const openGalleryTarget = useCallback((target: GalleryTarget, carry = true) => {
+    const place = carry ? carriedPlace() : BLANK_PLACE
+    if (carry) stickyRef.current = place
+    const next = projectGallery(target, place)
+    if (next === 'leave') {
       window.location.assign(`${normalizeBase()}/designs/the-protocol.html`)
       return
     }
-    applyRoute(route('home', { design: target, designPage: 'home', version: 'v2' }), 'push')
-  }, [applyRoute])
+    if (urlsMatch(next)) return
+
+    const nextPlace = placeFromRoute(next)
+    const keep = carry && placeSignature(place) === placeSignature(nextPlace)
+    if (!keep) scrollToTop()
+    applyRoute(next, 'push')
+    if (carry) tabShadow.current = true
+    if (keep) {
+      scrollPlan.current = 'keep'
+      pendingScroll.current = place.scrollY
+    }
+  }, [applyRoute, carriedPlace])
+
+  const galleryHref = useCallback((target: GalleryTarget) => {
+    const next = projectGallery(target, carriedPlace())
+    if (next === 'leave') return `${normalizeBase()}/designs/the-protocol.html`
+    return toUrl(next.page, next.productId, next.shopStep, next.hash, next.preview, next.version, next.design, next.designPage)
+  }, [carriedPlace])
 
   const siteDesign: 'working' | BrandedDesign = isBranded(design) ? design : 'working'
 
@@ -575,12 +748,59 @@ export default function App() {
   }, [page])
 
   // After the new page commits, pin scroll at the top before paint (skip in-page story hashes).
+  // Design-tab switches that stay on the same screen restore the previous scroll instead.
   useLayoutEffect(() => {
+    if (scrollPlan.current === 'keep') {
+      const y = pendingScroll.current
+      const restore = () => window.scrollTo(0, y)
+      restore()
+      let second = 0
+      const frame = requestAnimationFrame(() => {
+        restore()
+        second = requestAnimationFrame(restore)
+      })
+      return () => {
+        cancelAnimationFrame(frame)
+        cancelAnimationFrame(second)
+      }
+    }
     if (storyHash && (!design || ((design === 'working' || isBranded(design)) && preview === 'about'))) return
     scrollToTop()
     const frame = requestAnimationFrame(() => scrollToTop())
     return () => cancelAnimationFrame(frame)
   }, [page, productId, shopStep, preview, storyHash, version, design, designPage])
+
+  useEffect(() => {
+    if (!isPortable(design, preview)) return
+    const current = placeSignature({ page, productId, shopStep, hash: storyHash, preview, designPage, scrollY: 0 })
+    if (tabShadow.current && current !== placeSignature(stickyRef.current)) return
+    const remember = () => {
+      if (suppressPlaceScroll) return
+      stickyRef.current = {
+        page,
+        productId,
+        shopStep,
+        hash: storyHash,
+        preview,
+        designPage,
+        scrollY: window.scrollY,
+      }
+    }
+    remember()
+    window.addEventListener('scroll', remember, { passive: true })
+    return () => window.removeEventListener('scroll', remember)
+  }, [page, productId, shopStep, storyHash, preview, design, designPage])
+
+  useEffect(() => {
+    if (design !== 'lighter') return
+    const remember = () => {
+      if (suppressPlaceScroll) return
+      if (placeSignature(stickyRef.current) !== 'home') return
+      stickyRef.current = { ...stickyRef.current, scrollY: window.scrollY }
+    }
+    window.addEventListener('scroll', remember, { passive: true })
+    return () => window.removeEventListener('scroll', remember)
+  }, [design])
 
   // Sync initial URL + browser back/forward
   useEffect(() => {
@@ -592,6 +812,8 @@ export default function App() {
     applyRoute(current, 'replace')
 
     const onPopState = (event: PopStateEvent) => {
+      scrollPlan.current = 'top'
+      tabShadow.current = false
       const state = event.state as RouteState | null
       const next = state?.page
         ? route(state.page, {
@@ -635,13 +857,13 @@ export default function App() {
   const Education = isV2 ? ProductEducationV2 : ProductEducation
 
   if (design === 'picker') {
-    return <PickerPage onOpen={openGalleryTarget} />
+    return <PickerPage onOpen={target => openGalleryTarget(target, false)} />
   }
 
   if (design === 'lighter') {
     return (
       <div className="theme-clear min-h-screen bg-white">
-        <DesignTabs current="lighter" onOpen={openGalleryTarget} />
+        <DesignTabs current="lighter" onOpen={openGalleryTarget} hrefFor={galleryHref} />
         <WorkingHeader lighter />
         <main className="overflow-x-hidden">
           <WorkingHomePage lighter />
@@ -665,7 +887,7 @@ export default function App() {
     return (
       <SiteRootProvider root={branded ? `/designs/${design}` : '/designs/working'}>
       <div className={`theme-clear min-h-screen ${siteClass}`}>
-        <DesignTabs current={branded ? design : preview === 'quiz-coverage' ? 'quiz-coverage' : preview === 'protocol-refine' ? 'protocol-refine' : 'working'} onOpen={openGalleryTarget} />
+        <DesignTabs current={branded ? design : preview === 'quiz-coverage' ? 'quiz-coverage' : preview === 'protocol-refine' ? 'protocol-refine' : 'working'} onOpen={openGalleryTarget} hrefFor={galleryHref} />
         {!workingPreview && <WorkingHeader />}
         <main className="overflow-x-hidden">
           {page === 'product' ? (
@@ -724,6 +946,7 @@ export default function App() {
         onNavigate={navigateDesign}
         onPicker={openPicker}
         onOpen={openGalleryTarget}
+        hrefFor={galleryHref}
       />
     )
   }
@@ -731,7 +954,7 @@ export default function App() {
   return (
     <div className={isV2 ? 'theme-v2 min-h-screen bg-ivory' : 'min-h-screen bg-white'}>
       <div className="sticky top-0 z-50">
-        <DesignTabs pinned={false} current={isV2 ? 'rose' : 'original'} onOpen={openGalleryTarget} />
+        <DesignTabs pinned={false} current={isV2 ? 'rose' : 'original'} onOpen={openGalleryTarget} hrefFor={galleryHref} />
         <Bar />
         <Top currentPage={page} onNavigate={navigate} cartCount={cartCount} />
       </div>

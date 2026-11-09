@@ -20,10 +20,12 @@ const CHOICES: { id: GalleryTarget; label: string; href: string }[] = [
 interface DesignTabsProps {
   current: GalleryTarget
   onOpen: (target: GalleryTarget) => void
+  /** Keeps the link pointed at the same page the click will open. */
+  hrefFor?: (target: GalleryTarget) => string
   pinned?: boolean
 }
 
-export default function DesignTabs({ current, onOpen, pinned = true }: DesignTabsProps) {
+export default function DesignTabs({ current, onOpen, hrefFor, pinned = true }: DesignTabsProps) {
   return (
     <div className={`${pinned ? 'sticky top-0 z-[60]' : ''} h-11 border-b border-white/10 bg-[#1A1916] font-sans text-white`}>
       <div role="tablist" aria-label="Designs" className="flex h-full items-center gap-1 overflow-x-auto px-3 md:px-5">
@@ -34,7 +36,7 @@ export default function DesignTabs({ current, onOpen, pinned = true }: DesignTab
               key={choice.id}
               role="tab"
               aria-selected={selected}
-              href={choice.href}
+              href={hrefFor ? hrefFor(choice.id) : choice.href}
               onClick={event => {
                 if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return
                 event.preventDefault()

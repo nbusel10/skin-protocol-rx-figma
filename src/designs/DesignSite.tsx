@@ -35,9 +35,10 @@ interface DesignSiteProps {
   onNavigate: DesignNavigate
   onPicker: () => void
   onOpen: (target: GalleryTarget) => void
+  hrefFor?: (target: GalleryTarget) => string
 }
 
-export default function DesignSite({ id, page, productId, onNavigate, onPicker, onOpen }: DesignSiteProps) {
+export default function DesignSite({ id, page, productId, onNavigate, onPicker, onOpen, hrefFor }: DesignSiteProps) {
   const [cartCount, setCartCount] = useState(0)
   const pitched = id === 'boutique' || id === 'luxe' || id === 'ritual'
   const Home = id === 'clear' ? HomeClear : id === 'grove' ? HomeGrove : id === 'boutique' ? HomeBoutique : id === 'luxe' ? HomeLuxe : HomeRitual
@@ -46,7 +47,7 @@ export default function DesignSite({ id, page, productId, onNavigate, onPicker, 
 
   return (
     <div className={`${THEME[id]} min-h-screen`}>
-      <DesignTabs current={id} onOpen={onOpen} />
+      <DesignTabs current={id} onOpen={onOpen} hrefFor={hrefFor} />
       <div className={pitched ? 'pitch' : undefined}>
         {pitched ? (
           <PitchHeader page={page} cartCount={cartCount} onNavigate={onNavigate} tone={id} />
