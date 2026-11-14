@@ -7,6 +7,7 @@ const EXPLORE = [
   { href: '#protocol', label: 'Build your protocol' },
   { href: '/our-story#our-story', label: 'Our story' },
   { href: '/spa-partners', label: 'Spa partners' },
+  { href: '/contact', label: 'Contact' },
 ]
 
 const LEARN = [
@@ -31,6 +32,7 @@ export default function Footer({ lighter = false, previews = false }: { lighter?
     if (item.href === '/shop' && !lighter) return { ...item, href: site.shop }
     if (item.href === '#protocol' && !lighter) return { ...item, href: site.protocol }
     if (item.href === '/our-story#our-story' && !lighter) return { ...item, href: `${site.about}#our-story` }
+    if (item.href === '/contact') return { ...item, href: site.contact }
     return item
   })
   const learn = LEARN.map(item =>

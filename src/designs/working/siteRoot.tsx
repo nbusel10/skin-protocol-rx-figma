@@ -5,6 +5,8 @@ export type SitePaths = {
   about: string
   shop: string
   protocol: string
+  spa: string
+  contact: string
   product: (id: string) => string
   shopStep: (step: string | number) => string
 }
@@ -14,6 +16,8 @@ const WORKING: SitePaths = {
   about: '/about',
   shop: '/designs/working/shop',
   protocol: '/designs/working/protocol',
+  spa: '/designs/working/spa-partners',
+  contact: '/contact',
   product: id => `/designs/working/product/${id}`,
   shopStep: step => `/designs/working/shop?step=${step}`,
 }
@@ -28,6 +32,8 @@ export function SiteRootProvider({ root, children }: { root: string; children: R
         about: `${root}/about`,
         shop: `${root}/shop`,
         protocol: `${root}/protocol`,
+        spa: `${root}/spa-partners`,
+        contact: `${root}/contact`,
         product: id => `${root}/product/${id}`,
         shopStep: step => `${root}/shop?step=${step}`,
       }

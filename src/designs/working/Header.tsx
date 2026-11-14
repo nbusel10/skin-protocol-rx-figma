@@ -53,6 +53,16 @@ export default function Header({ lighter = false }: { lighter?: boolean }) {
       }
       return
     }
+    if (id === 'contact') {
+      const here = window.location.pathname.replace(/\/$/, '') || '/'
+      const contactPath = site.contact.replace(/\/$/, '') || '/'
+      if (here !== contactPath) {
+        window.location.assign(site.contact)
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+      return
+    }
     const node = document.getElementById(id === 'about' ? 'founders' : id)
     if (node) {
       node.scrollIntoView({ behavior: 'smooth' })

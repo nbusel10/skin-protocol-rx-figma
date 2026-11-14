@@ -42,6 +42,7 @@ import HeroSectionPreview from './designs/working/HeroSectionPreview'
 import WorkingProtocolPage from './designs/working/ProtocolPage'
 import ProtocolRefinePreview from './designs/working/ProtocolRefinePreview'
 import WorkingAboutPage from './designs/working/AboutPage'
+import WorkingContactPage from './designs/working/ContactPage'
 import OutcomesDecorationPreview from './designs/working/OutcomesDecorationPreview'
 import WorkingProductPage from './designs/working/ProductPage'
 import WorkingShopPage from './designs/working/ShopPage'
@@ -141,6 +142,7 @@ function placeFromRoute(state: RouteState, scrollY = 0): Place {
 function placeSignature(place: Place): string {
   if (place.preview === 'protocol' || place.page === 'protocol') return 'protocol'
   if (place.preview === 'about' || (place.page === 'story' && place.preview !== 'standards')) return `story:${place.hash}`
+  if (place.preview === 'contact') return 'contact'
   if (place.page === 'shop' || place.designPage === 'shop') return `shop:${place.shopStep}`
   if ((place.page === 'product' || place.designPage === 'product') && place.productId) return `product:${place.productId}`
   if (place.page === 'spa') return 'spa'
@@ -165,6 +167,9 @@ function projectWorking(place: Place): RouteState {
   }
   if (place.preview === 'about' || (place.page === 'story' && place.preview !== 'standards')) {
     return route('home', { ...shared, designPage: 'home', preview: 'about', hash: place.hash })
+  }
+  if (place.preview === 'contact') {
+    return route('home', { ...shared, designPage: 'home', preview: 'contact' })
   }
   return route('home', { ...shared, designPage: 'home' })
 }
@@ -298,6 +303,7 @@ function toUrl(
       const fragment = hash ? `#${hash.replace(/^#/, '')}` : ''
       return `${base}/about${fragment}`
     }
+    if (preview === 'contact') return `${base}/contact`
     return `${base}/designs/working`
   }
   if (isDesignId(design)) {
@@ -354,6 +360,9 @@ function parseLocation(pathname: string, search = '', hash = ''): RouteState {
   }
   if (path === '/about' || path === '/about/' || path === '/designs/working/about' || path === '/designs/working/about/') {
     return route('home', { design: 'working', designPage: 'home', preview: 'about', hash: storyHash, version: 'v2' })
+  }
+  if (path === '/contact' || path === '/contact/' || path === '/designs/working/contact' || path === '/designs/working/contact/') {
+    return route('home', { design: 'working', designPage: 'home', preview: 'contact', version: 'v2' })
   }
   if (path === '/designs/working/shop' || path === '/designs/working/shop/') {
     return route('shop', { design: 'working', designPage: 'shop', shopStep, version: 'v2' })
@@ -451,7 +460,9 @@ function applyDocumentTitle(
                       ? 'Build Your Protocol Refine | Working | Skin Protocol RX'
                     : preview === 'about'
                       ? 'About Us | Working | Skin Protocol RX'
-                      : 'Working | Skin Protocol RX'
+                      : preview === 'contact'
+                        ? 'Contact | Skin Protocol RX'
+                        : 'Working | Skin Protocol RX'
     return
   }
   if (isDesignId(design)) {
@@ -876,6 +887,8 @@ export default function App() {
             <ProtocolRefinePreview onViewProduct={openWorkingProduct} />
           ) : preview === 'about' ? (
             <WorkingAboutPage hash={storyHash} />
+          ) : preview === 'contact' ? (
+            <WorkingContactPage />
           ) : (
             <WorkingHomePage />
           )}
