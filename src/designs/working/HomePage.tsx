@@ -51,6 +51,12 @@ const PHILOSOPHY_LINKS = [
 
 /** Lighter Our Philosophy section. */
 function LighterPhilosophy({ id, background }: { id: string; background: string }) {
+  const site = useSiteRoot()
+  const links = PHILOSOPHY_LINKS.map(item => {
+    if (item.href === '/ingredient-glossary') return { ...item, href: site.glossary }
+    if (item.href === '/product-education') return { ...item, href: site.education }
+    return item
+  })
   return (
     <section id={id} className={`relative scroll-mt-28 overflow-visible py-16 text-[#252520] md:py-[75px] ${background}`}>
       <div className="relative z-10 grid grid-cols-1 items-center gap-12 min-[681px]:grid-cols-[48%_52%]">
@@ -105,7 +111,7 @@ function LighterPhilosophy({ id, background }: { id: string; background: string 
             </p>
           </div>
           <div className="mt-8 grid max-w-[650px] grid-cols-1 border-t border-[#D6CEC3] min-[701px]:grid-cols-3">
-            {PHILOSOPHY_LINKS.map((item, i) => (
+            {links.map((item, i) => (
               <a
                 key={item.label}
                 href={item.href}
@@ -363,8 +369,8 @@ export default function HomePage({
             <div className="mt-8 grid max-w-[650px] grid-cols-1 border-t border-[#D6CEC3] min-[701px]:grid-cols-3">
               {[
                 { href: '/about#our-standards', label: 'Our Standards', body: 'How we decide what stays and what stays out.' },
-                { href: '/ingredient-glossary', label: 'Ingredient Glossary', body: 'See what is in the formulas and why.' },
-                { href: '/product-education', label: 'Product Education', body: 'Learn what each product is good for.' },
+                { href: site.glossary, label: 'Ingredient Glossary', body: 'See what is in the formulas and why.' },
+                { href: site.education, label: 'Product Education', body: 'Learn what each product is good for.' },
               ].map((item, i) => (
                 <a
                   key={item.label}
@@ -547,7 +553,7 @@ export default function HomePage({
             </p>
             {lighter ? (
               <a
-                href="/spa-partners"
+                href={site.spa}
                 className="group inline-flex min-h-12 w-full items-center justify-center gap-3 self-start border border-[#F7F4EF]/70 bg-transparent px-5 text-[11px] font-semibold tracking-[0.1em] uppercase text-[#F7F4EF] transition-colors duration-200 hover:border-[#ab8584] hover:text-[#ab8584] min-[480px]:w-auto"
               >
                 Explore Spa Partnership
@@ -557,7 +563,7 @@ export default function HomePage({
               </a>
             ) : (
               <a
-                href="/spa-partners"
+                href={site.spa}
                 className="group inline-flex min-h-12 w-full items-center justify-center gap-4 self-start bg-[#F7F4EF] px-5 text-[11px] font-semibold tracking-[0.1em] uppercase text-[#2B2727] transition-colors duration-200 hover:bg-white min-[480px]:w-auto"
               >
                 <span className="relative inline-block whitespace-nowrap">
