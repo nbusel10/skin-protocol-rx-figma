@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { PRODUCTS, getProtocolStepLabel } from '../../data'
 import ProductImage from '../../v2/components/ProductImage'
+import { useSiteRoot } from './siteRoot'
 
 const ROSE = '#ab8584'
 const LILY = '#D6C3C2'
@@ -50,6 +51,7 @@ export default function ProductPage({
   onCollection: () => void
   onViewProduct: (id: string) => void
 }) {
+  const site = useSiteRoot()
   const product = PRODUCTS.find(item => item.id === productId)
   const [qty, setQty] = useState(1)
   const [activeImage, setActiveImage] = useState(0)
@@ -189,7 +191,7 @@ export default function ProductPage({
                   {product.fullIngredients.join(' · ')}
                 </p>
                 <a
-                  href="/ingredient-glossary"
+                  href={site.glossary}
                   className="mt-4 inline-block text-sm text-[#ab8584] underline underline-offset-2"
                 >
                   Browse the Ingredient Glossary →

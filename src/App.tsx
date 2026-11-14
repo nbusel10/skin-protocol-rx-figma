@@ -39,10 +39,14 @@ import QuietGeometryPreview from './designs/working/QuietGeometryPreview'
 import OutcomeSectionPreview from './designs/working/OutcomeSectionPreview'
 import QuizCoveragePreview from './designs/working/QuizCoveragePreview'
 import HeroSectionPreview from './designs/working/HeroSectionPreview'
+import ApplyLayoutsPreview from './designs/working/ApplyLayoutsPreview'
 import WorkingProtocolPage from './designs/working/ProtocolPage'
 import ProtocolRefinePreview from './designs/working/ProtocolRefinePreview'
 import WorkingAboutPage from './designs/working/AboutPage'
+import WorkingSpaPartnersPage from './designs/working/SpaPartnersPage'
 import WorkingContactPage from './designs/working/ContactPage'
+import WorkingIngredientGlossaryPage from './designs/working/IngredientGlossaryPage'
+import WorkingProductEducationPage from './designs/working/ProductEducationPage'
 import OutcomesDecorationPreview from './designs/working/OutcomesDecorationPreview'
 import WorkingProductPage from './designs/working/ProductPage'
 import WorkingShopPage from './designs/working/ShopPage'
@@ -97,6 +101,7 @@ const SOLO_PREVIEWS = new Set([
   'outcomes',
   'quiz-coverage',
   'heroes',
+  'apply-layouts',
   'protocol-refine',
   'outcomes-decor',
 ])
@@ -142,10 +147,10 @@ function placeFromRoute(state: RouteState, scrollY = 0): Place {
 function placeSignature(place: Place): string {
   if (place.preview === 'protocol' || place.page === 'protocol') return 'protocol'
   if (place.preview === 'about' || (place.page === 'story' && place.preview !== 'standards')) return `story:${place.hash}`
+  if (place.preview === 'spa' || place.page === 'spa') return `spa:${place.hash}`
   if (place.preview === 'contact') return 'contact'
   if (place.page === 'shop' || place.designPage === 'shop') return `shop:${place.shopStep}`
   if ((place.page === 'product' || place.designPage === 'product') && place.productId) return `product:${place.productId}`
-  if (place.page === 'spa') return 'spa'
   if (place.page === 'glossary') return 'glossary'
   if (place.page === 'education') return 'education'
   if (place.preview === 'standards') return 'standards'
@@ -168,8 +173,17 @@ function projectWorking(place: Place): RouteState {
   if (place.preview === 'about' || (place.page === 'story' && place.preview !== 'standards')) {
     return route('home', { ...shared, designPage: 'home', preview: 'about', hash: place.hash })
   }
+  if (place.preview === 'spa' || place.page === 'spa') {
+    return route('home', { ...shared, designPage: 'home', preview: 'spa', hash: place.hash })
+  }
   if (place.preview === 'contact') {
     return route('home', { ...shared, designPage: 'home', preview: 'contact' })
+  }
+  if (place.page === 'glossary') {
+    return route('glossary', { ...shared })
+  }
+  if (place.page === 'education') {
+    return route('education', { ...shared })
   }
   return route('home', { ...shared, designPage: 'home' })
 }
@@ -194,7 +208,8 @@ function projectVersion(version: Version, place: Place): RouteState {
   if ((place.page === 'product' || place.designPage === 'product') && place.productId) {
     return route('product', { productId: place.productId, version })
   }
-  if (place.page === 'spa' || place.page === 'glossary' || place.page === 'education') return route(place.page, { version })
+  if (place.preview === 'spa' || place.page === 'spa') return route('spa', { version })
+  if (place.page === 'glossary' || place.page === 'education') return route(place.page, { version })
   if (version === 'v2' && (place.preview === 'philosophy' || place.preview === 'concerns' || place.preview === 'story-section')) {
     return route('home', { preview: place.preview, version })
   }
@@ -234,7 +249,7 @@ function urlsMatch(next: RouteState): boolean {
 }
 
 function anchorHash(next: Pick<RouteState, 'page' | 'preview' | 'design' | 'hash'>) {
-  if (next.design === 'working' && next.preview === 'about') return next.hash || ''
+  if (next.design === 'working' && (next.preview === 'about' || next.preview === 'spa')) return next.hash || ''
   if (next.page === 'story' && next.preview !== 'standards') return next.hash || ''
   return ''
 }
@@ -297,13 +312,20 @@ function toUrl(
     if (preview === 'outcomes') return `${base}/designs/working/outcomes`
     if (preview === 'quiz-coverage') return `${base}/designs/working/quiz-coverage`
     if (preview === 'heroes') return `${base}/designs/working/heroes`
+    if (preview === 'apply-layouts') return `${base}/designs/working/apply-layouts`
     if (preview === 'protocol') return `${base}/designs/working/protocol`
     if (preview === 'protocol-refine') return `${base}/designs/working/protocol-refine`
     if (preview === 'about') {
       const fragment = hash ? `#${hash.replace(/^#/, '')}` : ''
       return `${base}/about${fragment}`
     }
+    if (preview === 'spa') {
+      const fragment = hash ? `#${hash.replace(/^#/, '')}` : ''
+      return `${base}/designs/working/spa-partners${fragment}`
+    }
     if (preview === 'contact') return `${base}/contact`
+    if (page === 'glossary') return `${base}/designs/working/ingredient-glossary`
+    if (page === 'education') return `${base}/designs/working/product-education`
     return `${base}/designs/working`
   }
   if (isDesignId(design)) {
@@ -352,6 +374,9 @@ function parseLocation(pathname: string, search = '', hash = ''): RouteState {
   if (path === '/designs/working/heroes' || path === '/designs/working/heroes/') {
     return route('home', { design: 'working', designPage: 'home', preview: 'heroes', version: 'v2' })
   }
+  if (path === '/designs/working/apply-layouts' || path === '/designs/working/apply-layouts/') {
+    return route('home', { design: 'working', designPage: 'home', preview: 'apply-layouts', version: 'v2' })
+  }
   if (path === '/designs/working/protocol' || path === '/designs/working/protocol/') {
     return route('home', { design: 'working', designPage: 'home', preview: 'protocol', version: 'v2' })
   }
@@ -361,8 +386,17 @@ function parseLocation(pathname: string, search = '', hash = ''): RouteState {
   if (path === '/about' || path === '/about/' || path === '/designs/working/about' || path === '/designs/working/about/') {
     return route('home', { design: 'working', designPage: 'home', preview: 'about', hash: storyHash, version: 'v2' })
   }
+  if (path === '/designs/working/spa-partners' || path === '/designs/working/spa-partners/') {
+    return route('home', { design: 'working', designPage: 'home', preview: 'spa', hash: storyHash, version: 'v2' })
+  }
   if (path === '/contact' || path === '/contact/' || path === '/designs/working/contact' || path === '/designs/working/contact/') {
     return route('home', { design: 'working', designPage: 'home', preview: 'contact', version: 'v2' })
+  }
+  if (path === '/designs/working/ingredient-glossary' || path === '/designs/working/ingredient-glossary/') {
+    return route('glossary', { design: 'working', version: 'v2' })
+  }
+  if (path === '/designs/working/product-education' || path === '/designs/working/product-education/') {
+    return route('education', { design: 'working', version: 'v2' })
   }
   if (path === '/designs/working/shop' || path === '/designs/working/shop/') {
     return route('shop', { design: 'working', designPage: 'shop', shopStep, version: 'v2' })
@@ -441,6 +475,14 @@ function applyDocumentTitle(
       document.title = 'Explore the Collection | Skin Protocol RX'
       return
     }
+    if (page === 'glossary') {
+      document.title = 'Ingredient Glossary | Skin Protocol RX'
+      return
+    }
+    if (page === 'education') {
+      document.title = 'Product Education | Skin Protocol RX'
+      return
+    }
     document.title =
       preview === 'hero-backgrounds'
         ? 'Hero Background Explorations | Working | Skin Protocol RX'
@@ -454,15 +496,19 @@ function applyDocumentTitle(
                 ? 'Quiz Coverage | Working | Skin Protocol RX'
                 : preview === 'heroes'
                   ? 'Hero Sections | Working | Skin Protocol RX'
+                  : preview === 'apply-layouts'
+                    ? 'Apply Layouts | Working | Skin Protocol RX'
                   : preview === 'protocol'
                     ? 'Build Your Protocol | Working | Skin Protocol RX'
                     : preview === 'protocol-refine'
                       ? 'Build Your Protocol Refine | Working | Skin Protocol RX'
                     : preview === 'about'
                       ? 'About Us | Working | Skin Protocol RX'
-                      : preview === 'contact'
-                        ? 'Contact | Skin Protocol RX'
-                        : 'Working | Skin Protocol RX'
+                      : preview === 'spa'
+                        ? 'Spa Partners | Working | Skin Protocol RX'
+                        : preview === 'contact'
+                          ? 'Contact | Skin Protocol RX'
+                          : 'Working | Skin Protocol RX'
     return
   }
   if (isDesignId(design)) {
@@ -731,7 +777,7 @@ export default function App() {
         cancelAnimationFrame(second)
       }
     }
-    if (storyHash && (!design || (design === 'working' && preview === 'about'))) return
+    if (storyHash && (!design || (design === 'working' && (preview === 'about' || preview === 'spa')))) return
     scrollToTop()
     const frame = requestAnimationFrame(() => scrollToTop())
     return () => cancelAnimationFrame(frame)
@@ -802,8 +848,8 @@ export default function App() {
       setDesign(next.design || '')
       setDesignPage(next.designPage || 'home')
       applyDocumentTitle(next.page, next.productId, next.preview, next.version, next.design, next.designPage)
-      const aboutAnchor = next.design === 'working' && next.preview === 'about' && Boolean(next.hash)
-      if (!aboutAnchor && (!next.hash || next.design)) scrollToTop()
+      const chapterAnchor = next.design === 'working' && (next.preview === 'about' || next.preview === 'spa') && Boolean(next.hash)
+      if (!chapterAnchor && (!next.hash || next.design)) scrollToTop()
     }
 
     window.addEventListener('popstate', onPopState)
@@ -847,7 +893,8 @@ export default function App() {
       preview === 'quiet-geometry' ||
       preview === 'outcomes' ||
       preview === 'quiz-coverage' ||
-      preview === 'heroes'
+      preview === 'heroes' ||
+      preview === 'apply-layouts'
     )
     return (
       <SiteRootProvider root="/designs/working">
@@ -881,19 +928,27 @@ export default function App() {
             <QuizCoveragePreview />
           ) : preview === 'heroes' ? (
             <HeroSectionPreview />
+          ) : preview === 'apply-layouts' ? (
+            <ApplyLayoutsPreview />
           ) : preview === 'protocol' ? (
             <WorkingProtocolPage onViewProduct={openWorkingProduct} />
           ) : preview === 'protocol-refine' ? (
             <ProtocolRefinePreview onViewProduct={openWorkingProduct} />
           ) : preview === 'about' ? (
             <WorkingAboutPage hash={storyHash} />
+          ) : preview === 'spa' ? (
+            <WorkingSpaPartnersPage hash={storyHash} />
           ) : preview === 'contact' ? (
             <WorkingContactPage />
+          ) : page === 'glossary' ? (
+            <WorkingIngredientGlossaryPage />
+          ) : page === 'education' ? (
+            <WorkingProductEducationPage />
           ) : (
             <WorkingHomePage />
           )}
         </main>
-        {!workingPreview && <WorkingFooter previews={page !== 'product' && !preview} />}
+        {!workingPreview && <WorkingFooter previews={page !== 'product' && page !== 'glossary' && page !== 'education' && !preview} />}
       </div>
       </SiteRootProvider>
     )

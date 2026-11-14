@@ -22,6 +22,7 @@ const PREVIEWS = [
   { href: '/designs/working/outcomes', label: 'Outcome sections' },
   { href: '/designs/working/quiz-coverage', label: 'Quiz coverage' },
   { href: '/designs/working/heroes', label: 'Hero sections' },
+  { href: '/designs/working/apply-layouts', label: 'Apply layouts' },
 ]
 
 export default function Footer({ lighter = false, previews = false }: { lighter?: boolean; previews?: boolean }) {
@@ -32,14 +33,16 @@ export default function Footer({ lighter = false, previews = false }: { lighter?
     if (item.href === '/shop' && !lighter) return { ...item, href: site.shop }
     if (item.href === '#protocol' && !lighter) return { ...item, href: site.protocol }
     if (item.href === '/our-story#our-story' && !lighter) return { ...item, href: `${site.about}#our-story` }
+    if (item.href === '/spa-partners') return { ...item, href: site.spa }
     if (item.href === '/contact') return { ...item, href: site.contact }
     return item
   })
-  const learn = LEARN.map(item =>
-    item.href === '/our-story#our-standards' && !lighter
-      ? { ...item, href: `${site.about}#our-standards` }
-      : item,
-  )
+  const learn = LEARN.map(item => {
+    if (item.href === '/our-story#our-standards' && !lighter) return { ...item, href: `${site.about}#our-standards` }
+    if (item.href === '/ingredient-glossary') return { ...item, href: site.glossary }
+    if (item.href === '/product-education') return { ...item, href: site.education }
+    return item
+  })
   const eyebrow = lighter
     ? 'text-[11px] font-medium tracking-[0.16em] uppercase text-[#6D6A63]'
     : 'text-[13px] font-semibold tracking-[0.21em] uppercase text-[#ab8584]'

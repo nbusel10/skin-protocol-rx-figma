@@ -53,6 +53,15 @@ export default function Header({ lighter = false }: { lighter?: boolean }) {
       }
       return
     }
+    if (!lighter && id === 'spa') {
+      const here = window.location.pathname.replace(/\/$/, '')
+      if (here !== site.spa) {
+        window.location.assign(site.spa)
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+      return
+    }
     if (id === 'contact') {
       const here = window.location.pathname.replace(/\/$/, '') || '/'
       const contactPath = site.contact.replace(/\/$/, '') || '/'
