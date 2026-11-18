@@ -45,6 +45,7 @@ import ProtocolRefinePreview from './designs/working/ProtocolRefinePreview'
 import WorkingAboutPage from './designs/working/AboutPage'
 import WorkingSpaPartnersPage from './designs/working/SpaPartnersPage'
 import WorkingContactPage from './designs/working/ContactPage'
+import WorkingTrackOrderPage from './designs/working/TrackOrderPage'
 import WorkingIngredientGlossaryPage from './designs/working/IngredientGlossaryPage'
 import WorkingProductEducationPage from './designs/working/ProductEducationPage'
 import OutcomesDecorationPreview from './designs/working/OutcomesDecorationPreview'
@@ -149,6 +150,7 @@ function placeSignature(place: Place): string {
   if (place.preview === 'about' || (place.page === 'story' && place.preview !== 'standards')) return `story:${place.hash}`
   if (place.preview === 'spa' || place.page === 'spa') return `spa:${place.hash}`
   if (place.preview === 'contact') return 'contact'
+  if (place.preview === 'track') return 'track'
   if (place.page === 'shop' || place.designPage === 'shop') return `shop:${place.shopStep}`
   if ((place.page === 'product' || place.designPage === 'product') && place.productId) return `product:${place.productId}`
   if (place.page === 'glossary') return 'glossary'
@@ -178,6 +180,9 @@ function projectWorking(place: Place): RouteState {
   }
   if (place.preview === 'contact') {
     return route('home', { ...shared, designPage: 'home', preview: 'contact' })
+  }
+  if (place.preview === 'track') {
+    return route('home', { ...shared, designPage: 'home', preview: 'track' })
   }
   if (place.page === 'glossary') {
     return route('glossary', { ...shared })
@@ -324,6 +329,7 @@ function toUrl(
       return `${base}/designs/working/spa-partners${fragment}`
     }
     if (preview === 'contact') return `${base}/contact`
+    if (preview === 'track') return `${base}/track-order`
     if (page === 'glossary') return `${base}/designs/working/ingredient-glossary`
     if (page === 'education') return `${base}/designs/working/product-education`
     return `${base}/designs/working`
@@ -391,6 +397,9 @@ function parseLocation(pathname: string, search = '', hash = ''): RouteState {
   }
   if (path === '/contact' || path === '/contact/' || path === '/designs/working/contact' || path === '/designs/working/contact/') {
     return route('home', { design: 'working', designPage: 'home', preview: 'contact', version: 'v2' })
+  }
+  if (path === '/track-order' || path === '/track-order/' || path === '/designs/working/track-order' || path === '/designs/working/track-order/') {
+    return route('home', { design: 'working', designPage: 'home', preview: 'track', version: 'v2' })
   }
   if (path === '/designs/working/ingredient-glossary' || path === '/designs/working/ingredient-glossary/') {
     return route('glossary', { design: 'working', version: 'v2' })
@@ -508,7 +517,9 @@ function applyDocumentTitle(
                         ? 'Spa Partners | Working | Skin Protocol RX'
                         : preview === 'contact'
                           ? 'Contact | Skin Protocol RX'
-                          : 'Working | Skin Protocol RX'
+                          : preview === 'track'
+                            ? 'Track Your Order | Skin Protocol RX'
+                            : 'Working | Skin Protocol RX'
     return
   }
   if (isDesignId(design)) {
@@ -940,6 +951,8 @@ export default function App() {
             <WorkingSpaPartnersPage hash={storyHash} />
           ) : preview === 'contact' ? (
             <WorkingContactPage />
+          ) : preview === 'track' ? (
+            <WorkingTrackOrderPage />
           ) : page === 'glossary' ? (
             <WorkingIngredientGlossaryPage />
           ) : page === 'education' ? (
